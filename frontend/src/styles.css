@@ -1,0 +1,263 @@
+html, body, p{
+  margin: 0;
+  padding: 0;
+}
+
+
+.specialInput{
+  width: 19vw;
+  height: 3vh;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.44);
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  display: flex;
+  align-items:center;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.54);
+  margin-top: 1vh 0;
+  padding-left: 0.5vw;
+}
+
+.smallInput{
+  width: 15vw;
+  height: 35px;
+  border: 0.7px solid rgba(0, 0, 0, 0.54);
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  text-align:start;
+  color: rgba(0, 0, 0, 0.54);
+  padding-left: 0.5vw;
+}
+
+.mediumInput{
+  width: 40vw;
+  height: 35px;
+  border: 0.7px solid rgba(0, 0, 0, 0.54);
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  text-align: start;
+  color: rgba(0, 0, 0, 0.54);
+  padding-left: 0.5vw;
+
+}
+
+.largeInput{
+  width: 60vw;
+  height: 35px;
+  border: 0.7px solid rgba(0, 0, 0, 0.54);
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  text-align: start;
+  color: rgba(0, 0, 0, 0.54);
+  padding-left: 0.5vw;
+
+}
+
+.inputLabel{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: rgba(0, 0, 0, 0.54);
+
+
+}
+
+.saveButton{
+  background: #4A851A;
+  box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  width: 10vw;
+  height: 7vh;
+  border: none;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  text-align: center;
+
+  color: #FFFFFF;
+}
+
+.cancelButton{
+  background: #A51010;;
+  box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  width: 10vw;
+  height: 7vh;
+  border: none;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  text-align: center;
+
+  color: #FFFFFF;
+}
+
+.content{
+  background: #F7F7F7;
+  border-radius: 10px;
+  width: 76vw;
+  height: 74vh;
+  margin-left: 3.5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+  padding-top: 1vw;
+  overflow: scroll;
+}
+
+ .listItem{
+  box-sizing: border-box;
+  background: #F7F7F7;
+  box-shadow: 0px 5px 4px rgba(164, 163, 163, 0.65);
+  border-radius: 10px;
+  width: 73vw;
+  margin-left: 1.7vw;
+  padding: 2vh;
+  display: flex;
+  flex-wrap: wrap;
+  gap:1vw
+
+}
+
+.listItemText{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.titlesRow{
+  display: flex;
+  gap:1vw;
+  margin: 0 0 0.5vh 3.2vw;
+
+
+}
+
+.titleText{
+  list-style-type: none;
+  font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 21px;
+/* identical to box height */
+
+
+/* Creme 01 */
+
+color: #F0EFEF;
+}
+
+
+.actionIcon{
+  width: 2.1vw;
+  align-self:flex-end;
+}
+
+.modalContainer{
+  width: 100vw;
+  height: 100vh;
+  position:fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fadeGray{
+  background-color: gray;
+  opacity: 0.9;
+  width: 100vw;
+  height: 100vh;
+  position:fixed;
+  bottom: 0;
+  left: 0;
+}
+
+.modal{
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  background-color: whitesmoke;
+  opacity: 1;
+  padding: 3vh;
+  z-index: 1;
+
+  background: #FFFFFF;
+  box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+
+
+
+}
+
+
+.formLine{
+  display: flex;
+  gap: 3vw;
+  justify-content:space-between;
+}
+
+.dropDown{
+  position:fixed;
+  z-index: 2;
+  background: #F7F7F7;
+  border: 0.177454px solid #696D7B;
+  border-bottom: none;
+  border-radius: 2px 2px 0px 0px;
+  
+}
+
+.dropdDownOption{
+  border-bottom: 0.177454px solid #696D7B;
+  border-radius: 2px 2px 0px 0px;
+
+  width: 62vw;
+  height: 35px;
+  
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  text-align: start;
+  color: rgba(0, 0, 0, 0.54);
+  padding-left: 0.5vw;
+}

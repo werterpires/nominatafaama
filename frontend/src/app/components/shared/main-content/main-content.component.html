@@ -1,0 +1,17 @@
+<div class="mainContent">
+  <nav class="superiorMenu">
+    <ul class="optionsList">
+      <li class="listOption" *ngFor="let option of menuOptions" [id]="option.description" (click)="pageActivate(option.description);addClass(option.description, 'selected')" >
+        <p class="supMenuItem">{{option.description}}</p>
+      </li>
+    </ul>
+    <div class="line"></div>
+  </nav>
+  <div class="searchDiv" *ngIf="isThereSelected">
+    <img class="filterIcon" src="assets/icons/filterIcon.svg" alt="Ícone de filtro">
+    <input class="searchInput" type="search" placeholder="Procurar">
+    <img src="assets/icons/searchIcon.png" alt="Ícone de lupa" class="searchIcon">
+  </div>
+  <ng-content></ng-content>
+
+</div>

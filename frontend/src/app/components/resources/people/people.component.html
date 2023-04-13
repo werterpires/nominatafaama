@@ -1,0 +1,60 @@
+<div>
+    <ul class="titlesRow">
+        <li class="titleText" id="personNameTitle">Nome</li>
+        <li class="titleText" id="personEmailTitle">Email</li>
+        <li class="titleText" id="personCpfTitle">CPF</li>
+    </ul>
+</div>
+
+<div class="content">
+    <img src="assets/icons/plusIcon.svg" class="actionIcon" alt="" (click)="createPersonModal()">
+    <div *ngFor="let person of people" class="listItem">
+        <p class="listItemText" id="personName">{{person.first_names}} {{person.surname}} </p>
+        <p class="listItemText" id="personEmail">{{person.email}}</p>
+        <p class="listItemText" id="personCpf">{{person.cpf}}</p>
+        <p class="listItemText" id="personAddress">{{person.street}}, nº {{person.number}}, {{person.complement}} - Bairro {{person.neighborhood}}. CEP: {{person.zip_code}}. {{person.city}} - {{person.state}}. {{person.reference_point}}.</p>
+    </div>
+</div>
+<div *ngIf="creatingPerson.active" class="modalContainer">
+    <div class="fadeGray"></div>
+    <div class="modal">
+    
+      <div class="formLine">
+        <label class="inputLabel" for="primeirosNomesInput" >Primeiros nomes <input id="primeirosNOmesInput" class="smallInput" type="text"[(ngModel)]="newPerson.firstName"></label>
+        <label class="inputLabel" for="sobenomeInput" >Sobrenome <input id="sobrenomeInput" class="smallInput" type="text"[(ngModel)]="newPerson.surname"></label>
+        <label class="inputLabel" for="cpfInput" >CPF <input id="cpfInput" class="smallInput" type="text"[(ngModel)]="newPerson.cpf"></label>
+      </div>
+      <label class="inputLabel" for="emailInput" >Email<input id="emailInput" class="mediumInput" type="text"[(ngModel)]="newPerson.email"></label>
+
+      <label class="inputLabel" for="addressSelect">Selecione um endereço
+        <input class="largeInput" type="text" list="addressesList" [(ngModel)]="searchedAddress" (focus)="startSearchAddress()" (input)="filterAddresses()">
+        <div *ngIf="selectedAddresses" class="dropDown">
+          <p class="dropdDownOption" *ngFor="let address of selectedAddresses" id={{address.address_id}} (click)="selectAddress(address.address_id)">
+            {{address.street}}, nº {{address.number}}, {{address.complement}} - Bairro {{address.neighborhood}}. CEP: {{address.zip_code}}. {{address.city}} - {{address.state}}. {{address.reference_point}}.
+          </p>
+        </div>
+      </label>
+      <div *ngIf="!newPerson.addressId">
+        <label class="inputLabel" for="logradouroInput">Logradouro<input id="logradouroInput" class="largeInput" type="text" [(ngModel)]="newAddress.street"></label>
+        <div class="formLine">
+          <label class="inputLabel" for="numeroInput">Número<input id="numeroInput" class="smallInput" type="text" [(ngModel)]="newAddress.number"></label>
+          <label class="inputLabel" for="complementoInput">Complemento<input id="complementoInput" class="mediumInput" type="text" [(ngModel)]="newAddress.complement"></label>
+        </div>
+        <div class="formLine">
+          <label class="inputLabel" for="bairroInput">Bairro<input id="bairroInput" class="mediumInput" type="text" [(ngModel)]="newAddress.neighborhood"></label>
+          <label class="inputLabel" for="cepInput">CEP<input id="cepInput" class="smallInput" type="text" [(ngModel)]="newAddress.zipCode" (blur)="findCep()"></label>
+        </div>
+        <div class="formLine">
+          <label class="inputLabel" for="cidadeInput">Cidade<input id="cidadeInput" class="mediumInput" type="text" [(ngModel)]="newAddress.city"></label>
+          <label class="inputLabel" for="estadoInput">Estado<input id="estadoInput" class="smallInput" type="text" [(ngModel)]="newAddress.state"></label>
+        </div>
+
+        <label class="inputLabel" for="referenciaInput">Ponto de referência<input id="referenciaInput" class="mediumInput" type="text" [(ngModel)]="newAddress.referencePoint"></label>
+      </div>
+        <div class="formLine">
+          <button class="saveButton" type="submit" (click)="createPerson()">Salvar</button>
+          <button class="cancelButton" type="submit" (click)="destroyPersonModal()">Cancelar</button>
+        </div>
+        {{newPerson.addressId}}
+    </div>
+</div>

@@ -1,0 +1,109 @@
+.mainContent{
+  box-sizing: border-box;
+  width: 81vw;
+  height: 97vh;
+  background: #728C5D;
+  border-radius: 40px;
+  padding-top: 2.5vh;
+}
+
+.optionsList{
+  box-sizing: border-box;
+  display: flex;
+  justify-content:flex-start;
+  gap: 4vw;
+  margin-left: 4vw;
+  margin-right: 2vw;
+  padding-left: 0;
+  overflow-x:auto;
+  overflow-y: hidden;
+}
+
+ul{
+  margin: 0;
+}
+
+.listOption{
+  list-style-type: none;
+  transition: transform 0.05s;
+  height: 3vw;
+  min-width: 10vw;
+}
+
+.selected{
+  box-sizing: border-box;
+  border-bottom: 7px #728C5D solid;
+  transition:none;
+  z-index: 1;
+}
+
+.listOption:hover{
+  transform: scale(1.08);
+  cursor:context-menu ;
+}
+
+.listOption::selection{
+  transform: scale(1.1);
+}
+
+.supMenuItem{
+  text-decoration-line: none;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(240, 239, 239, 0.66);
+}
+
+
+.line{
+  position: relative;
+  bottom: 0.48vh;
+  height: 3px;
+  background-color: rgba(196, 196, 196, 0.45);
+  margin-left: 4vw;
+}
+
+.searchDiv{
+  position: relative;
+  display:flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.filterIcon{
+  position: relative;
+  bottom: 0.25vh;
+  height: 4vh;
+  color: 1px solid #F0EFEF;
+  margin: 2vh 0 1vh
+}
+
+.searchInput{
+  background: rgba(244, 244, 244, 0.38);
+  border: 1px solid #F4F4F4;
+  border-radius: 5px;
+  margin: 2vh 1.54vw 1vh;
+  width: 16vw;
+  height: 3.9vh;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+
+  /* Preto 01 */
+
+  color: rgba(0, 0, 0, 1);
+}
+
+.searchIcon{
+  position:absolute;
+  right: 15.8vw;
+  top:2.5vh;
+  height: 3vh;
+}

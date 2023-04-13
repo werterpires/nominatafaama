@@ -1,0 +1,27 @@
+#personNameTitle{
+    width: 20vw;
+  }
+  
+  #personEmailTitle{
+    width: 18vw;
+  }
+  
+  #personCpfTitle{
+    width: 10vw;
+  }
+  
+  #personName{
+    width: 20vw;
+  }
+  
+  #personEmail{
+    width: 18vw;
+  }
+  
+  #personCpf{
+    width: 10vw;
+  }
+
+  option{
+    width: 50vw;
+  }

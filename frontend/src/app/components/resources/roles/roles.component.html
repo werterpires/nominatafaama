@@ -1,0 +1,11 @@
+<ul class="titlesRow">
+    <li class="titleText" id="roleNameTitle">Nome</li>
+    <li class="titleText" id="roleDescriptionTitle">Descrição</li>
+</ul>
+
+<div class="content">
+    <div *ngFor="let role of roles" class="listItem">
+        <p class="listItemText" id="roleName">{{role.role_name}}</p>
+        <p class="listItemText" id="roleDescription">{{role.role_description}}</p>
+    </div>
+</div>

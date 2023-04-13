@@ -1,0 +1,57 @@
+.sidebar{
+  box-sizing: border-box;
+  width: 17vw;
+  height: 97.vh;
+  background-color: transparent;
+}
+
+.logo{
+  margin-top: 3vh;
+  margin-bottom: 6vh;
+  width: 15vw;
+
+}
+
+.sidebarMenu{
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.sidebarItem{
+  display: flex;
+  margin-left: 3vw;
+  margin-bottom: 4vh;
+  transition: transform 0.05s;
+  width: 7vw;
+}
+
+.sidebarItem:hover{
+  transform: scale(1.1);
+}
+
+.sibebarIcons{
+  height: 16.5px;
+  margin-right: 12px;
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 700,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+.sidebarText{
+display: flex;
+align-items:center;
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 21px;
+text-decoration-line: none;
+
+/* Preto 01 */
+
+color: rgba(0, 0, 0, 0.54);
+
+}

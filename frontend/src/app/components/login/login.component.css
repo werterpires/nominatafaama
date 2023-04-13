@@ -1,0 +1,98 @@
+.loginContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #546A42 -11.2%, #4B2C29 100%);
+  width: 100vw;
+  height: 100vh;
+
+}
+
+.loginSquare {
+width: 30vw;
+height: 60vh;
+align-self: center;
+display: flex;
+flex-direction: column;
+align-items: center;
+
+background: #FFFFFF;
+/* Shadow/Blur 20 */
+
+box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.25);
+border-radius: 10px;;
+
+}
+
+.logo{
+  margin-top: 3vh;
+  width: 15vw;
+
+}
+
+.loginInstruction{
+  width: 24vw;
+
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+
+  color: rgba(0, 0, 0, 0.5);
+
+  margin-bottom: 1vh;
+
+}
+
+.loginForm{
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loginField{
+display: flex;
+position: relative;
+}
+
+
+.label{
+
+font-family: 'Public Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 16px;
+color: #333333;
+margin-top: 3vh;
+}
+
+.inputIcon{
+  position:absolute;
+  right: 1.3vw;
+  bottom: 1.5vh;
+}
+
+.loginButton{
+  margin-top: 4vh;
+  width: 24vw;
+  height: 5vh;
+  padding: 1vh;
+  gap: 8px;
+  background: #546A42;
+  border-radius: 5px;
+  border: none;
+
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 26px;
+
+  letter-spacing: 0.46px;
+  text-transform: uppercase;
+  color: #FFFFFF
+}
