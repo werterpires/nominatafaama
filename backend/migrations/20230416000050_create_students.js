@@ -10,16 +10,8 @@ exports.up = function (knex) {
     table.boolean('is_whatsapp').notNullable();
     table.string('principal_email', 150).unique().notNullable();
     table.string('alternative_email', 150).unique().notNullable();
+    table.string('student_mensage', 150).notNullable();
     table.integer('person_id').unsigned();
-    table.string('street').notNullable();
-    table.string('number').notNullable();
-    table.string('complement');
-    table.string('neighborhood').notNullable();
-    table.string('city').notNullable();
-    table.string('state').notNullable();
-    table.string('reference_point');
-    table.string('zip_code').notNullable();
-    table.string('mailbox').notNullable;
     table.integer('origin_field_id').notNullable;
     table.string('justification', 400).notNullable;
     table.string('birth_city', 150).notNullable;
@@ -28,6 +20,10 @@ exports.up = function (knex) {
     table.date('birth_date').notNullable;
     table.date('baptism_date').notNullable;
     table.string('baptism_place', 150).notNullable;
+    table.integer('marital_status_id').notNullable;
+    table.integer('hiring_status_id').notNullable;
+    table.boolean('student_approved').notNullable()
+    table.boolean('student_active').notNullable()
 
     table
       .foreign('person_id')
@@ -37,6 +33,16 @@ exports.up = function (knex) {
     table
       .foreign('origin_field_id')
       .references('associations.association_id')
+      .onDelete('RESTRICT')
+      .onUpdate('RESTRICT');
+    table
+      .foreign('marital_status_id')
+      .references('marital_status_types.marital_status_type_id')
+      .onDelete('RESTRICT')
+      .onUpdate('RESTRICT');
+    table
+      .foreign('hiring_status_id')
+      .references('hiring_status.hiring_status_id')
       .onDelete('RESTRICT')
       .onUpdate('RESTRICT');
 

@@ -8,13 +8,14 @@ exports.up = function (knex) {
 
     table.string('chosen_language', 150).notNullable();
 
-    table.boolean('read', 250).notNullable();
-    table.boolean('understand', 250).notNullable();
-    table.boolean('speak', 250).notNullable();
-    table.boolean('write', 250).notNullable();
-    table.boolean('fluent', 250).notNullable();
-    table.boolean('unknown', 250).notNullable();
+    table.boolean('read').notNullable();
+    table.boolean('understand').notNullable();
+    table.boolean('speak').notNullable();
+    table.boolean('write').notNullable();
+    table.boolean('fluent').notNullable();
+    table.boolean('unknown').notNullable();
     table.integer('person_id');
+    table.boolean('language_approved').notNullable()
 
     table
       .foreign('person_id')

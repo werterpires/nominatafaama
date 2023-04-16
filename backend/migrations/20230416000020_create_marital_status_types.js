@@ -3,12 +3,10 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable('tax_types', (table) => {
-    table.increments('tax_type_id').primary();
+  return knex.schema.createTable('marital_status_types', (table) => {
+    table.increments('marital_status_type_id').primary();
 
-    table.string('tax_type_name', 150).notNullable();
-
-    table.string('tax_type_description', 250).notNullable();
+    table.string('marital_status_type_name', 150).notNullable();
 
     table.timestamps(true, true);
   });
@@ -19,5 +17,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  return knex.schema.dropTable('tax_types');
+  return knex.schema.dropTable('marital_status_types');
 };

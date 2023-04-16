@@ -7,6 +7,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('people', (table) => {
     table.increments('person_id').primary();
     table.string('name', 150).notNullable();
+    table.string('cpf', 11).notNullable().unique();
     table.timestamps(true, true);
   });
 };
