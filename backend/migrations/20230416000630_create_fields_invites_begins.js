@@ -7,8 +7,8 @@ exports.up = function (knex) {
   return knex.schema.createTable('fields_invites_begins', (table) => {
     table.increments('fields_invites_id').primary();
     table.date('orig_field_invites_begin').notNullable()
-    table.integer('field_id').notNullable()
-    table.integer('nominata_id').notNullable()
+    table.integer('field_id').unsigned().notNullable()
+    table.integer('nominata_id').unsigned().notNullable()
 
     table
       .foreign('field_id')

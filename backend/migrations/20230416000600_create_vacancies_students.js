@@ -5,7 +5,7 @@
 exports.up = function (knex) {
   
   return knex.schema.createTable('vacancies_students', (table) => {
-    table.increments('vacancie_student_id').primary();
+    table.increments('vacancy_student_id').primary();
     table.string('comments', 500).notNullable();
     table.integer('vacancy_id').unsigned().notNullable();
     table.integer('student_id').unsigned().notNullable();

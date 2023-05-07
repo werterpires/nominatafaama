@@ -7,12 +7,12 @@ exports.up = function (knex) {
   return knex.schema.createTable('evangelistic_experiences', (table) => {
     table.increments('evang_exp_id').primary();
     
-    table.string('project', 150);
-    table.string('place', 150);
-    table.date('exp_begin_date');
-    table.date('exp_end_date');
-    table.integer('person_id')
-    table.integer('evang_exp_type_id')
+    table.string('project', 250).notNullable();
+    table.string('place', 250).notNullable();
+    table.date('exp_begin_date').notNullable();
+    table.date('exp_end_date').notNullable();
+    table.integer('person_id').unsigned().notNullable()
+    table.integer('evang_exp_type_id').unsigned().notNullable()
     table.boolean('evang_exp_approved').notNullable()
     table
       .foreign('person_id')

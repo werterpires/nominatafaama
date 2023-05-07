@@ -5,9 +5,9 @@
 exports.up = function (knex) {
   return knex.schema.createTable('associations', (table) => {
     table.increments('association_id').primary();
-    table.string('association_name', 150).notNullable();
-    table.string('association_acronym', 250).notNullable();
-    table.integer('union_id').unsigned();
+    table.string('association_name', 250).notNullable();
+    table.string('association_acronym', 150).notNullable();
+    table.integer('union_id').unsigned().notNullable();
     table
       .foreign('union_id')
       .references('unions.union_id')

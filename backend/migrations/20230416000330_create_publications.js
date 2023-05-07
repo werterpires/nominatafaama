@@ -5,13 +5,13 @@
 exports.up = function (knex) {
   return knex.schema.createTable('publications', (table) => {
     table.increments('publication_id').primary();
-    table.integer('publication_type_id').notNullable();
-    table.string('reference').notNullable();
-    table.string('link').notNullable();
+    table.integer('publication_type_id').unsigned().notNullable();
+    table.string('reference', 500).notNullable();
+    table.string('link', 500).notNullable();
     table.boolean('publication_approved').notNullable()
 
 
-    table.integer('person_id');
+    table.integer('person_id').unsigned();
 
     table
       .foreign('person_id')

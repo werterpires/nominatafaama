@@ -106,11 +106,9 @@ export class PeopleComponent {
   }
 
   createPerson() {
-    console.log(this.newPerson)
     if (this.newPerson.addressId === null) {
       this.newPerson.address = this.newAddress
     }
-    console.log(this.newPerson)
     this.resourcesService.createPerson(this.newPerson).subscribe(person => {
 
       alert(`A pessoa ${person} foi cadastrada`)

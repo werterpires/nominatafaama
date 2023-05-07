@@ -60,7 +60,6 @@ export class UsersComponent {
   }
 
   startSearchPerson() {
-    console.log('search')
     this.newUser.personId = 0
 
     this.resourcesService.findAllPeople().subscribe(people => {
@@ -84,7 +83,6 @@ export class UsersComponent {
   }
 
   filterPeople(){
-    console.log("filter")
     this.selectedPeople = this.people.filter(person => {
       return Object.values(person).some(value => {
         return typeof value === 'string' && value.toLowerCase().normalize('NFD').includes(this.searchedPerson.toLowerCase().normalize('NFD'));

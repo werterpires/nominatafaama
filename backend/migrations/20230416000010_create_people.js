@@ -8,6 +8,7 @@ exports.up = function (knex) {
     table.increments('person_id').primary();
     table.string('name', 150).notNullable();
     table.string('cpf', 11).notNullable().unique();
+
     table.timestamps(true, true);
   });
 };

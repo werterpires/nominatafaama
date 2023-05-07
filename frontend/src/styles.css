@@ -5,7 +5,7 @@ html, body, p{
 
 
 .specialInput{
-  width: 19vw;
+  width: 289px;
   height: 3vh;
   border: none;
   border-bottom: 2px solid rgba(0, 0, 0, 0.44);
@@ -18,9 +18,14 @@ html, body, p{
   align-items:center;
   text-align: left;
   color: rgba(0, 0, 0, 0.54);
-  margin-top: 1vh 0;
+  margin-top: 5px;
   padding-left: 0.5vw;
 }
+
+input:focus {
+  outline: none;
+}
+
 
 .smallInput{
   width: 15vw;

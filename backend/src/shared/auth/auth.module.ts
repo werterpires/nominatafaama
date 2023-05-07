@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { FindUserByEmail } from '../../modules/users/services/findUserByEmail.service';
+import { UsersService } from '../../modules/users/dz_services/users.service';
 import { UsersModule } from '../../modules/users/users.module';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
@@ -11,7 +11,7 @@ import { LoginValidationMiddleware } from './middlewares/login-validation.middle
 
 config();
 
-const services = [AuthService, LocalStrategy, FindUserByEmail, JwtStrategy];
+const services = [AuthService, LocalStrategy, UsersService, JwtStrategy];
 
 @Module({
   imports: [

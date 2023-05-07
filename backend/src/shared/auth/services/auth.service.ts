@@ -1,29 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { FindUserByEmail } from 'src/modules/users/services/findUserByEmail.service';
+import { UsersService } from 'src/modules/users/dz_services/users.service';
 import * as bcrypt from 'bcrypt';
-import { IUser } from 'src/modules/users/types';
+import { IValidateUser, IUser } from 'src/modules/users/bz_types/types';
 import { UserPayload, UserToken } from '../types/types';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly findUserByEmail: FindUserByEmail,
+    private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
 
   async validateUser(email: string, password: string) {
-    const user: IUser[] = await this.findUserByEmail.findUserByEmail(email);
-    if (user[0].user_id > 0) {
+    const user: IValidateUser | null = await this.usersService.findUserByEmail(email);
+    if ((user) && (user.user_id > 0)) {
       
       const isPasswordValid = await bcrypt.compare(
         password,
-        user[0].password_hash,
+        user.password_hash,
       );
 
       if (isPasswordValid) {
         return {
-          ...user[0],
+          ...user,
           password_hash: undefined,
         };
       }
@@ -31,11 +31,11 @@ export class AuthService {
     throw new Error('Email e/ou a senha não encontrado(s)');
   }
 
-  login(user: IUser): UserToken {
+  login(user: IValidateUser): UserToken {
     const payload: UserPayload = {
       sub: user.user_id,
-      email: user.email,
-      surname: user.surname,
+      principal_email: user.principal_email,
+      name: user.name,
       roles: user.roles,
     };
     const jwtToken = this.jwtService.sign(payload);

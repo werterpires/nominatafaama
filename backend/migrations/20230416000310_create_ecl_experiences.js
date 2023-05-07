@@ -7,8 +7,8 @@ exports.up = function (knex) {
   return knex.schema.createTable('ecl_experiences', (table) => {
     table.increments('ecl_exp_id').primary();
     
-    table.integer('person_id')
-    table.integer('ecl_exp_type_id')
+    table.integer('person_id').unsigned().notNullable()
+    table.integer('ecl_exp_type_id').unsigned().notNullable()
     table.boolean('ecl_exp_approved').notNullable()
     table
       .foreign('person_id')

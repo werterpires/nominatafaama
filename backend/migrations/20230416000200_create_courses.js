@@ -6,11 +6,11 @@ exports.up = function (knex) {
   
   return knex.schema.createTable('courses', (table) => {
     table.increments('course_id').primary();
-    table.string('course_area', 150);
-    table.string('institution', 150);
-    table.date('begin_date');
+    table.string('course_area', 250).notNullable();
+    table.string('institution', 250).notNullable();
+    table.date('begin_date').notNullable();
     table.date('conclusion_date');
-    table.integer('person_id')
+    table.integer('person_id').unsigned().notNullable()
     table.boolean('course_approved').notNullable()
     table
       .foreign('person_id')

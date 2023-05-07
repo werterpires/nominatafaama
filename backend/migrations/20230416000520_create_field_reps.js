@@ -7,8 +7,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('field_reps', (table) => {
     table.increments('rep_id').primary();
     table.string('phone_number', 15).notNullable();
-    table.string('principal_email', 150).unique().notNullable();
-    table.integer('person_id').unsigned();
+    table.integer('person_id').unsigned().notNullable();
 
     table
       .foreign('person_id')

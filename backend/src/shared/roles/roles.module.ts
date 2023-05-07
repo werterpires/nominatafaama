@@ -1,15 +1,11 @@
 import { Module } from '@nestjs/common';
-import { RolesController } from './controllers/roles.controller';
-import { FindAllRolesService } from './services/findAllRoles.service';
-import { RolesModel } from './model/roles.model';
-import { CreateRoleService } from './services/createRole.service';
-import { CreateUsersRoleService } from './services/createUsersRole.service';
+import { RolesController } from './cz_controllers/roles.controller';
+import { RolesService } from './dz_services/roles.service';
+import { RolesModel } from './ez_model/roles.model';
 
 const services = [
-  FindAllRolesService,
+  RolesService,
   RolesModel,
-  CreateRoleService,
-  CreateUsersRoleService,
 ];
 
 @Module({

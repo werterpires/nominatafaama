@@ -6,8 +6,8 @@ exports.up = function (knex) {
   
   return knex.schema.createTable('favorites', (table) => {
     table.increments('favorite_id').primary();
-    table.integer('rep_id').unsigned();
-    table.integer('student_id').unsigned();
+    table.integer('rep_id').unsigned().notNullable();
+    table.integer('student_id').unsigned().notNullable();
 
     table
       .foreign('rep_id')

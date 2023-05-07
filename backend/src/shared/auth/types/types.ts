@@ -6,16 +6,16 @@ import {
   MinLength,
 } from 'class-validator';
 import { Request } from 'express';
-import { IUser } from '../../../modules/users/types';
+import { IValidateUser, IUser } from '../../../modules/users/bz_types/types';
 
 export interface AuthRequest extends Request {
-  user: IUser;
+  user: IValidateUser;
 }
 
 export interface UserPayload {
+  principal_email: string;
   sub: number;
-  email: string;
-  surname: string;
+  name: string;
   roles: object;
   iat?: number;
   exp?: number;
@@ -26,9 +26,9 @@ export interface UserToken {
 }
 
 export interface UserFromJwt {
-  id: number;
-  email: string;
-  surname: string;
+  user_id: number;
+  principal_email: string;
+  name: string;
   roles: object;
 }
 

@@ -6,12 +6,12 @@ exports.up = function (knex) {
   
   return knex.schema.createTable('academic_formations', (table) => {
     table.increments('formation_id').primary();
-    table.integer('degree_id');
-    table.string('course_area', 150);
-    table.string('institution', 150);
-    table.date('begin_date');
+    table.integer('degree_id').unsigned().notNullable();
+    table.string('course_area', 250).notNullable();
+    table.string('institution', 250).notNullable();
+    table.date('begin_date').notNullable();
     table.date('conclusion_date');
-    table.integer('person_id')
+    table.integer('person_id').unsigned().notNullable()
     table.boolean('academic_formation_approved').notNullable()
 
     table
@@ -21,7 +21,7 @@ exports.up = function (knex) {
       .onUpdate('RESTRICT');
     table
       .foreign('degree_id')
-      .references('academic_degrees.person_id')
+      .references('academic_degrees.degree_id')
       .onDelete('RESTRICT')
       .onUpdate('RESTRICT');
     

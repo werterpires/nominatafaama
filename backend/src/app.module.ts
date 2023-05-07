@@ -3,14 +3,11 @@ import { KnexModule } from 'nest-knexjs';
 import { config } from 'dotenv';
 import { UsersModule } from './modules/users/users.module';
 import { PeopleModule } from './modules/people/people.module';
-import { AddressesModule } from './modules/addresses/addresses.module';
-import { ItensCategoryModule } from './modules/resources/itensCategory/itensCategory.module';
-import { ItensSubCategoryModule } from './modules/resources/itensSubCategory/itensSubCategory.module';
 import { AuthModule } from './shared/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard';
 import { RolesModule } from './shared/roles/roles.module';
-import { RolesGuard } from './shared/roles/guards/roles.guard';
+import { RolesGuard } from './shared/roles/gz_guards/roles.guard';
 
 config();
 
@@ -30,11 +27,8 @@ config();
     }),
     UsersModule,
     PeopleModule,
-    AddressesModule,
     AuthModule,
     RolesModule,
-    ItensCategoryModule,
-    ItensSubCategoryModule,
   ],
   providers: [
     {
@@ -47,4 +41,4 @@ config();
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

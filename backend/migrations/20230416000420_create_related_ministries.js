@@ -7,8 +7,8 @@ exports.up = function (knex) {
   return knex.schema.createTable('related_ministries', (table) => {
     table.increments('related_ministry_id').primary();
     
-    table.integer('person_id').notNullable()
-    table.integer('ministry_type_id').notNullable()
+    table.integer('person_id').unsigned().notNullable()
+    table.integer('ministry_type_id').unsigned().notNullable()
     table.integer('priority').notNullable()
     table.boolean('related_ministry_approved').notNullable()
 

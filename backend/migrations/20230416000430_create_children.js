@@ -7,11 +7,11 @@ exports.up = function (knex) {
   return knex.schema.createTable('children', (table) => {
     table.increments('child_id').primary();
     
-    table.string('child_birth_date', 150).notNullable();
+    table.date('child_birth_date').notNullable();
     table.string('study_grade', 150).notNullable();
-    table.integer('marital_status_id').notNullable();
-    table.integer('person_id')
-    table.integer('student_id')
+    table.integer('marital_status_id').unsigned().notNullable();
+    table.integer('person_id').unsigned().notNullable()
+    table.integer('student_id').unsigned().notNullable()
     table.boolean('child_approved').notNullable()
 
     table

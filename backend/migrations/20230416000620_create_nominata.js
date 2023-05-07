@@ -6,7 +6,7 @@ exports.up = function (knex) {
   
   return knex.schema.createTable('nominatas', (table) => {
     table.increments('nominata_id').primary();
-    table.string('year', 4);
+    table.string('year', 4).notNullable();
     table.date('orig_field_invites_begin').notNullable()
     table.timestamps(true, true);
   });

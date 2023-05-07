@@ -7,11 +7,11 @@ exports.up = function (knex) {
   return knex.schema.createTable('professional_experiences', (table) => {
     table.increments('experience_id').primary();
     
-    table.string('job', 150);
-    table.string('job_institution', 150);
-    table.date('job_begin_date');
+    table.string('job', 250).notNullable();
+    table.string('job_institution', 250).notNullable();
+    table.date('job_begin_date').notNullable();
     table.date('job_end_date');
-    table.integer('person_id')
+    table.integer('person_id').unsigned().notNullable()
     table.boolean('experience_approved').notNullable()
     table
       .foreign('person_id')

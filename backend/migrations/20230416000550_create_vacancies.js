@@ -8,7 +8,7 @@ exports.up = function (knex) {
     table.increments('vacancy_id').primary();
     table.string('title', 150).notNullable();
     table.string('description', 300).notNullable();
-    table.integer('field_id').notNullable;
+    table.integer('field_id').unsigned().notNullable();
     table.integer('rep_id').unsigned().notNullable();
     table.integer('ministry_id').unsigned().notNullable();
 

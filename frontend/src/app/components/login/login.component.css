@@ -2,21 +2,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #546A42 -11.2%, #4B2C29 100%);
+  background: linear-gradient(180deg, #202C3D 5.58%, #223A52 43.15%, #244C6C 111.37%);;
   width: 100vw;
   height: 100vh;
 
 }
 
 .loginSquare {
-width: 30vw;
-height: 60vh;
+width: 531.59px;
+height: 640.52px;
 align-self: center;
 display: flex;
 flex-direction: column;
 align-items: center;
 
-background: #FFFFFF;
+background: #ffffff;
 /* Shadow/Blur 20 */
 
 box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.25);
@@ -25,8 +25,9 @@ border-radius: 10px;;
 }
 
 .logo{
-  margin-top: 3vh;
-  width: 15vw;
+  margin-top: 90px;
+  width: 210.19px;
+  margin-bottom: 3vh ;
 
 }
 
@@ -35,14 +36,14 @@ border-radius: 10px;;
 
   font-family: 'Public Sans';
   font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 18px;
   text-align: center;
 
-  color: rgba(0, 0, 0, 0.5);
+  color: #0D3E66;
 
-  margin-bottom: 1vh;
+  margin-bottom: 50px;
 
 }
 
@@ -56,42 +57,46 @@ border-radius: 10px;;
 .loginField{
 display: flex;
 position: relative;
+margin-bottom: 20px;
 }
 
 
 .label{
-
 font-family: 'Public Sans';
 font-style: normal;
 font-weight: 400;
 font-size: 14px;
 line-height: 16px;
 color: #333333;
-margin-top: 3vh;
+margin-top: 5px;
 }
 
 .inputIcon{
+  height: 17px;
   position:absolute;
-  right: 1.3vw;
-  bottom: 1.5vh;
+  right: 2px;
+  top: 30px;
+  color: #0D3362;
+  z-index: 2;
+}
+
+#emailInput{
+  margin-bottom: 25px;
 }
 
 .loginButton{
-  margin-top: 4vh;
-  width: 24vw;
-  height: 5vh;
+  margin-top: 60px;
+  width: 289px;
+  height: 46px;
   padding: 1vh;
-  gap: 8px;
-  background: #546A42;
+  background: #0D3362;
   border-radius: 5px;
   border: none;
-
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
   line-height: 26px;
-
   letter-spacing: 0.46px;
   text-transform: uppercase;
   color: #FFFFFF

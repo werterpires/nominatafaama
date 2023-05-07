@@ -74,7 +74,6 @@ export class ResourcesComponent {
   findAllItensCategory() {
 
     this.resourcesService.findAllItensCategory().subscribe(itensCategory => {
-      console.log(itensCategory)
       this.itensCategory = itensCategory
     });
   }

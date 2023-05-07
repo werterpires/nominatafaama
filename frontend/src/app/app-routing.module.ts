@@ -5,7 +5,8 @@ import { ResourcesComponent } from './components/resources/resources.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
-  { path: "resources", component: ResourcesComponent }
+  { path: "resources", component: ResourcesComponent },
+  { path: "", redirectTo: "/login", pathMatch: "full"}
 ];
 
 @NgModule({

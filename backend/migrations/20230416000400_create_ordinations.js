@@ -7,10 +7,10 @@ exports.up = function (knex) {
   return knex.schema.createTable('ordinations', (table) => {
     table.increments('evang_exp_id').primary();
     
-    table.string('ordination_name', 150).notNullable();
-    table.string('place', 150).notNullable();
+    table.string('ordination_name', 250).notNullable();
+    table.string('place', 250).notNullable();
     table.integer('Year').notNullable();
-    table.integer('person_id').notNullable()
+    table.integer('person_id').unsigned().notNullable()
     table.boolean('ordination_approved').notNullable()
     table
       .foreign('person_id')

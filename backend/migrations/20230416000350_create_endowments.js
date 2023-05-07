@@ -7,8 +7,8 @@ exports.up = function (knex) {
   return knex.schema.createTable('endowments', (table) => {
     table.increments('endowment_id').primary();
     
-    table.integer('person_id')
-    table.integer('endowment_type_id')
+    table.integer('person_id').unsigned().notNullable()
+    table.integer('endowment_type_id').unsigned().notNullable()
     table.boolean('endowment_approved').notNullable()
     table
       .foreign('person_id')

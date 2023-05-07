@@ -6,7 +6,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('languages', (table) => {
     table.increments('language_id').primary();
 
-    table.string('chosen_language', 150).notNullable();
+    table.integer('chosen_language').unsigned().notNullable();
 
     table.boolean('read').notNullable();
     table.boolean('understand').notNullable();
@@ -14,7 +14,7 @@ exports.up = function (knex) {
     table.boolean('write').notNullable();
     table.boolean('fluent').notNullable();
     table.boolean('unknown').notNullable();
-    table.integer('person_id');
+    table.integer('person_id').unsigned().notNullable();
     table.boolean('language_approved').notNullable()
 
     table

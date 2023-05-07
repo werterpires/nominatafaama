@@ -6,12 +6,12 @@ exports.up = function (knex) {
   
   return knex.schema.createTable('previous_marriages', (table) => {
     table.increments('previous_marriage_id').primary()
-    table.date('marriage_end_date')
-    table.integer('person_id')
+    table.date('marriage_end_date').notNullable()
+    table.integer('student_id').unsigned().notNullable()
     table.boolean('previous_marriage_approved').notNullable()
     table
-      .foreign('person_id')
-      .references('people.person_id')
+      .foreign('student_id')
+      .references('students.student_id')
       .onDelete('RESTRICT')
       .onUpdate('RESTRICT')
     

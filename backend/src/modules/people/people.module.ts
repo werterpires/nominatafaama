@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { PeopleController } from './controllers/people.controller';
-import { FindAllPeopleService } from './services/findAllPeople.service';
-import { PeopleModel } from './model/people.model';
-import { CreatePersonService } from './services/createPerson.service';
-import { AddressesModel } from '../addresses/model/addresses.model';
+import { PeopleServices } from './dz_services/people.service';
+import { PeopleModel } from './ez_model/people.model';
+import { PeopleController } from './cz_controllers/people.controller';
 
-const services = [FindAllPeopleService, PeopleModel, CreatePersonService, AddressesModel];
+const services = [PeopleServices, PeopleModel];
 
 @Module({
   imports: [],

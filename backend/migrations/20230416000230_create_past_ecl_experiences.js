@@ -7,11 +7,11 @@ exports.up = function (knex) {
   return knex.schema.createTable('past_ecl_exps', (table) => {
     table.increments('past_ecl_id').primary();
     
-    table.string('function', 150);
-    table.string('place', 150);
-    table.date('past_exp_begin_date');
-    table.date('past_exp_end_date');
-    table.integer('person_id')
+    table.string('function', 250).notNullable();
+    table.string('place', 250).notNullable();
+    table.date('past_exp_begin_date').notNullable();
+    table.date('past_exp_end_date').notNullable();
+    table.integer('person_id').unsigned().notNullable()
     table.boolean('past_ecl_approved').notNullable()
     table
       .foreign('person_id')

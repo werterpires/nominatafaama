@@ -2,20 +2,20 @@
 
   <div class="loginSquare">
 
-    <img class="logo" src="assets/img/solovidaLogo.png" alt="Logo da Solo Vida Sementes">
-    <p class="loginInstruction">Preencha os dados do login para acessar a conta</p>
+    <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA">
+    <p class="loginInstruction">Nominata Salt</p>
   <form class="loginForm">
     <div class="loginField">
       <label class="label">Email de usuário
-        <input id="emailInput" type="email" class="specialInput" placeholder="nome.sobrenome@solovidasementes.com" [(ngModel)]="loginData.email" (ngModelChange)="mailChange.emit($event)" [ngModelOptions]="{standalone: true}"></label>
+        <input id="emailInput" type="email" class="specialInput" placeholder="seuimail@gmail.com" [(ngModel)]="loginData.email" [ngModelOptions]="{standalone: true}" (blur)="validateEmailData()"></label>
       <img class="inputIcon" src="assets/icons/usuarioIcone.png" alt="icone de um usuário">
     </div>
 
     <div class="loginField">
       <label class="label">Senha
-        <input id="senhaInput" type="password" class="specialInput" placeholder="123456789" [(ngModel)]="loginData.password" (ngModelChange)="passwordChange.emit($event)" [ngModelOptions]="{standalone: true}">
+        <input id="senhaInput" type="password" class="specialInput" placeholder="123456789" [(ngModel)]="loginData.password" [ngModelOptions]="{standalone: true}">
       </label>
-      <img class="inputIcon" src="assets/icons/seePasswordIcon.png" alt="icone de um olho">
+      <img class="inputIcon" src="assets/icons/seePasswordIcon.png" alt="icone de um olho" (click)="showPassword()">
     </div>
     <button class="loginButton" type="submit" (click)="login()"> Entrar </button>
   </form>

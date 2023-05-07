@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './controllers/users.controller';
-import { FindAllUsersService } from './services/findAllUsers.service';
-import { UsersModel } from './model/users.model';
-import { CreateUserService } from './services/createUser.service';
+import { UsersController } from './cz_controllers/users.controller';
+import { UsersService } from './dz_services/users.service';
+import { UsersModel } from './ez_model/users.model';
 
 const services = [
-  FindAllUsersService,
+  UsersService,
   UsersModel,
-  CreateUserService,
-  FindAllUsersService,
 ];
 
 @Module({
