@@ -1,0 +1,106 @@
+<div class="logonContainer">
+
+    <div class="logonSquare">
+  
+      <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA">
+      <p class="logonInstruction">Nominata Salt</p>
+      <form class="logonForm">
+        <div class="logonArea">
+            <div class="logonField">
+                <label class="label">Nome
+                    <input id="nameInput" type="text" class="specialInput" placeholder="Saulo de Tarso" [(ngModel)]="logonData.name" [ngModelOptions]="{standalone: true}" (blur)="validateNameData()">
+                </label>
+                <img class="inputIcon" src="assets/icons/usuarioIcone.png" alt="icone de um olho">
+            </div>
+            <div class="logonField">
+                <label class="label">CPF
+                    <input id="cpfInput" type="text" class="specialInput" placeholder="00000000000" [(ngModel)]="logonData.cpf" [ngModelOptions]="{standalone: true}" (input)="formatarCPF()" (blur)="validateCpfData()">
+                </label>
+                <img class="inputIcon" src="assets/icons/cpfIIcon.svg" alt="icone de um olho">
+            </div>
+
+        </div>
+
+        <div class="logonArea">
+            <div class="logonField">
+                <label class="label">Email de usuário
+                  <input id="emailInput" type="email" class="specialInput" placeholder="saulo.tarso@sinedrio.com" [(ngModel)]="logonData.principalEmail" [ngModelOptions]="{standalone: true}" (blur)="validateEmailData()"></label>
+                <img class="inputIcon" src="assets/icons/emailInput.svg" alt="icone de um usuário">
+            </div>
+    
+            <div class="logonField">
+                <label class="label">Confirme seu email
+                    <input id="confirmEmailInput" type="email" class="specialInput" placeholder="saulo.tarso@sinedrio.com" [(ngModel)]="confirmEmail" [ngModelOptions]="{standalone: true}" (blur)="confirmEmailData()"></label>
+                <img class="inputIcon" src="assets/icons/emailInput.svg" alt="icone de um usuário">
+            </div>
+        </div>
+        
+        <div class="logonArea">
+            <div class="logonField">
+                <label class="label">Senha
+                  <input id="senhaInput" type="password" class="specialInput" placeholder="1Cor13:1" [(ngModel)]="logonData.passwordHash" [ngModelOptions]="{standalone: true}" (blur)="validatePasswordData()">
+                </label>
+                <img class="inputIcon" src="assets/icons/seePasswordIcon.png" alt="icone de um olho" (click)="showPassword()">
+              </div>
+      
+              <div class="logonField">
+                  <label class="label">Confirme sua senha
+                      <input id="confirmPasswordInput" type="password" class="specialInput" placeholder="1Cor13:1" [(ngModel)]="confirmPassword" [ngModelOptions]="{standalone: true}" (blur)="confirmPasswordData()">
+                  </label>
+                  <img class="inputIcon" src="assets/icons/seePasswordIcon.png" alt="icone de um olho" (click)="showPassword()">
+              </div>
+        </div>
+
+        <div class="logonArea">
+            <div class="logonField">
+                <p>Escolha um ou mais papéis de usuário.</p>
+            </div>
+            <div class="logonField">
+                <div class="checksSide">
+                  <label class="label checkOption">
+                    <input type="checkbox" [(ngModel)]="logonData.rolesId[3]" [value]="3" name="dirOption"> Diretor
+                  </label>
+              
+                  <label class="label checkOption">
+                    <input type="checkbox" [(ngModel)]="logonData.rolesId[4]" [value]="4" name="repOption"> Representante de campo
+                  </label>
+              
+                  <label class="label checkOption">
+                    <input type="checkbox" [(ngModel)]="logonData.rolesId[5]" [value]="5" name="admOption"> Administrador do sistema
+                  </label>
+                </div>
+                <div class="checksSide">
+                  <label class="label checkOption">
+                    <input type="checkbox" [(ngModel)]="logonData.rolesId[0]" [value]="0" name="estOption"> Estudante
+                  </label>
+              
+                  <label class="label checkOption">
+                    <input type="checkbox" [(ngModel)]="logonData.rolesId[1]" [value]="1" name="profOption"> Professor
+                  </label>
+              
+                  <label class="label checkOption">
+                    <input type="checkbox" [(ngModel)]="logonData.rolesId[2]" [value]="2" name="secOption"> Secretária/o
+                  </label>
+                </div>
+              </div>
+              
+                
+                  
+            </div>
+        <button class="logonButton" type="submit" (click)="logon()"> Cadastrar-se </button>
+        
+      </form>
+      <div *ngIf="error" class="error">
+        <div class="errorTitle">
+          <p>Atenção</p>
+        </div>
+        <div class="errorMessage">
+          <p>{{errorMessage}}</p>
+        </div>
+        <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+      </div>
+    </div>
+    <div *ngIf="isLoading" class="loader1"></div>
+    <div *ngIf="isLoading" class="loader2"></div>
+  
+  </div>

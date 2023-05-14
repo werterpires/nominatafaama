@@ -4,22 +4,34 @@
 
     <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA">
     <p class="loginInstruction">Nominata Salt</p>
-  <form class="loginForm">
-    <div class="loginField">
-      <label class="label">Email de usuário
-        <input id="emailInput" type="email" class="specialInput" placeholder="seuimail@gmail.com" [(ngModel)]="loginData.email" [ngModelOptions]="{standalone: true}" (blur)="validateEmailData()"></label>
-      <img class="inputIcon" src="assets/icons/usuarioIcone.png" alt="icone de um usuário">
-    </div>
+    <form class="loginForm">
+      <div class="loginField">
+        <label class="label">Email de usuário
+          <input id="emailInput" type="email" class="specialInput" placeholder="seuemail@provedor.com" [(ngModel)]="loginData.email" [ngModelOptions]="{standalone: true}" (blur)="validateEmailData()"></label>
+        <img class="inputIcon" src="assets/icons/usuarioIcone.png" alt="icone de um usuário">
+      </div>
 
-    <div class="loginField">
-      <label class="label">Senha
-        <input id="senhaInput" type="password" class="specialInput" placeholder="123456789" [(ngModel)]="loginData.password" [ngModelOptions]="{standalone: true}">
-      </label>
-      <img class="inputIcon" src="assets/icons/seePasswordIcon.png" alt="icone de um olho" (click)="showPassword()">
+      <div class="loginField">
+        <label class="label">Senha
+          <input id="senhaInput" type="password" class="specialInput" placeholder="123456789" [(ngModel)]="loginData.password" [ngModelOptions]="{standalone: true}" (blur)="validatePasswordData()">
+        </label>
+        <img class="inputIcon" src="assets/icons/seePasswordIcon.png" alt="icone de um olho" (click)="showPassword()">
+      </div>
+      <button class="loginButton" type="submit" (click)="login()"> Entrar </button>
+      
+    </form>
+    <p class="recover">Esqueci minha senha</p>
+    <div *ngIf="error" class="error">
+      <div class="errorTitle">
+        <p>Atenção</p>
+      </div>
+      <div class="errorMessage">
+        <p>{{errorMessage}}</p>
+      </div>
+      <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
     </div>
-    <button class="loginButton" type="submit" (click)="login()"> Entrar </button>
-  </form>
-</div>
-
+  </div>
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
 
 </div>

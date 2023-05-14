@@ -3,6 +3,7 @@ import { ILoginDto } from './login.Dto';
 import { LoginService } from './login.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidateService } from '../shared/shared.service.ts/validate.services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,13 +12,14 @@ import { ValidateService } from '../shared/shared.service.ts/validate.services';
 })
 export class LoginComponent {
   constructor(private loginService:LoginService, 
-  private validateService:ValidateService){};
+  private validateService:ValidateService,
+  private router: Router){};
 
   @Output() mailChange = new EventEmitter<string>();
   @Output() passwordChange = new EventEmitter<string>();
  
-
-  loginForm!: FormGroup;
+  errorMessage:string = ""
+  error!: boolean
 
   loginData:ILoginDto = {
     email: "",
@@ -25,35 +27,71 @@ export class LoginComponent {
   }
 
   seePassword:boolean = false
+  isLoading:boolean = false
 
-  validateEmailData(): boolean {
-    const passwordInput = document.getElementById('emailInput') as HTMLInputElement;
-    const validEmail = this.validateService.validateEmailData(this.loginData.email)
+  validateEmailData() {
+    const emailInput = document.getElementById('emailInput') as HTMLInputElement;
+    const valid = this.validateService.validateEmailData(this.loginData.email)
+    this.validateService.colorInput(valid, emailInput)
     
-    // Verifica se o email é válido
-    if (validEmail) {
-      passwordInput.style.borderBottomColor = 'green'
-    } else{
-      passwordInput.style.borderBottomColor = 'red'
-    }
-
-    return true;
+  }
+  
+  validatePasswordData() {
+    const passwordInput = document.getElementById('senhaInput') as HTMLInputElement;
+    const valid = this.validateService.validatePasswordData(this.loginData.password)
+    this.validateService.colorInput(valid, passwordInput)
   }
 
-  login(){
+  
+  login() {
+    this.isLoading=true
 
-    this.loginService.login(this.loginData)
+    const isValidEmail = this.validateService.validateEmailData(this.loginData.email)  
+    if(!isValidEmail){
+      this.errorMessage = 'Digite um email válido para prosseguir com o login'
+          this.error = true
+          this.isLoading = false
+          return      
+      }
+    const isValidPass = this.validateService.validatePasswordData(this.loginData.password)
+      if(!isValidPass){
+        this.errorMessage = 'A senha deve conter pelo menos 8 caracteres, sendo´pelo menos uma letra minúscula, pelo menos uma letra maiúscula, pelo menos um símbolo e pelo menos um número.'
+        this.error = true
+        this.isLoading = false
+        return
+      }
+    
+    this.loginService.login(this.loginData).subscribe({
+      
+      next: res => {
+      
+        
+        
+        localStorage.setItem("access_token", JSON.parse(JSON.stringify(res)).access_token)
+        this.router.navigate(['/']);
+        this.isLoading = false
+      },
+      error: err => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      }
+    });
   }
 
   showPassword(){
     this.seePassword = !this.seePassword
-    console.log('uau')
+
     const passwordInput = document.getElementById('senhaInput') as HTMLInputElement;
-  if (this.seePassword) {
-    passwordInput.type = 'text';
-  } else {
-    passwordInput.type = 'password';
+    if (this.seePassword) {
+      passwordInput.type = 'text';
+    } else {
+      passwordInput.type = 'password';
+    }
   }
+
+  closeError(){
+    this.error = false
   }
 
 }

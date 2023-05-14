@@ -1,6 +1,7 @@
 import { IRole } from 'src/shared/roles/bz_types/types';
 
 export interface IUser {
+  user_approved?: boolean;
   user_id: number;
   principal_email: string;
   person_id: number;
@@ -9,6 +10,7 @@ export interface IUser {
   roles: IRole[];
   created_at: Date;
   updated_at: Date;
+
 }
 
 export interface IValidateUser {
@@ -21,6 +23,7 @@ export interface IValidateUser {
   roles: IRole[];
   created_at: Date;
   updated_at: Date;
+  user_approved: boolean
 }
 
 export interface ICreateUser {

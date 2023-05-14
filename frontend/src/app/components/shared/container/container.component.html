@@ -1,10 +1,22 @@
 <div class="container">
-
-
-  <ng-content>
-
-
-
-  </ng-content>
-
+  <header class="header">
+    <div class="logoDiv">
+        <img class="logo" src="assets/img/Logo.png" alt="">
+    </div>
+    <nav class="navDiv">
+        <ul class="menuOptions">
+            <li class="menuOption" (click)="choseOption('nominata')"><a >Nominata</a></li>
+            <li *ngIf="(permissions.administrador||permissions.direcao||permissions.estudante||permissions.representacao||permissions.secretaria) && permissions.isApproved" class="menuOption"(click)="choseOption('cadastros')"><a >Cadastros</a></li>
+            <li *ngIf="(permissions.administrador||permissions.direcao||permissions.secretaria) && permissions.isApproved" class="menuOption" (click)="choseOption('aprovacoes')"><a >Aprovações</a></li>
+            <li *ngIf="(permissions.administrador||permissions.representacao) && permissions.isApproved" class="menuOption" (click)="choseOption('vagas')"><a >Vagas</a></li>
+            <li *ngIf="(permissions.administrador||permissions.representacao||permissions.direcao) && permissions.isApproved" class="menuOption" (click)="choseOption('chamados')"><a >Chamados</a></li>
+            <li class="menuOption">
+              <img class="menuIcon" src="assets/icons/userIcon.svg" alt="Ícone de usuário">
+            </li>
+            <li class="menuOption"><img class="menuIcon" src="assets/icons/notificationIcon.png" alt="Ícone de notificação"></li>
+        </ul>
+    </nav>
+  </header>
+  <app-approves *ngIf="(permissions.administrador||permissions.direcao||permissions.secretaria) && permissions.isApproved && options.aprovacoes" [permissions]="permissions"></app-approves>
+  <app-records *ngIf="(permissions.administrador||permissions.direcao||permissions.estudante||permissions.representacao||permissions.secretaria) && permissions.isApproved && options.cadastros">></app-records>
 </div>

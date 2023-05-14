@@ -15,7 +15,7 @@ export class UsersModel {
     principal_email,
     role_id,
   }: ICreateUser): Promise<IUser> {
-    let user: IUser | null = {} as IUser; // Definindo um valor padrão
+    let user: IUser | null = {} as IUser;
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
@@ -27,7 +27,7 @@ export class UsersModel {
             password_hash,
             principal_email,
             person_id: person,
-            user_approved: false,
+            user_approved: null,
           })
 
         const roles = role_id.map((role) => ({
@@ -152,7 +152,8 @@ export class UsersModel {
             'people.cpf',
             'roles.role_id',
             'roles.role_name',
-            'roles.role_description'
+            'roles.role_description',
+            'users.user_approved'
           )
           .leftJoin('people', 'users.person_id', 'people.person_id')
           .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
@@ -188,6 +189,7 @@ export class UsersModel {
             roles,
             created_at: result[0].created_at,
             updated_at: result[0].updated_at,
+            user_approved: result[0].user_approved
           };
 
         }
@@ -227,6 +229,7 @@ export class UsersModel {
             'roles.role_description',
             'users.created_at',
             'users.updated_at',
+            'users.user_approved'
           )
           .leftJoin('people', 'users.person_id', 'people.person_id')
           .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
@@ -255,6 +258,7 @@ export class UsersModel {
                 roles: [],
                 created_at: row.created_at,
                 updated_at: row.updated_at,
+                user_approved: row.user_approved
               };
           
               if (row.role_id) {
@@ -352,10 +356,9 @@ export class UsersModel {
             .select('person_id')
             .where('user_id', id)
 
-            console.log(userPeople)
+           
             
             if (updateUser.name) {
-              console.log(updateUser.name)
               await this.knex('people').where('person_id', userPeople.person_id ).update( {name: updateUser.name} );
             }
     

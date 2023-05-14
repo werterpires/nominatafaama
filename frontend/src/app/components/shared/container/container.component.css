@@ -1,10 +1,56 @@
 .container{
   box-sizing: border-box;
   background: #E3E3E3;
-  width: 100vw;
-  height: 100vh;
-  padding: 1.5vh 1vw ;
+
+
+}
+
+.header{
   display: flex;
+  justify-content: space-between;
+  height: 87.94px;
+  margin-bottom: 25px;
+  padding: 0px 10vw;
+  background: linear-gradient(180deg, #202C3D 5.58%, #223A52 43.15%, #244C6C 111.37%);
+  align-items: center;
 
+}
 
+.navDiv{
+  max-width: 50vw;
+  overflow:hidden
+}
+
+.logo{
+  height: 42px;
+}
+
+.menuOptions{
+  display: flex;
+  list-style: none;
+  gap: 26px;
+  
+}
+
+.menuOption{
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 100;
+  font-size: 12px;
+  transform: 0.5s;
+  transition: transform 0.1s ease-in-out;
+  cursor: pointer;
+  
+  /* or 200% */
+  align-items: center;
+  letter-spacing: 0.2px;
+  color: #F0F0F0;
+}
+
+.menuOption:hover{
+  transform: scale(1.15);
+}
+
+.menuIcon{
+  height: 17px;
 }

@@ -29,6 +29,7 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<AuthRequest>();
     const user = request.user;
     const userId = Number(request.params.id)
+    const approved = user.user_approved
     
     const userRoles: string[] = [];
     let matchUserRoles: string[] = []
@@ -42,6 +43,10 @@ export class RolesGuard implements CanActivate {
         matchUserRoles.push(role)
       }
     })
+
+    if(!approved){
+      throw new ForbiddenException('Seu usuário deve ser aprovado antes de executar essa ação.')
+    }
 
     if(matchUserRoles.length<1){
       throw new ForbiddenException('Você não tem um papel válido para acessar esse recurso')

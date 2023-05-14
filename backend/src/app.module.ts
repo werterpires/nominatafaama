@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard';
 import { RolesModule } from './shared/roles/roles.module';
 import { RolesGuard } from './shared/roles/gz_guards/roles.guard';
+import { ResourcesModule } from './modules/resources/resources.module';
 
 config();
 
@@ -29,6 +30,7 @@ config();
     PeopleModule,
     AuthModule,
     RolesModule,
+    ResourcesModule,
   ],
   providers: [
     {

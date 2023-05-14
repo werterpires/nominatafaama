@@ -8,6 +8,9 @@ exports.up = function (knex) {
     table.increments('nominata_id').primary();
     table.string('year', 4).notNullable();
     table.date('orig_field_invites_begin').notNullable()
+    table.string('director_words', 4).notNullable();
+    table.string('director_photo', 4).notNullable();
+
     table.timestamps(true, true);
   });
 };

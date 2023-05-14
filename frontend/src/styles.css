@@ -92,24 +92,6 @@ input:focus {
 
 }
 
-.saveButton{
-  background: #4A851A;
-  box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
-  border-radius: 16px;
-  width: 10vw;
-  height: 7vh;
-  border: none;
-
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 21px;
-  text-align: center;
-
-  color: #FFFFFF;
-}
-
 .cancelButton{
   background: #A51010;;
   box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
@@ -117,14 +99,12 @@ input:focus {
   width: 10vw;
   height: 7vh;
   border: none;
-
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
   line-height: 21px;
   text-align: center;
-
   color: #FFFFFF;
 }
 
@@ -265,4 +245,313 @@ color: #F0EFEF;
   text-align: start;
   color: rgba(0, 0, 0, 0.54);
   padding-left: 0.5vw;
+}
+
+.error{
+  box-sizing: border-box;
+  position: absolute;
+  width: 395.63px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background: #FFFFFF;
+  border: 0.936385px solid #53555f;
+  border-radius: 6.66045px;
+}
+
+.errorTitle{
+  width: 395.59px;
+  height: 46.48px;
+  background: #F60E0E;
+  border-radius: 6.66045px 6.66045px 0px 0px;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 27px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.118192px;
+  text-transform:uppercase;
+  color: #FFFFFF;
+  border: none;
+
+
+}
+
+.errorMessage{
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border-radius: 6.66045px;
+  border: none;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 27px;
+
+  text-align: center;
+  letter-spacing: 0.118192px;
+
+  color: #35353F;
+
+  padding: 10px;
+}
+
+.done{
+  box-sizing: border-box;
+  position: fixed;
+  width: 395.63px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background: #F4F4F4;
+  box-shadow: 0px 9.06876px 9.06876px rgba(0, 0, 0, 0.25);
+  border: 0.236385px solid #696D7B;
+}
+
+.doneTitle{
+  width: 395.59px;
+  height: 46.48px;
+  background: green;
+  border-radius: 6.66045px 6.66045px 0px 0px;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 27px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.118192px;
+  text-transform:uppercase;
+  color: #FFFFFF;
+  border: none;
+
+
+}
+
+.doneMessage{
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border-radius: 6.66045px;
+  border: none;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 27px;
+
+  text-align: center;
+  letter-spacing: 0.118192px;
+
+  color: #35353F;
+
+  padding: 10px;
+}
+
+.closeIcon{
+  height: 17px;
+  position:absolute;
+  right: 11px;
+  top: 16px;
+  z-index: 3;
+}
+
+.sectionBoxes{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 85vh;
+}
+
+.sectionBox{
+  width: 80vw;
+  max-width: 833.71px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  padding: 28px;
+  margin-bottom: 12px;
+  transition: height 5s ease-in-out;
+}
+
+.sectionTitle1{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 36px;
+  color: #23435F;
+}
+
+.fieldTitle{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  display: flex;
+  align-items: center;
+  color: #23435F;
+  margin-top: 25px;
+}
+
+.subSection{
+  display: flex;
+}
+
+.formSection{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 35px;
+}
+.field{
+  display: flex;
+  justify-content: baseline;
+  align-items: flex-end;
+  flex:1
+  
+}
+
+.fieldContent{
+  font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+margin-top: 27px;
+margin-left: 5px;
+color: #23435F;
+
+}
+
+.approvedRadio {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 5px solid #ccc;
+  transition: transform 0.3s ease;
+  margin: 0;
+  margin-right: 5px;
+}
+
+/* Estilização dos botões de rádio quando selecionados */
+.approvedRadio:checked {
+  transform: scale(1.2);
+  border-color: green;
+}
+
+.rejectedRadio {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 5px solid #ccc;
+  transition: transform 0.3s ease;
+  margin: 0;
+  margin-right: 5px;
+}
+
+/* Estilização dos botões de rádio quando selecionados */
+.rejectedRadio:checked {
+  transform: scale(1.2);
+  border-color: red;
+}
+
+.saveButton{
+  background: linear-gradient(180deg, #202C3D 5.58%, #223A52 43.15%, #244C6C 111.37%);
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  justify-content: center;
+  width: 105px;
+  height: 30px;
+  border: none;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+  transition: transform 0.1s ease-in-out;
+}
+
+.saveButton:hover{
+  transform: scale(1.1);
+}
+
+.labelRadio{
+  display: flex;
+  align-items: center;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  /* Preto 01 */
+
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.sectionDivisiion{
+  background: rgba(113, 112, 112, 0.16);
+  border: none;
+  border-top: rgba(113, 112, 112, 0.16) solid 2.09px;
+}
+
+.loader1 {
+  border: 16px solid transparent;
+  border-top: 16px solid #0D3E66;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -60px;
+  margin-left: -60px;
+  z-index: 9999;
+}
+
+.loader2 {
+  border: 16px solid transparent;
+  border-top: 16px dotted #12548A;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 1s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -60px;
+  margin-left: -60px;
+  z-index: 9998;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.setted{
+  background-color: #23435F;
 }

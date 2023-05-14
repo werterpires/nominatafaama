@@ -16,6 +16,7 @@ export interface UserPayload {
   principal_email: string;
   sub: number;
   name: string;
+  user_approved: boolean
   roles: object;
   iat?: number;
   exp?: number;
@@ -30,6 +31,7 @@ export interface UserFromJwt {
   principal_email: string;
   name: string;
   roles: object;
+  user_approved: boolean;
 }
 
 export class LoginRequestBody {

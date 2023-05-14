@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, ExecutionContext, Get, InternalServerErrorException, NotFoundException, Param, Post, Put, Req, Request, UseGuards } from '@nestjs/common';
+import { Body, ConsoleLogger, Controller, Delete, ExecutionContext, Get, InternalServerErrorException, NotFoundException, Param, Post, Put, Req, Request, UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
 import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator';
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
@@ -23,6 +23,7 @@ import { UpdateUserDto } from '../az_dto/updateUserDto';
   @Post()
   async createUser(
     @Body() input: CreateUserDto) {
+    
     try {
       const user = await this.usersService.createUser(input);
       return user;
@@ -47,7 +48,25 @@ import { UpdateUserDto } from '../az_dto/updateUserDto';
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  
+  @Get('roles')
+  async getUserRoles(@CurrentUser() currentUser: IUser) {
+    try {
+      
+      if(!currentUser){
+        throw new Error('No user')
+      }
+      const user = {
+        roles: currentUser.roles,
+        user_approved: currentUser.user_approved
+      }
+      return user
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.SECRETARIA)
   @Get()
   async findAllUsers() {
     return await this.usersService.findAllUsers();
@@ -55,11 +74,9 @@ import { UpdateUserDto } from '../az_dto/updateUserDto';
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @UseGuards(UsersGuard)
-  @Put('aprove')
+  @Put('approve')
   async aproveUserById(@Body() input: AproveUserDto){
-   
     try{
-      delete input.roles;   
       const approvedUser = await this.usersService.approveUserById(input);
       return approvedUser
     }catch(error){

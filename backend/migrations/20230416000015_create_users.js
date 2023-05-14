@@ -14,7 +14,11 @@ exports.up = function(knex) {
 
       table.string('principal_email', 150).unique().notNullable();
 
-      table.boolean('user_approved').notNullable()
+      table.boolean('user_approved')
+
+      table.boolean('consent_term')
+
+      table.boolean('cookies')
 
       table.foreign('person_id')
           .references('people.person_id')

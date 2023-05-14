@@ -11,7 +11,8 @@ export class UsersGuard implements CanActivate {
   constructor(private reflector: Reflector) { }
 
   canActivate(context: ExecutionContext): boolean {
-    
+
+
       
     const request = context.switchToHttp().getRequest<AuthRequest>();
     const approverUserRoles:string[] = request.user.roles.map(role => role.role_name);

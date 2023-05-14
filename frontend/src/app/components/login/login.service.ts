@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILoginDto } from './login.Dto';
 import { Router } from '@angular/router';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 
 @Injectable({
@@ -17,13 +19,18 @@ export class LoginService {
 
 
   login(loginData: ILoginDto) {
-
-    this.http.post('http://localhost:3000/login', loginData)
-      .subscribe(res => {
-        localStorage.setItem("access_token", JSON.parse(JSON.stringify(res)).access_token)
-        this.router.navigate(['/resources']);
-
-      })
-
+    return this.http.post('http://localhost:3000/login', loginData)
+      .pipe(
+        catchError((error) => {
+          if(error.statusText = 'Unauthorized'){
+            return throwError(() => new Error('Senha ou email não localizados.'));
+          }else if(error.name = "HttpErrorResponse"){
+            return throwError(() => new Error('Não foi possível fazer contato com o servidor.'));
+          } else {
+            return throwError(() => new Error('Aconteceu um problema com o seu login'));
+          }
+          
+        })
+      );
   }
 }
