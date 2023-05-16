@@ -45,21 +45,22 @@ input:focus {
 }
 
 .mediumInput{
-  width: 40vw;
-  height: 35px;
-  border: 0.7px solid rgba(0, 0, 0, 0.54);
+  width: 560px;
+  height: 40px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
-  font-family: 'Poppins', sans-serif;
+  border: 1.5px solid #DCDADA;
+  border-radius: 5px;
+  padding-left: 10px;
+
+  font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
-  font-size: 13px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  text-align: start;
-  color: rgba(0, 0, 0, 0.54);
-  padding-left: 0.5vw;
+  font-size: 12px;
+  line-height: 18px;
 
+  color: #23435F;
 }
 
 .largeInput{
@@ -81,6 +82,8 @@ input:focus {
 }
 
 .inputLabel{
+  display: flex;
+  flex-direction: column;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
@@ -88,6 +91,7 @@ input:focus {
   line-height: 18px;
 
   color: rgba(0, 0, 0, 0.54);
+  margin-bottom: 20px;
 
 
 }
@@ -365,11 +369,54 @@ color: #F0EFEF;
   z-index: 3;
 }
 
+.addIcon{
+  height: 17px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.addIcon:hover{
+  transform: scale(1.5);
+  
+}
+
+.seeMoreIcon{
+  height: 17px;
+  transition: transform 0.2s ease-in-out;
+  transform: rotate(-90deg);
+}
+
+.seeMoreIcon:hover{
+  transform: scale(1.5);
+}
+
+.rotatedClock{
+  transform: rotate(0deg);
+}
+
+.rotatedClock:hover{
+
+  transform: scale(1.5) rotate(-90deg);
+}
+
+
 .sectionBoxes{
   display:flex;
   flex-direction: column;
   align-items: center;
   min-height: 85vh;
+}
+
+.smallSectionBox{
+  width: 80vw;
+  height: 35px;
+  max-width: 833.71px;
+  background: #FFFFFF;
+  box-shadow: 0px 5px 4px rgba(164, 163, 163, 0.65);;
+  border-radius: 10px;
+  padding: 28px;
+  margin-bottom: 12px;
+  transition: height 5s ease;
+  overflow: hidden;
 }
 
 .sectionBox{
@@ -380,7 +427,13 @@ color: #F0EFEF;
   border-radius: 5px;
   padding: 28px;
   margin-bottom: 12px;
-  transition: height 5s ease-in-out;
+  transition: height 5s ease;
+}
+
+.headField{
+  display: flex;
+  align-items: center;
+  gap:7px
 }
 
 .sectionTitle1{
@@ -406,6 +459,7 @@ color: #F0EFEF;
 
 .subSection{
   display: flex;
+  align-items: flex-end;
 }
 
 .formSection{
@@ -431,6 +485,7 @@ line-height: 18px;
 margin-top: 27px;
 margin-left: 5px;
 color: #23435F;
+border: none  ;
 
 }
 
@@ -554,4 +609,8 @@ color: #23435F;
 
 .setted{
   background-color: #23435F;
+}
+
+.hidden{
+  display: none;
 }

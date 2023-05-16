@@ -18,5 +18,5 @@
     </nav>
   </header>
   <app-approves *ngIf="(permissions.administrador||permissions.direcao||permissions.secretaria) && permissions.isApproved && options.aprovacoes" [permissions]="permissions"></app-approves>
-  <app-records *ngIf="(permissions.administrador||permissions.direcao||permissions.estudante||permissions.representacao||permissions.secretaria) && permissions.isApproved && options.cadastros">></app-records>
+  <app-records *ngIf="(permissions.administrador||permissions.direcao||permissions.estudante||permissions.representacao||permissions.secretaria) && permissions.isApproved && options.cadastros" [permissions]="permissions"></app-records>
 </div>

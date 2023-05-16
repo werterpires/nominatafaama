@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { IPermissions } from '../shared/container/types';
 
 @Component({
   selector: 'app-records',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./records.component.css']
 })
 export class RecordsComponent {
+
+  @Input() permissions!: IPermissions
 
 }

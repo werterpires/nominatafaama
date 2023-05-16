@@ -38,12 +38,12 @@ export class MaritalStatusService {
     }
   }
   
-  async updateMaritalStatusById(id: number, updateMaritalStatus: IUpdateMaritalStatus): Promise<IMaritalStatus> {
+  async updateMaritalStatusById(input: IUpdateMaritalStatus): Promise<IMaritalStatus> {
     let updatedMaritalStatus: IMaritalStatus | null = null;
     let sentError: Error | null = null;
   
     try {
-      updatedMaritalStatus = await this.maritalStatusModel.updateMaritalStatusById(id, updateMaritalStatus);
+      updatedMaritalStatus = await this.maritalStatusModel.updateMaritalStatusById(input);
     } catch (error) {
       sentError = new Error(error.message);
     }

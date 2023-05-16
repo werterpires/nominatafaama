@@ -111,21 +111,21 @@ export class MaritalStatusModel {
   }
 
   async updateMaritalStatusById(
-    id: number,
     updateMaritalStatus: IUpdateMaritalStatus
   ): Promise<IMaritalStatus> {
     let updatedMaritalStatus: IMaritalStatus | null = null;
     let sentError: Error | null = null;
-  
+    
     await this.knex.transaction(async (trx) => {
       try {
         const { marital_status_type_name } = updateMaritalStatus;
+        const { marital_status_type_id } = updateMaritalStatus
   
         await trx('marital_status_types')
-          .where('marital_status_type_id', id)
+          .where('marital_status_type_id', marital_status_type_id)
           .update({ marital_status_type_name });
   
-        updatedMaritalStatus = await this.findMaritalStatusById(id);
+        updatedMaritalStatus = await this.findMaritalStatusById(marital_status_type_id);
   
         await trx.commit();
       } catch (error) {

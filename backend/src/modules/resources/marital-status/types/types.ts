@@ -11,4 +11,5 @@ export interface IMaritalStatus {
   
   export interface IUpdateMaritalStatus {
     marital_status_type_name: string;
+    marital_status_type_id: number
   }

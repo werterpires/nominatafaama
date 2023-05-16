@@ -37,10 +37,10 @@ export class MaritalStatusController {
     return await this.maritalStatusService.findAllMaritalStatuses();
   }
 
-  @Put(':id')
-  async updateMaritalStatusById(@Param('id') id: number, @Body() input: UpdateMaritalStatusDto) {
+  @Put()
+  async updateMaritalStatusById(id: number, @Body() input: UpdateMaritalStatusDto) {
     try {
-      const updatedMaritalStatus = await this.maritalStatusService.updateMaritalStatusById(id, input);
+      const updatedMaritalStatus = await this.maritalStatusService.updateMaritalStatusById(input);
       return updatedMaritalStatus;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
