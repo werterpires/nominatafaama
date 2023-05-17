@@ -10,6 +10,7 @@ export class AssociationsService {
   constructor(private associationsModel:AssociationsModel){}
 
   async createAssociation(dto: CreateAssociationDto): Promise<IAssociation> {
+    
     try {
       const association: ICreateAssociation = {
         association_name: dto.association_name,

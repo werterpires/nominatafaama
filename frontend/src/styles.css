@@ -28,20 +28,22 @@ input:focus {
 
 
 .smallInput{
-  width: 15vw;
-  height: 35px;
-  border: 0.7px solid rgba(0, 0, 0, 0.54);
+  width: 280px;
+  height: 40px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
-  font-family: 'Poppins', sans-serif;
+  border: 1.5px solid #DCDADA;
+  border-radius: 5px;
+  padding-left: 10px;
+
+  font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
-  font-size: 13px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  text-align:start;
-  color: rgba(0, 0, 0, 0.54);
-  padding-left: 0.5vw;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #23435F;
 }
 
 .mediumInput{
@@ -613,4 +615,9 @@ border: none  ;
 
 .hidden{
   display: none;
+}
+
+.formArea{
+  display: flex;
+  justify-content: space-between;
 }

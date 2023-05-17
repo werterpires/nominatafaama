@@ -1,60 +1,60 @@
 <section *ngIf="permissions.secretaria" class="smallSectionBox" id="boxHeadUnions">
-    <div class="boxHead">
-      <span class="headField">
-        <img class="seeMoreIcon" id="seeMoreIconUnions" src="assets/icons/seeMoreIcon.png" alt="" (click)="showBox()">
-        <p class="sectionTitle1">Uniões</p>
-      </span>
-      <img class="addIcon hidden" id="unionAddIcon" src="assets/icons/addIcon.png" alt="Criar nova união" (click)="createForm()">
-    </div>
-    <section>
-      <form *ngIf="creatingUnion" class="formCreation">
-        <label class="inputLabel">
-            Nova União<input class="mediumInput" type="text" name="unionNameInput" [(ngModel)]="createUnionData.union_name">
-        </label>
-        <label class="inputLabel">
-            SIGLA<input class="smallInput" type="text" name="unionAcronymInput" [(ngModel)]="createUnionData.union_acronym">
-        </label>
-        <button class="saveButton" type="button" (click)="createUnion()">SALVAR</button>
-      </form>
-      <div *ngFor="let union of allUnions; let i = index">
-        <div class="subSection">
-          <span class="field">
-            <p class="fieldTitle">União:</p>
-            <p class="fieldContent" [id]="'unionName'+i" (click)="changeTagType('unionName'+i, 'saveUnionButton'+i, 'unionInput'+i  )">{{union.union_name}}</p>
-            <input class="fieldContent hidden" [id]="'unionInput'+i" name=`unionInput${i}` [(ngModel)]="allUnions[i].union_name">
-          </span>
-          <span class="field">
-            <p class="fieldTitle">Sigla:</p>
-            <p class="fieldContent" [id]="'unionAcronym'+i" (click)="changeTagType('unionAcronym'+i,'saveUnionButton'+i, 'unionAcronymInput'+i )">{{union.union_acronym}}</p>
-            <input class="fieldContent hidden" [id]="'unionAcronymInput'+i" name=`unionInput${i}` [(ngModel)]="allUnions[i].union_acronym">
-          </span>
-          <button class="saveButton hidden" [id]="'saveUnionButton'+i" (click)="editUnion(i, 'saveUnionButton'+i)">Salvar</button>
-        </div>
-        <hr class="sectionDivision">
+  <div class="boxHead">
+    <span class="headField">
+      <img class="seeMoreIcon" id="seeMoreIconUnions" src="assets/icons/seeMoreIcon.png" alt="" (click)="showBox()">
+      <p class="sectionTitle1">Uniões</p>
+    </span>
+    <img class="addIcon hidden" id="unionAddIcon" src="assets/icons/addIcon.png" alt="Criar nova união" (click)="createForm()">
+  </div>
+  <section>
+    <form *ngIf="creatingUnion" class="formCreation">
+      <label class="inputLabel">
+          Nova União<input class="mediumInput" type="text" name="unionNameInput" [(ngModel)]="createUnionData.union_name">
+      </label>
+      <label class="inputLabel">
+          SIGLA<input class="smallInput" type="text" name="unionAcronymInput" [(ngModel)]="createUnionData.union_acronym">
+      </label>
+      <button class="saveButton" type="button" (click)="createUnion()">SALVAR</button>
+    </form>
+    <div *ngFor="let union of allUnions; let i = index">
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">União:</p>
+          <p class="fieldContent" [id]="'unionName'+i" (click)="changeTagType('unionName'+i, 'saveUnionButton'+i, 'unionInput'+i  )">{{union.union_name}}</p>
+          <input class="fieldContent hidden" [id]="'unionInput'+i" name=`unionInput${i}` [(ngModel)]="allUnions[i].union_name">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Sigla:</p>
+          <p class="fieldContent" [id]="'unionAcronym'+i" (click)="changeTagType('unionAcronym'+i,'saveUnionButton'+i, 'unionAcronymInput'+i )">{{union.union_acronym}}</p>
+          <input class="fieldContent hidden" [id]="'unionAcronymInput'+i" name=`unionInput${i}` [(ngModel)]="allUnions[i].union_acronym">
+        </span>
+        <button class="saveButton hidden" [id]="'saveUnionButton'+i" (click)="editUnion(i, 'saveUnionButton'+i)">Salvar</button>
       </div>
-    </section>
+      <hr class="sectionDivision">
+    </div>
   </section>
+</section>
   
-  <div *ngIf="error" class="error">
-    <div class="errorTitle">
-      <p>Atenção</p>
-    </div>
-    <div class="errorMessage">
-      <p>{{errorMessage}}</p>
-    </div>
-    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
   </div>
-  
-  <div *ngIf="done" class="done">
-    <div class="doneTitle">
-      <p>Parabéns</p>
-    </div>
-    <div class="doneMessage">
-      <p>{{doneMessage}}</p>
-    </div>
-    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <div class="errorMessage">
+    <p>{{errorMessage}}</p>
   </div>
-  
-  <div *ngIf="isLoading" class="loader1"></div>
-  <div *ngIf="isLoading" class="loader2"></div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+</div>
+
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{doneMessage}}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
   

@@ -1,0 +1,75 @@
+<section *ngIf="permissions.secretaria" class="smallSectionBox" id="boxHeadAssociations">
+    <div class="boxHead">
+      <span class="headField">
+        <img class="seeMoreIcon" id="seeMoreIconAssociations" src="assets/icons/seeMoreIcon.png" alt="" (click)="showBox()">
+        <p class="sectionTitle1">Associações</p>
+      </span>
+      <img class="addIcon hidden" id="associationAddIcon" src="assets/icons/addIcon.png" alt="Criar nova associação" (click)="createForm()">
+    </div>
+    <section>
+      <form *ngIf="creatingAssociation" class="formCreation">
+        <label class="inputLabel">
+          Nova Associação<input class="mediumInput" type="text" name="associationNameInput" [(ngModel)]="createAssociationData.association_name">
+        </label>
+            <section class="formArea">
+                <label class="inputLabel">
+                    Sigla<input class="smallInput" type="text" name="associationAcronymInput" [(ngModel)]="createAssociationData.association_acronym">
+                </label>
+                <label class="inputLabel">
+                    União
+                    <select class="smallInput" name="unionSelect" [(ngModel)]="createAssociationData.union_id">
+                        <option *ngFor="let union of allUnions" [value]=union.union_id>{{union.union_acronym}} - {{union.union_name}}</option>
+                    </select>
+                </label>
+            </section>
+                
+        <button class="saveButton" type="button" (click)="createAssociation()">SALVAR</button>
+      </form>
+      <div *ngFor="let association of allAssociations; let i = index">
+        <div class="subSection">
+          <span class="field">
+            <p class="fieldTitle">Associação:</p>
+            <p class="fieldContent" [id]="'associationName'+i" (click)="changeTagType('associationName'+i, 'saveAssociationButton'+i, 'associationInput'+i)">{{association.association_name}}</p>
+            <input class="fieldContent hidden" [id]="'associationInput'+i" name=`associationInput${i}` [(ngModel)]="allAssociations[i].association_name">
+          </span>
+          <span class="field">
+            <p class="fieldTitle">Sigla:</p>
+            <p class="fieldContent" [id]="'associationAcronym'+i" (click)="changeTagType('associationAcronym'+i, 'saveAssociationButton'+i, 'associationAcronymInput'+i)">{{association.association_acronym}}</p>
+            <input class="fieldContent hidden" [id]="'associationAcronymInput'+i" name=`associationInput${i}` [(ngModel)]="allAssociations[i].association_acronym">
+          </span>
+          <span class="field">
+            <p class="fieldTitle">União:</p>
+            <p class="fieldContent" [id]="'union'+i" (click)="changeTagTypeToSelect('union'+i, 'saveAssociationButton'+i, 'unionSelect'+i)">{{association.union_acronym}} - {{association.union_name}} </p>
+            <select class="fieldContent hidden" [id]="'unionSelect'+i" name=`unionSelect${i}` [(ngModel)]="allAssociations[i].union_id">
+                <option *ngFor="let union of allUnions" [value]=union.union_id>{{union.union_acronym}} - {{union.union_name}}</option>
+            </select>
+          </span>
+          <button class="saveButton hidden" [id]="'saveAssociationButton'+i" (click)="editAssociation(i, 'saveAssociationButton'+i)">Salvar</button>
+        </div>
+        <hr class="sectionDivision">
+      </div>
+    </section>
+  </section>
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{errorMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  </div>
+  
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{doneMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  </div>
+  
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+    

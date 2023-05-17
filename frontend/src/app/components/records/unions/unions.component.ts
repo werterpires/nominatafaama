@@ -55,9 +55,11 @@ export class UnionsComponent {
       add?.classList.remove("hidden")
       see?.classList.add("rotatedClock")
     }else{
+      this.creatingUnion = false
       box?.classList.replace("sectionBox", "smallSectionBox")
       add?.classList.add("hidden")
       see?.classList.remove("rotatedClock")
+      
 
 
     }

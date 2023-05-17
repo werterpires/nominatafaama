@@ -10,25 +10,12 @@ export class AssociationsModel {
   async createAssociation(createAssociation: ICreateAssociation): Promise<IAssociation> {
     let association: IAssociation | null = null;
     let sentError: Error | null = null;
-  
+   
     await this.knex.transaction(async (trx) => {
       try {
         const [result] = await trx('associations').insert(createAssociation);
-        const found: IAssociation|null = await this.findAssociationById(result)
-        
-        if(found){
-            association = {
-                association_id: result,
-                association_name: found.association_name,
-                association_acronym: found.association_acronym,
-                union_id: found.union_id,
-                union_acronym: found.union_acronym,
-                union_name: found.union_name,
-                created_at: new Date(),
-                updated_at: new Date(),
-              };
-        }
-        
+       
+         
   
         await trx.commit();
       } catch (error) {
@@ -44,21 +31,30 @@ export class AssociationsModel {
     if (sentError) {
       throw sentError;
     }
-  
+    console.log(association)
     return association!;
   }
   
   async findAssociationById(id: number): Promise<IAssociation | null> {
     let association: IAssociation | null = null;
     let sentError: Error | null = null;
-  
+    
     await this.knex.transaction(async (trx) => {
       try {
-        const result = await trx('associations')
-          .select('associations.*', 'unions.union_name', 'unions.union_acronym')
+        const result = await trx
+        .table('associations')
+        .select(
+            'associations.association_name',
+            'associations.association_acronym',
+            'associations.association_id',
+            'unions.union_name',
+            'unions.union_acronym',
+            'associations.union_id'
+        )
           .leftJoin('unions', 'associations.union_id', 'unions.union_id')
           .where('associations.association_id', '=', id);
-  
+        console.log('O result', result)
+
         if (result.length < 1) {
           throw new Error('Association not found');
         }

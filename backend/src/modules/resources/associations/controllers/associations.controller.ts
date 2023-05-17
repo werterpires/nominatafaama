@@ -10,9 +10,10 @@ import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
 export class AssociationsController {
   constructor(private readonly associationsService: AssociationsService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
-@Post('associations')
+@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+@Post()
 async createAssociation(@Body() input: CreateAssociationDto) {
+  
   try {
     const association = await this.associationsService.createAssociation(input);
     return association;

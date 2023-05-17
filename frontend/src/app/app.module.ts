@@ -15,6 +15,7 @@ import { ApprovesComponent } from './components/approves/approves.component';
 import { LogonComponent } from './components/logon/logon.component';
 import { UsersApprovesComponent } from './components/approves/users-approves/users-approves.component';
 import { UnionsComponent } from './components/records/unions/unions.component';
+import { AssociationsComponent } from './components/records/associations/associations.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { UnionsComponent } from './components/records/unions/unions.component';
     LogonComponent,
     UsersApprovesComponent,
     UnionsComponent,
+    AssociationsComponent,
   ],
   imports: [
     BrowserModule,
