@@ -20,11 +20,11 @@
             <div class="subSection">
                 <span class="field">
                     <p class="fieldTitle">Estado civil:</p>
-                    <p class="fieldContent" [id]="'maritalStatus'+i" (click)="changeTagType('maritalStatus'+i, 'saveButton'+i, 'maritalStatusInput'+i)">{{status.marital_status_type_name}}</p>
+                    <p class="fieldContent" [id]="'maritalStatus'+i" (click)="changeTagType('maritalStatus'+i, 'saveMaritalStatusButton'+i, 'maritalStatusInput'+i)">{{status.marital_status_type_name}}</p>
                     <input class="fieldContent hidden" [id]="'maritalStatusInput'+i" name=`maritalStatusInput${i}` [(ngModel)]="allStatus[i].marital_status_type_name">
                     
                 </span>
-                <button class="saveButton hidden" [id]="'saveButton'+i" (click)="editMaritalStatus(i)">Salvar</button>
+                <button class="saveButton hidden" [id]="'saveMaritalStatusButton'+i" (click)="editMaritalStatus(i, 'saveMaritalStatusButton'+i)">Salvar</button>
             </div>
             <hr class="sectionDivisiion">
         </div>

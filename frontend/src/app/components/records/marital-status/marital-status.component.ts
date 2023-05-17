@@ -108,14 +108,14 @@ export class MaritalStatusComponent {
         paragraph.textContent = input.value;
         input.classList.add('hidden')
         paragraph.classList.remove('hidden')
-    }
+      }
    
     
     };
     
   }
 
-  editMaritalStatus(i:number){
+  editMaritalStatus(i:number, buttonId:string){
     this.isLoading = true
     const editStatusData:IUpdateMaritalStatus = {
       marital_status_type_id: this.allStatus[i].marital_status_type_id,
@@ -126,6 +126,7 @@ export class MaritalStatusComponent {
       next: res => {
         this.doneMessage = 'Estado civil editado com sucesso.'
         this.done = true
+        const button = document.getElementById(buttonId)?.classList.add('hidden')
         this.isLoading = false
 
       },

@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AssociationsService } from './associations.service';
-import { AssociationsController } from './associations.controller';
-
+import { AssociationsService } from './services/associations.service';
+import { AssociationsController } from './controllers/associations.controller';
+import { AssociationsModel } from './model/associations.model';
+const services = [
+  AssociationsService,
+  AssociationsModel
+]
 @Module({
   controllers: [AssociationsController],
-  providers: [AssociationsService]
+  providers: services,
+  exports: services
 })
 export class AssociationsModule {}

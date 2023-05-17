@@ -14,6 +14,7 @@ import { MaritalStatusComponent } from './components/records/marital-status/mari
 import { ApprovesComponent } from './components/approves/approves.component';
 import { LogonComponent } from './components/logon/logon.component';
 import { UsersApprovesComponent } from './components/approves/users-approves/users-approves.component';
+import { UnionsComponent } from './components/records/unions/unions.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { UsersApprovesComponent } from './components/approves/users-approves/use
     ApprovesComponent,
     LogonComponent,
     UsersApprovesComponent,
+    UnionsComponent,
   ],
   imports: [
     BrowserModule,
