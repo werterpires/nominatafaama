@@ -1,9 +1,15 @@
 import { Module } from '@nestjs/common';
-import { HiringStatusService } from './hiring-status.service';
-import { HiringStatusController } from './hiring-status.controller';
+import { HiringStatusService } from './services/hiring-status.service';
+import { HiringStatusController } from './controller/hiring-status.controller';
+import { HiringStatusModel } from './model/hiring-status.model';
+
+const services = [HiringStatusModel, HiringStatusService ]
+
 
 @Module({
   controllers: [HiringStatusController],
-  providers: [HiringStatusService]
+  providers: services,
+  exports: services
+
 })
 export class HiringStatusModule {}

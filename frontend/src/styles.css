@@ -28,6 +28,7 @@ input:focus {
 
 
 .smallInput{
+  box-sizing: border-box;
   width: 280px;
   height: 40px;
   background: #FFFFFF;
@@ -46,7 +47,47 @@ input:focus {
   color: #23435F;
 }
 
+.dateInput{
+  width: 268.4px;
+  height: 40px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1.5px solid #DCDADA;
+  border-radius: 5px;
+  padding-left: 10px;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #23435F;
+}
+
+.smallMediumInput{
+  box-sizing: border-box;
+  width: 420px;
+  height: 40px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1.5px solid #DCDADA;
+  border-radius: 5px;
+  padding-left: 10px;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #23435F;
+}
+
 .mediumInput{
+  box-sizing: border-box;
   width: 560px;
   height: 40px;
   background: #FFFFFF;
@@ -66,20 +107,24 @@ input:focus {
 }
 
 .largeInput{
-  width: 60vw;
-  height: 35px;
-  border: 0.7px solid rgba(0, 0, 0, 0.54);
+  box-sizing: border-box;
+  width: 740px;
+  height: 40px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
-  font-family: 'Poppins', sans-serif;
+  border: 1.5px solid #DCDADA;
+  border-radius: 5px;
+  padding-left: 10px;
+
+  font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
-  font-size: 13px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  text-align: start;
-  color: rgba(0, 0, 0, 0.54);
-  padding-left: 0.5vw;
+  font-size: 12px;
+  line-height: 18px;
+  outline: none;
+
+  color: #23435F;
 
 }
 
@@ -473,21 +518,22 @@ color: #F0EFEF;
 .field{
   display: flex;
   justify-content: baseline;
-  align-items: flex-end;
+  align-items: center;
   flex:1
   
 }
 
 .fieldContent{
   font-family: 'Poppins';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-line-height: 18px;
-margin-top: 27px;
-margin-left: 5px;
-color: #23435F;
-border: none  ;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  margin-top: 27px;
+  margin-left: 5px;
+  color: #23435F;
+  border: none;
+  outline: none;
 
 }
 
@@ -620,4 +666,5 @@ border: none  ;
 .formArea{
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }

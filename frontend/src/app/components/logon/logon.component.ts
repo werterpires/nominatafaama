@@ -49,7 +49,7 @@ export class LogonComponent {
   }
 
   validateNameData() {
-    console.log(this.logonData.rolesId)
+    
     const nameInput = document.getElementById('nameInput') as HTMLInputElement;
     const valid = this.validateService.validateNameData(this.logonData.name)
     this.validateService.colorInput(valid, nameInput)

@@ -53,6 +53,7 @@ export class MaritalStatusComponent {
       box?.classList.replace("smallSectionBox", "sectionBox")
       add?.classList.remove("hidden")
       see?.classList.add("rotatedClock")
+      this.editingStatus = false
     }else{
       box?.classList.replace("sectionBox", "smallSectionBox")
       add?.classList.add("hidden")

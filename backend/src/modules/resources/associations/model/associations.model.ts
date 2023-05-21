@@ -31,7 +31,7 @@ export class AssociationsModel {
     if (sentError) {
       throw sentError;
     }
-    console.log(association)
+  
     return association!;
   }
   
@@ -53,7 +53,7 @@ export class AssociationsModel {
         )
           .leftJoin('unions', 'associations.union_id', 'unions.union_id')
           .where('associations.association_id', '=', id);
-        console.log('O result', result)
+  
 
         if (result.length < 1) {
           throw new Error('Association not found');

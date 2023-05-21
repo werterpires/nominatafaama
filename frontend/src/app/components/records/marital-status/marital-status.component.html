@@ -1,7 +1,7 @@
-<section *ngIf="permissions.secretaria" class="smallSectionBox" id="boxHeadMaritalStatus">
+<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadMaritalStatus">
     <div class="boxHead">
-        <span class="headField">
-            <img class="seeMoreIcon" id="seeMoreIconStatus" src="assets/icons/seeMoreIcon.png" alt="" (click)="showBox()">
+        <span class="headField" (click)="showBox()">
+            <img class="seeMoreIcon" id="seeMoreIconStatus" src="assets/icons/seeMoreIcon.png" alt="">
             <p class="sectionTitle1">Estados civis</p>
         </span>
         

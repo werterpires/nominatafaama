@@ -52,11 +52,10 @@ export class ValidateService {
     
     // Verifica se a senha é válido
     if (this.nameRegex.test(name)) {
-        console.log('deu verdadeiro')
+       
         return true
     } else{
-        console.log(name)
-        console.log('deu falso')
+
         return false
     }
   }

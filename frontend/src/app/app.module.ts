@@ -16,6 +16,8 @@ import { LogonComponent } from './components/logon/logon.component';
 import { UsersApprovesComponent } from './components/approves/users-approves/users-approves.component';
 import { UnionsComponent } from './components/records/unions/unions.component';
 import { AssociationsComponent } from './components/records/associations/associations.component';
+import { HiringStatusComponent } from './components/records/hiring-status/hiring-status.component';
+import { StudentsComponent } from './components/records/students/students.component';
 
 
 @NgModule({
@@ -32,6 +34,8 @@ import { AssociationsComponent } from './components/records/associations/associa
     UsersApprovesComponent,
     UnionsComponent,
     AssociationsComponent,
+    HiringStatusComponent,
+    StudentsComponent,
   ],
   imports: [
     BrowserModule,

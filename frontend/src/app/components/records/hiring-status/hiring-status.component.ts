@@ -1,25 +1,25 @@
 import { Component, Input } from '@angular/core';
 import { IPermissions } from '../../shared/container/types';
-import { CreateUnionDto, IUnion, UpdateUnionDto } from './types';
-import { UnionService } from './unions.service';
+import { HiringStatusService } from './hiring_status.service';
+import { CreateHiringStatusDto, IHiringStatus, UpdateHiringStatusDto } from './types';
 
 @Component({
-  selector: 'app-unions',
-  templateUrl: './unions.component.html',
-  styleUrls: ['./unions.component.css']
+  selector: 'app-hiring-status',
+  templateUrl: './hiring-status.component.html',
+  styleUrls: ['./hiring-status.component.css']
 })
-export class UnionsComponent {
+export class HiringStatusComponent {
   constructor(
-    private unionService: UnionService
+    private hiringStatusService: HiringStatusService
   ) { }
 
   @Input() permissions!: IPermissions;
-  allUnions: IUnion[] = [];
-  creatingUnion: boolean = false;
-  editingUnion: boolean = false;
-  createUnionData: CreateUnionDto = {
-    union_name: '',
-    union_acronym:''
+  allHiringStatus: IHiringStatus[] = [];
+  creatingHiringStatus: boolean = false;
+  editingHiringStatus: boolean = false;
+  createHiringStatusData: CreateHiringStatusDto = {
+    hiring_status_name:"",
+    hiring_status_description: ""
   };
 
   isLoading: boolean = false;
@@ -32,9 +32,9 @@ export class UnionsComponent {
 
   ngOnInit() {
     this.isLoading = true;
-    this.unionService.findAllUnions().subscribe({
+    this.hiringStatusService.findAllHiringStatus().subscribe({
       next: res => {
-        this.allUnions = res;
+        this.allHiringStatus = res;
         this.isLoading = false;
       },
       error: err => {
@@ -46,17 +46,17 @@ export class UnionsComponent {
   }
 
   showBox(){
-    const box = document.getElementById("boxHeadUnions");
-    const add = document.getElementById("unionAddIcon")
-    const see = document.getElementById("seeMoreIconUnions")
+    const box = document.getElementById("boxHeadHiringStatus");
+    const add = document.getElementById("hiring_statusAddIcon")
+    const see = document.getElementById("seeMoreIconHiringStatus")
     this.shownBox = !this.shownBox
     if (this.shownBox){
       box?.classList.replace("smallSectionBox", "sectionBox")
       add?.classList.remove("hidden")
       see?.classList.add("rotatedClock")
     }else{
-      this.creatingUnion = false
-      this.editingUnion = false
+      this.creatingHiringStatus = false
+      this.editingHiringStatus = false
       box?.classList.replace("sectionBox", "smallSectionBox")
       add?.classList.add("hidden")
       see?.classList.remove("rotatedClock")
@@ -67,19 +67,19 @@ export class UnionsComponent {
   }
 
   createForm() {
-    this.creatingUnion = true;
+    this.creatingHiringStatus = true;
   }
 
-  createUnion() {
+  createHiringStatus() {
     this.isLoading = true;
-    this.unionService.createUnion(this.createUnionData).subscribe({
+    this.hiringStatusService.createHiringStatus(this.createHiringStatusData).subscribe({
       next: res => {
-        this.doneMessage = 'Union criada com sucesso.';
+        this.doneMessage = 'HiringStatus criada com sucesso.';
         this.done = true;
         this.isLoading = false;
         this.ngOnInit();
-        this.createUnionData.union_name = '';
-        this.creatingUnion = false;
+        this.createHiringStatusData.hiring_status_name = '';
+        this.creatingHiringStatus = false;
       },
       error: err => {
         this.errorMessage = err.message;
@@ -118,17 +118,17 @@ export class UnionsComponent {
     
   }
 
-  editUnion(i: number, buttonId:string) {
+  editHiringStatus(i: number, buttonId:string) {
     this.isLoading = true;
-    const editUnionData: UpdateUnionDto = {
-      union_id: this.allUnions[i].union_id,
-      union_name: this.allUnions[i].union_name,
-      union_acronym: this.allUnions[i].union_acronym
+    const editHiringStatusData: UpdateHiringStatusDto = {
+      hiring_status_id: this.allHiringStatus[i].hiring_status_id,
+      hiring_status_name: this.allHiringStatus[i].hiring_status_name,
+      hiring_status_description: this.allHiringStatus[i].hiring_status_description
     };
 
-    this.unionService.updateUnion(editUnionData).subscribe({
+    this.hiringStatusService.updateHiringStatus(editHiringStatusData).subscribe({
       next: res => {
-        this.doneMessage = 'Union editada com sucesso.';
+        this.doneMessage = 'HiringStatus editada com sucesso.';
         this.done = true;
         const button = document.getElementById(buttonId)?.classList.add('hidden')
         this.isLoading = false;
@@ -141,13 +141,13 @@ export class UnionsComponent {
     });
   }
 
-  deleteUnion(i: number) {
+  deleteHiringStatus(i: number) {
     this.isLoading = true;
-    const unionId = this.allUnions[i].union_id;
+    const hiring_statusId = this.allHiringStatus[i].hiring_status_id;
 
-    this.unionService.deleteUnion(unionId).subscribe({
+    this.hiringStatusService.deleteHiringStatus(hiring_statusId).subscribe({
       next: res => {
-        this.doneMessage = 'Union deletada com sucesso.';
+        this.doneMessage = 'HiringStatus deletada com sucesso.';
         this.done = true;
         this.isLoading = false;
         this.ngOnInit();

@@ -1,7 +1,7 @@
-<section *ngIf="permissions.secretaria" class="smallSectionBox" id="boxHeadUnions">
+<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadUnions">
   <div class="boxHead">
-    <span class="headField">
-      <img class="seeMoreIcon" id="seeMoreIconUnions" src="assets/icons/seeMoreIcon.png" alt="" (click)="showBox()">
+    <span class="headField" (click)="showBox()">
+      <img class="seeMoreIcon" id="seeMoreIconUnions" src="assets/icons/seeMoreIcon.png" alt="">
       <p class="sectionTitle1">Uniões</p>
     </span>
     <img class="addIcon hidden" id="unionAddIcon" src="assets/icons/addIcon.png" alt="Criar nova união" (click)="createForm()">

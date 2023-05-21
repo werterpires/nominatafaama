@@ -9,6 +9,7 @@ import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard';
 import { RolesModule } from './shared/roles/roles.module';
 import { RolesGuard } from './shared/roles/gz_guards/roles.guard';
 import { ResourcesModule } from './modules/resources/resources.module';
+import { StudentsModule } from './modules/students/students.module';
 
 config();
 
@@ -31,6 +32,7 @@ config();
     AuthModule,
     RolesModule,
     ResourcesModule,
+    StudentsModule,
   ],
   providers: [
     {

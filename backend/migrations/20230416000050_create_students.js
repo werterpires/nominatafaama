@@ -14,14 +14,15 @@ exports.up = function (knex) {
     table.integer('origin_field_id').unsigned().notNullable();
     table.string('justification', 400).notNullable();
     table.string('birth_city', 250).notNullable();
-    table.string('birth_state', 2).notNullable();
+    table.string('birth_state', 5).notNullable();
+    table.string('baptism_state', 5).notNullable();
     table.string('primary_school_city', 250).notNullable();
     table.date('birth_date').notNullable();
     table.date('baptism_date').notNullable();
     table.string('baptism_place', 250).notNullable();
     table.integer('marital_status_id').unsigned().notNullable();
     table.integer('hiring_status_id').unsigned().notNullable();
-    table.boolean('student_approved').notNullable()
+    table.boolean('student_approved')
     table.boolean('student_active').notNullable()
 
     table

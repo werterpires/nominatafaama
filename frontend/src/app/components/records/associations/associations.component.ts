@@ -67,7 +67,7 @@ export class AssociationsComponent {
             return 0
           }
         });
-        console.log(this.allUnions)
+
         this.isLoading = false;
       },
       error: err => {
@@ -87,6 +87,7 @@ export class AssociationsComponent {
       box?.classList.replace('smallSectionBox', 'sectionBox');
       add?.classList.remove('hidden');
       see?.classList.add('rotatedClock');
+      this.creatingAssociation = false
     } else {
       this.creatingAssociation = false
       box?.classList.replace('sectionBox', 'smallSectionBox');
@@ -144,6 +145,7 @@ export class AssociationsComponent {
   }
 
   changeTagTypeToSelect(paragraphId: string, buttonId: string, selectId: string) {
+
     const paragraph = document.getElementById(paragraphId);
     const select = document.getElementById(selectId) as HTMLSelectElement;
 
@@ -152,7 +154,9 @@ export class AssociationsComponent {
       paragraph.classList.add('hidden');
 
       select.selectedOptions.namedItem(paragraph.textContent)
-      select.onselect = function() {
+
+      select.onchange = function() {
+
         const button = document.getElementById(buttonId)?.classList.remove('hidden');
       };
 
@@ -168,11 +172,12 @@ export class AssociationsComponent {
 
   editAssociation(i: number, buttonId: string) {
     this.isLoading = true;
+    
     const editAssociationData: UpdateAssociationDto = {
       association_id: this.allAssociations[i].association_id,
       association_name: this.allAssociations[i].association_name,
       association_acronym: this.allAssociations[i].association_acronym,
-      union_id: this.allAssociations[i].union_id
+      union_id: Number(this.allAssociations[i].union_id)
     };
 
     this.associationService.updateAssociation(editAssociationData).subscribe({

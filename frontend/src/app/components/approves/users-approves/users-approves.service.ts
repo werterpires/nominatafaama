@@ -24,7 +24,7 @@ export class UserApprovesService {
     return this.http.put('http://localhost:3000/users/approve', approveData, { headers: head_obj })
       .pipe(
         catchError((error) => {
-            console.log('Veja o erro completo', error)
+           
             return throwError(() => new Error('Não fo possível aprovar esse usuário'));
           
         })

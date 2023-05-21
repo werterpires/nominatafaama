@@ -1,0 +1,275 @@
+<section *ngIf="permissions.estudante || permissions.administrador" class="smallSectionBox" id="boxHeadStudents">
+    <div class="boxHead" >
+        <span class="headField" (click)="showBox()">
+        <img class="seeMoreIcon" id="seeMoreIconStudents" src="assets/icons/seeMoreIcon.png" alt="">
+        <p class="sectionTitle1">Dados gerais</p>
+        </span>
+    </div >
+    <section>
+        <form *ngIf="!student && shownBox" class="formCreation">
+            <section class="formArea">
+                <label class="inputLabel">
+                    Número de telefone<input class="smallInput" type="text" name="studentPhoneNumberInput" [(ngModel)]="createStudentData.phone_number">
+                </label>
+                <label class="inputLabel">
+                    É WhatsApp? <input type="checkbox" name="studentIsWhatsCheck" [(ngModel)]="createStudentData.is_whatsapp"> 
+                </label>
+                <label class="inputLabel">
+                    Email Alternativo<input class="smallInput" type="text" name="studentAlternativeEmailInput" [(ngModel)]="createStudentData.alternative_email">
+                </label>
+                
+            </section>
+            <section class="formArea">
+                <label class="inputLabel">
+                    União de origem
+                    <select class="smallInput" name="unionSelect" [(ngModel)]="selectedUnion" (change)="filterAssociation()">
+                        <option *ngFor="let union of allUnions" [value]=union>{{union}}</option>
+                    </select>
+                </label>
+                
+                <label *ngIf="selectedUnion" class="inputLabel">
+                    Associação/Missão de origem
+                    <select class="smallMediumInput" name="studentSelect" [(ngModel)]="createStudentData.origin_field_id">
+                        <option *ngFor="let student of possibleAssociantions" [value]="student.association_id">{{student.association_acronym}} -{{student.association_name}}</option>
+                    </select>
+                </label>
+
+            </section>
+            <section>
+                <label class="inputLabel">
+                    Justifique por que você acredita ser esse o seu campo de origem
+                    <input class="largeInput" name="justificationInput" [(ngModel)]="createStudentData.justification">
+                        
+                </label>
+                
+            </section>
+
+            <section class="formArea">
+                <label class="inputLabel">
+                    Estado civil
+                    <select class="smallInput" name="maritalStateSelect" [(ngModel)]="createStudentData.marital_status_id">
+                        <option *ngFor="let status of allMaritalStatus" [value]=status.marital_status_type_id>{{status.marital_status_type_name}}</option>
+                    </select>
+                </label>     
+                <label class="inputLabel">
+                    Data de nascimento
+                    <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="createStudentData.birth_date">
+                </label>
+            </section>
+
+            <section class="formArea">
+                <label class="inputLabel">
+                    Estado de nascimento
+                    <select class="smallInput" name="birthStateSelect" [(ngModel)]="chosenBirthStateId" (change)="findCities('birth')">
+                        <option *ngFor="let state of allBirthStates" [value]=state.id>{{state.nome}} </option>
+                    </select>
+                </label>
+                <label *ngIf="allBirthCities" class="inputLabel">
+                    Cidade de nascimento
+                    <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="createStudentData.birth_city">
+                        <option *ngFor="let city of allBirthCities" [value]=city.nome>{{city.nome}}</option>
+                    </select>
+                </label>
+                
+                
+            </section>
+
+            <section class="formArea">
+                <label class="inputLabel">
+                    Estado em que completou o ensino fundamental
+                    <select class="smallInput" name="birtStateSelect" [(ngModel)]="chosenSchollStateId" (change)="findCities('school')">
+                        <option *ngFor="let state of allBirthStates" [value]=state.id>{{state.nome}}</option>
+                    </select>
+                </label>
+                <label *ngIf="allSchoolCities" class="inputLabel">
+                    Cidade em que completou o ensino fundamental
+                    <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="createStudentData.primary_school_city">
+                        <option *ngFor="let city of allSchoolCities" [value]=city.nome>{{city.nome}}</option>
+                    </select>
+                </label>
+            </section>
+            <section class="formArea">
+                <label class="inputLabel">
+                    Data de batismo
+                    <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="createStudentData.baptism_date">
+                </label>
+                <label class="inputLabel">
+                    Local de batismo
+                    <input class="smallMediumInput" type="text" name="baptimPlaceInput" [(ngModel)]="createStudentData.baptism_place">
+                </label>
+                
+            </section>
+
+            <section class="formArea">
+                
+                <label class="inputLabel">
+                    Status de contratação
+                    <select class="largeInput" name="hiringStatusSelect" [(ngModel)]="createStudentData.hiring_status_id">
+                        <option *ngFor="let hiringStatus of allHiringStatus" [value]=hiringStatus.hiring_status_id>{{hiringStatus.hiring_status_name}} - {{hiringStatus.hiring_status_description}}</option>
+                    </select>
+                </label>
+                
+            </section>
+
+            <section class="formArea">
+                
+                <label class="inputLabel">
+                    Mensagem do estudante
+                    <input class="largeInput" type="text" name="studentMessageInput" [(ngModel)]="createStudentData.student_mensage">
+                    
+                </label>
+                
+            </section>
+
+            <button class="saveButton" type="button" (click)="createStudent()">SALVAR</button>
+            
+        </form>
+        <div *ngIf="student.student_id > 0 && shownBox">
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Telefone:</p>
+                    <p class="fieldContent" [id]="'studentPhone'" (click)="changeTagType('studentPhone', 'saveStudentButton', 'studentPhoneInput')">{{student.phone_number}}</p>
+                    <input class="fieldContent hidden" [id]="'studentPhoneInput'" name=`studentInput` [(ngModel)]="student.phone_number">
+                </span>
+                <span>
+                    <p>É WhatsApp?</p>  
+                    <input type="checkbox" name="studentIsWhatsCheck" [(ngModel)]="student.is_whatsapp">
+                </span>
+                <span class="field">
+                    <p class="fieldTitle">Email Alternativo:</p>
+                    <p class="fieldContent" [id]="'studentAlternativeEmail'" (click)="changeTagType('studentAlternativeEmail', 'saveStudentButton', 'studentAlternativeEmailInput')">{{student.alternative_email}}</p>
+                    <input class="fieldContent hidden" [id]="'studentAlternativeEmailInput'" name=`studentAlternativeEmailInput` [(ngModel)]="student.alternative_email">
+                </span>   
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">União de origem:</p>
+                    <p class="fieldContent" [id]="'originUnion'" (click)="changeTagTypeToSelect('originUnion', 'saveStudentButton', 'originUnionSelect')">{{student.union_acronym}} </p>
+                    <select class="fieldContent hidden" [id]="'originUnionSelect'" name=`originUnionSelect` [(ngModel)]="selectedUnion" (change)="filterAssociation()">
+                        <option *ngFor="let union of allUnions" class="fieldContent" [value]=union>{{union}}</option>
+                        <input class="fieldContent hidden" [id]="'studentAlternativeInput'" name=`studentAlternativeEmailInput` [(ngModel)]="student.alternative_email">
+                    </select>
+                </span>
+                <span class="field">
+                    <p class="fieldTitle">Associação de origem:</p>
+                    <p class="fieldContent" [id]="'originAssociation'" (click)="changeTagTypeToSelect('originAssociation', 'saveStudentButton', 'originAssociationSelect')">{{student.association_acronym}} </p>
+                    <select class="fieldContent hidden" [id]="'originAssociationSelect'" name=`originAssociationSelect` [(ngModel)]="student.origin_field_id">
+                        <option *ngFor="let association of possibleAssociantions" class="fieldContent" [value]='association.association_id'>{{association.association_acronym}}</option> 
+                    </select>
+                </span>                
+            </div>
+            <div class="sub">
+                <span class="field">
+                    <p class="fieldTitle">Justificativa</p>
+                    <p class="fieldContent" [id]="'justification'" (click)="changeTagType('justification', 'saveStudentButton', 'justificationInput')">{{student.justification}} </p>
+                    <input class="fieldContent hidden" [id]="'justificationInput'" name=`justificationInput` [(ngModel)]="student.justification">
+                </span>
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Estado Civil</p>
+                    <p class="fieldContent" [id]="'maritalStatus'" (click)="changeTagTypeToSelect('maritalStatus', 'saveStudentButton', 'maritalStatusSelect')" >{{student.marital_status_type_name}}</p>
+                    <select class="fieldContent hidden" [id]="'maritalStatusSelect'" name=`maritalStatusSelect` [(ngModel)]="student.marital_status_id">
+                        <option *ngFor="let status of allMaritalStatus" class="fieldContent" [value]='status.marital_status_type_id'>{{status.marital_status_type_name}}</option> 
+                    </select>                    
+                </span>
+                <span class="field">
+                    <p class="fieldTitle">Data de nascimento</p>
+                    <p class="fieldContent" [id]="'birthDate'" (click)="changeTagType('birthDate', 'saveStudentButton', 'birthDateInput')">{{student.birth_date}} </p>
+                    <input class="fieldContent hidden" [id]="'birthDateInput'" name=`birthDateInput` [(ngModel)]="student.birth_date">
+                </span>
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Estado de nascimento</p>
+                    <p class="fieldContent" id="birthState" (click)="changeTagTypeToSelect('birthState', 'saveStudentButton', 'birthStateSelect')" >{{student.birth_state}}</p>
+                    <select class="fieldContent hidden" name="birthStateSelect" id="birthStateSelect" [(ngModel)]="chosenBirthStateId" (change)="findCities('birth')">
+                        <option *ngFor="let state of allBirthStates" class="fieldContent" [value]="state.id">{{state.sigla}} </option>
+                    </select>
+                </span>
+                <span class="field">
+                    <p class="fieldTitle">Cidade de nascimento</p>
+                    <p class="fieldContent" id="birthCity" (click)="changeTagTypeToSelect('birthCity', 'saveStudentButton', 'birthCitySelect')">{{student.birth_city}}</p>
+                    <select class="fieldContent hidden" name="birthCitySelect" id="birthCitySelect" [(ngModel)]="student.birth_city">
+                        <option *ngFor="let city of allBirthCities" class="fieldContent" [value]="city.nome">{{city.nome}} </option>
+                    </select>
+                </span>
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Estado de conclusão do ensino fundamental</p>
+                    <p class="fieldContent" id="primarySchoolState" (click)="changeTagTypeToSelect('primarySchoolState', 'saveStudentButton', 'primarySchoolStateSelect')" >{{student.primary_school_state}}</p>
+                    <select class="fieldContent hidden" name="primarySchoolStateSelect" id="primarySchoolStateSelect" [(ngModel)]="chosenSchollStateId" (change)="findCities('school')">
+                        <option *ngFor="let state of allBirthStates" class="fieldContent" [value]="state.id">{{state.sigla}} </option>
+                    </select>
+                </span>
+                <span class="field">
+                    <p class="fieldTitle">Cidade de conclusão do ensino fundamental</p>
+                    <p class="fieldContent" id="primarySchoolCity" (click)="changeTagTypeToSelect('primarySchoolCity', 'saveStudentButton', 'primarySchoolCitySelect')">{{student.primary_school_city}}</p>
+                    <select class="fieldContent hidden" name="primarySchoolCitySelect" id="primarySchoolCitySelect" [(ngModel)]="student.primary_school_city">
+                        <option *ngFor="let city of allSchoolCities" class="fieldContent" [value]="city.nome">{{city.nome}} </option>
+                    </select>
+                </span>
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Data de batismo</p>
+                    <p class="fieldContent" id="baptismDate" (click)="changeTagType('baptismDate', 'saveStudentButton', 'baptismDateInput')">{{student.baptism_date}}</p>
+                    <input class="fieldContent hidden" [id]="'baptismDateInput'" type="date" name=`birthDateInput` [(ngModel)]="student.baptism_date">
+                    
+                </span>
+                <span class="field">
+                    <p class="fieldTitle">Local de batismo</p>
+                    <p class="fieldContent" id="baptismPlace" (click)="changeTagType('baptismPlace', 'saveStudentButton', 'baptismPlaceInput')">{{student.baptism_place}}</p>
+                    <input class="fieldContent hidden" [id]="'baptismPlaceInput'" type="text" name=`baptismPlaceInput` [(ngModel)]="student.baptism_place">
+                    
+                </span>
+
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Status de contratação</p>
+                    <p class="fieldContent" id="hiringStatus" (click)="changeTagTypeToSelect('hiringStatus', 'saveStudentButton', 'hiringStatusSelect')">{{student.hiring_status_name}}</p>
+                    <select class="fieldContent hidden" name="hiringStatusSelect" id="hiringStatusSelect" [(ngModel)]="student.hiring_status_id">
+                        <option *ngFor="let status of allHiringStatus" class="fieldContent" [value]="status.hiring_status_id">{{status.hiring_status_name}} </option>
+                    </select>
+                </span>
+                
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Mensagem do estudante</p>
+                    <p class="fieldContent" id="studentMessage" (click)="changeTagType('studentMessage', 'saveStudentButton', 'studentMessageInput')">{{student.student_mensage}}</p>
+                    <input class="fieldContent hidden" [id]="'studentMessageInput'" type="text" name=`studentMessageInput` [(ngModel)]="student.student_mensage">
+
+                </span>
+
+            </div>
+
+            <button class="saveButton hidden" [id]="'saveStudentButton'" (click)="editStudent('saveStudentButton')">Salvar</button>
+            <hr class="sectionDivision">
+        </div>
+    </section>
+</section>
+<div *ngIf="error" class="error">
+<div class="errorTitle">
+    <p>Atenção</p>
+</div>
+<div class="errorMessage">
+    <p>{{errorMessage}}</p>
+</div>
+<img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+</div>
+
+<div *ngIf="done" class="done">
+<div class="doneTitle">
+    <p>Parabéns</p>
+</div>
+<div class="doneMessage">
+    <p>{{doneMessage}}</p>
+</div>
+<img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

@@ -66,7 +66,7 @@ export class UsersApprovesComponent {
       
       next: res => {
         this.allUsers= res
-        console.log(this.allUsers)
+     
         this.admUsersNull = this.userServices.filterUsers(null, this.allUsers, 6)
         this.admUsersFalse = this.userServices.filterUsers(0, this.allUsers, 6)
         this.admUsersTrue = this.userServices.filterUsers(1, this.allUsers, 6)
@@ -85,7 +85,7 @@ export class UsersApprovesComponent {
         this.estUsersNull = this.userServices.filterUsers(null, this.allUsers, 1)
         this.estUsersFalse = this.userServices.filterUsers(0, this.allUsers, 1)
         this.estUsersTrue = this.userServices.filterUsers(1, this.allUsers, 1)
-        console.log(this.docUsersNull)
+        
         this.isLoading = false
       },
       error: err => {

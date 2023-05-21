@@ -49,8 +49,7 @@ export class ContainerComponent {
       this.permissions.representacao = roles.includes('representacao');
       this.permissions.administrador = roles.includes('administrador');
       this.permissions.isApproved = this.user.user_approved
-      console.log(this.user)
-      console.log(this.permissions)
+
     
     },
     error: err =>{

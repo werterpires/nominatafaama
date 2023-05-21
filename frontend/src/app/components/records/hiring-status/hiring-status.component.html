@@ -1,0 +1,60 @@
+<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadHiringStatus">
+    <div class="boxHead">
+      <span class="headField" (click)="showBox()">
+        <img class="seeMoreIcon" id="seeMoreIconHiringStatus" src="assets/icons/seeMoreIcon.png" alt="">
+        <p class="sectionTitle1">Status de contratação</p>
+      </span>
+      <img class="addIcon hidden" id="hiring_statusAddIcon" src="assets/icons/addIcon.png" alt="Criar novo status de contratação" (click)="createForm()">
+    </div>
+    <section>
+      <form *ngIf="creatingHiringStatus" class="formCreation">
+        <label class="inputLabel">
+            Novo Status de contratação<input class="smallInput" type="text" name="hiring_statusNameInput" [(ngModel)]="createHiringStatusData.hiring_status_name">
+        </label>
+        <label class="inputLabel">
+            Descrição<input class="largeInput" type="text" name="hiring_statusAcronymInput" [(ngModel)]="createHiringStatusData.hiring_status_description">
+        </label>
+        <button class="saveButton" type="button" (click)="createHiringStatus()">SALVAR</button>
+      </form>
+      <div *ngFor="let hiring_status of allHiringStatus; let i = index">
+        <div class="subSection">
+          <span class="field">
+            <p class="fieldTitle">União:</p>
+            <p class="fieldContent" [id]="'hiring_statusName'+i" (click)="changeTagType('hiring_statusName'+i, 'saveHiringStatusButton'+i, 'hiring_statusInput'+i  )">{{hiring_status.hiring_status_name}}</p>
+            <input class="fieldContent hidden" [id]="'hiring_statusInput'+i" name=`hiring_statusInput${i}` [(ngModel)]="allHiringStatus[i].hiring_status_name">
+          </span>
+          <span class="field">
+            <p class="fieldTitle">Descrição:</p>
+            <p class="fieldContent" [id]="'hiring_statusAcronym'+i" (click)="changeTagType('hiring_statusAcronym'+i,'saveHiringStatusButton'+i, 'hiring_statusAcronymInput'+i )">{{hiring_status.hiring_status_description}}</p>
+            <input class="fieldContent hidden" [id]="'hiring_statusAcronymInput'+i" name=`hiring_statusInput${i}` [(ngModel)]="allHiringStatus[i].hiring_status_description">
+          </span>
+          <button class="saveButton hidden" [id]="'saveHiringStatusButton'+i" (click)="editHiringStatus(i, 'saveHiringStatusButton'+i)">Salvar</button>
+        </div>
+        <hr class="sectionDivision">
+      </div>
+    </section>
+  </section>
+    
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{errorMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  </div>
+  
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{doneMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  </div>
+  
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+    
