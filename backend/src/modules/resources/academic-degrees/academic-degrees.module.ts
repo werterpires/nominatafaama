@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AcademicDegreesService } from './services/academic-degrees.service';
 import { AcademicDegreesController } from './controllers/academic-degrees.controller';
-import { AcademicDegreesModel } from './model/academic-degress.model';
+import { AcademicDegreesModel } from './model/academic-degrees.model';
 
 const services = [AcademicDegreesService, AcademicDegreesModel]
 

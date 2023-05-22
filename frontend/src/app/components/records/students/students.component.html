@@ -6,7 +6,7 @@
         </span>
     </div >
     <section>
-        <form *ngIf="!student && shownBox" class="formCreation">
+        <form *ngIf="student.student_id==0 && shownBox" class="formCreation">
             <section class="formArea">
                 <label class="inputLabel">
                     Número de telefone<input class="smallInput" type="text" name="studentPhoneNumberInput" [(ngModel)]="createStudentData.phone_number">

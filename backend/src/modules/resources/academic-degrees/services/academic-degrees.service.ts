@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AcademicDegreesModel } from '../model/academic-degress.model';
+import { AcademicDegreesModel } from '../model/academic-degrees.model';
 import { CreateAcademicDegreeDto } from '../dto/create-academic-degree.dto';
 import { IAcademicDegree, ICreateAcademicDegree, IUpdateAcademicDegree } from '../types/types';
 

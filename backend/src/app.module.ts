@@ -11,6 +11,7 @@ import { RolesGuard } from './shared/roles/gz_guards/roles.guard';
 import { ResourcesModule } from './modules/resources/resources.module';
 import { StudentsModule } from './modules/students/students.module';
 import { SpousesModule } from './modules/spouses/spouses.module';
+import { InfoModule } from './modules/info/info.module';
 
 config();
 
@@ -35,6 +36,7 @@ config();
     ResourcesModule,
     StudentsModule,
     SpousesModule,
+    InfoModule,
   ],
   providers: [
     {
