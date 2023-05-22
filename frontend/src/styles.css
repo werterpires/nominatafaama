@@ -300,10 +300,11 @@ color: #F0EFEF;
 
 .error{
   box-sizing: border-box;
-  position: absolute;
+  position: fixed;
   width: 395.63px;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   z-index: 2;
   background: #FFFFFF;
@@ -516,7 +517,6 @@ color: #F0EFEF;
   margin-top: 35px;
 }
 .field{
-  display: flex;
   justify-content: baseline;
   align-items: center;
   flex:1
@@ -529,8 +529,6 @@ color: #F0EFEF;
   font-weight: 400;
   font-size: 12px;
   line-height: 18px;
-  margin-top: 27px;
-  margin-left: 5px;
   color: #23435F;
   border: none;
   outline: none;

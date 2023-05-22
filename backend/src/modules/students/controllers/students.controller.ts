@@ -25,20 +25,6 @@ export class StudentsController {
     }
   }
 
-  // @IsPublic()
-  // @Get(':id')
-  // async getStudentById(@Param('id') id: number) {
-  //   try {
-  //     const student = await this.studentsService.findStudentById(id);
-  //     if (!student) {
-  //       throw new NotFoundException(`Student with id ${id} not found.`);
-  //     }
-  //     return student;
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message);
-  //   }
-  // }
-
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('edit')
   async getStudentByIdToEdit(@CurrentUser() user:UserFromJwt) {

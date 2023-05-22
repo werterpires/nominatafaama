@@ -17,14 +17,16 @@ exports.up = function (knex) {
     table.string('birth_city', 250).notNullable();
     table.string('birth_state', 2).notNullable();
     table.string('primary_school_city', 250).notNullable();
+    table.string('primary_school_state', 250).notNullable();
     table.date('birth_date').notNullable();
     table.date('baptism_date').notNullable();
     table.string('baptism_place', 250).notNullable();
     table.date('civil_marriage_date');
     table.string('civil_marriage_city', 250);
+    table.string('civil_marriage_state', 250);
     table.string('registry', 250);
     table.string('registry_number', 150);
-    table.boolean('spouse_approved').notNullable()
+    table.boolean('spouse_approved')
 
     table
       .foreign('person_id')

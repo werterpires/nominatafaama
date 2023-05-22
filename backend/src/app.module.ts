@@ -10,6 +10,7 @@ import { RolesModule } from './shared/roles/roles.module';
 import { RolesGuard } from './shared/roles/gz_guards/roles.guard';
 import { ResourcesModule } from './modules/resources/resources.module';
 import { StudentsModule } from './modules/students/students.module';
+import { SpousesModule } from './modules/spouses/spouses.module';
 
 config();
 
@@ -33,6 +34,7 @@ config();
     RolesModule,
     ResourcesModule,
     StudentsModule,
+    SpousesModule,
   ],
   providers: [
     {

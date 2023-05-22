@@ -292,6 +292,7 @@ export class StudentsModel {
           baptism_place,
           marital_status_id,
           hiring_status_id,
+          primary_school_state
         } = updateStudent;
   
         await trx('students')
@@ -312,6 +313,7 @@ export class StudentsModel {
             baptism_place,
             marital_status_id,
             hiring_status_id,
+            primary_school_state
           });
   
         updatedStudent = await this.findStudentById(student_id);

@@ -1,85 +1,84 @@
 import { Component, Input } from '@angular/core';
-import { StudentService } from './students.service';
 import { IPermissions } from '../../shared/container/types';
-import { ICreateStudent, IStudent, IUpdateStudent } from './types';
+import { OthersServices } from '../../shared/shared.service.ts/others.service';
+import { IUF, ICity } from '../../shared/types';
 import { AssociationService } from '../associations/associations.service';
 import { IAssociation } from '../associations/types';
 import { HiringStatusService } from '../hiring-status/hiring_status.service';
-import { MaritalStatusService } from '../marital-status/marital-status.service';
 import { IHiringStatus } from '../hiring-status/types';
+import { MaritalStatusService } from '../marital-status/marital-status.service';
 import { IMaritalStatus } from '../marital-status/types';
-import { OthersServices } from '../../shared/shared.service.ts/others.service';
-import { ICity, IUF } from '../../shared/types';
-import { IUnion } from '../unions/types';
+import { SpouseService } from './spouses.service';
+import { ISpouse, ICreateSpouse, IUpdateSpouse } from './types';
 import { DataService } from '../../shared/shared.service.ts/data.service';
 
 @Component({
-  selector: 'app-students',
-  templateUrl: './students.component.html',
-  styleUrls: ['./students.component.css']
+  selector: 'app-spouses',
+  templateUrl: './spouses.component.html',
+  styleUrls: ['./spouses.component.css']
 })
-export class StudentsComponent {
+export class SpousesComponent {
+
   constructor(
-    private studentServices: StudentService,
+    private spouseServices: SpouseService,
     private associationService: AssociationService,
-    private hiringStatusService: HiringStatusService,
-    private maritalStatusService: MaritalStatusService,
     private othersService: OthersServices,
-    private dataService: DataService
+    public dataService: DataService
     ){}
 
   @Input() permissions!: IPermissions;
-  student: IStudent = {
-    name:"",
-    phone_number:"",
-    is_whatsapp:false,
-    alternative_email:"",
-    student_mensage:"",
-    person_id:0,
-    origin_field_id:0,
-    justification:"",
-    birth_city:"",
-    birth_state:"",
-    primary_school_city:"",
-    birth_date:"",
-    baptism_date:"",
-    baptism_place:"",
-    marital_status_id:0,
-    hiring_status_id:0,
-    student_approved:null,
-    student_active:false,
-    student_id:0,
-    association_name:"",
-    association_acronym:"",
-    union_name:"",
-    union_acronym:"",
-    union_id:0,
-    marital_status_type_name:"",
-    hiring_status_name:"",
-    hiring_status_description:"",
-    primary_school_state: ""
-
-
-
-  }
-  creatingStudent: boolean = false;
-  editingStudent: boolean = false;
-  createStudentData: ICreateStudent = {
+  spouse: ISpouse = {
+    person_name: "",
     phone_number: "",
     is_whatsapp: false,
     alternative_email: "",
-    student_mensage: "",
+    person_id: 0,
     origin_field_id: 0,
     justification: "",
     birth_city: "",
     birth_state: "",
     primary_school_city: "",
-    birth_date: new Date(),
-    baptism_date: new Date(),
+    birth_date: "",
+    baptism_date: "",
     baptism_place: "",
-    marital_status_id: 0,
-    hiring_status_id: 0,
-    primary_school_state:""
+    spouse_approved: null,
+    spouse_id: 0,
+    association_name: "",
+    association_acronym: "",
+    union_name: "",
+    union_acronym: "",
+    union_id: 0,
+    civil_marriage_date: "",
+    civil_marriage_city: "",
+    registry: "",
+    registry_number: "",
+    primary_school_state: "",
+    created_at: '',
+    updated_at: '',
+    civil_marriage_state: null
+  }
+  creatingSpouse: boolean = false;
+  editingSpouse: boolean = false;
+  createSpouseData: ICreateSpouse = {
+    phone_number: "",
+    is_whatsapp: false,
+    alternative_email: "",
+    origin_field_id: 0,
+    justification: "",
+    birth_city: "",
+    birth_state: "",
+    primary_school_city: "",
+    birth_date: "",
+    baptism_date: "",
+    baptism_place: "",
+    civil_marriage_date: null,
+    civil_marriage_city: null,
+    registry: null,
+    registry_number: null,
+    name: '',
+    cpf: '',
+    primary_school_state: '',
+    civil_marriage_state: null
   };
 
   allAssociations:IAssociation[] = []
@@ -96,6 +95,11 @@ export class StudentsComponent {
   originUnion!:string
   originAssociation!:IAssociation
   chosenUnionToEdit!:string
+  chosenMerryStateId!: number;
+  allMerryCities!: ICity[];
+  cpf!:string;
+
+  realBirthDate!:Date
 
   isLoading: boolean = false;
   done: boolean = false;
@@ -107,17 +111,17 @@ export class StudentsComponent {
 
   ngOnInit() {
     this.isLoading = true;
-    this.studentServices.findStudentByUserId().subscribe({
+    this.spouseServices.findSpouseByUserId().subscribe({
       next: res => {
         
-        if(res.student_id ){
+        if(res.spouse_id>0 ){
           
-          this.student = res
-          this.dataService.maritalStatusName = this.student.marital_status_type_name
-        }
+          this.spouse = res
 
-        
-        
+          console.log(this.spouse.baptism_date)
+          
+        }
+      
       },
       error: err => {
         this.errorMessage = err.message;
@@ -151,50 +155,10 @@ export class StudentsComponent {
       }
     });
 
-    this.hiringStatusService.findAllHiringStatus().subscribe({
-      next: res => {
-        this.allHiringStatus = res.sort((a, b)=>{
-          if(a.hiring_status_name < b.hiring_status_name){
-            return -1
-          }else if (a.hiring_status_name < b.hiring_status_name){
-            return 1
-          }else{
-            return 0
-          }
-        });
-    
-      },
-      error: err => {
-        this.errorMessage = err.message;
-        this.error = true;
-        this.isLoading = false;
-      }
-    });
-
-    this.maritalStatusService.findAllMaritalStatus().subscribe({
-      next: res => {
-        this.allMaritalStatus = res.sort((a, b)=>{
-          if(a.marital_status_type_name < b.marital_status_type_name){
-            return -1
-          }else if (a.marital_status_type_name < b.marital_status_type_name){
-            return 1
-          }else{
-            return 0
-          }
-        });
-        this.isLoading = false;
-      },
-      error: err => {
-        this.errorMessage = err.message;
-        this.error = true;
-        this.isLoading = false;
-      }
-    });
-
     this.othersService.findAllStates().subscribe({
       next: res=>{
         this.allBirthStates = res
-       
+        this.isLoading=false;
       },
       error: err=>{
         this.errorMessage = err.message;
@@ -204,23 +168,21 @@ export class StudentsComponent {
       }
     })
 
-
-
   }
 
  
   showBox() {
-    const box = document.getElementById('boxHeadStudents');
-    const add = document.getElementById('studentAddIcon');
-    const see = document.getElementById('seeMoreIconStudents');
+    const box = document.getElementById('boxHeadSpouses');
+    const add = document.getElementById('spouseAddIcon');
+    const see = document.getElementById('seeMoreIconSpouses');
     this.shownBox = !this.shownBox;
     if (this.shownBox) {
       box?.classList.replace('smallSectionBox', 'sectionBox');
       add?.classList.remove('hidden');
       see?.classList.add('rotatedClock');
-      this.creatingStudent = false;
+      this.creatingSpouse = false;
     } else {
-      this.creatingStudent = false;
+      this.creatingSpouse = false;
       box?.classList.replace('sectionBox', 'smallSectionBox');
       add?.classList.add('hidden');
       see?.classList.remove('rotatedClock');
@@ -228,7 +190,7 @@ export class StudentsComponent {
   }
   
   filterAssociation(){
-    this.createStudentData.origin_field_id=0
+    this.createSpouseData.origin_field_id=0
     this.possibleAssociantions = this.allAssociations.filter(association=>{
       return association.union_acronym == this.selectedUnion
     })
@@ -236,7 +198,7 @@ export class StudentsComponent {
   }
 
   createForm() {
-    this.creatingStudent = true;
+    this.creatingSpouse = true;
   }
 
   findCities(cityType:string){
@@ -246,6 +208,8 @@ export class StudentsComponent {
       id = this.chosenBirthStateId
     }else if(cityType=="school"){
       id = this.chosenSchollStateId
+    }else if(cityType=="merry"){
+      id = this.chosenMerryStateId
     }
     
     this.othersService.findAllCities(id).subscribe({
@@ -254,6 +218,8 @@ export class StudentsComponent {
           this.allBirthCities = res
         }else if(cityType=="school"){
           this.allSchoolCities = res
+        }else if(cityType == "merry"){
+          this.allMerryCities = res
         }
         
       },
@@ -266,46 +232,50 @@ export class StudentsComponent {
     })
   }
 
-  createStudent() {
+  createSpouse() {
     this.isLoading = true
-    this.createStudentData.origin_field_id = Number(this.createStudentData.origin_field_id);
-    this.createStudentData.marital_status_id = Number(this.createStudentData.marital_status_id);
-    this.createStudentData.hiring_status_id = Number(this.createStudentData.hiring_status_id);
+    this.createSpouseData.origin_field_id = Number(this.createSpouseData.origin_field_id);
     const birthState = this.allBirthStates.find(state=>{return state.id == this.chosenBirthStateId})?.sigla;
+
     if(birthState){
-      this.createStudentData.birth_state = birthState
+      this.createSpouseData.birth_state = birthState
     }
 
     const primarySchoolState = this.allBirthStates.find(state=>{return state.id == this.chosenSchollStateId})?.sigla;
     if(primarySchoolState){
-      this.createStudentData.primary_school_state = primarySchoolState
+      this.createSpouseData.primary_school_state = primarySchoolState
     }
 
-    
+    const civilMerryState = this.allBirthStates.find(state=>{return state.id == this.chosenMerryStateId})?.sigla;
+    if(civilMerryState){
+      this.createSpouseData.civil_marriage_state = civilMerryState
+    }
+
+    this.createSpouseData.baptism_date = this.createSpouseData.baptism_date.slice(5,7)+ '/'+ this.createSpouseData.baptism_date.slice(8,10)+'/'+this.createSpouseData.baptism_date.slice(0,4)
+    this.createSpouseData.birth_date = this.createSpouseData.birth_date.slice(5,7)+ '/'+ this.createSpouseData.birth_date.slice(8,10)+'/'+this.createSpouseData.birth_date.slice(0,4)
+
+    if(this.createSpouseData.civil_marriage_date!=null){
+      this.createSpouseData.civil_marriage_date = this.createSpouseData.civil_marriage_date?.slice(5,7)+ '/'+ this.createSpouseData.civil_marriage_date?.slice(8,10)+'/'+this.createSpouseData.civil_marriage_date?.slice(0,4)
+    }
   
-    this.studentServices.createStudent(this.createStudentData).subscribe({
+    this.spouseServices.createSpouse(this.createSpouseData).subscribe({
       next: res => {
         this.doneMessage = 'Estudante criado com sucesso.';
         this.done = true;
         this.isLoading = false;
-        this.createStudentData.phone_number = '';
-        this.createStudentData.is_whatsapp = false;
-        this.createStudentData.alternative_email = '';
-        this.createStudentData.student_mensage = '';
-        this.createStudentData.origin_field_id = 0;
-        this.createStudentData.justification = '';
-        this.createStudentData.birth_city = '';
-        this.createStudentData.birth_state = '';
-        this.createStudentData.primary_school_city = '';
-        this.createStudentData.birth_date = new Date();
-        this.createStudentData.baptism_date = new Date();
-        this.createStudentData.baptism_place = '';
-        this.createStudentData.marital_status_id = 0;
-        this.createStudentData.hiring_status_id = 0;
-        this.createStudentData.primary_school_state = "";
-        this.creatingStudent = false;
-        this.ngOnInit()
-
+        this.createSpouseData.phone_number = '';
+        this.createSpouseData.is_whatsapp = false;
+        this.createSpouseData.alternative_email = '';
+        this.createSpouseData.origin_field_id = 0;
+        this.createSpouseData.justification = '';
+        this.createSpouseData.birth_city = '';
+        this.createSpouseData.birth_state = '';
+        this.createSpouseData.primary_school_city = '';
+        this.createSpouseData.birth_date = "";
+        this.createSpouseData.baptism_date = "";
+        this.createSpouseData.baptism_place = '';
+        this.createSpouseData.primary_school_state = "";
+        this.creatingSpouse = false;
       },
       error: err => {
         this.errorMessage = 'Não foi possível criar o estudante.';
@@ -365,52 +335,69 @@ export class StudentsComponent {
     }
   }
 
-  editStudent( buttonId: string) {
+  editSpouse( buttonId: string) {
     this.isLoading = true
-    this.student.origin_field_id = Number(this.student.origin_field_id);
-    this.student.marital_status_id = Number(this.student.marital_status_id);
-    this.student.hiring_status_id = Number(this.student.hiring_status_id);
+    this.spouse.origin_field_id = Number(this.spouse.origin_field_id);
+    
     const birthState = this.allBirthStates.find(state=>{return state.id == this.chosenBirthStateId})?.sigla;
     if(birthState){
-      this.student.birth_state = birthState
+      this.spouse.birth_state = birthState
     }
 
     const baptismState = this.allBirthStates.find(state=>{return state.id == this.chosenSchollStateId})?.sigla;
-
     if(baptismState){
-      this.student.primary_school_state = baptismState
+      this.spouse.primary_school_state = baptismState
+    }
 
+    const merryState = this.allBirthStates.find(state=>{return state.id == this.chosenMerryStateId})?.sigla;
+    if(merryState){
+      this.spouse.civil_marriage_state = merryState
     }
     
-    const isWhats = (this.student.is_whatsapp==1)
+    const isWhats = (this.spouse.is_whatsapp==1)
+
+    const baptism_date:string = this.spouse.baptism_date.slice(5,7)+ '/'+ this.spouse.baptism_date.slice(8,10)+'/'+this.spouse.baptism_date.slice(0,4)
+    const birth_date:string = this.spouse.birth_date.slice(5,7)+ '/'+ this.spouse.birth_date.slice(8,10)+'/'+this.spouse.birth_date.slice(0,4)
     
-    const editStudentData: IUpdateStudent = {
-      student_id: this.student.student_id,
-      phone_number: this.student.phone_number,
+    let merry_date:string | null = null
+
+    if(this.spouse.civil_marriage_date!=null){
+      merry_date = this.spouse.civil_marriage_date?.slice(5,7)+ '/'+ this.spouse.civil_marriage_date?.slice(8,10)+'/'+this.spouse.civil_marriage_date?.slice(0,4)
+    }
+    
+    const editSpouseData: IUpdateSpouse = {
+      spouse_id: this.spouse.spouse_id,
+      phone_number: this.spouse.phone_number,
       is_whatsapp: isWhats,
-      alternative_email: this.student.alternative_email,
-      student_mensage: this.student.student_mensage,
-      person_id: this.student.person_id,
-      origin_field_id: this.student.origin_field_id,
-      justification: this.student.justification,
-      birth_city: this.student.birth_city,
-      birth_state: this.student.birth_state,
-      primary_school_city: this.student.primary_school_city,
-      primary_school_state: this.student.primary_school_state,
-      birth_date: new Date(this.student.birth_date),
-      baptism_date: new Date(this.student.baptism_date),
-      baptism_place: this.student.baptism_place,
-      marital_status_id: Number(this.student.marital_status_id),
-      hiring_status_id: this.student.hiring_status_id,
+      alternative_email: this.spouse.alternative_email,
+      person_id: this.spouse.person_id,
+      origin_field_id: this.spouse.origin_field_id,
+      justification: this.spouse.justification,
+      birth_city: this.spouse.birth_city,
+      birth_state: this.spouse.birth_state,
+      primary_school_city: this.spouse.primary_school_city,
+      primary_school_state: this.spouse.primary_school_state,
+      birth_date: birth_date,
+      baptism_date: baptism_date,
+      baptism_place: this.spouse.baptism_place,
+      civil_marriage_date: merry_date,
+      civil_marriage_city: this.spouse.civil_marriage_city,
+      registry: this.spouse.registry,
+      registry_number: this.spouse.registry_number,
+      spouse_approved: false,
+      name: this.spouse.person_name,
+      cpf: this.cpf,
+      civil_marriage_state: this.spouse.civil_marriage_state
     };
+    
+    console.log(editSpouseData)
   
-    this.studentServices.updateStudent(editStudentData).subscribe({
+    this.spouseServices.updateSpouse(editSpouseData).subscribe({
       next: res => {
         this.doneMessage = 'Estudante editado com sucesso.';
         this.done = true;
         const button = document.getElementById(buttonId)?.classList.add('hidden');
         this.isLoading = false;
-        this.ngOnInit()
       },
       error: err => {
         this.errorMessage = 'Não foi possível atualizar o estudante.';
@@ -421,11 +408,11 @@ export class StudentsComponent {
   }
   
 
-  deleteStudent(i: number) {
+  deleteSpouse(i: number) {
     this.isLoading = true;
-    const studentId = this.student.student_id;
+    const spouseId = this.spouse.spouse_id;
 
-    this.studentServices.deleteStudent(studentId).subscribe({
+    this.spouseServices.deleteSpouse(spouseId).subscribe({
       next: res => {
         this.doneMessage = 'Associação deletada com sucesso.';
         this.done = true;
@@ -447,5 +434,4 @@ export class StudentsComponent {
   closeDone() {
     this.done = false;
   }
-
 }

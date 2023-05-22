@@ -18,6 +18,7 @@ import { UnionsComponent } from './components/records/unions/unions.component';
 import { AssociationsComponent } from './components/records/associations/associations.component';
 import { HiringStatusComponent } from './components/records/hiring-status/hiring-status.component';
 import { StudentsComponent } from './components/records/students/students.component';
+import { SpousesComponent } from './components/records/spouses/spouses.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { StudentsComponent } from './components/records/students/students.compon
     AssociationsComponent,
     HiringStatusComponent,
     StudentsComponent,
+    SpousesComponent,
   ],
   imports: [
     BrowserModule,
