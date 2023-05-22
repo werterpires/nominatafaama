@@ -19,6 +19,7 @@ import { AssociationsComponent } from './components/records/associations/associa
 import { HiringStatusComponent } from './components/records/hiring-status/hiring-status.component';
 import { StudentsComponent } from './components/records/students/students.component';
 import { SpousesComponent } from './components/records/spouses/spouses.component';
+import { AcademicDegreesComponent } from './components/records/academic-degrees/academic-degrees.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { SpousesComponent } from './components/records/spouses/spouses.component
     HiringStatusComponent,
     StudentsComponent,
     SpousesComponent,
+    AcademicDegreesComponent,
   ],
   imports: [
     BrowserModule,

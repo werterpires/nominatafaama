@@ -1,0 +1,54 @@
+<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadAcademicDegres">
+    <div class="boxHead">
+        <span class="headField" (click)="showBox()">
+            <img class="seeMoreIcon" id="seeMoreIconDegrees" src="assets/icons/seeMoreIcon.png" alt="">
+            <p class="sectionTitle1">Graus acadêmicos</p>
+        </span>
+        
+        <img class="addIcon hidden" id="degreeAddIcon" src="assets/icons/addIcon.png" alt="Criar novo grau acadêmico" (click)="createForm()">
+    </div>
+    <section>
+        <form *ngIf="creatingDegree" class="formSCriation">
+            <label class="inputLabel">
+                Novo grau acadêmico<input class="mediumInput" type="text" name="academicDegreeInput" [(ngModel)]="createAcademicDegreeData.degree_name" >
+            </label>
+            
+            <button class="saveButton" type="button" (click)="createAcademicDegree()">SALVAR</button>
+            
+        </form>
+        <div *ngFor="let degree of allDegrees; let i = index">
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Grau acadêmico:</p>
+                    <p class="fieldContent" [id]="'academicDegree'+i" (click)="changeTagType('academicDegree'+i, 'saveAcademicDegreeButton'+i, 'academicDegreeInput'+i)">{{degree.degree_name}}</p>
+                    <input class="fieldContent hidden" [id]="'academicDegreeInput'+i" name=`academicDegreeInput${i}` [(ngModel)]="allDegrees[i].degree_name">
+                    
+                </span>
+                <button class="saveButton hidden" [id]="'saveAcademicDegreeButton'+i" (click)="editAcademicDegree(i, 'saveAcademicDegreeButton'+i)">Salvar</button>
+            </div>
+            <hr class="sectionDivisiion">
+        </div>
+    </section>
+</section>
+
+<div *ngIf="error" class="error">
+    <div class="errorTitle">
+        <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+        <p>{{errorMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+</div>
+<div *ngIf="done" class="done">
+    <div class="doneTitle">
+        <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+        <p>{{doneMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
