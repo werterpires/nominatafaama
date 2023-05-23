@@ -19,5 +19,9 @@ export class UpdateAcademicFormationDto {
     @IsInt()
     @Min(1)
     degree_id: number;
+
+    @IsInt()
+    @Min(1)
+    formation_id: number
   }
   

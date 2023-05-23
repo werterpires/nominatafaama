@@ -1,4 +1,4 @@
-import { IsBoolean, IsDateString, IsInt, IsNotEmpty, IsString, Length, Min } from 'class-validator';
+import { IsBoolean, IsDateString, IsInt, IsNotEmpty, IsOptional, IsString, Length, Min } from 'class-validator';
 
 export class CreateAcademicFormationDto {
     @IsNotEmpty()
@@ -14,7 +14,8 @@ export class CreateAcademicFormationDto {
     @IsNotEmpty()
     @IsDateString()
     begin_date: string;
-  
+
+    @IsOptional()
     @IsDateString()
     conclusion_date: string | null;
   

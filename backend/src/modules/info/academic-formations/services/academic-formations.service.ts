@@ -17,7 +17,9 @@ export class AcademicFormationsService {
   async createStudentAcademicFormation(dto: CreateAcademicFormationDto, id:number): Promise<IAcademicFormation> {
     try {
       
-      const {person_id} = await this.usersService.findUserById(id)
+      const person = await this.usersService.findUserById(id)
+      console.log (person)
+      const person_id = person.person_id
 
       const createAcademicFormation: ICreateAcademicFormation = {
         course_area: dto.course_area,
@@ -100,11 +102,11 @@ export class AcademicFormationsService {
     }
   }
 
-  async updateAcademicFormationById(id: number, dto: UpdateAcademicFormationDto): Promise<IAcademicFormation> {
+  async updateAcademicFormationById(dto: UpdateAcademicFormationDto): Promise<IAcademicFormation> {
     try {
   
       const updatedAcademicFormation: IUpdateAcademicFormation = {
-        formation_id: id,
+        formation_id: dto.formation_id,
         course_area: dto.course_area,
         institution: dto.institution,
         begin_date: new Date(dto.begin_date),

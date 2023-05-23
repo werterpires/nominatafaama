@@ -591,6 +591,7 @@ color: #F0EFEF;
   text-align: center;
   color: #FFFFFF;
   transition: transform 0.1s ease-in-out;
+  margin-top: 25px;
 }
 
 .saveButton:hover{

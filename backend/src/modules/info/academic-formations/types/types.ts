@@ -6,7 +6,8 @@ export interface IAcademicFormation {
     conclusion_date: Date | null;
     person_id: number;
     academic_formation_approved: boolean;
-    degree_id:number
+    degree_id:number;
+    degree_name:string;
     created_at: Date;
     updated_at: Date;
   }

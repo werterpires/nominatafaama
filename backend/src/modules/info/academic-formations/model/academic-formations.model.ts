@@ -40,9 +40,10 @@ export class AcademicFormationsModel {
             conclusion_date: conclusion_date,
             person_id: person_id,
             degree_id: degree_id,
-          created_at: new Date(),
-          updated_at: new Date(),
-          academic_formation_approved: false
+            created_at: new Date(),
+            updated_at: new Date(),
+            academic_formation_approved: false,
+            degree_name: `${degree_id}`
         };
   
         await trx.commit();
@@ -71,7 +72,8 @@ export class AcademicFormationsModel {
       try {
         const result = await trx
           .table('academic_formations')
-          .select('*')
+          .select('academic_formations.*', 'academic_degrees.degree_name')
+          .leftJoin('academic_degrees', 'academic_formations.degree_id', 'academic_degrees.degree_id')
           .where('formation_id', '=', id);
   
         if (result.length < 1) {
@@ -88,7 +90,8 @@ export class AcademicFormationsModel {
           academic_formation_approved: result[0].academic_formation_approved,
           created_at: result[0].created_at,
           updated_at: result[0].updated_at,
-          degree_id: result[0].degree_id
+          degree_id: result[0].degree_id,
+          degree_name: result[0].degree_name
         };
   
         await trx.commit();

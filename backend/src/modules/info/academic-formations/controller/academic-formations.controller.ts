@@ -14,8 +14,8 @@ export class AcademicFormationsController {
   constructor(private academicFormationsService: AcademicFormationsService) {}
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  @Post()
-  async createAcademicFormation(@Body() input: CreateAcademicFormationDto, @CurrentUser() user: UserFromJwt) {
+  @Post('student')
+  async createStudentAcademicFormation(@Body() input: CreateAcademicFormationDto, @CurrentUser() user: UserFromJwt) {
     const id = user.user_id;
     try {
       const academicFormation = await this.academicFormationsService.createStudentAcademicFormation(input, id);
@@ -26,13 +26,11 @@ export class AcademicFormationsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  @Get(':id')
-  async findAcademicFormationById(@Param('id') id: number): Promise<IAcademicFormation> {
+  @Post('spouse')
+  async createSpouseAcademicFormation(@Body() input: CreateAcademicFormationDto, @CurrentUser() user: UserFromJwt) {
+    const id = user.user_id;
     try {
-      const academicFormation = await this.academicFormationsService.findAcademicFormationById(id);
-      if (!academicFormation) {
-        throw new NotFoundException(`Academic formation with id ${id} not found.`);
-      }
+      const academicFormation = await this.academicFormationsService.createSpouseAcademicFormation(input, id);
       return academicFormation;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -40,11 +38,14 @@ export class AcademicFormationsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  @Get('student/')
+  @Get('student')
   async findStudentAcademicFormationsByPersonId(@CurrentUser() user: UserFromJwt): Promise<IAcademicFormation[]> {
     try {
+      console.log('no controller')
       const user_id = user.user_id
+      
       const academicFormations = await this.academicFormationsService.findStudentAcademicFormationByPersonId(user_id);
+      
       if (!academicFormations) {
         throw new NotFoundException(`No academic formations found for user with id ${user_id}.`);
       }
@@ -53,9 +54,9 @@ export class AcademicFormationsController {
       throw new InternalServerErrorException(error.message);
     }
   }
-
+ 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  @Get('spouse/')
+  @Get('spouse')
   async findSpouseAcademicFormationsByPersonId(@CurrentUser() user: UserFromJwt): Promise<IAcademicFormation[]> {
     try {
       const user_id = user.user_id
@@ -81,13 +82,12 @@ export class AcademicFormationsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  @Put(':id')
+  @Put()
   async updateAcademicFormationById(
-    @Param('id') id: number,
     @Body() input: UpdateAcademicFormationDto,
   ): Promise<IAcademicFormation> {
     try {
-      const updatedAcademicFormation = await this.academicFormationsService.updateAcademicFormationById(id, input);
+      const updatedAcademicFormation = await this.academicFormationsService.updateAcademicFormationById(input);
       return updatedAcademicFormation;
     } catch (error) {
       throw new InternalServerErrorException(error.message);

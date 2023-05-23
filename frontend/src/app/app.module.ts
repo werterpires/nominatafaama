@@ -20,6 +20,8 @@ import { HiringStatusComponent } from './components/records/hiring-status/hiring
 import { StudentsComponent } from './components/records/students/students.component';
 import { SpousesComponent } from './components/records/spouses/spouses.component';
 import { AcademicDegreesComponent } from './components/records/academic-degrees/academic-degrees.component';
+import { StudentAcademicFormationsComponent } from './components/records/student-academic-formations/student-academic-formations.component';
+import { SpAcademicFormmationsComponent } from './components/records/sp-academic-formmations/sp-academic-formmations.component';
 
 
 @NgModule({
@@ -40,6 +42,8 @@ import { AcademicDegreesComponent } from './components/records/academic-degrees/
     StudentsComponent,
     SpousesComponent,
     AcademicDegreesComponent,
+    StudentAcademicFormationsComponent,
+    SpAcademicFormmationsComponent,
   ],
   imports: [
     BrowserModule,

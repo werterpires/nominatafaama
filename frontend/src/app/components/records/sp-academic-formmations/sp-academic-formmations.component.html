@@ -1,0 +1,102 @@
+<section *ngIf="permissions.estudante || permissions.administrador" class="smallSectionBox" id="boxHeadSpAcademicFormations">
+    <div class="boxHead">
+        <span class="headField" (click)="showBox()">
+            <img class="seeMoreIcon" id="seeMoreIconFormations" src="assets/icons/seeMoreIcon.png" alt="Expandir">
+            <p class="sectionTitle1">Formações acadêmicas do cônjuge</p>
+        </span>
+        
+        <img class="addIcon hidden" id="spFormationAddIcon" src="assets/icons/addIcon.png" alt="Criar nova formação acadêmica" (click)="createForm()">
+    </div>
+    <section>
+        <form *ngIf="creatingFormation" class="formSCriation">
+            
+            <section class="formArea">
+                <label class="inputLabel">
+                    Grau acadêmico
+                    <select class="smallInput" name="degreeSelect" [(ngModel)]="createSpAcademicFormationData.degree_id">
+                        <option *ngFor="let degree of spAllDegrees" [value]=degree.degree_id>{{degree.degree_name}}</option>
+                    </select>
+                </label>
+                <label class="inputLabel">
+                    Área de formação<input class="smallMediumInput" type="text" name="formationAreaInput" [(ngModel)]="createSpAcademicFormationData.course_area">
+                </label>
+            </section>           
+            <section class="formArea">
+                <label class="inputLabel">
+                    Instituição:<input class="largeInput" type="text" name="institutionInput" [(ngModel)]="createSpAcademicFormationData.institution">
+                </label>
+            </section>
+            
+            <section class="formArea">
+                <label class="inputLabel">
+                    Data de início: <input class="smallInput" type="date" name="beginDateInput" [(ngModel)]="createSpAcademicFormationData.begin_date">
+                </label>
+                <label class="inputLabel">
+                    Data de fim: <input class="smallInput" type="date" name="beginDateInput" [(ngModel)]="createSpAcademicFormationData.conclusion_date">
+                </label>
+            </section>
+            <button class="saveButton" type="button" (click)="createSpAcademicFormation()">SALVAR</button>
+        </form>
+        <div *ngFor="let formation of spAllFormations; let i = index">
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Grau acadêmico:</p>
+                    <p class="fieldContent" [id]="'spDegree'+i" (click)="changeTagTypeToSelect('spDegree'+i, 'spsaveAcademicFormationButton'+i, 'spDegreeSelect'+i)">{{formation.degree_name}}</p>
+                    <select class="smallInput hidden" [id]="'spDegreeSelect'+i" name="'degreeSelect'+i" [(ngModel)]="spAllFormations[i].degree_id">
+                        <option *ngFor="let degree of spAllDegrees" [value]=degree.degree_id>{{degree.degree_name}}</option>
+                    </select>
+                </span>
+                <span class="field">
+                    <p class="fieldTitle">Área de formação:</p>
+                    <p class="fieldContent" [id]="'spCourse_area'+i" (click)="changeTagType('spCourse_area'+i, 'spsaveAcademicFormationButton'+i, 'spCourse_areaInput'+i)">{{formation.course_area}}</p>
+                    <input class="fieldContent hidden" [id]="'spCourse_areaInput'+i" name=`course_areaInput${i}` [(ngModel)]="spAllFormations[i].course_area">
+                </span>
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Instituição</p>
+                    <p class="fieldContent" [id]="'spinstitution'+i" (click)="changeTagType('spinstitution'+i, 'spsaveAcademicFormationButton'+i, 'spinstitutionInput'+i)">{{formation.institution}}</p>
+                    <input class="fieldContent hidden" [id]="'spinstitutionInput'+i" name=`institutionInput${i}` [(ngModel)]="spAllFormations[i].institution">
+                </span>
+               
+            </div>
+            <div class="subSection">
+                <span class="field">
+                    <p class="fieldTitle">Data de início:</p>
+                    <p class="fieldContent" [id]="'spbegin_date'+i" (click)="changeTagType('spbegin_date'+i, 'spsaveAcademicFormationButton'+i, 'spbegin_dateInput'+i)">{{formation.begin_date}}</p>
+                    <input class="fieldContent hidden" [id]="'spbegin_dateInput'+i" type="date" name=`begin_dateInput${i}` [(ngModel)]="spAllFormations[i].begin_date">
+                </span>
+                <span class="field" (click)="changeTagType('spconclusion_date'+i, 'spsaveAcademicFormationButton'+i, 'spconclusion_dateInput'+i)">
+                    <p class="fieldTitle">Data de conclusão:</p>
+                    <p *ngIf="spAllFormations[i].conclusion_date != null" class="fieldContent" [id]="'spconclusion_date'+i">{{formation.conclusion_date}}</p>
+                    <p *ngIf="spAllFormations[i].conclusion_date == null" class="fieldContent" [id]="'spconclusion_date'+i" (click)="changeTagType('spconclusion_date'+i, 'spsaveAcademicFormationButton'+i, 'spconclusion_dateInput'+i)">Não concluído</p>
+                    <input class="fieldContent hidden" [id]="'spconclusion_dateInput'+i" type="date" name=`conclusion_dateInput${i}` [(ngModel)]="spAllFormations[i].conclusion_date">
+                </span>
+            </div>
+            <button class="saveButton hidden" [id]="'spsaveAcademicFormationButton'+i" (click)="editSpAcademicFormation(i, 'spsaveAcademicFormationButton'+i)">Salvar</button>
+            <hr class="sectionDivisiion">
+        </div>
+    </section>
+</section>
+
+<div *ngIf="error" class="error">
+    <div class="errorTitle">
+        <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+        <p>{{errorMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+</div>
+<div *ngIf="done" class="done">
+    <div class="doneTitle">
+        <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+        <p>{{doneMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

@@ -3,7 +3,7 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable('languages_list', (table) => {
+  return knex.schema.createTable('language_types', (table) => {
     
     table.increments('language_id').primary();
 
