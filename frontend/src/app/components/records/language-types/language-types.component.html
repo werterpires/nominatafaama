@@ -1,0 +1,54 @@
+<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadLanguageTypes">
+    <div class="boxHead">
+      <span class="headField" (click)="showBox()">
+        <img class="seeMoreIcon" id="seeMoreIconLanguageTypes" src="assets/icons/seeMoreIcon.png" alt="">
+        <p class="sectionTitle1">Tipos de linguagem</p>
+      </span>
+      
+      <img class="addIcon hidden" id="languageTypeAddIcon" src="assets/icons/addIcon.png" alt="Criar novo tipo de linguagem" (click)="createForm()">
+    </div>
+    <section>
+      <form *ngIf="creatingLanguageType" class="formCreation">
+        <label class="inputLabel">
+          Novo tipo de linguagem
+          <input class="mediumInput" type="text" name="languageTypeInput" [(ngModel)]="createLanguageTypeData.language_name">
+        </label>
+        
+        <button class="saveButton" type="button" (click)="createLanguageType()">SALVAR</button>
+      </form>
+      <div *ngFor="let language of allLanguageTypes; let i = index">
+        <div class="subSection">
+          <span class="field">
+            <p class="fieldTitle">Tipo de linguagem:</p>
+            <p class="fieldContent" [id]="'languageType'+i" (click)="changeTagType('languageType'+i, 'saveLanguageTypeButton'+i, 'languageTypeInput'+i)">{{language.language_name}}</p>
+            <input class="fieldContent hidden" [id]="'languageTypeInput'+i" name=`languageTypeInput${i}` [(ngModel)]="allLanguageTypes[i].language_name">
+          </span>
+          <button class="saveButton hidden" [id]="'saveLanguageTypeButton'+i" (click)="editLanguageType(i, 'saveLanguageTypeButton'+i)">Salvar</button>
+        </div>
+        <hr class="sectionDivision">
+      </div>
+    </section>
+  </section>
+  
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{errorMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{doneMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  </div>
+  
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+  

@@ -22,6 +22,9 @@ import { SpousesComponent } from './components/records/spouses/spouses.component
 import { AcademicDegreesComponent } from './components/records/academic-degrees/academic-degrees.component';
 import { StudentAcademicFormationsComponent } from './components/records/student-academic-formations/student-academic-formations.component';
 import { SpAcademicFormmationsComponent } from './components/records/sp-academic-formmations/sp-academic-formmations.component';
+import { LanguageTypesComponent } from './components/records/language-types/language-types.component';
+import { EvangExpTypesComponent } from './components/records/evang-exp-types/evang-exp-types.component';
+import { EclExpTypesComponent } from './components/records/ecl-exp-types/ecl-exp-types.component';
 
 
 @NgModule({
@@ -44,6 +47,9 @@ import { SpAcademicFormmationsComponent } from './components/records/sp-academic
     AcademicDegreesComponent,
     StudentAcademicFormationsComponent,
     SpAcademicFormmationsComponent,
+    LanguageTypesComponent,
+    EvangExpTypesComponent,
+    EclExpTypesComponent,
   ],
   imports: [
     BrowserModule,

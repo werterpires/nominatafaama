@@ -4,8 +4,11 @@ import { UnionsModule } from './unions/unions.module';
 import { AssociationsModule } from './associations/associations.module';
 import { HiringStatusModule } from './hiring-status/hiring-status.module';
 import { AcademicDegreesModule } from './academic-degrees/academic-degrees.module';
+import { LanguageTypesModule } from './language-types/language-types.module';
+import { EvangExpTypesModule } from './evang-exp-types/evang-exp-types.module';
+import { EclExpTypesModule } from './ecl-exp-types/ecl-exp-types.module';
 
 @Module({
-  imports: [MaritalStatusModule, UnionsModule, AssociationsModule, HiringStatusModule, AcademicDegreesModule]
+  imports: [MaritalStatusModule, UnionsModule, AssociationsModule, HiringStatusModule, AcademicDegreesModule, LanguageTypesModule, EvangExpTypesModule, EclExpTypesModule]
 })
 export class ResourcesModule {}
