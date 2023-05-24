@@ -5,7 +5,7 @@
 - Instale as dependências: 
 > `npm install`
 
-- Crie o arquivo .env com o seguinte conteúdo:
+- Crie o arquivo `backend/.env` e preencha o valor das variáveis abaixo:
 ```shell
 MYSQL_ROOT_PASSWORD=VALOR
 MYSQL_DATABASE=VALOR
