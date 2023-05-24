@@ -25,10 +25,10 @@ exports.up = function (knex) {
 
     table
       .foreign('chosen_language')
-      .references('languages_list.language_id')
+      .references('language_types.language_id')
       .onDelete('RESTRICT')
       .onUpdate('RESTRICT');
-      
+
     table.timestamps(true, true);
   });
 };
