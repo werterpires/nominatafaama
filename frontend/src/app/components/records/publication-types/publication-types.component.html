@@ -1,0 +1,70 @@
+<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox"
+  id="boxHeadPublicationTypes">
+  <div class="boxHead">
+    <span class="headField" (click)="showBox()">
+      <img class="seeMoreIcon" id="seeMoreIconPublicationTypes" src="assets/icons/seeMoreIcon.png" alt="">
+      <p class="sectionTitle1">Tipos de Publicação</p>
+    </span>
+    <img class="addIcon hidden" id="publicationTypeAddIcon" src="assets/icons/addIcon.png"
+      alt="Criar novo tipo de publicação" (click)="createForm()">
+  </div>
+  <section>
+    <form *ngIf="creatingPublicationType" class="formCreation">
+      <label class="inputLabel">
+        Novo Tipo de Publicação<input class="mediumInput" type="text" name="publicationTypeInput"
+          [(ngModel)]="createPublicationTypeData.publication_type">
+      </label>
+      <label class="inputLabel">
+        INSTRUÇÕES<input class="smallInput" type="text" name="instructionsInput"
+          [(ngModel)]="createPublicationTypeData.instructions">
+      </label>
+      <button class="saveButton" type="button" (click)="createPublicationType()">SALVAR</button>
+    </form>
+    <div *ngFor="let publicationType of allPublicationTypes; let i = index">
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">Tipo de Publicação:</p>
+          <p class="fieldContent" [id]="'publicationType'+i"
+            (click)="changeTagType('publicationType'+i, 'savePublicationTypeButton'+i, 'publicationTypeInput'+i  )">
+            {{publicationType.publication_type}}</p>
+          <input class="fieldContent hidden" [id]="'publicationTypeInput'+i" name=`publicationTypeInput${i}`
+            [(ngModel)]="allPublicationTypes[i].publication_type">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Instruções:</p>
+          <p class="fieldContent" [id]="'instructions'+i"
+            (click)="changeTagType('instructions'+i,'savePublicationTypeButton'+i, 'instructionsInput'+i )">
+            {{publicationType.instructions}}</p>
+          <input class="fieldContent hidden" [id]="'instructionsInput'+i" name=`instructionsInput${i}`
+            [(ngModel)]="allPublicationTypes[i].instructions">
+        </span>
+        <button class="saveButton hidden" [id]="'savePublicationTypeButton'+i"
+          (click)="editPublicationType(i, 'savePublicationTypeButton'+i)">Salvar</button>
+      </div>
+      <hr class="sectionDivision">
+    </div>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{errorMessage}}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+</div>
+
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{doneMessage}}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

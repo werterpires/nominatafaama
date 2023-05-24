@@ -27,6 +27,7 @@ import { EvangExpTypesComponent } from './components/records/evang-exp-types/eva
 import { EclExpTypesComponent } from './components/records/ecl-exp-types/ecl-exp-types.component';
 import { EndowmentTypesComponent } from './components/records/endowment-types/endowment-types.component';
 import { MinistryTypesComponent } from './components/records/minstry-types/ministry-types.component';
+import { PublicationTypesComponent } from './components/records/publication-types/publication-types.component';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import { MinistryTypesComponent } from './components/records/minstry-types/minis
     EclExpTypesComponent,
     EndowmentTypesComponent,
     MinistryTypesComponent,
+    PublicationTypesComponent,
   ],
   imports: [
     BrowserModule,
