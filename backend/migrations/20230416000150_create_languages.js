@@ -1,3 +1,4 @@
+
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
@@ -5,9 +6,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable('languages', (table) => {
     table.increments('language_id').primary();
-
     table.integer('chosen_language').unsigned().notNullable();
-
     table.boolean('read').notNullable();
     table.boolean('understand').notNullable();
     table.boolean('speak').notNullable();
