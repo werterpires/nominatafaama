@@ -18,7 +18,7 @@ export class EclExpTypesComponent {
   creatingEclExpType: boolean = false;
   editingEclExpType: boolean = false;
   createEclExpTypeData: ICreateEclExpTypeDto = {
-   ecl_name:""
+   ecl_exp_type_name:""
   };
 
   isLoading: boolean = false;
@@ -73,7 +73,7 @@ export class EclExpTypesComponent {
         this.done = true;
         this.isLoading = false;
         this.ngOnInit();
-        this.createEclExpTypeData.ecl_name = "";
+        this.createEclExpTypeData.ecl_exp_type_name = "";
         this.creatingEclExpType = false;
       },
       error: err => {
@@ -110,8 +110,8 @@ export class EclExpTypesComponent {
   editEclExpType(i: number, buttonId: string){
     this.isLoading = true;
     const editEclExpTypeData: IUpdateEclExpType = {
-      ecl_id: this.allEclExpTypes[i].ecl_id,
-      ecl_name: this.allEclExpTypes[i].ecl_name
+      ecl_exp_type_id: this.allEclExpTypes[i].ecl_exp_type_id,
+      ecl_exp_type_name: this.allEclExpTypes[i].ecl_exp_type_name
     };
 
     this.eclExpTypesService.editEclExpType(editEclExpTypeData).subscribe({

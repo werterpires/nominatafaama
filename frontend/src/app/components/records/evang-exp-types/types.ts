@@ -1,14 +1,14 @@
 export interface IEvangExpType {
-    evang_id: number;
-    evang_name: string;
+    evang_exp_type_id: number;
+    evang_exp_type_name: string;
   }
   
   export interface ICreateEvangExpTypeDto {
-    evang_name: string;
+    evang_exp_type_name: string;
   }
   
   export interface IUpdateEvangExpType {
-    evang_id: number;
-    evang_name: string;
+    evang_exp_type_id: number;
+    evang_exp_type_name: string;
   }
   

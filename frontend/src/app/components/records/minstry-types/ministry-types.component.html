@@ -1,0 +1,54 @@
+<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadMinistryTypes">
+    <div class="boxHead">
+      <span class="headField" (click)="showBox()">
+        <img class="seeMoreIcon" id="seeMoreIconMinistryTypes" src="assets/icons/seeMoreIcon.png" alt="">
+        <p class="sectionTitle1">Tipos de ministério</p>
+      </span>
+      
+      <img class="addIcon hidden" id="ministryTypeAddIcon" src="assets/icons/addIcon.png" alt="Criar novo tipo de ministério" (click)="createForm()">
+    </div>
+    <section>
+      <form *ngIf="creatingMinistryType" class="formCreation">
+        <label class="inputLabel">
+          Novo tipo de ministério
+          <input class="mediumInput" type="text" name="ministryTypeInput" [(ngModel)]="createMinistryTypeData.ministry_type_name">
+        </label>
+        
+        <button class="saveButton" type="button" (click)="createMinistryType()">SALVAR</button>
+      </form>
+      <div *ngFor="let ministry of allMinistryTypes; let i = index">
+        <div class="subSection">
+          <span class="field">
+            <p class="fieldTitle">Tipo de ministério:</p>
+            <p class="fieldContent" [id]="'ministryType'+i" (click)="changeTagType('ministryType'+i, 'saveMinistryTypeButton'+i, 'ministryTypeInput'+i)">{{ministry.ministry_type_name}}</p>
+            <input class="fieldContent hidden" [id]="'ministryTypeInput'+i" name=`ministryTypeInput${i}` [(ngModel)]="allMinistryTypes[i].ministry_type_name">
+          </span>
+          <button class="saveButton hidden" [id]="'saveMinistryTypeButton'+i" (click)="editMinistryType(i, 'saveMinistryTypeButton'+i)">Salvar</button>
+        </div>
+        <hr class="sectionDivision">
+      </div>
+    </section>
+  </section>
+  
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{errorMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{doneMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  </div>
+  
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+  

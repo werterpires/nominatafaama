@@ -1,14 +1,14 @@
 export interface IEclExpType {
-    ecl_id: number;
-    ecl_name: string;
+    ecl_exp_type_id: number;
+    ecl_exp_type_name: string;
   }
   
   export interface ICreateEclExpTypeDto {
-    ecl_name: string;
+    ecl_exp_type_name: string;
   }
   
   export interface IUpdateEclExpType {
-    ecl_id: number;
-    ecl_name: string;
+    ecl_exp_type_id: number;
+    ecl_exp_type_name: string;
   }
   

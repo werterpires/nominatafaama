@@ -18,7 +18,7 @@ export class EvangExpTypesComponent {
   creatingEvangExpType: boolean = false;
   editingEvangExpType: boolean = false;
   createEvangExpTypeData: ICreateEvangExpTypeDto = {
-    evang_name: ""
+    evang_exp_type_name: ""
   };
 
   isLoading: boolean = false;
@@ -73,7 +73,7 @@ export class EvangExpTypesComponent {
         this.done = true;
         this.isLoading = false;
         this.ngOnInit();
-        this.createEvangExpTypeData.evang_name = "";
+        this.createEvangExpTypeData.evang_exp_type_name = "";
         this.creatingEvangExpType = false;
       },
       error: err => {
@@ -110,8 +110,8 @@ export class EvangExpTypesComponent {
   editEvangExpType(i: number, buttonId: string){
     this.isLoading = true;
     const editEvangExpTypeData: IUpdateEvangExpType = {
-      evang_id: this.allEvangExpTypes[i].evang_id,
-      evang_name: this.allEvangExpTypes[i].evang_name
+      evang_exp_type_id: this.allEvangExpTypes[i].evang_exp_type_id,
+      evang_exp_type_name: this.allEvangExpTypes[i].evang_exp_type_name
     };
 
     this.evangExpTypesService.editEvangExpType(editEvangExpTypeData).subscribe({

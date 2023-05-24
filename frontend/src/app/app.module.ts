@@ -25,6 +25,8 @@ import { SpAcademicFormmationsComponent } from './components/records/sp-academic
 import { LanguageTypesComponent } from './components/records/language-types/language-types.component';
 import { EvangExpTypesComponent } from './components/records/evang-exp-types/evang-exp-types.component';
 import { EclExpTypesComponent } from './components/records/ecl-exp-types/ecl-exp-types.component';
+import { EndowmentTypesComponent } from './components/records/endowment-types/endowment-types.component';
+import { MinistryTypesComponent } from './components/records/minstry-types/ministry-types.component';
 
 
 @NgModule({
@@ -50,6 +52,8 @@ import { EclExpTypesComponent } from './components/records/ecl-exp-types/ecl-exp
     LanguageTypesComponent,
     EvangExpTypesComponent,
     EclExpTypesComponent,
+    EndowmentTypesComponent,
+    MinistryTypesComponent,
   ],
   imports: [
     BrowserModule,

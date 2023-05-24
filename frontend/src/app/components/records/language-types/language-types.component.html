@@ -11,7 +11,7 @@
       <form *ngIf="creatingLanguageType" class="formCreation">
         <label class="inputLabel">
           Novo tipo de linguagem
-          <input class="mediumInput" type="text" name="languageTypeInput" [(ngModel)]="createLanguageTypeData.language_name">
+          <input class="mediumInput" type="text" name="languageTypeInput" [(ngModel)]="createLanguageTypeData.language">
         </label>
         
         <button class="saveButton" type="button" (click)="createLanguageType()">SALVAR</button>
@@ -20,8 +20,8 @@
         <div class="subSection">
           <span class="field">
             <p class="fieldTitle">Tipo de linguagem:</p>
-            <p class="fieldContent" [id]="'languageType'+i" (click)="changeTagType('languageType'+i, 'saveLanguageTypeButton'+i, 'languageTypeInput'+i)">{{language.language_name}}</p>
-            <input class="fieldContent hidden" [id]="'languageTypeInput'+i" name=`languageTypeInput${i}` [(ngModel)]="allLanguageTypes[i].language_name">
+            <p class="fieldContent" [id]="'languageType'+i" (click)="changeTagType('languageType'+i, 'saveLanguageTypeButton'+i, 'languageTypeInput'+i)">{{language.language}}</p>
+            <input class="fieldContent hidden" [id]="'languageTypeInput'+i" name=`languageTypeInput${i}` [(ngModel)]="allLanguageTypes[i].language">
           </span>
           <button class="saveButton hidden" [id]="'saveLanguageTypeButton'+i" (click)="editLanguageType(i, 'saveLanguageTypeButton'+i)">Salvar</button>
         </div>

@@ -2,7 +2,7 @@
     <div class="boxHead">
       <span class="headField" (click)="showBox()">
         <img class="seeMoreIcon" id="seeMoreIconEvangExpTypes" src="assets/icons/seeMoreIcon.png" alt="">
-        <p class="sectionTitle1">Tipos de experiência evangélica</p>
+        <p class="sectionTitle1">Tipos de experiências evangelísticas</p>
       </span>
       
       <img class="addIcon hidden" id="evangExpTypeAddIcon" src="assets/icons/addIcon.png" alt="Criar novo tipo de experiência evangélica" (click)="createForm()">
@@ -10,8 +10,8 @@
     <section>
       <form *ngIf="creatingEvangExpType" class="formCreation">
         <label class="inputLabel">
-          Novo tipo de experiência evangélica
-          <input class="mediumInput" type="text" name="evangExpTypeInput" [(ngModel)]="createEvangExpTypeData.evang_name">
+          Novo tipo de experiência evangelística
+          <input class="mediumInput" type="text" name="evangExpTypeInput" [(ngModel)]="createEvangExpTypeData.evang_exp_type_name">
         </label>
         
         <button class="saveButton" type="button" (click)="createEvangExpType()">SALVAR</button>
@@ -19,9 +19,9 @@
       <div *ngFor="let evangExpType of allEvangExpTypes; let i = index">
         <div class="subSection">
           <span class="field">
-            <p class="fieldTitle">Tipo de experiência evangélica:</p>
-            <p class="fieldContent" [id]="'evangExpType'+i" (click)="changeTagType('evangExpType'+i, 'saveEvangExpTypeButton'+i, 'evangExpTypeInput'+i)">{{evangExpType.evang_name}}</p>
-            <input class="fieldContent hidden" [id]="'evangExpTypeInput'+i" name=`evangExpTypeInput${i}` [(ngModel)]="allEvangExpTypes[i].evang_name">
+            <p class="fieldTitle">Tipo de experiência evangelística:</p>
+            <p class="fieldContent" [id]="'evangExpType'+i" (click)="changeTagType('evangExpType'+i, 'saveEvangExpTypeButton'+i, 'evangExpTypeInput'+i)">{{evangExpType.evang_exp_type_name}}</p>
+            <input class="fieldContent hidden" [id]="'evangExpTypeInput'+i" name=`evangExpTypeInput${i}` [(ngModel)]="allEvangExpTypes[i].evang_exp_type_name">
           </span>
           <button class="saveButton hidden" [id]="'saveEvangExpTypeButton'+i" (click)="editEvangExpType(i, 'saveEvangExpTypeButton'+i)">Salvar</button>
         </div>

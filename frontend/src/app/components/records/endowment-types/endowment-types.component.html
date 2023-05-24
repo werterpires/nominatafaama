@@ -1,0 +1,71 @@
+<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadEndowmentTypes">
+    <div class="boxHead">
+      <span class="headField" (click)="showBox()">
+        <img class="seeMoreIcon" id="seeMoreIconEndowmentTypes" src="assets/icons/seeMoreIcon.png" alt="">
+        <p class="sectionTitle1">Tipos de investidura</p>
+      </span>
+      
+      <img class="addIcon hidden" id="endowmentTypeAddIcon" src="assets/icons/addIcon.png" alt="Criar novo tipo de investidura" (click)="createForm()">
+    </div>
+    <section>
+      <form *ngIf="creatingEndowmentType" class="formCreation">
+        <label class="inputLabel">
+          Novo tipo de investidura
+          <input class="mediumInput" type="text" name="endowmentTypeInput" [(ngModel)]="createEndowmentTypeData.endowment_type_name">
+        </label>
+        <label class="inputLabel">
+            Essa investidura se aplica a que gênero?
+            <select class="smallInput" name="endowmentTypeSelect" [(ngModel)]="createEndowmentTypeData.application">
+                <option value=0>Ambos</option>
+                <option value=1>Masculino</option>
+                <option value=2>Feminino</option>
+            </select>
+        </label>
+        
+        <button class="saveButton" type="button" (click)="createEndowmentType()">SALVAR</button>
+      </form>
+      <div *ngFor="let endowment of allEndowmentTypes; let i = index">
+        <div class="subSection">
+          <span class="field">
+            <p class="fieldTitle">Tipo de investidura:</p>
+            <p class="fieldContent" [id]="'endowmentType'+i" (click)="changeTagType('endowmentType'+i, 'saveEndowmentTypeButton'+i, 'endowmentTypeInput'+i)">{{endowment.endowment_type_name}}</p>
+            <input class="fieldContent hidden" [id]="'endowmentTypeInput'+i" name=`endowmentTypeInput${i}` [(ngModel)]="allEndowmentTypes[i].endowment_type_name">
+          </span>
+          <span class="field">
+            <p class="fieldTitle">Género a que se aplica:</p>
+            <p class="fieldContent" [id]="'application'+i" (click)="changeTagTypeToSelect('application'+i, 'saveEndowmentTypeButton'+i, 'applicationSelect'+i)">{{genders[endowment.application]}}</p>
+            <select class="fieldContent hidden" [id]="'applicationSelect'+i" name=`endowmentTypeInput${i}` [(ngModel)]="allEndowmentTypes[i].application">
+                <option value=0>Ambos</option>
+                <option value=1>Masculino</option>
+                <option value=2>Feminino</option>
+            </select>
+          </span>
+          <button class="saveButton hidden" [id]="'saveEndowmentTypeButton'+i" (click)="editEndowmentType(i, 'saveEndowmentTypeButton'+i)">Salvar</button>
+        </div>
+        <hr class="sectionDivision">
+      </div>
+    </section>
+  </section>
+  
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{errorMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{doneMessage}}</p>
+    </div>
+    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  </div>
+  
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+  

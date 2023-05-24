@@ -7,8 +7,11 @@ import { AcademicDegreesModule } from './academic-degrees/academic-degrees.modul
 import { LanguageTypesModule } from './language-types/language-types.module';
 import { EvangExpTypesModule } from './evang-exp-types/evang-exp-types.module';
 import { EclExpTypesModule } from './ecl-exp-types/ecl-exp-types.module';
+import { PublicationTypesModule } from './publication-types/publication-types.module';
+import { EndowmentsTypesModule } from './endowments-types/endowments-types.module';
+import { MinistryTypesModule } from './ministry-types/ministry-types.module';
 
 @Module({
-  imports: [MaritalStatusModule, UnionsModule, AssociationsModule, HiringStatusModule, AcademicDegreesModule, LanguageTypesModule, EvangExpTypesModule, EclExpTypesModule]
+  imports: [MaritalStatusModule, UnionsModule, AssociationsModule, HiringStatusModule, AcademicDegreesModule, LanguageTypesModule, EvangExpTypesModule, EclExpTypesModule, PublicationTypesModule, EndowmentsTypesModule, MinistryTypesModule]
 })
 export class ResourcesModule {}

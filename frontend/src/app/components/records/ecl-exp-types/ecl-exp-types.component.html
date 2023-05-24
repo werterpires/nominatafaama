@@ -2,7 +2,7 @@
     <div class="boxHead">
       <span class="headField" (click)="showBox()">
         <img class="seeMoreIcon" id="seeMoreIconEclExpTypes" src="assets/icons/seeMoreIcon.png" alt="">
-        <p class="sectionTitle1">Tipos de experiência de ECL</p>
+        <p class="sectionTitle1">Tipos de experiências eclesiásticas</p>
       </span>
       
       <img class="addIcon hidden" id="eclExpTypeAddIcon" src="assets/icons/addIcon.png" alt="Criar novo tipo de experiência de ECL" (click)="createForm()">
@@ -10,8 +10,8 @@
     <section>
       <form *ngIf="creatingEclExpType" class="formCreation">
         <label class="inputLabel">
-          Novo tipo de experiência de ECL
-          <input class="mediumInput" type="text" name="eclExpTypeInput" [(ngModel)]="createEclExpTypeData.ecl_name">
+          Novo tipo de experiências eclesiásticas
+          <input class="mediumInput" type="text" name="eclExpTypeInput" [(ngModel)]="createEclExpTypeData.ecl_exp_type_name">
         </label>
         
         <button class="saveButton" type="button" (click)="createEclExpType()">SALVAR</button>
@@ -19,9 +19,9 @@
       <div *ngFor="let eclExpType of allEclExpTypes; let i = index">
         <div class="subSection">
           <span class="field">
-            <p class="fieldTitle">Tipo de experiência de ECL:</p>
-            <p class="fieldContent" [id]="'eclExpType'+i" (click)="changeTagType('eclExpType'+i, 'saveEclExpTypeButton'+i, 'eclExpTypeInput'+i)">{{eclExpType.ecl_name}}</p>
-            <input class="fieldContent hidden" [id]="'eclExpTypeInput'+i" name=`eclExpTypeInput${i}` [(ngModel)]="allEclExpTypes[i].ecl_name">
+            <p class="fieldTitle">Tipo de experiências eclesiásticas:</p>
+            <p class="fieldContent" [id]="'eclExpType'+i" (click)="changeTagType('eclExpType'+i, 'saveEclExpTypeButton'+i, 'eclExpTypeInput'+i)">{{eclExpType.ecl_exp_type_name}}</p>
+            <input class="fieldContent hidden" [id]="'eclExpTypeInput'+i" name=`eclExpTypeInput${i}` [(ngModel)]="allEclExpTypes[i].ecl_exp_type_name">
           </span>
           <button class="saveButton hidden" [id]="'saveEclExpTypeButton'+i" (click)="editEclExpType(i, 'saveEclExpTypeButton'+i)">Salvar</button>
         </div>

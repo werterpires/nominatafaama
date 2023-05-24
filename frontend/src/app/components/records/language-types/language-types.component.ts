@@ -18,7 +18,7 @@ export class LanguageTypesComponent {
   creatingLanguageType: boolean = false;
   editingLanguageType: boolean = false;
   createLanguageTypeData: ICreateLanguageTypeDto = {
-    language_name: ""
+    language: ""
   };
 
   isLoading: boolean = false;
@@ -73,7 +73,7 @@ export class LanguageTypesComponent {
         this.done = true;
         this.isLoading = false;
         this.ngOnInit();
-        this.createLanguageTypeData.language_name = "";
+        this.createLanguageTypeData.language = "";
         this.creatingLanguageType = false;
       },
       error: err => {
@@ -111,7 +111,7 @@ export class LanguageTypesComponent {
     this.isLoading = true;
     const editLanguageTypeData: IUpdateLanguageType = {
       language_id: this.allLanguageTypes[i].language_id,
-      language_name: this.allLanguageTypes[i].language_name
+      language: this.allLanguageTypes[i].language
     };
 
     this.languageTypesService.editLanguageType(editLanguageTypeData).subscribe({
