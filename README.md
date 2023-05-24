@@ -18,7 +18,7 @@ JWT_SECRET=VALOR
 - Inicie o MySQL:
 > `docker-compose up`
 
-- Inicie as Migrations:
+- Crie as tabelas no MySQL:
 > `npx knex migrate:latest`
 
 - Inicie a aplicação:
