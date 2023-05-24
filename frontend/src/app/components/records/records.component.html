@@ -9,9 +9,9 @@
         <app-evang-exp-types [permissions]="permissions"></app-evang-exp-types>
         <app-ecl-exp-types [permissions]="permissions"></app-ecl-exp-types>
         <app-ministry-types [permissions]="permissions"></app-ministry-types>
-        <app-endowment-types [permissions]="permissions"></app-endowment-types>
-        <app-students [permissions]="permissions"></app-students>
-        <app-student-academic-formations [permissions]="permissions"></app-student-academic-formations>
-        <app-spouses [permissions]="permissions"></app-spouses>
-        <app-sp-academic-formations [permissions]="permissions"></app-sp-academic-formations>
+        <app-endowment-types  [permissions]="permissions"></app-endowment-types >
+        <app-students *ngIf="permissions.estudante || permissions.administrador" [permissions]="permissions"></app-students>
+        <app-student-academic-formations *ngIf="permissions.estudante || permissions.administrador" [permissions]="permissions"></app-student-academic-formations>
+        <app-spouses *ngIf="permissions.estudante || permissions.administrador" [permissions]="permissions"></app-spouses>
+        <app-sp-academic-formations *ngIf="permissions.estudante || permissions.administrador" [permissions]="permissions"></app-sp-academic-formations>
     </div>  
