@@ -1,6 +1,8 @@
 # nominatafaama
 
-## Backend
+## Instruções para executar localmente
+
+### Backend
 
 - Instale as dependências: 
 > `npm install`
@@ -24,7 +26,7 @@ JWT_SECRET=VALOR
 - Inicie a aplicação:
 > `npm run dev`
 
-## Frontend
+### Frontend
 
 - Instale as dependências:
 > `npm install`
