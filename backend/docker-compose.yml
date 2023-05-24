@@ -1,5 +1,5 @@
 version: "3"
-services: 
+services:
   nominata_faama:
     container_name: nominata_faama_salt
     hostname: salt_faama
@@ -10,7 +10,7 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --innodb_force_recovery=0
-    volumes: 
+    volumes:
       - faamadb:/var/lib/mysql
     ports:
       - 3306:3306

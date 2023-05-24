@@ -1,5 +1,5 @@
 {
   "singleQuote": true,
   "trailingComma": "all",
-  "bracketSpacing": false // ignora o espaçamento dentro das chaves {}
+  "bracketSpacing": false
 }
