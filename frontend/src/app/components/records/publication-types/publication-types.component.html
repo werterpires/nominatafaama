@@ -20,32 +20,21 @@
       </label>
       <button class="saveButton" type="button" (click)="createPublicationType()">SALVAR</button>
     </form>
-    <div class="registryWrapper" *ngFor="let publicationType of allPublicationTypes; let i = index">
-      <div class="subSection" (mouseover)="deleteButton.hidden=false" (mouseout)="deleteButton.hidden=true">
-        <section class="registryStartButtons">
-          <img #deleteButton class="deleteIcon" hidden src="assets/icons/delete.svg"
-            alt="ícone para deletar o tipo de publicação" (click)="deletePublicationType(i)">
-        </section>
-        <section class="registryFields">
-          <span class="field">
-            <p class="fieldTitle">Tipo de Publicação:</p>
-            <input class="fieldContent" [id]="'publicationTypeInput'+i" name=`publicationTypeInput${i}`
-              [(ngModel)]="allPublicationTypes[i].publication_type"
-              (ngModelChange)="saveButton.classList.remove('hidden')">
-          </span>
-          <span class="field">
-            <p class="fieldTitle">Instruções:</p>
-            <input class="fieldContent" [id]="'instructionsInput'+i" name=`instructionsInput${i}`
-              [(ngModel)]="allPublicationTypes[i].instructions" (ngModelChange)="saveButton.classList.remove('hidden')">
-          </span>
-        </section>
-        <section class="registryEndButtons">
-          <button #saveButton class="saveButton hidden" [id]="'savePublicationTypeButton'+i"
-            (click)="editPublicationType(i, 'savePublicationTypeButton'+i)">Salvar</button>
-        </section>
-      </div>
-      <hr class="sectionDivision">
-    </div>
+    <app-registry #registryApp [registryId]="i" (editRegistry)="editPublicationType($event.id, $event.saveButtonId)"
+      (deleteRegistry)="deletePublicationType($event)" *ngFor="let registry of allPublicationTypes; index as i;">
+      <span class="field">
+        <p class="fieldTitle">Tipo de Publicação:</p>
+        <input class="fieldContent" [id]="'publicationTypeInput'+i" name=`publicationTypeInput${i}`
+          [(ngModel)]="allPublicationTypes[i].publication_type" (ngModelChange)="registryApp.fieldChanged=true">
+      </span>
+      <span class="field">
+        <p class="fieldTitle">Instruções:</p>
+        <input class="fieldContent" [id]="'instructionsInput'+i" name=`instructionsInput${i}`
+          [(ngModel)]="allPublicationTypes[i].instructions" (ngModelChange)="registryApp.fieldChanged=true">
+      </span>
+    </app-registry>
+    <hr class="sectionDivision">
+
   </section>
 </section>
 

@@ -19,3 +19,8 @@ export interface Dialog {
   text: Array<string>
   confirmation: EventEmitter<number>
 }
+
+export interface RegistryField {
+  title: string
+  column: string
+}

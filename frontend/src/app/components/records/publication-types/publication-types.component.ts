@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core'
 import {IPermissions} from '../../shared/container/types'
 import {DialogService} from '../../shared/shared.service.ts/dialog.service'
+import {RegistryField} from '../../shared/types'
 import {PublicationTypeService} from './publication-types.service'
 import {
   CreatePublicationTypeDto,
@@ -21,6 +22,10 @@ export class PublicationTypesComponent {
 
   @Input() permissions!: IPermissions
   allPublicationTypes: IPublicationType[] = []
+  fields: Array<RegistryField> = [
+    {title: 'Tipo de Publicação', column: 'publication_type'},
+    {title: 'Instruções', column: 'instructions'},
+  ]
   creatingPublicationType: boolean = false
   editingPublicationType: boolean = false
   createPublicationTypeData: CreatePublicationTypeDto = {
