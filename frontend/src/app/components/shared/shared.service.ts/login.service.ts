@@ -19,6 +19,7 @@ export class LoginService {
     const token = localStorage.getItem('access_token')
     if (token) {
       this.userToken = token
+      this.getRoles(token)
     }
   }
 
@@ -48,21 +49,25 @@ export class LoginService {
           }
         }),
         tap((resposta) => {
-          if (resposta.access_token) {
-            this.userToken = resposta.access_token
-            localStorage.setItem('access_token', this.userToken)
-            this.http
-              .get<IUserApproved>('http://localhost:3000/users/roles', {
-                headers: {Authorization: 'bearer ' + resposta.access_token},
-              })
-              .subscribe((userApproved) => {
-                if (userApproved.user_approved) {
-                  this.user.next(userApproved)
-                  this.router.navigateByUrl('/')
-                } else throw Error('User not approved')
-              })
-          }
+          this.getRoles(resposta.access_token)
         }),
       )
+  }
+
+  getRoles(token: string) {
+    if (token) {
+      this.userToken = token
+      localStorage.setItem('access_token', this.userToken)
+      this.http
+        .get<IUserApproved>('http://localhost:3000/users/roles', {
+          headers: {Authorization: 'bearer ' + token},
+        })
+        .subscribe((userApproved) => {
+          if (userApproved.user_approved) {
+            this.user.next(userApproved)
+            this.router.navigateByUrl('/')
+          } else throw Error('User not approved')
+        })
+    }
   }
 }
