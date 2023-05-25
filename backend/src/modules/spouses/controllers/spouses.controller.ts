@@ -1,13 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { CreateSpouseDto } from '../dto/create-spouse.dto';
-import { UpdateSpouseDto } from '../dto/update-spouse.dto';
-import { SpousesService } from '../services/spouses.service';
-import { ISpouse } from '../types/types';
-import { NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  InternalServerErrorException,
+  Param,
+  Post,
+  Put
+} from '@nestjs/common';
 import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
 import { ERoles } from 'src/shared/auth/types/roles.enum';
 import { UserFromJwt } from 'src/shared/auth/types/types';
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
+import { CreateSpouseDto } from '../dto/create-spouse.dto';
+import { UpdateSpouseDto } from '../dto/update-spouse.dto';
+import { SpousesService } from '../services/spouses.service';
+import { ISpouse } from '../types/types';
 
 @Controller('spouses')
 export class SpousesController {
@@ -15,8 +23,11 @@ export class SpousesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Post()
-  async createSpouse(@Body() input: CreateSpouseDto, @CurrentUser() user :UserFromJwt) {
-    const id = user.user_id
+  async createSpouse(
+    @Body() input: CreateSpouseDto,
+    @CurrentUser() user: UserFromJwt,
+  ) {
+    const id = user.user_id;
     try {
       const spouse = await this.spousesService.createSpouse(input, id);
       return spouse;
@@ -27,13 +38,10 @@ export class SpousesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('edit')
-  async findSpouseById(@CurrentUser() user :UserFromJwt): Promise<ISpouse> {
-    const id = user.user_id
+  async findSpouseById(@CurrentUser() user: UserFromJwt): Promise<ISpouse> {
+    const id = user.user_id;
     try {
       const spouse = await this.spousesService.findSpouseByUserId(id);
-      if (!spouse) {
-        throw new NotFoundException(`Spouse with id ${id} not found.`);
-      }
       return spouse;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -42,10 +50,16 @@ export class SpousesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
-  async updateSpouse(@Body() input: UpdateSpouseDto, @CurrentUser() user:UserFromJwt) {
+  async updateSpouse(
+    @Body() input: UpdateSpouseDto,
+    @CurrentUser() user: UserFromJwt,
+  ) {
     try {
-      const id = user.user_id
-      const updatedSpouse = await this.spousesService.updateSpouseById(input, id);
+      const id = user.user_id;
+      const updatedSpouse = await this.spousesService.updateSpouseById(
+        input,
+        id,
+      );
       return updatedSpouse;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -57,7 +71,7 @@ export class SpousesController {
   async deleteSpouseById(@Param('id') id: number) {
     try {
       const message = await this.spousesService.deleteSpouseById(id);
-      return { message };
+      return {message};
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

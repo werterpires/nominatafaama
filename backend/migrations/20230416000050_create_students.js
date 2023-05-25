@@ -3,7 +3,7 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  
+
   return knex.schema.createTable('students', (table) => {
     table.increments('student_id').primary();
     table.string('phone_number', 15).notNullable();
@@ -15,7 +15,6 @@ exports.up = function (knex) {
     table.string('justification', 400).notNullable();
     table.string('birth_city', 250).notNullable();
     table.string('birth_state', 5).notNullable();
-    table.string('baptism_state', 5).notNullable();
     table.string('primary_school_city', 250).notNullable();
     table.string('primary_school_state', 250).notNullable();
     table.date('birth_date').notNullable();
@@ -58,5 +57,5 @@ exports.up = function (knex) {
 exports.down = function (knex) {
 
   return knex.schema.dropTable('students');
-  
+
 };

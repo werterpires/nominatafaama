@@ -113,15 +113,15 @@ export class SpousesComponent {
     this.isLoading = true;
     this.spouseServices.findSpouseByUserId().subscribe({
       next: res => {
-        
-        if(res.spouse_id>0 ){
-          
+
+        if(res?.spouse_id>0 ){
+
           this.spouse = res
 
           console.log(this.spouse.baptism_date)
-          
+
         }
-      
+
       },
       error: err => {
         this.errorMessage = err.message;
@@ -146,7 +146,7 @@ export class SpousesComponent {
             this.allUnions.push(association.union_acronym)
           }
         })
-      
+
       },
       error: err => {
         this.errorMessage = err.message;
@@ -164,13 +164,13 @@ export class SpousesComponent {
         this.errorMessage = err.message;
         this.error = true;
         this.isLoading=false;
-        
+
       }
     })
 
   }
 
- 
+
   showBox() {
     const box = document.getElementById('boxHeadSpouses');
     const add = document.getElementById('spouseAddIcon');
@@ -188,13 +188,13 @@ export class SpousesComponent {
       see?.classList.remove('rotatedClock');
     }
   }
-  
+
   filterAssociation(){
     this.createSpouseData.origin_field_id=0
     this.possibleAssociantions = this.allAssociations.filter(association=>{
       return association.union_acronym == this.selectedUnion
     })
-  
+
   }
 
   createForm() {
@@ -202,7 +202,7 @@ export class SpousesComponent {
   }
 
   findCities(cityType:string){
-    
+
     let id!:number
     if(cityType=="birth"){
       id = this.chosenBirthStateId
@@ -211,7 +211,7 @@ export class SpousesComponent {
     }else if(cityType=="merry"){
       id = this.chosenMerryStateId
     }
-    
+
     this.othersService.findAllCities(id).subscribe({
       next: res=>{
         if(cityType=="birth"){
@@ -221,13 +221,13 @@ export class SpousesComponent {
         }else if(cityType == "merry"){
           this.allMerryCities = res
         }
-        
+
       },
       error: err=>{
         this.errorMessage = err.message;
         this.error = true;
         this.isLoading=false;
-        
+
       }
     })
   }
@@ -257,7 +257,7 @@ export class SpousesComponent {
     if(this.createSpouseData.civil_marriage_date!=null){
       this.createSpouseData.civil_marriage_date = this.createSpouseData.civil_marriage_date?.slice(5,7)+ '/'+ this.createSpouseData.civil_marriage_date?.slice(8,10)+'/'+this.createSpouseData.civil_marriage_date?.slice(0,4)
     }
-  
+
     this.spouseServices.createSpouse(this.createSpouseData).subscribe({
       next: res => {
         this.doneMessage = 'Estudante criado com sucesso.';
@@ -284,7 +284,7 @@ export class SpousesComponent {
       }
     });
   }
-  
+
 
   changeTagType(paragraphId: string, buttonId: string, inputId: string) {
     const paragraph = document.getElementById(paragraphId);
@@ -338,7 +338,7 @@ export class SpousesComponent {
   editSpouse( buttonId: string) {
     this.isLoading = true
     this.spouse.origin_field_id = Number(this.spouse.origin_field_id);
-    
+
     const birthState = this.allBirthStates.find(state=>{return state.id == this.chosenBirthStateId})?.sigla;
     if(birthState){
       this.spouse.birth_state = birthState
@@ -353,18 +353,18 @@ export class SpousesComponent {
     if(merryState){
       this.spouse.civil_marriage_state = merryState
     }
-    
+
     const isWhats = (this.spouse.is_whatsapp==1)
 
     const baptism_date:string = this.spouse.baptism_date.slice(5,7)+ '/'+ this.spouse.baptism_date.slice(8,10)+'/'+this.spouse.baptism_date.slice(0,4)
     const birth_date:string = this.spouse.birth_date.slice(5,7)+ '/'+ this.spouse.birth_date.slice(8,10)+'/'+this.spouse.birth_date.slice(0,4)
-    
+
     let merry_date:string | null = null
 
     if(this.spouse.civil_marriage_date!=null){
       merry_date = this.spouse.civil_marriage_date?.slice(5,7)+ '/'+ this.spouse.civil_marriage_date?.slice(8,10)+'/'+this.spouse.civil_marriage_date?.slice(0,4)
     }
-    
+
     const editSpouseData: IUpdateSpouse = {
       spouse_id: this.spouse.spouse_id,
       phone_number: this.spouse.phone_number,
@@ -389,9 +389,9 @@ export class SpousesComponent {
       cpf: this.cpf,
       civil_marriage_state: this.spouse.civil_marriage_state
     };
-    
+
     console.log(editSpouseData)
-  
+
     this.spouseServices.updateSpouse(editSpouseData).subscribe({
       next: res => {
         this.doneMessage = 'Estudante editado com sucesso.';
@@ -406,7 +406,7 @@ export class SpousesComponent {
       }
     });
   }
-  
+
 
   deleteSpouse(i: number) {
     this.isLoading = true;
@@ -430,7 +430,7 @@ export class SpousesComponent {
   closeError() {
     this.error = false;
   }
-    
+
   closeDone() {
     this.done = false;
   }

@@ -28,6 +28,7 @@ import { EclExpTypesComponent } from './components/records/ecl-exp-types/ecl-exp
 import { EndowmentTypesComponent } from './components/records/endowment-types/endowment-types.component';
 import { MinistryTypesComponent } from './components/records/minstry-types/ministry-types.component';
 import { PublicationTypesComponent } from './components/records/publication-types/publication-types.component';
+import { ConfirmationDialogComponent } from './components/shared/confirmation-dialog/confirmation-dialog.component';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { PublicationTypesComponent } from './components/records/publication-type
     EndowmentTypesComponent,
     MinistryTypesComponent,
     PublicationTypesComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,

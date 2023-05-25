@@ -152,7 +152,7 @@ export class PublicationTypeModel {
     }
 
     if (updatedPublicationType === null) {
-      throw new Error('Failed to update union.');
+      throw new Error('Failed to update publication type.');
     }
 
     return updatedPublicationType;
@@ -177,7 +177,7 @@ export class PublicationTypeModel {
       throw sentError;
     }
 
-    message = 'Union deleted successfully.';
+    message = 'Publication type deleted successfully.';
     return message;
   }
 }

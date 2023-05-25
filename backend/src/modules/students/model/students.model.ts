@@ -1,16 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { Knex } from 'knex';
-import { InjectModel } from 'nest-knexjs';
-import { ICreateStudent, IStudent, IUpdateStudent } from '../types/types';
+import {Injectable} from '@nestjs/common';
+import {Knex} from 'knex';
+import {InjectModel} from 'nest-knexjs';
+import {ICreateStudent, IStudent, IUpdateStudent} from '../types/types';
 
 @Injectable()
 export class StudentsModel {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
-  async createStudent(createStudent: ICreateStudent, name:string): Promise<IStudent> {
+  async createStudent(
+    createStudent: ICreateStudent,
+    name: string,
+  ): Promise<IStudent> {
     let student: IStudent | null = null;
     let sentError: Error | null = null;
-  
+
     await this.knex.transaction(async (trx) => {
       try {
         const [result] = await trx('students').insert({
@@ -18,42 +21,12 @@ export class StudentsModel {
           student_approved: null,
           student_active: true,
         });
-  
-        student = {
-          student_id: result,
-          phone_number: createStudent.phone_number,
-          is_whatsapp: createStudent.is_whatsapp,
-          alternative_email: createStudent.alternative_email,
-          student_mensage: createStudent.student_mensage,
-          person_id: createStudent.person_id,
-          origin_field_id: createStudent.origin_field_id,
-          justification: createStudent.justification,
-          birth_city: createStudent.birth_city,
-          birth_state: createStudent.birth_state,
-          primary_school_city: createStudent.primary_school_city,
-          birth_date: createStudent.birth_date,
-          baptism_date: createStudent.baptism_date,
-          baptism_place: createStudent.baptism_place,
-          marital_status_id: createStudent.marital_status_id,
-          hiring_status_id: createStudent.hiring_status_id,
-          primary_school_state:createStudent.primary_school_state,
-          association_name:result[0].association_name,
-          association_acronym:result[0].association_acronym,
-          union_name:result[0].union_name,
-          union_acronym:result[0].union_acronym,
-          union_id:result[0].union_id,
-          marital_status_type_name:result[0].marital_status_type_name,
-          hiring_status_name:result[0].hiring_status_name,
-          hiring_status_description:result[0].hiring_status_description,
-          student_approved: null,
-          student_active: true,
-          created_at: new Date(),
-          updated_at: new Date(),
-          name: name
-        };
-  
+
         await trx.commit();
+
+        student = await this.findStudentById(result);
       } catch (error) {
+        console.error(error);
         await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Estudante já existe');
@@ -62,18 +35,18 @@ export class StudentsModel {
         }
       }
     });
-  
+
     if (sentError) {
       throw sentError;
     }
-  
+
     return student!;
   }
-  
+
   async findStudentById(id: number): Promise<IStudent | null> {
     let student: IStudent | null = null;
     let sentError: Error | null = null;
-  
+
     await this.knex.transaction(async (trx) => {
       try {
         const result = await trx
@@ -85,20 +58,32 @@ export class StudentsModel {
             'associations.*',
             'unions.*',
             'people.name as person_name',
-            'people.person_id as person_id'
+            'people.person_id as person_id',
           )
           .leftJoin('users', 'students.person_id', 'users.person_id')
           .leftJoin('people', 'students.person_id', 'people.person_id')
-          .leftJoin('marital_status_types', 'students.marital_status_id', 'marital_status_types.marital_status_type_id')
-          .leftJoin('hiring_status', 'students.hiring_status_id', 'hiring_status.hiring_status_id')
-          .leftJoin('associations', 'students.origin_field_id', 'associations.association_id')
+          .leftJoin(
+            'marital_status_types',
+            'students.marital_status_id',
+            'marital_status_types.marital_status_type_id',
+          )
+          .leftJoin(
+            'hiring_status',
+            'students.hiring_status_id',
+            'hiring_status.hiring_status_id',
+          )
+          .leftJoin(
+            'associations',
+            'students.origin_field_id',
+            'associations.association_id',
+          )
           .leftJoin('unions', 'associations.union_id', 'unions.union_id')
           .where('students.student_id', '=', id);
-  
+
         if (result.length < 1) {
           throw new Error('Estudante não encontrado');
         }
-  
+
         student = {
           student_id: result[0].student_id,
           phone_number: result[0].phone_number,
@@ -122,16 +107,16 @@ export class StudentsModel {
           created_at: result[0].created_at,
           updated_at: result[0].updated_at,
           name: result[0].name,
-          association_name:result[0].association_name,
-          association_acronym:result[0].association_acronym,
-          union_name:result[0].union_name,
-          union_acronym:result[0].union_acronym,
-          union_id:result[0].union_id,
-          marital_status_type_name:result[0].marital_status_type_name,
-          hiring_status_name:result[0].hiring_status_name,
-          hiring_status_description:result[0].hiring_status_description
+          association_name: result[0].association_name,
+          association_acronym: result[0].association_acronym,
+          union_name: result[0].union_name,
+          union_acronym: result[0].union_acronym,
+          union_id: result[0].union_id,
+          marital_status_type_name: result[0].marital_status_type_name,
+          hiring_status_name: result[0].hiring_status_name,
+          hiring_status_description: result[0].hiring_status_description,
         };
-  
+
         await trx.commit();
       } catch (error) {
         sentError = new Error(error.message);
@@ -139,60 +124,71 @@ export class StudentsModel {
         throw error;
       }
     });
-  
+
     if (sentError) {
       throw sentError;
     }
-  
+
     return student;
   }
 
-  async findStudentByUserId(userId:number):Promise<IStudent> {
+  async findStudentByUserId(userId: number): Promise<IStudent> {
     let student: IStudent | null = null;
     let sentError: Error | null = null;
 
     try {
       const result = await this.knex('students')
-      .select(
-        'students.*',
-        'hiring_status.*',
-        'marital_status_types.*',
-        'associations.*',
-        'unions.*',
-        'people.name as person_name',
-        'people.person_id as person_id'
-      )
-      .leftJoin('users', 'students.person_id', 'users.person_id')
-      .leftJoin('people', 'students.person_id', 'people.person_id')
-      .leftJoin('marital_status_types', 'students.marital_status_id', 'marital_status_types.marital_status_type_id')
-      .leftJoin('hiring_status', 'students.hiring_status_id', 'hiring_status.hiring_status_id')
-      .leftJoin('associations', 'students.origin_field_id', 'associations.association_id')
-      .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-      .where('users.user_id', userId);
-        
-  
+        .select(
+          'students.*',
+          'hiring_status.*',
+          'marital_status_types.*',
+          'associations.*',
+          'unions.*',
+          'people.name as person_name',
+          'people.person_id as person_id',
+        )
+        .leftJoin('users', 'students.person_id', 'users.person_id')
+        .leftJoin('people', 'students.person_id', 'people.person_id')
+        .leftJoin(
+          'marital_status_types',
+          'students.marital_status_id',
+          'marital_status_types.marital_status_type_id',
+        )
+        .leftJoin(
+          'hiring_status',
+          'students.hiring_status_id',
+          'hiring_status.hiring_status_id',
+        )
+        .leftJoin(
+          'associations',
+          'students.origin_field_id',
+          'associations.association_id',
+        )
+        .leftJoin('unions', 'associations.union_id', 'unions.union_id')
+        .where('users.user_id', userId);
+
       if (result.length < 1) {
         throw new Error('Estudante não encontrado');
       }
-  
+
       student = result[0];
     } catch (error) {
-      console.log(error)
-      sentError = new Error(error.message)
+      console.log(error);
+      sentError = new Error(error.message);
     }
     if (sentError) {
       throw sentError;
     }
-    if(student == null){
-      throw new Error('Estudante não encontrado.')
+    if (student == null) {
+      throw new Error('Estudante não encontrado.');
     }
     return student;
   }
-  
+
   async findAllStudents(): Promise<IStudent[]> {
     let studentList: IStudent[] = [];
     let sentError: Error | null = null;
-  
+
     await this.knex.transaction(async (trx) => {
       try {
         const results = await trx('students')
@@ -217,10 +213,10 @@ export class StudentsModel {
             'students.student_active',
             'students.created_at',
             'students.updated_at',
-            'people.name' // Adiciona a coluna 'name' da tabela 'people'
+            'people.name', // Adiciona a coluna 'name' da tabela 'people'
           )
           .leftJoin('people', 'students.person_id', 'people.person_id'); // Faz o left join com a tabela 'people'
-  
+
         studentList = results.map((row: any) => ({
           student_id: row.student_id,
           phone_number: row.phone_number,
@@ -244,35 +240,34 @@ export class StudentsModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
           name: row.name,
-          association_name:row.association_name,
-          association_acronym:row.association_acronym,
-          union_name:row.union_name,
-          union_acronym:row.union_acronym,
-          union_id:row.union_id,
-          marital_status_type_name:row.marital_status_type_name,
-          hiring_status_name:row.hiring_status_name,
-          hiring_status_description:row.hiring_status_description
+          association_name: row.association_name,
+          association_acronym: row.association_acronym,
+          union_name: row.union_name,
+          union_acronym: row.union_acronym,
+          union_id: row.union_id,
+          marital_status_type_name: row.marital_status_type_name,
+          hiring_status_name: row.hiring_status_name,
+          hiring_status_description: row.hiring_status_description,
         }));
-  
+
         await trx.commit();
       } catch (error) {
         await trx.rollback();
         sentError = new Error(error.sqlMessage);
       }
     });
-  
+
     if (sentError) {
       throw sentError;
     }
-  
+
     return studentList;
   }
-  
-  
+
   async updateStudentById(updateStudent: IUpdateStudent): Promise<IStudent> {
     let updatedStudent: IStudent | null = null;
     let sentError: Error | null = null;
-  
+
     await this.knex.transaction(async (trx) => {
       try {
         const {
@@ -292,74 +287,68 @@ export class StudentsModel {
           baptism_place,
           marital_status_id,
           hiring_status_id,
-          primary_school_state
+          primary_school_state,
         } = updateStudent;
-  
-        await trx('students')
-          .where('student_id', student_id)
-          .update({
-            phone_number,
-            is_whatsapp,
-            alternative_email,
-            student_mensage,
-            person_id,
-            origin_field_id,
-            justification,
-            birth_city,
-            birth_state,
-            primary_school_city,
-            birth_date,
-            baptism_date,
-            baptism_place,
-            marital_status_id,
-            hiring_status_id,
-            primary_school_state
-          });
-  
+
+        await trx('students').where('student_id', student_id).update({
+          phone_number,
+          is_whatsapp,
+          alternative_email,
+          student_mensage,
+          person_id,
+          origin_field_id,
+          justification,
+          birth_city,
+          birth_state,
+          primary_school_city,
+          birth_date,
+          baptism_date,
+          baptism_place,
+          marital_status_id,
+          hiring_status_id,
+          primary_school_state,
+        });
+
         updatedStudent = await this.findStudentById(student_id);
-  
+
         await trx.commit();
       } catch (error) {
         await trx.rollback();
         sentError = new Error(error.message);
       }
     });
-  
+
     if (sentError) {
       throw sentError;
     }
-  
+
     if (updatedStudent === null) {
       throw new Error('Falha ao atualizar estudante.');
     }
-  
+
     return updatedStudent;
   }
-  
+
   async deleteStudentById(id: number): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
-  
+
     await this.knex.transaction(async (trx) => {
       try {
         await trx('students').where('student_id', id).del();
-  
+
         await trx.commit();
       } catch (error) {
         sentError = new Error(error.message);
         await trx.rollback();
       }
     });
-  
+
     if (sentError) {
       throw sentError;
     }
-  
+
     message = 'Estudante excluído com sucesso.';
     return message;
   }
-  
-  
-  
-  
 }
