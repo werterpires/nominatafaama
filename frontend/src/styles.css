@@ -552,6 +552,7 @@ input:focus {
 
 .registryStartButtons {
   display: flex;
+  flex-shrink: 0;
   gap: 1rem;
   align-items: center;
   min-width: 32px;
@@ -566,6 +567,7 @@ input:focus {
 
 .registryEndButtons {
   display: flex;
+  flex-shrink: 0;
   gap: 1rem;
   align-items: center;
   min-width: 72px;
