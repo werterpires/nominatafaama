@@ -15,7 +15,6 @@ exports.up = function (knex) {
     table.string('justification', 400).notNullable();
     table.string('birth_city', 250).notNullable();
     table.string('birth_state', 5).notNullable();
-    table.string('baptism_place', 5).notNullable();
     table.string('primary_school_city', 250).notNullable();
     table.string('primary_school_state', 250).notNullable();
     table.date('birth_date').notNullable();
