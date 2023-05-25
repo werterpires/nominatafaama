@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { SpousesModel } from 'src/modules/spouses/model/spouses.model';
-import { UsersService } from 'src/modules/users/dz_services/users.service';
-import { CreateAcademicFormationDto } from '../dto/create-academic-formation.dto';
-import { UpdateAcademicFormationDto } from '../dto/update-academic-formation.dto';
-import { AcademicFormationsModel } from '../model/academic-formations.model';
+import {Injectable} from '@nestjs/common'
+import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
+import {UsersService} from 'src/modules/users/dz_services/users.service'
+import {CreateAcademicFormationDto} from '../dto/create-academic-formation.dto'
+import {UpdateAcademicFormationDto} from '../dto/update-academic-formation.dto'
+import {AcademicFormationsModel} from '../model/academic-formations.model'
 import {
   IAcademicFormation,
   ICreateAcademicFormation,
   IUpdateAcademicFormation,
-} from '../types/types';
+} from '../types/types'
 
 @Injectable()
 export class AcademicFormationsService {
@@ -23,9 +23,8 @@ export class AcademicFormationsService {
     id: number,
   ): Promise<IAcademicFormation> {
     try {
-      const person = await this.usersService.findUserById(id);
-      console.log(person);
-      const person_id = person.person_id;
+      const person = await this.usersService.findUserById(id)
+      const person_id = person.person_id
 
       const createAcademicFormation: ICreateAcademicFormation = {
         course_area: dto.course_area,
@@ -36,15 +35,15 @@ export class AcademicFormationsService {
           : null,
         person_id: person_id,
         degree_id: dto.degree_id,
-      };
+      }
 
       const newAcademicFormation =
         await this.academicFormationsModel.createAcademicFormation(
           createAcademicFormation,
-        );
-      return newAcademicFormation;
+        )
+      return newAcademicFormation
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
@@ -52,13 +51,13 @@ export class AcademicFormationsService {
     dto: CreateAcademicFormationDto,
     id: number,
   ): Promise<IAcademicFormation> {
-    const spouse = await this.spouseModel.findSpouseByUserId(id);
+    const spouse = await this.spouseModel.findSpouseByUserId(id)
 
     if (!spouse) {
-      throw Error(`Spouse not found for id ${id}`);
+      throw Error(`Spouse not found for id ${id}`)
     }
 
-    const {person_id} = spouse;
+    const {person_id} = spouse
 
     const createAcademicFormation: ICreateAcademicFormation = {
       course_area: dto.course_area,
@@ -69,13 +68,13 @@ export class AcademicFormationsService {
         : null,
       person_id: person_id,
       degree_id: dto.degree_id,
-    };
+    }
 
     const newAcademicFormation =
       await this.academicFormationsModel.createAcademicFormation(
         createAcademicFormation,
-      );
-    return newAcademicFormation;
+      )
+    return newAcademicFormation
   }
 
   async findAcademicFormationById(
@@ -83,12 +82,12 @@ export class AcademicFormationsService {
   ): Promise<IAcademicFormation | null> {
     try {
       const academicFormation =
-        await this.academicFormationsModel.findAcademicFormationById(id);
-      return academicFormation;
+        await this.academicFormationsModel.findAcademicFormationById(id)
+      return academicFormation
     } catch (error) {
       throw new Error(
         `Não foi possível encontrar a formação acadêmica com o id ${id}: ${error.message}`,
-      );
+      )
     }
   }
 
@@ -96,17 +95,17 @@ export class AcademicFormationsService {
     id: number,
   ): Promise<IAcademicFormation[] | null> {
     try {
-      const {person_id} = await this.usersService.findUserById(id);
+      const {person_id} = await this.usersService.findUserById(id)
 
       const academicFormation =
         await this.academicFormationsModel.findAcademicFormationsByPersonId(
           person_id,
-        );
-      return academicFormation;
+        )
+      return academicFormation
     } catch (error) {
       throw new Error(
         `Não foi possível encontrar formações acadêmicas para o usuário com id ${id}: ${error.message}`,
-      );
+      )
     }
   }
 
@@ -114,32 +113,32 @@ export class AcademicFormationsService {
     id: number,
   ): Promise<IAcademicFormation[] | null> {
     try {
-      const spouse = await this.spouseModel.findSpouseByUserId(id);
+      const spouse = await this.spouseModel.findSpouseByUserId(id)
       if (spouse) {
-        const {person_id} = spouse;
+        const {person_id} = spouse
 
         const academicFormation =
           await this.academicFormationsModel.findAcademicFormationsByPersonId(
             person_id,
-          );
-        return academicFormation;
+          )
+        return academicFormation
       } else {
-        return [];
+        return []
       }
     } catch (error) {
       throw new Error(
         `Não foi possível encontrar formações acadêmicas para o usuário com id ${id}: ${error.message}`,
-      );
+      )
     }
   }
 
   async findAllAcademicFormations(): Promise<IAcademicFormation[]> {
     try {
       const academicFormations =
-        await this.academicFormationsModel.findAllAcademicFormations();
-      return academicFormations;
+        await this.academicFormationsModel.findAllAcademicFormations()
+      return academicFormations
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
@@ -156,25 +155,25 @@ export class AcademicFormationsService {
           ? new Date(dto.conclusion_date)
           : null,
         degree_id: dto.degree_id,
-      };
+      }
 
       const updatedFormation =
         await this.academicFormationsModel.updateAcademicFormationById(
           updatedAcademicFormation,
-        );
-      return updatedFormation;
+        )
+      return updatedFormation
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
   async deleteAcademicFormationById(id: number): Promise<string> {
     try {
-      await this.academicFormationsModel.deleteAcademicFormationById(id);
+      await this.academicFormationsModel.deleteAcademicFormationById(id)
 
-      return 'Formação acadêmica deletada com sucesso.';
+      return 'Formação acadêmica deletada com sucesso.'
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 }
