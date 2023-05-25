@@ -148,12 +148,11 @@ input:focus {
   margin-bottom: 20px;
 }
 
-.cancelButton {
-  background: #a51010;
+button {
+  background-color: #0d3362;
   box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
-  border-radius: 5%;
-  width: 10vw;
-  height: 7vh;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
   border: none;
   font-family: 'Poppins';
   font-style: normal;
@@ -162,42 +161,21 @@ input:focus {
   line-height: 21px;
   text-align: center;
   color: #ffffff;
+}
+
+.cancelButton {
+  background: #a51010;
 }
 
 .confirmButton {
   background-color: #0d3362;
-  box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
-  border-radius: 5%;
-  width: 10vw;
-  height: 7vh;
-  border: none;
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 21px;
-  text-align: center;
-  color: #ffffff;
 }
 
 .defaultButton {
   background-color: #0d3362;
-  box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  border: none;
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 21px;
-  padding: 0.5rem 1rem;
-  text-align: center;
-  color: #ffffff;
 }
 
-.defaultButton:active,
-.cancelButton:active,
-.confirmButton:active {
+button:active {
   box-shadow: none;
   transform: translate(1px, 2px);
 }
@@ -629,31 +607,6 @@ input:focus {
 .rejectedRadio:checked {
   transform: scale(1.2);
   border-color: red;
-}
-
-.saveButton {
-  background: linear-gradient(
-    180deg,
-    #202c3d 5.58%,
-    #223a52 43.15%,
-    #244c6c 111.37%
-  );
-  border-radius: 5px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border: none;
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 18px;
-  text-align: center;
-  color: #ffffff;
-  transition: transform 0.1s ease-in-out;
-  padding: 0.4rem 1rem;
-}
-
-.saveButton:hover {
-  transform: scale(1.1);
 }
 
 .labelRadio {
