@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { PublicationTypeService } from './publication-types.service';
 import { IPermissions } from '../../shared/container/types';
+import { DialogService } from '../../shared/shared.service.ts/dialog.service';
+import { PublicationTypeService } from './publication-types.service';
 import {
   CreatePublicationTypeDto,
   IPublicationType,
@@ -13,7 +14,10 @@ import {
   styleUrls: ['./publication-types.component.css'],
 })
 export class PublicationTypesComponent {
-  constructor(private service: PublicationTypeService) {}
+  constructor(
+    private service: PublicationTypeService,
+    private dialogService: DialogService
+  ) {}
 
   @Input() permissions!: IPermissions;
   allPublicationTypes: IPublicationType[] = [];
@@ -116,22 +120,28 @@ export class PublicationTypesComponent {
   }
 
   deletePublicationType(i: number) {
-    this.isLoading = true;
-    const publicationTypeId = this.allPublicationTypes[i].publication_type_id;
+    const dialogId = this.dialogService.new('Confirma a remoção?', [
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi repellat ad esse, suscipit quidem dicta! Minus corrupti harum, magnam optio laborum, porro numquam, ipsa asperiores blanditiis repellat impedit adipisci delectus!',
+      'Você está certo em remover este registro?',
+    ]);
+    if (false) {
+      this.isLoading = true;
+      const publicationTypeId = this.allPublicationTypes[i].publication_type_id;
 
-    this.service.deletePublicationType(publicationTypeId).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Tipo de publicação deletado com sucesso.';
-        this.done = true;
-        this.isLoading = false;
-        this.ngOnInit();
-      },
-      error: (err) => {
-        this.errorMessage = err.message;
-        this.error = true;
-        this.isLoading = false;
-      },
-    });
+      this.service.deletePublicationType(publicationTypeId).subscribe({
+        next: (res) => {
+          this.doneMessage = 'Tipo de publicação deletado com sucesso.';
+          this.done = true;
+          this.isLoading = false;
+          this.ngOnInit();
+        },
+        error: (err) => {
+          this.errorMessage = err.message;
+          this.error = true;
+          this.isLoading = false;
+        },
+      });
+    }
   }
 
   closeError() {

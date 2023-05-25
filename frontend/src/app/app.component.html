@@ -1,1 +1,4 @@
-  <router-outlet></router-outlet>
+<router-outlet></router-outlet>
+
+<app-confirmation-dialog *ngFor="let dialog of dialogService.dialogs; index as i" [id]="i" [title]="dialog.title"
+  [text]="dialog.text"></app-confirmation-dialog>

@@ -1,0 +1,14 @@
+<div class="backdrop">
+  <div class="dialogContainer">
+    <section class="dialogHeader">
+      <h2 class="dialogTitle">{{title}}</h2>
+    </section>
+    <section class="dialogText">
+      <p class="dialogParagraph" *ngFor="let paragraph of text">{{paragraph}}</p>
+    </section>
+    <section class="dialogButtons">
+      <button class="cancelButton" (click)="cancel()">Cancelar</button>
+      <button class="confirmButton" (click)="confirm()">Confirmar</button>
+    </section>
+  </div>
+</div>
