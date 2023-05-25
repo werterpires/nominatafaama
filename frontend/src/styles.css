@@ -500,6 +500,10 @@ button:active {
   transition: height 5s ease;
 }
 
+.formCreation {
+  margin-bottom: 1rem;
+}
+
 .boxHead {
   margin-bottom: 1rem;
 }
