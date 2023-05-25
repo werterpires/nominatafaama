@@ -11,8 +11,8 @@ exports.up = function (knex) {
     table.string('institution', 250).notNullable();
     table.date('begin_date').notNullable();
     table.date('conclusion_date');
-    table.integer('person_id').unsigned().notNullable()
-    table.boolean('academic_formation_approved').notNullable()
+    table.integer('person_id').unsigned().notNullable();
+    table.boolean('academic_formation_approved').notNullable();
 
     table
       .foreign('person_id')
