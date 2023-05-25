@@ -1,36 +1,47 @@
-.container{
+.container {
   box-sizing: border-box;
-  background: #E3E3E3;
+  background: #e3e3e3;
+  min-height: 100vh;
+  max-height: 100%;
 }
 
-.header{
-  display: flex;
-  justify-content: space-between;
-  height: 87.94px;
+.header {
+  width: 100%;
+  overflow-x: hidden;
+  padding: 1rem;
+  background: linear-gradient(
+    180deg,
+    #202c3d 5.58%,
+    #223a52 43.15%,
+    #244c6c 111.37%
+  );
   margin-bottom: 25px;
-  padding: 0px 10vw;
-  background: linear-gradient(180deg, #202C3D 5.58%, #223A52 43.15%, #244C6C 111.37%);
+}
+
+.headerWrapper {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1024px;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
   align-items: center;
-
 }
 
-.navDiv{
-  max-width: 50vw;
-  overflow:hidden
+.navDiv {
 }
 
-.logo{
+.logo {
   height: 42px;
 }
 
-.menuOptions{
+.menuOptions {
   display: flex;
   list-style: none;
   gap: 26px;
-  
 }
 
-.menuOption{
+.menuOption {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 100;
@@ -38,17 +49,17 @@
   transform: 0.5s;
   transition: transform 0.1s ease-in-out;
   cursor: pointer;
-  
+
   /* or 200% */
   align-items: center;
   letter-spacing: 0.2px;
-  color: #F0F0F0;
+  color: #f0f0f0;
 }
 
-.menuOption:hover{
+.menuOption:hover {
   transform: scale(1.15);
 }
 
-.menuIcon{
+.menuIcon {
   height: 17px;
 }

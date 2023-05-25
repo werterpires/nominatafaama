@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { DialogService } from './components/shared/shared.service.ts/dialog.service';
+import {Component} from '@angular/core'
+import {DialogService} from './components/shared/shared.service.ts/dialog.service'
+import {LoginService} from './components/shared/shared.service.ts/login.service'
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,9 @@ import { DialogService } from './components/shared/shared.service.ts/dialog.serv
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'frontend'
 
-  constructor(public dialogService: DialogService) {}
+  constructor(public dialogService: DialogService, loginService: LoginService) {
+    loginService.loginCheck()
+  }
 }
