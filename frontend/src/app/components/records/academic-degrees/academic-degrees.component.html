@@ -18,26 +18,14 @@
       <button class="saveButton" type="button" (click)="createAcademicDegree()">SALVAR</button>
 
     </form>
-    <div class="registryWrapper" *ngFor="let degree of allDegrees; let i = index">
-      <div class="subSection" (mouseover)="deleteButton.hidden=false" (mouseout)="deleteButton.hidden=true">
-        <section class="registryStartButtons">
-          <img #deleteButton class="deleteIcon" hidden src="assets/icons/delete.svg"
-            alt="ícone para deletar o tipo de publicação" (click)="deleteAcademicDecree(i)">
-        </section>
-        <section class="registryFields">
-          <span class="field">
-            <p class="fieldTitle">Grau acadêmico:</p>
-            <input class="fieldContent" [id]="'academicDegreeInput'+i" name=`academicDegreeInput${i}`
-              [(ngModel)]="allDegrees[i].degree_name" (ngModelChange)="saveButton.classList.remove('hidden')">
-          </span>
-        </section>
-        <section class="registryEndButtons">
-          <button #saveButton class="saveButton hidden" [id]="'saveAcademicDegreeButton'+i"
-            (click)="editAcademicDegree(i, 'saveAcademicDegreeButton'+i)">Salvar</button>
-        </section>
-      </div>
-      <hr class="sectionDivisiion">
-    </div>
+    <app-registry #registryApp [registryId]="i" (editRegistry)="editAcademicDegree($event.id, $event.saveButtonId)"
+      (deleteRegistry)="deleteAcademicDecree($event)" *ngFor="let registry of allDegrees; index as i;">
+      <span class="field">
+        <p class="fieldTitle">Grau acadêmico:</p>
+        <input class="fieldContent" [id]="'academicDegreeInput'+i" name=`academicDegreeInput${i}`
+          [(ngModel)]="allDegrees[i].degree_name" (ngModelChange)="registryApp.fieldChanged=true">
+      </span>
+    </app-registry>
   </section>
 </section>
 

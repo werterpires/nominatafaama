@@ -13,6 +13,14 @@ p {
   position: static;
 }
 
+.w-full {
+  width: 100%;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
 .specialInput {
   width: 289px;
   height: 3vh;
