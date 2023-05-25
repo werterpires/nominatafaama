@@ -8,7 +8,7 @@
     <img class="addIcon hidden" id="publicationTypeAddIcon" src="assets/icons/addIcon.png"
       alt="Criar novo tipo de publicação" (click)="createForm()">
   </div>
-  <section>
+  <section class="boxMain">
     <form *ngIf="creatingPublicationType" class="formCreation">
       <label class="inputLabel">
         Novo Tipo de Publicação<input class="mediumInput" type="text" name="publicationTypeInput"
@@ -20,7 +20,7 @@
       </label>
       <button class="saveButton" type="button" (click)="createPublicationType()">SALVAR</button>
     </form>
-    <div *ngFor="let publicationType of allPublicationTypes; let i = index">
+    <div class="registryWrapper" *ngFor="let publicationType of allPublicationTypes; let i = index">
       <div class="subSection" (mouseover)="deleteButton.hidden=false" (mouseout)="deleteButton.hidden=true">
         <section class="registryStartButtons">
           <img #deleteButton class="deleteIcon" hidden src="assets/icons/delete.svg"

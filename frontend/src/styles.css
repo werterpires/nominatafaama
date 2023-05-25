@@ -492,6 +492,16 @@ button:active {
   transition: height 5s ease;
 }
 
+.boxHead {
+  margin-bottom: 25px;
+}
+
+.boxMain {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .headField {
   display: flex;
   align-items: center;
@@ -516,12 +526,14 @@ button:active {
   display: flex;
   align-items: center;
   color: #23435f;
-  margin-top: 25px;
 }
 
 .subSection {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
 }
 
 .formSection {
@@ -552,8 +564,10 @@ button:active {
   display: flex;
   gap: 1rem;
   align-items: center;
-  min-width: 32px;
+  justify-content: center;
+  width: 32px;
   height: 32px;
+  flex-shrink: 0;
 }
 
 .registryFields {
@@ -567,8 +581,10 @@ button:active {
   display: flex;
   gap: 1rem;
   align-items: center;
-  min-width: 72px;
-  height: 32px;
+  justify-content: center;
+  width: 74px;
+  height: 40px;
+  flex-shrink: 0;
 }
 
 .approvedRadio {
