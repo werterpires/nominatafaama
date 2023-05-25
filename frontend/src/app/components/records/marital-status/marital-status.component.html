@@ -1,53 +1,52 @@
 <section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadMaritalStatus">
-    <div class="boxHead">
-        <span class="headField" (click)="showBox()">
-            <img class="seeMoreIcon" id="seeMoreIconStatus" src="assets/icons/seeMoreIcon.png" alt="">
-            <p class="sectionTitle1">Estados civis</p>
-        </span>
-        
-        <img class="addIcon hidden" id="statusAddIcon" src="assets/icons/addIcon.png" alt="Criar novo estado civil" (click)="createForm()">
-    </div>
-    <section>
-        <form *ngIf="creatingStatus" class="formSCriation">
-            <label class="inputLabel">
-                Novo estado civil<input class="mediumInput" type="text" name="maritalStatusInput" [(ngModel)]="createMaritalStatusData.marital_status_type_name" >
-            </label>
-            
-            <button class="saveButton" type="button" (click)="createMaritalStatus()">SALVAR</button>
-            
-        </form>
-        <div *ngFor="let status of allStatus; let i = index">
-            <div class="subSection">
-                <span class="field">
-                    <p class="fieldTitle">Estado civil:</p>
-                    <p class="fieldContent" [id]="'maritalStatus'+i" (click)="changeTagType('maritalStatus'+i, 'saveMaritalStatusButton'+i, 'maritalStatusInput'+i)">{{status.marital_status_type_name}}</p>
-                    <input class="fieldContent hidden" [id]="'maritalStatusInput'+i" name=`maritalStatusInput${i}` [(ngModel)]="allStatus[i].marital_status_type_name">
-                    
-                </span>
-                <button class="saveButton hidden" [id]="'saveMaritalStatusButton'+i" (click)="editMaritalStatus(i, 'saveMaritalStatusButton'+i)">Salvar</button>
-            </div>
-            <hr class="sectionDivisiion">
-        </div>
-    </section>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox()">
+      <img class="seeMoreIcon" id="seeMoreIconStatus" src="assets/icons/seeMoreIcon.png" alt="">
+      <p class="sectionTitle1">Estados civis</p>
+    </span>
+
+    <img class="addIcon hidden" id="statusAddIcon" src="assets/icons/addIcon.png" alt="Criar novo estado civil"
+      (click)="createForm()">
+  </div>
+  <section>
+    <form *ngIf="creatingStatus" class="formSCriation">
+      <label class="inputLabel">
+        Novo estado civil<input class="mediumInput" type="text" name="maritalStatusInput"
+          [(ngModel)]="createMaritalStatusData.marital_status_type_name">
+      </label>
+
+      <button class="saveButton" type="button" (click)="createMaritalStatus()">SALVAR</button>
+
+    </form>
+    <app-registry #registryApp [registryId]="i" (editRegistry)="editMaritalStatus($event.id, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allStatus; index as i;">
+      <span class="field">
+        <p class="fieldTitle">Estado civil:</p>
+        <input class="fieldContent" [id]="'maritalStatusInput'+i" name=`maritalStatusInput${i}`
+          [(ngModel)]="allStatus[i].marital_status_type_name">
+
+      </span>
+    </app-registry>
+  </section>
 </section>
 
 <div *ngIf="error" class="error">
-    <div class="errorTitle">
-        <p>Atenção</p>
-    </div>
-    <div class="errorMessage">
-        <p>{{errorMessage}}</p>
-    </div>
-    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{errorMessage}}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
 </div>
 <div *ngIf="done" class="done">
-    <div class="doneTitle">
-        <p>Parabéns</p>
-    </div>
-    <div class="doneMessage">
-        <p>{{doneMessage}}</p>
-    </div>
-    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{doneMessage}}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

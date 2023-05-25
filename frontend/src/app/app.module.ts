@@ -29,6 +29,9 @@ import { EndowmentTypesComponent } from './components/records/endowment-types/en
 import { MinistryTypesComponent } from './components/records/minstry-types/ministry-types.component';
 import { PublicationTypesComponent } from './components/records/publication-types/publication-types.component';
 import { ConfirmationDialogComponent } from './components/shared/confirmation-dialog/confirmation-dialog.component';
+import { LoginMenuComponent } from './components/shared/login-menu/login-menu.component';
+import { RegistryComponent } from './components/shared/registry/registry.component';
+import { UniqueIdDirective } from './components/shared/directives/unique-id.directive';
 
 
 @NgModule({
@@ -58,6 +61,9 @@ import { ConfirmationDialogComponent } from './components/shared/confirmation-di
     MinistryTypesComponent,
     PublicationTypesComponent,
     ConfirmationDialogComponent,
+    LoginMenuComponent,
+    RegistryComponent,
+    UniqueIdDirective,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,5 @@
+<div class="loginMenu">
+  <button class="loginMenuButton defaultButton" (click)="login()" *ngIf="!service.userToken">Entrar</button>
+  <button class="loginMenuButton defaultButton" (click)="logon()" *ngIf="!service.userToken">Cadastrar</button>
+  <button class="loginMenuButton defaultButton" (click)="logout()" *ngIf="service.userToken">Sair</button>
+</div>

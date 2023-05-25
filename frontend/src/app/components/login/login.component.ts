@@ -1,9 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ILoginDto } from './login.Dto';
-import { LoginService } from './login.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ValidateService } from '../shared/shared.service.ts/validate.services';
-import { Router } from '@angular/router';
+import {Component, EventEmitter, Output} from '@angular/core'
+import {Router} from '@angular/router'
+import {LoginService} from '../shared/shared.service.ts/login.service'
+import {ValidateService} from '../shared/shared.service.ts/validate.services'
+import {ILoginDto} from './login.Dto'
 
 @Component({
   selector: 'app-login',
@@ -11,87 +10,91 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  constructor(private loginService:LoginService, 
-  private validateService:ValidateService,
-  private router: Router){};
+  constructor(
+    private loginService: LoginService,
+    private validateService: ValidateService,
+    private router: Router,
+  ) {}
 
-  @Output() mailChange = new EventEmitter<string>();
-  @Output() passwordChange = new EventEmitter<string>();
- 
-  errorMessage:string = ""
+  @Output() mailChange = new EventEmitter<string>()
+  @Output() passwordChange = new EventEmitter<string>()
+
+  errorMessage: string = ''
   error!: boolean
 
-  loginData:ILoginDto = {
-    email: "",
-    password:""
+  loginData: ILoginDto = {
+    email: '',
+    password: '',
   }
 
-  seePassword:boolean = false
-  isLoading:boolean = false
+  seePassword: boolean = false
+  isLoading: boolean = false
 
   validateEmailData() {
-    const emailInput = document.getElementById('emailInput') as HTMLInputElement;
+    const emailInput = document.getElementById('emailInput') as HTMLInputElement
     const valid = this.validateService.validateEmailData(this.loginData.email)
     this.validateService.colorInput(valid, emailInput)
-    
   }
-  
+
   validatePasswordData() {
-    const passwordInput = document.getElementById('senhaInput') as HTMLInputElement;
-    const valid = this.validateService.validatePasswordData(this.loginData.password)
+    const passwordInput = document.getElementById(
+      'senhaInput',
+    ) as HTMLInputElement
+    const valid = this.validateService.validatePasswordData(
+      this.loginData.password,
+    )
     this.validateService.colorInput(valid, passwordInput)
   }
 
-  
   login() {
-    this.isLoading=true
+    this.isLoading = true
 
-    const isValidEmail = this.validateService.validateEmailData(this.loginData.email)  
-    if(!isValidEmail){
+    const isValidEmail = this.validateService.validateEmailData(
+      this.loginData.email,
+    )
+    if (!isValidEmail) {
       this.errorMessage = 'Digite um email válido para prosseguir com o login'
-          this.error = true
-          this.isLoading = false
-          return      
-      }
-    const isValidPass = this.validateService.validatePasswordData(this.loginData.password)
-      if(!isValidPass){
-        this.errorMessage = 'A senha deve conter pelo menos 8 caracteres, sendo´pelo menos uma letra minúscula, pelo menos uma letra maiúscula, pelo menos um símbolo e pelo menos um número.'
-        this.error = true
-        this.isLoading = false
-        return
-      }
-    
+      this.error = true
+      this.isLoading = false
+      return
+    }
+    const isValidPass = this.validateService.validatePasswordData(
+      this.loginData.password,
+    )
+    if (!isValidPass) {
+      this.errorMessage =
+        'A senha deve conter pelo menos 8 caracteres, sendo´pelo menos uma letra minúscula, pelo menos uma letra maiúscula, pelo menos um símbolo e pelo menos um número.'
+      this.error = true
+      this.isLoading = false
+      return
+    }
+
     this.loginService.login(this.loginData).subscribe({
-      
-      next: res => {
-      
-        
-        
-        localStorage.setItem("access_token", JSON.parse(JSON.stringify(res)).access_token)
-        this.router.navigate(['/']);
+      next: (res) => {
         this.isLoading = false
       },
-      error: err => {
+      error: (err) => {
         this.errorMessage = err.message
         this.error = true
         this.isLoading = false
-      }
-    });
+      },
+    })
   }
 
-  showPassword(){
+  showPassword() {
     this.seePassword = !this.seePassword
 
-    const passwordInput = document.getElementById('senhaInput') as HTMLInputElement;
+    const passwordInput = document.getElementById(
+      'senhaInput',
+    ) as HTMLInputElement
     if (this.seePassword) {
-      passwordInput.type = 'text';
+      passwordInput.type = 'text'
     } else {
-      passwordInput.type = 'password';
+      passwordInput.type = 'password'
     }
   }
 
-  closeError(){
+  closeError() {
     this.error = false
   }
-
 }

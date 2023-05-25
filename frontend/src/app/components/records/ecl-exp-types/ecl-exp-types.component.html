@@ -1,54 +1,53 @@
 <section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadEclExpTypes">
-    <div class="boxHead">
-      <span class="headField" (click)="showBox()">
-        <img class="seeMoreIcon" id="seeMoreIconEclExpTypes" src="assets/icons/seeMoreIcon.png" alt="">
-        <p class="sectionTitle1">Tipos de experiências eclesiásticas</p>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox()">
+      <img class="seeMoreIcon" id="seeMoreIconEclExpTypes" src="assets/icons/seeMoreIcon.png" alt="">
+      <p class="sectionTitle1">Tipos de experiências eclesiásticas</p>
+    </span>
+
+    <img class="addIcon hidden" id="eclExpTypeAddIcon" src="assets/icons/addIcon.png"
+      alt="Criar novo tipo de experiência de ECL" (click)="createForm()">
+  </div>
+  <section>
+    <form *ngIf="creatingEclExpType" class="formCreation">
+      <label class="inputLabel">
+        Novo tipo de experiências eclesiásticas
+        <input class="mediumInput" type="text" name="eclExpTypeInput"
+          [(ngModel)]="createEclExpTypeData.ecl_exp_type_name">
+      </label>
+
+      <button class="saveButton" type="button" (click)="createEclExpType()">SALVAR</button>
+    </form>
+    <app-registry #registryApp [registryId]="i" (editRegistry)="editEclExpType($event.id, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allEclExpTypes; index as i;">
+      <span class="field">
+        <p class="fieldTitle">Tipo de experiências eclesiásticas:</p>
+        <input class="fieldContent" [id]="'eclExpTypeInput'+i" name=`eclExpTypeInput${i}`
+          [(ngModel)]="allEclExpTypes[i].ecl_exp_type_name">
       </span>
-      
-      <img class="addIcon hidden" id="eclExpTypeAddIcon" src="assets/icons/addIcon.png" alt="Criar novo tipo de experiência de ECL" (click)="createForm()">
-    </div>
-    <section>
-      <form *ngIf="creatingEclExpType" class="formCreation">
-        <label class="inputLabel">
-          Novo tipo de experiências eclesiásticas
-          <input class="mediumInput" type="text" name="eclExpTypeInput" [(ngModel)]="createEclExpTypeData.ecl_exp_type_name">
-        </label>
-        
-        <button class="saveButton" type="button" (click)="createEclExpType()">SALVAR</button>
-      </form>
-      <div *ngFor="let eclExpType of allEclExpTypes; let i = index">
-        <div class="subSection">
-          <span class="field">
-            <p class="fieldTitle">Tipo de experiências eclesiásticas:</p>
-            <p class="fieldContent" [id]="'eclExpType'+i" (click)="changeTagType('eclExpType'+i, 'saveEclExpTypeButton'+i, 'eclExpTypeInput'+i)">{{eclExpType.ecl_exp_type_name}}</p>
-            <input class="fieldContent hidden" [id]="'eclExpTypeInput'+i" name=`eclExpTypeInput${i}` [(ngModel)]="allEclExpTypes[i].ecl_exp_type_name">
-          </span>
-          <button class="saveButton hidden" [id]="'saveEclExpTypeButton'+i" (click)="editEclExpType(i, 'saveEclExpTypeButton'+i)">Salvar</button>
-        </div>
-        <hr class="sectionDivision">
-      </div>
-    </section>
+    </app-registry>
+
   </section>
-  
-  <div *ngIf="error" class="error">
-    <div class="errorTitle">
-      <p>Atenção</p>
-    </div>
-    <div class="errorMessage">
-      <p>{{errorMessage}}</p>
-    </div>
-    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
   </div>
-  <div *ngIf="done" class="done">
-    <div class="doneTitle">
-      <p>Parabéns</p>
-    </div>
-    <div class="doneMessage">
-      <p>{{doneMessage}}</p>
-    </div>
-    <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <div class="errorMessage">
+    <p>{{errorMessage}}</p>
   </div>
-  
-  <div *ngIf="isLoading" class="loader1"></div>
-  <div *ngIf="isLoading" class="loader2"></div>
-  
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{doneMessage}}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
