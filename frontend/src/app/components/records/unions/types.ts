@@ -13,9 +13,4 @@ export interface IUnion {
     union_name: string;
     union_acronym: string;
     union_id: number;
-  }
-    
-  
-  
-  
-  
+  } 
