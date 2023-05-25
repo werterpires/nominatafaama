@@ -31,18 +31,12 @@
       (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allEndowmentTypes; index as i;">
       <span class="field">
         <p class="fieldTitle">Tipo de investidura:</p>
-        <p class="fieldContent" [id]="'endowmentType'+i"
-          (click)="changeTagType('endowmentType'+i, 'saveEndowmentTypeButton'+i, 'endowmentTypeInput'+i)">
-          {{registry.endowment_type_name}}</p>
-        <input class="fieldContent hidden" [id]="'endowmentTypeInput'+i" name=`endowmentTypeInput${i}`
+        <input class="fieldContent" [id]="'endowmentTypeInput'+i" name=`endowmentTypeInput${i}`
           [(ngModel)]="allEndowmentTypes[i].endowment_type_name">
       </span>
       <span class="field">
         <p class="fieldTitle">Género a que se aplica:</p>
-        <p class="fieldContent" [id]="'application'+i"
-          (click)="changeTagTypeToSelect('application'+i, 'saveEndowmentTypeButton'+i, 'applicationSelect'+i)">
-          {{genders[registry.application]}}</p>
-        <select class="fieldContent hidden" [id]="'applicationSelect'+i" name=`endowmentTypeInput${i}`
+        <select class="fieldContent" [id]="'applicationSelect'+i" name=`endowmentTypeInput${i}`
           [(ngModel)]="allEndowmentTypes[i].application">
           <option value=0>Ambos</option>
           <option value=1>Masculino</option>
