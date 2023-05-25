@@ -52,28 +52,30 @@ export class AcademicFormationsService {
     dto: CreateAcademicFormationDto,
     id: number,
   ): Promise<IAcademicFormation> {
-    try {
-      const {person_id} = await this.spouseModel.findSpouseByUserId(id);
+    const spouse = await this.spouseModel.findSpouseByUserId(id);
 
-      const createAcademicFormation: ICreateAcademicFormation = {
-        course_area: dto.course_area,
-        institution: dto.institution,
-        begin_date: new Date(dto.begin_date),
-        conclusion_date: dto.conclusion_date
-          ? new Date(dto.conclusion_date)
-          : null,
-        person_id: person_id,
-        degree_id: dto.degree_id,
-      };
-
-      const newAcademicFormation =
-        await this.academicFormationsModel.createAcademicFormation(
-          createAcademicFormation,
-        );
-      return newAcademicFormation;
-    } catch (error) {
-      throw error;
+    if (!spouse) {
+      throw Error(`Spouse not found for id ${id}`);
     }
+
+    const {person_id} = spouse;
+
+    const createAcademicFormation: ICreateAcademicFormation = {
+      course_area: dto.course_area,
+      institution: dto.institution,
+      begin_date: new Date(dto.begin_date),
+      conclusion_date: dto.conclusion_date
+        ? new Date(dto.conclusion_date)
+        : null,
+      person_id: person_id,
+      degree_id: dto.degree_id,
+    };
+
+    const newAcademicFormation =
+      await this.academicFormationsModel.createAcademicFormation(
+        createAcademicFormation,
+      );
+    return newAcademicFormation;
   }
 
   async findAcademicFormationById(
