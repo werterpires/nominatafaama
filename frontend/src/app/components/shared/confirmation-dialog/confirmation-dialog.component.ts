@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
 import { DialogService } from '../shared.service.ts/dialog.service';
 
 @Component({
@@ -10,7 +10,7 @@ export class ConfirmationDialogComponent {
   @Input() id!: number;
   @Input() title = 'Confirma?';
   @Input() text = ['Você confirma esta ação?'];
-  @Output() confirmation = new EventEmitter<number>();
+  @Input() confirmation!: EventEmitter<number>;
 
   constructor(public service: DialogService) {}
 

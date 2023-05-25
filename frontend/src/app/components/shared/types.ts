@@ -1,3 +1,5 @@
+import { EventEmitter } from '@angular/core';
+
 export interface IUF {
   id: Number;
   nome: string;
@@ -15,4 +17,5 @@ export interface ICity {
 export interface Dialog {
   title: string;
   text: Array<string>;
+  confirmation: EventEmitter<number>;
 }

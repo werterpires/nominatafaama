@@ -120,28 +120,32 @@ export class PublicationTypesComponent {
   }
 
   deletePublicationType(i: number) {
-    const dialogId = this.dialogService.new('Confirma a remoção?', [
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi repellat ad esse, suscipit quidem dicta! Minus corrupti harum, magnam optio laborum, porro numquam, ipsa asperiores blanditiis repellat impedit adipisci delectus!',
-      'Você está certo em remover este registro?',
-    ]);
-    if (false) {
-      this.isLoading = true;
-      const publicationTypeId = this.allPublicationTypes[i].publication_type_id;
+    this.dialogService
+      .new('Confirma a remoção?', [
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi repellat ad esse, suscipit quidem dicta! Minus corrupti harum, magnam optio laborum, porro numquam, ipsa asperiores blanditiis repellat impedit adipisci delectus!',
+        'Você está certo em remover este registro?',
+      ])
+      .then((confirmation) => {
+        if (this.dialogService.checkConfirmation(confirmation)) {
+          this.isLoading = true;
+          const publicationTypeId =
+            this.allPublicationTypes[i].publication_type_id;
 
-      this.service.deletePublicationType(publicationTypeId).subscribe({
-        next: (res) => {
-          this.doneMessage = 'Tipo de publicação deletado com sucesso.';
-          this.done = true;
-          this.isLoading = false;
-          this.ngOnInit();
-        },
-        error: (err) => {
-          this.errorMessage = err.message;
-          this.error = true;
-          this.isLoading = false;
-        },
+          this.service.deletePublicationType(publicationTypeId).subscribe({
+            next: (res) => {
+              this.doneMessage = 'Tipo de publicação deletado com sucesso.';
+              this.done = true;
+              this.isLoading = false;
+              this.ngOnInit();
+            },
+            error: (err) => {
+              this.errorMessage = err.message;
+              this.error = true;
+              this.isLoading = false;
+            },
+          });
+        }
       });
-    }
   }
 
   closeError() {
