@@ -136,11 +136,11 @@ export class EclExpTypesComponent {
     })
   }
 
-  deleteAssociation(i: number) {
+  deleteRegistry(i: number) {
     this.isLoading = true
     const associationId = this.allEclExpTypes[i].ecl_exp_type_id
 
-    this.eclExpTypesService.deleteEclExpType(associationId).subscribe({
+    this.eclExpTypesService.deleteRegistry(associationId).subscribe({
       next: (res) => {
         this.doneMessage = 'Associação deletada com sucesso.'
         this.done = true

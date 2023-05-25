@@ -79,7 +79,7 @@ export class EclExpTypesService {
       )
   }
 
-  deleteEclExpType(eclExpTypeId: number): Observable<string> {
+  deleteRegistry(eclExpTypeId: number): Observable<string> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
