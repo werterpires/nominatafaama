@@ -1,35 +1,41 @@
-import { IsNotEmpty, IsInt, IsBoolean } from "class-validator";
+import {IsNotEmpty, IsInt, IsBoolean, Min} from 'class-validator'
 
 export class UpdateLanguageDto {
   @IsNotEmpty()
   @IsInt()
-  chosen_language: number;
+  @Min(1)
+  language_id
+
+  @IsNotEmpty()
+  @IsInt()
+  chosen_language: number
 
   @IsNotEmpty()
   @IsBoolean()
-  read: boolean;
+  read: boolean
 
   @IsNotEmpty()
   @IsBoolean()
-  understand: boolean;
+  understand: boolean
 
   @IsNotEmpty()
   @IsBoolean()
-  speak: boolean;
+  speak: boolean
 
   @IsNotEmpty()
   @IsBoolean()
-  write: boolean;
+  write: boolean
 
   @IsNotEmpty()
   @IsBoolean()
-  fluent: boolean;
+  fluent: boolean
 
   @IsNotEmpty()
   @IsBoolean()
-  unknown: boolean;
+  unknown: boolean
 
   @IsNotEmpty()
-  @IsBoolean()
-  language_approved: boolean;
+  @IsInt()
+  @Min(1)
+  person_id
 }
