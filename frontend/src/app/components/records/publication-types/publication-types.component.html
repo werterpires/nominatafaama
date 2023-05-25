@@ -21,25 +21,26 @@
       <button class="saveButton" type="button" (click)="createPublicationType()">SALVAR</button>
     </form>
     <div *ngFor="let publicationType of allPublicationTypes; let i = index">
-      <div class="subSection">
+      <div class="subSection" (mouseover)="deleteButton.hidden=false" (mouseout)="deleteButton.hidden=true">
+        <span class="registryStartButtons">
+          <img #deleteButton class="deleteIcon" hidden src="assets/icons/delete.svg"
+          alt="ícone para deletar o tipo de publicação" (click)="deletePublicationType(i)">
+        </span>
         <span class="field">
           <p class="fieldTitle">Tipo de Publicação:</p>
-          <p class="fieldContent" [id]="'publicationType'+i"
-            (click)="changeTagType('publicationType'+i, 'savePublicationTypeButton'+i, 'publicationTypeInput'+i  )">
-            {{publicationType.publication_type}}</p>
-          <input class="fieldContent hidden" [id]="'publicationTypeInput'+i" name=`publicationTypeInput${i}`
-            [(ngModel)]="allPublicationTypes[i].publication_type">
+          <input class="fieldContent" [id]="'publicationTypeInput'+i" name=`publicationTypeInput${i}`
+            [(ngModel)]="allPublicationTypes[i].publication_type"
+            (ngModelChange)="saveButton.classList.remove('hidden')">
         </span>
         <span class="field">
           <p class="fieldTitle">Instruções:</p>
-          <p class="fieldContent" [id]="'instructions'+i"
-            (click)="changeTagType('instructions'+i,'savePublicationTypeButton'+i, 'instructionsInput'+i )">
-            {{publicationType.instructions}}</p>
-          <input class="fieldContent hidden" [id]="'instructionsInput'+i" name=`instructionsInput${i}`
-            [(ngModel)]="allPublicationTypes[i].instructions">
+          <input class="fieldContent" [id]="'instructionsInput'+i" name=`instructionsInput${i}`
+            [(ngModel)]="allPublicationTypes[i].instructions" (ngModelChange)="saveButton.classList.remove('hidden')">
         </span>
-        <button class="saveButton hidden" [id]="'savePublicationTypeButton'+i"
-          (click)="editPublicationType(i, 'savePublicationTypeButton'+i)">Salvar</button>
+        <span class="registryEndButtons">
+          <button #saveButton class="saveButton hidden" [id]="'savePublicationTypeButton'+i"
+            (click)="editPublicationType(i, 'savePublicationTypeButton'+i)">Salvar</button>
+        </span>
       </div>
       <hr class="sectionDivision">
     </div>
