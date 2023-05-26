@@ -74,8 +74,20 @@ export class LanguagesComponent {
     })
   }
 
-  loga(texto: any) {
-    console.log(texto)
+  resetCreationRegistry() {
+    Object.keys(this.createRegistryData).forEach((key) => {
+      switch (typeof key) {
+        case 'boolean':
+          Object.defineProperty(this.createRegistryData, key, { value: false })
+          break
+        case 'number':
+          Object.defineProperty(this.createRegistryData, key, { value: 0 })
+          break
+        case 'string':
+          Object.defineProperty(this.createRegistryData, key, { value: '' })
+          break
+      }
+    })
   }
 
   createRegistry() {
@@ -102,22 +114,6 @@ export class LanguagesComponent {
           this.isLoading = false
         },
       })
-  }
-
-  resetCreationRegistry() {
-    Object.keys(this.createRegistryData).forEach((key) => {
-      switch (typeof key) {
-        case 'boolean':
-          Object.defineProperty(this.createRegistryData, key, { value: false })
-          break
-        case 'number':
-          Object.defineProperty(this.createRegistryData, key, { value: 0 })
-          break
-        case 'string':
-          Object.defineProperty(this.createRegistryData, key, { value: '' })
-          break
-      }
-    })
   }
 
   editRegistry(index: number, buttonId: string) {
