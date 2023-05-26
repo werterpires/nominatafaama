@@ -5,8 +5,9 @@ import { EvangelisticExperiencesModule } from './evangelistic-experiences/evange
 import { EclExperiencesModule } from './ecl-experiences/ecl-experiences.module';
 import { CoursesModule } from './courses/courses.module';
 import { PreviousMarriageModule } from './previous-marriage/previous-marriage.module';
+import { ProfessionalExperiencesModule } from './professional-experiences/professional-experiences.module';
 
 @Module({
-  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule]
+  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule]
 })
 export class InfoModule {}
