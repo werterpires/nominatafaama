@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common'
-import { KnexModule } from 'nest-knexjs'
-import { config } from 'dotenv'
-import { UsersModule } from './modules/users/users.module'
-import { PeopleModule } from './modules/people/people.module'
-import { AuthModule } from './shared/auth/auth.module'
 import { APP_GUARD } from '@nestjs/core'
-import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard'
-import { RolesModule } from './shared/roles/roles.module'
-import { RolesGuard } from './shared/roles/gz_guards/roles.guard'
-import { ResourcesModule } from './modules/resources/resources.module'
-import { StudentsModule } from './modules/students/students.module'
-import { SpousesModule } from './modules/spouses/spouses.module'
+import { config } from 'dotenv'
+import { KnexModule } from 'nest-knexjs'
 import { InfoModule } from './modules/info/info.module'
+import { PeopleModule } from './modules/people/people.module'
+import { ResourcesModule } from './modules/resources/resources.module'
+import { SpousesModule } from './modules/spouses/spouses.module'
+import { StudentsModule } from './modules/students/students.module'
+import { UsersModule } from './modules/users/users.module'
+import { AuthModule } from './shared/auth/auth.module'
+import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard'
+import { RolesGuard } from './shared/roles/gz_guards/roles.guard'
+import { RolesModule } from './shared/roles/roles.module'
+import { UtilService } from './shared/services/util.service'
 
 config()
 
@@ -53,6 +54,7 @@ config()
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    UtilService,
   ],
 })
 export class AppModule {}
