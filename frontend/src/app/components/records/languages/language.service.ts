@@ -1,8 +1,8 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
-import {ICreateLanguageDto, ILanguage, IUpdateLanguageDto} from './types'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
+import { ICreateLanguageDto, ILanguage, IUpdateLanguageDto } from './types'
 
 @Injectable({
   providedIn: 'root',
@@ -53,7 +53,7 @@ export class LanguageService {
       .put<IUpdateLanguageDto>(
         'http://localhost:3000/languages',
         updatedRegistry,
-        {headers: head_obj},
+        { headers: head_obj },
       )
       .pipe(
         catchError((error) => {
@@ -69,7 +69,7 @@ export class LanguageService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/languages/student/${registryId}`, {
+      .delete<string>(`http://localhost:3000/languages/${registryId}`, {
         headers,
       })
       .pipe(
