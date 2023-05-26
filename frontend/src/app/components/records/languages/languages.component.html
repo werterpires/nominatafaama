@@ -21,27 +21,27 @@
       </label>
       <label class="inputLabel">
         Ler
-        <input type="checkbox" appUniqueId name="create-read" [(ngModel)]="createRegistryData.read" />
+        <input type="checkbox" name="create-read" [(ngModel)]="createRegistryData.read" />
       </label>
       <label class="inputLabel">
         Ouvir
-        <input type="checkbox" appUniqueId name="create-understand" [(ngModel)]="createRegistryData.understand" />
+        <input type="checkbox" name="create-understand" [(ngModel)]="createRegistryData.understand" />
       </label>
       <label class="inputLabel">
         Falar
-        <input type="checkbox" appUniqueId name="create-speak" [(ngModel)]="createRegistryData.speak" />
+        <input type="checkbox" name="create-speak" [(ngModel)]="createRegistryData.speak" />
       </label>
       <label class="inputLabel">
         Escrever
-        <input type="checkbox" appUniqueId name="create-write" [(ngModel)]="createRegistryData.write" />
+        <input type="checkbox" name="create-write" [(ngModel)]="createRegistryData.write" />
       </label>
       <label class="inputLabel">
         Fluência
-        <input type="checkbox" appUniqueId name="create-fluent" [(ngModel)]="createRegistryData.fluent" />
+        <input type="checkbox" name="create-fluent" [(ngModel)]="createRegistryData.fluent" />
       </label>
       <label class="inputLabel">
         Desconhece
-        <input type="checkbox" appUniqueId name="create-unknown" [(ngModel)]="createRegistryData.unknown" />
+        <input type="checkbox" name="create-unknown" [(ngModel)]="createRegistryData.unknown" />
       </label>
       <button class="saveButton" type="button" (click)="createRegistry()">SALVAR</button>
     </form>
@@ -49,7 +49,7 @@
       (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allRegistries; index as i;">
       <span class="field">
         <p class="fieldTitle">Linguagem</p>
-        <select class="smallInput" appUniqueId name="language_id" [(ngModel)]="registry.language_id">
+        <select class="smallInput" name="language_id" [(ngModel)]="registry.language_id">
           <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
             {{languageType.language}}
           </option>
@@ -57,7 +57,7 @@
       </span>
       <span class="field">
         <p class="fieldTitle">Ler</p>
-        <input class="fieldContent" appUniqueId name="edit-read" type="checkbox" [(ngModel)]="registry.read">
+        <input class="fieldContent" name="edit-read" type="checkbox" [(ngModel)]="registry.read">
       </span>
     </app-registry>
   </section>

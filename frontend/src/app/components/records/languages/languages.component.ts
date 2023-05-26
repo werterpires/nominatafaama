@@ -18,7 +18,7 @@ export class LanguagesComponent {
   title = 'Linguagens'
   createRegistryData: ICreateLanguageDto = {
     chosen_language: 0,
-    read: true,
+    read: false,
     understand: false,
     speak: false,
     write: false,
