@@ -43,8 +43,8 @@ export class AcademicFormationsModel {
           formation_id: result,
           course_area: course_area,
           institution: institution,
-          begin_date: begin_date,
-          conclusion_date: conclusion_date,
+          begin_date: toDateString(begin_date),
+          conclusion_date: toDateString(conclusion_date),
           person_id: person_id,
           degree_id: degree_id,
           created_at: new Date(),
@@ -81,7 +81,7 @@ export class AcademicFormationsModel {
       try {
         const result = await trx
           .table('academic_formations')
-          .select('academic_formations.*', 'academic_degrees.degree_name')
+          .first('academic_formations.*', 'academic_degrees.degree_name')
           .leftJoin(
             'academic_degrees',
             'academic_formations.degree_id',
@@ -94,17 +94,17 @@ export class AcademicFormationsModel {
         }
 
         academicFormation = {
-          formation_id: result[0].formation_id,
-          course_area: result[0].course_area,
-          institution: result[0].institution,
-          begin_date: result[0].begin_date,
-          conclusion_date: result[0].conclusion_date,
-          person_id: result[0].person_id,
-          academic_formation_approved: result[0].academic_formation_approved,
-          created_at: result[0].created_at,
-          updated_at: result[0].updated_at,
-          degree_id: result[0].degree_id,
-          degree_name: result[0].degree_name,
+          formation_id: result.formation_id,
+          course_area: result.course_area,
+          institution: result.institution,
+          begin_date: toDateString(result.begin_date),
+          conclusion_date: toDateString(result.conclusion_date),
+          person_id: result.person_id,
+          academic_formation_approved: result.academic_formation_approved,
+          created_at: result.created_at,
+          updated_at: result.updated_at,
+          degree_id: result.degree_id,
+          degree_name: result.degree_name,
         }
 
         await trx.commit()
