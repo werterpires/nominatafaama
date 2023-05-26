@@ -7,5 +7,4 @@ import {v4 as uuidv4} from 'uuid'
 export class UniqueIdDirective {
   readonly uniqueId = uuidv4()
   @HostBinding('id') id = this.uniqueId
-  @HostBinding('name') name = this.uniqueId
 }

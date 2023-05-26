@@ -1,0 +1,94 @@
+<section #sectionBox [ngClass]="{smallSectionBox: !showBox, sectionBox: showBox}">
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{rotatedClock: showBox}" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir">
+      <p class="sectionTitle1">{{title}}</p>
+    </span>
+
+    <img #addIcon class="addIcon" [ngClass]="{hidden: !showBox}" src="assets/icons/addIcon.png"
+      alt="Criar nova Linguagem" (click)="showForm=true">
+  </div>
+  <section>
+    <form *ngIf="showForm" class="formCreation formArea">
+      <!--
+        read: false,
+        understand: false,
+        speak: false,
+        write: false,
+        fluent: false,
+        unknown: false,
+      -->
+      <label class="inputLabel">
+        Linguagem
+        <select class="smallInput" name="degreeSelect" [(ngModel)]="createRegistryData.chosen_language">
+          <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
+            {{languageType.language}}
+          </option>
+        </select>
+      </label>
+      <label class="inputLabel">
+        Ler
+        <input type="checkbox" appUniqueId name="create-read" [ngModel]="createRegistryData.read" />
+      </label>
+      <label class="inputLabel">
+        Ouvir
+        <input type="checkbox" appUniqueId name="create-understand" [(ngModel)]="createRegistryData.understand" />
+      </label>
+      <label class="inputLabel">
+        Falar
+        <input type="checkbox" appUniqueId name="create-speak" [(ngModel)]="createRegistryData.speak" />
+      </label>
+      <label class="inputLabel">
+        Escrever
+        <input type="checkbox" appUniqueId name="create-write" [(ngModel)]="createRegistryData.write" />
+      </label>
+      <label class="inputLabel">
+        Fluência
+        <input type="checkbox" appUniqueId name="create-fluent" [(ngModel)]="createRegistryData.fluent" />
+      </label>
+      <label class="inputLabel">
+        Desconhece
+        <input type="checkbox" appUniqueId name="create-unknown" [(ngModel)]="createRegistryData.unknown" />
+      </label>
+      <button class="saveButton" type="button" (click)="createRegistry()">SALVAR</button>
+    </form>
+    <app-registry #registryApp [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allRegistries; index as i;">
+      <span class="field">
+        <p class="fieldTitle">Linguagem</p>
+        <select class="smallInput" appUniqueId name="language_id" [(ngModel)]="registry.language_id">
+          <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
+            {{languageType.language}}
+          </option>
+        </select>
+      </span>
+      <span class="field">
+        <p class="fieldTitle">Ler</p>
+        <input class="fieldContent" appUniqueId name="edit-read" type="checkbox" [(ngModel)]="registry.read">
+      </span>
+    </app-registry>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{errorMessage}}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{doneMessage}}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

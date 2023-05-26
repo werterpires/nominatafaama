@@ -13,6 +13,9 @@
   <!-- Hugo -->
   <app-publication-types [permissions]="permissions"></app-publication-types>
 
+  <app-languages *ngIf="permissions.estudante || permissions.administrador" [permissions]="permissions"></app-languages>
+  <!-- fim -->
+
   <app-students *ngIf="permissions.estudante || permissions.administrador" [permissions]="permissions"></app-students>
   <app-student-academic-formations *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"></app-student-academic-formations>

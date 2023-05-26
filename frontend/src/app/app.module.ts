@@ -32,6 +32,7 @@ import { ConfirmationDialogComponent } from './components/shared/confirmation-di
 import { LoginMenuComponent } from './components/shared/login-menu/login-menu.component';
 import { RegistryComponent } from './components/shared/registry/registry.component';
 import { UniqueIdDirective } from './components/shared/directives/unique-id.directive';
+import { LanguagesComponent } from './components/records/languages/languages.component';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import { UniqueIdDirective } from './components/shared/directives/unique-id.dire
     LoginMenuComponent,
     RegistryComponent,
     UniqueIdDirective,
+    LanguagesComponent,
   ],
   imports: [
     BrowserModule,
