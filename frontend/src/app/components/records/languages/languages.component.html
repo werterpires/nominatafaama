@@ -11,14 +11,6 @@
   </div>
   <section>
     <form *ngIf="showForm" class="formCreation formArea">
-      <!--
-        read: false,
-        understand: false,
-        speak: false,
-        write: false,
-        fluent: false,
-        unknown: false,
-      -->
       <label class="inputLabel">
         Linguagem
         <select class="smallInput" name="degreeSelect" [(ngModel)]="createRegistryData.chosen_language">
@@ -29,7 +21,7 @@
       </label>
       <label class="inputLabel">
         Ler
-        <input type="checkbox" appUniqueId name="create-read" [ngModel]="createRegistryData.read" />
+        <input type="checkbox" appUniqueId name="create-read" [(ngModel)]="createRegistryData.read" />
       </label>
       <label class="inputLabel">
         Ouvir
