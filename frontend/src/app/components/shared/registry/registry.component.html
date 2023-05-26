@@ -1,16 +1,14 @@
-<form class="registryWrapper">
-  <div class="subSection" (mouseover)="deleteButton.classList.remove('hidden'); saveButton.classList.remove('hidden')"
-    (mouseout)="deleteButton.classList.add('hidden'); saveButton.classList.add('hidden')">
-    <section class="registryStartButtons">
-      <img #deleteButton class="deleteIcon hidden" src="assets/icons/delete.svg" alt="ícone para deletar registro"
+<form class="registryWrapper" (submit)="editRegistry.emit({id: registryId, saveButtonId: saveButton.id})">
+  <section class="formCreation">
+    <ng-content></ng-content>
+  </section>
+  <section class="registryEndButtons">
+    <button type="submit">
+      <img #saveButton class="iconButton" src="assets/icons/saveIcon.svg" alt="ícone para salvar registro">
+    </button>
+    <button type="button">
+      <img #deleteButton class="iconButton" src="assets/icons/delete.svg" alt="ícone para deletar registro"
         (click)="deleteRegistry.emit(registryId)">
-    </section>
-    <section class="formCreation">
-      <ng-content></ng-content>
-    </section>
-    <section class="registryEndButtons">
-      <button #saveButton appUniqueId class="saveButton hidden"
-        (click)="editRegistry.emit({id: registryId, saveButtonId: saveButton.id})">Salvar</button>
-    </section>
-  </div>
+    </button>
+  </section>
 </form>

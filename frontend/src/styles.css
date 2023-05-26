@@ -82,6 +82,7 @@ input:focus {
 .formCreation select {
   width: 100%;
   padding: 0.5rem 1rem;
+  margin: 4px 0;
   background: #ffffff;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
@@ -393,13 +394,13 @@ button:active {
   transform: scale(1.5);
 }
 
-.deleteIcon {
+.iconButton {
   height: 17px;
   transition: transform 0.2s ease-in-out;
   stroke: red;
 }
 
-.deleteIcon:hover {
+.iconButton:hover {
   transform: scale(1.5);
 }
 
@@ -489,10 +490,10 @@ button:active {
   color: #23435f;
 }
 
-.subSection {
+.registryWrapper {
   display: grid;
   align-items: center;
-  grid-template-columns: 38px 1fr 78px;
+  grid-template-columns: 1fr 40px;
   gap: 1rem;
   border-radius: 0.5rem;
   padding: 1rem;
@@ -519,13 +520,11 @@ button:active {
 
 .registryEndButtons {
   display: flex;
+  flex-direction: column;
   flex-shrink: 0;
   gap: 1rem;
   align-items: center;
   justify-content: center;
-  width: 74px;
-  height: 40px;
-  flex-shrink: 0;
 }
 
 .approvedRadio {
