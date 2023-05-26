@@ -1,6 +1,5 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http'
 import {Injectable} from '@angular/core'
-import {Router} from '@angular/router'
 import {Observable, throwError} from 'rxjs'
 import {catchError} from 'rxjs/operators'
 import {ICreateLanguageDto, ILanguage, IUpdateLanguageDto} from './types'
@@ -9,7 +8,7 @@ import {ICreateLanguageDto, ILanguage, IUpdateLanguageDto} from './types'
   providedIn: 'root',
 })
 export class LanguageService {
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {}
 
   findAllRegistries(): Observable<ILanguage[]> {
     const token = localStorage.getItem('access_token')
