@@ -49,6 +49,15 @@ input:focus {
   gap: 1rem;
 }
 
+.registryWrapper {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 40px;
+  gap: 1rem;
+  padding: 1rem 1rem 2rem;
+  border-bottom: solid rgba(113, 112, 112, 0.16) 2px;
+}
+
 .formCreationWrapper {
   padding-bottom: 1rem;
   margin-bottom: 1rem;
@@ -488,16 +497,6 @@ button:active {
   display: flex;
   align-items: center;
   color: #23435f;
-}
-
-.registryWrapper {
-  display: grid;
-  align-items: center;
-  grid-template-columns: 1fr 40px;
-  gap: 1rem;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .formSection {
