@@ -3,7 +3,7 @@ import { IPermissions } from '../../shared/container/types'
 import { LanguageTypesService } from '../language-types/language-types.service'
 import { ILanguageType } from '../language-types/types'
 import { LanguageService } from './language.service'
-import { ICreateLanguageDto, ILanguage, IUpdateLanguageDto } from './types'
+import { ICreateLanguageDto, ILanguage } from './types'
 
 @Component({
   selector: 'app-languages',
@@ -120,21 +120,10 @@ export class LanguagesComponent {
     })
   }
 
-  editRegistry(i: number, buttonId: string) {
+  editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const editFormationData: IUpdateLanguageDto = {
-      chosen_language: this.allRegistries[i].chosen_language,
-      fluent: this.allRegistries[i].fluent,
-      language_id: this.allRegistries[i].language_id,
-      person_id: this.allRegistries[i].person_id,
-      read: this.allRegistries[i].read,
-      speak: this.allRegistries[i].speak,
-      understand: this.allRegistries[i].understand,
-      unknown: this.allRegistries[i].unknown,
-      write: this.allRegistries[i].write,
-    }
 
-    this.service.updateRegistry(editFormationData).subscribe({
+    this.service.updateRegistry(this.allRegistries[index]).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
@@ -149,9 +138,9 @@ export class LanguagesComponent {
     })
   }
 
-  deleteRegistry(i: number) {
+  deleteRegistry(id: number) {
     this.isLoading = true
-    this.service.deleteRegistry(i).subscribe({
+    this.service.deleteRegistry(id).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
