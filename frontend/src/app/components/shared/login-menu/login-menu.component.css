@@ -1,6 +1,6 @@
 .loginMenu {
   border-radius: 10px;
-  position: fixed;
+  position: absolute;
   right: max(1rem, (100% - 1024px)/2);
   top: 70px;
   padding: 1.5rem;
