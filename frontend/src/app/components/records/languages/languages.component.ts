@@ -1,9 +1,9 @@
-import {Component, Input} from '@angular/core'
-import {IPermissions} from '../../shared/container/types'
-import {LanguageTypesService} from '../language-types/language-types.service'
-import {ILanguageType} from '../language-types/types'
-import {LanguageService} from './language.service'
-import {ICreateLanguageDto, ILanguage, IUpdateLanguageDto} from './types'
+import { Component, Input } from '@angular/core'
+import { IPermissions } from '../../shared/container/types'
+import { LanguageTypesService } from '../language-types/language-types.service'
+import { ILanguageType } from '../language-types/types'
+import { LanguageService } from './language.service'
+import { ICreateLanguageDto, ILanguage, IUpdateLanguageDto } from './types'
 
 @Component({
   selector: 'app-languages',
@@ -108,13 +108,13 @@ export class LanguagesComponent {
     Object.keys(this.createRegistryData).forEach((key) => {
       switch (typeof key) {
         case 'boolean':
-          Object.defineProperty(this.createRegistryData, key, {value: false})
+          Object.defineProperty(this.createRegistryData, key, { value: false })
           break
         case 'number':
-          Object.defineProperty(this.createRegistryData, key, {value: 0})
+          Object.defineProperty(this.createRegistryData, key, { value: 0 })
           break
         case 'string':
-          Object.defineProperty(this.createRegistryData, key, {value: ''})
+          Object.defineProperty(this.createRegistryData, key, { value: '' })
           break
       }
     })

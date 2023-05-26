@@ -47,7 +47,7 @@
         <button class="saveButton" type="button" (click)="createRegistry()">SALVAR</button>
       </div>
     </form>
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+    <app-registry [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allRegistries; index as i;">
       <label class="w-full">
         Linguagem
