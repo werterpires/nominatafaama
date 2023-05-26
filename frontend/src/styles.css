@@ -147,7 +147,7 @@ input:focus {
   color: #23435f;
 }
 
-.inputLabel {
+.formCreation > label {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -156,9 +156,21 @@ input:focus {
   font-weight: 500;
   font-size: 12px;
   line-height: 18px;
-
   color: rgba(0, 0, 0, 0.54);
-  margin-bottom: 20px;
+}
+
+.formCreation > label > input,
+.formCreation > label > select {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0;
+}
+
+.subSection > .formCreation > label {
+}
+
+.checkboxLabel {
+  text-align: center;
 }
 
 button {
@@ -506,6 +518,11 @@ button:active {
 }
 
 .formCreation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin-bottom: 1rem;
   overflow: hidden;
 }
@@ -590,12 +607,6 @@ button:active {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
-}
-
-.registryFields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
 }
 
 .registryEndButtons {
@@ -712,12 +723,4 @@ button:active {
 
 .hidden {
   display: none;
-}
-
-.formArea {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
