@@ -27,23 +27,24 @@
       <button class="saveButton" type="button" (click)="createEndowmentType()">SALVAR</button>
     </form>
 
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editEndowmentType($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allEndowmentTypes; index as i;">
-      <span class="field">
-        <p class="fieldTitle">Tipo de investidura:</p>
-        <input class="fieldContent" [id]="'endowmentTypeInput'+i" name=`endowmentTypeInput${i}`
-          [(ngModel)]="allEndowmentTypes[i].endowment_type_name">
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Género a que se aplica:</p>
-        <select class="fieldContent" [id]="'applicationSelect'+i" name=`endowmentTypeInput${i}`
-          [(ngModel)]="allEndowmentTypes[i].application">
-          <option value=0>Ambos</option>
-          <option value=1>Masculino</option>
-          <option value=2>Feminino</option>
-        </select>
-      </span>
-    </app-registry>
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editEndowmentType($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
+        *ngFor="let registry of allEndowmentTypes; index as i;">
+        <span class="field">
+          <p class="fieldTitle">Tipo de investidura:</p>
+          <input class="fieldContent" [id]="'endowmentTypeInput'+i" name=`endowmentTypeInput${i}`
+            [(ngModel)]="allEndowmentTypes[i].endowment_type_name">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Género a que se aplica:</p>
+          <select class="fieldContent" [id]="'applicationSelect'+i" name=`endowmentTypeInput${i}`
+            [(ngModel)]="allEndowmentTypes[i].application">
+            <option value=0>Ambos</option>
+            <option value=1>Masculino</option>
+            <option value=2>Feminino</option>
+          </select>
+        </span>
+      </app-registry></section>
   </section>
 </section>
 

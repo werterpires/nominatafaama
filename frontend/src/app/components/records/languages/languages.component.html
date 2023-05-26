@@ -10,78 +10,78 @@
       alt="Criar nova Linguagem" (click)="showForm=true">
   </div>
   <section>
-    <form *ngIf="showForm" class="formCreation">
-      <label class="w-full">
-        Linguagem
-        <select class="smallInput" name="degreeSelect" [(ngModel)]="createRegistryData.chosen_language">
-          <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
-            {{languageType.language}}
-          </option>
-        </select>
-      </label>
-      <label class="checkboxLabel">
-        Ler
-        <input type="checkbox" name="create-read" [(ngModel)]="createRegistryData.read" />
-      </label>
-      <label class="checkboxLabel">
-        Ouvir
-        <input type="checkbox" name="create-understand" [(ngModel)]="createRegistryData.understand" />
-      </label>
-      <label class="checkboxLabel">
-        Falar
-        <input type="checkbox" name="create-speak" [(ngModel)]="createRegistryData.speak" />
-      </label>
-      <label class="checkboxLabel">
-        Escrever
-        <input type="checkbox" name="create-write" [(ngModel)]="createRegistryData.write" />
-      </label>
-      <label class="checkboxLabel">
-        Fluência
-        <input type="checkbox" name="create-fluent" [(ngModel)]="createRegistryData.fluent" />
-      </label>
-      <label class="checkboxLabel">
-        Desconhece
-        <input type="checkbox" name="create-unknown" [(ngModel)]="createRegistryData.unknown" />
-      </label>
-      <div class="w-full">
-        <button class="saveButton" type="button" (click)="createRegistry()">SALVAR</button>
-      </div>
-    </form>
-    <app-registry [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.language_id)" *ngFor="let registry of allRegistries; index as i;">
-      <label class="w-full">
-        Linguagem
-        <select class="smallInput" name="degreeSelect" [(ngModel)]="registry.chosen_language">
-          <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
-            {{languageType.language}}
-          </option>
-        </select>
-      </label>
-      <label class="checkboxLabel">
-        Ler
-        <input type="checkbox" name="create-read" [(ngModel)]="registry.read" />
-      </label>
-      <label class="checkboxLabel">
-        Ouvir
-        <input type="checkbox" name="create-understand" [(ngModel)]="registry.understand" />
-      </label>
-      <label class="checkboxLabel">
-        Falar
-        <input type="checkbox" name="create-speak" [(ngModel)]="registry.speak" />
-      </label>
-      <label class="checkboxLabel">
-        Escrever
-        <input type="checkbox" name="create-write" [(ngModel)]="registry.write" />
-      </label>
-      <label class="checkboxLabel">
-        Fluência
-        <input type="checkbox" name="create-fluent" [(ngModel)]="registry.fluent" />
-      </label>
-      <label class="checkboxLabel">
-        Desconhece
-        <input type="checkbox" name="create-unknown" [(ngModel)]="registry.unknown" />
-      </label>
-    </app-registry>
+    <section class="formCreationWrapper" *ngIf="showForm">
+      <app-creation-form>
+        <label class="w-full">
+          Linguagem
+          <select class="smallInput" name="degreeSelect" [(ngModel)]="createRegistryData.chosen_language">
+            <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
+              {{languageType.language}}
+            </option>
+          </select>
+        </label>
+        <label class="checkboxLabel">
+          Ler
+          <input type="checkbox" name="create-read" [(ngModel)]="createRegistryData.read" />
+        </label>
+        <label class="checkboxLabel">
+          Ouvir
+          <input type="checkbox" name="create-understand" [(ngModel)]="createRegistryData.understand" />
+        </label>
+        <label class="checkboxLabel">
+          Falar
+          <input type="checkbox" name="create-speak" [(ngModel)]="createRegistryData.speak" />
+        </label>
+        <label class="checkboxLabel">
+          Escrever
+          <input type="checkbox" name="create-write" [(ngModel)]="createRegistryData.write" />
+        </label>
+        <label class="checkboxLabel">
+          Fluência
+          <input type="checkbox" name="create-fluent" [(ngModel)]="createRegistryData.fluent" />
+        </label>
+        <label class="checkboxLabel">
+          Desconhece
+          <input type="checkbox" name="create-unknown" [(ngModel)]="createRegistryData.unknown" />
+        </label>
+      </app-creation-form>
+    </section>
+    <section class="registriesWrapper"><app-registry [registryId]="i"
+        (editRegistry)="editRegistry(i, $event.saveButtonId)" (deleteRegistry)="deleteRegistry(registry.language_id)"
+        *ngFor="let registry of allRegistries; index as i;">
+        <label class="w-full">
+          Linguagem
+          <select class="smallInput" name="degreeSelect" [(ngModel)]="registry.chosen_language">
+            <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
+              {{languageType.language}}
+            </option>
+          </select>
+        </label>
+        <label class="checkboxLabel">
+          Ler
+          <input type="checkbox" name="create-read" [(ngModel)]="registry.read" />
+        </label>
+        <label class="checkboxLabel">
+          Ouvir
+          <input type="checkbox" name="create-understand" [(ngModel)]="registry.understand" />
+        </label>
+        <label class="checkboxLabel">
+          Falar
+          <input type="checkbox" name="create-speak" [(ngModel)]="registry.speak" />
+        </label>
+        <label class="checkboxLabel">
+          Escrever
+          <input type="checkbox" name="create-write" [(ngModel)]="registry.write" />
+        </label>
+        <label class="checkboxLabel">
+          Fluência
+          <input type="checkbox" name="create-fluent" [(ngModel)]="registry.fluent" />
+        </label>
+        <label class="checkboxLabel">
+          Desconhece
+          <input type="checkbox" name="create-unknown" [(ngModel)]="registry.unknown" />
+        </label>
+      </app-registry></section>
   </section>
 </section>
 

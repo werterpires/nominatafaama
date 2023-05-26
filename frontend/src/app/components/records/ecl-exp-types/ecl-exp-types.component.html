@@ -18,14 +18,15 @@
 
       <button class="saveButton" type="button" (click)="createEclExpType()">SALVAR</button>
     </form>
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editEclExpType($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allEclExpTypes; index as i;">
-      <span class="field">
-        <p class="fieldTitle">Tipo de experiências eclesiásticas:</p>
-        <input class="fieldContent" [id]="'eclExpTypeInput'+i" name=`eclExpTypeInput${i}`
-          [(ngModel)]="allEclExpTypes[i].ecl_exp_type_name">
-      </span>
-    </app-registry>
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editEclExpType($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
+        *ngFor="let registry of allEclExpTypes; index as i;">
+        <span class="field">
+          <p class="fieldTitle">Tipo de experiências eclesiásticas:</p>
+          <input class="fieldContent" [id]="'eclExpTypeInput'+i" name=`eclExpTypeInput${i}`
+            [(ngModel)]="allEclExpTypes[i].ecl_exp_type_name">
+        </span>
+      </app-registry></section>
 
   </section>
 </section>

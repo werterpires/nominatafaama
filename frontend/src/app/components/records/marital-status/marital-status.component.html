@@ -9,7 +9,7 @@
       (click)="createForm()">
   </div>
   <section>
-    <form *ngIf="creatingStatus" class="formSCriation">
+    <form *ngIf="creatingStatus" class="formCreation">
       <label class="inputLabel">
         Novo estado civil<input class="mediumInput" type="text" name="maritalStatusInput"
           [(ngModel)]="createMaritalStatusData.marital_status_type_name">
@@ -18,15 +18,16 @@
       <button class="saveButton" type="button" (click)="createMaritalStatus()">SALVAR</button>
 
     </form>
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editMaritalStatus($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allStatus; index as i;">
-      <span class="field">
-        <p class="fieldTitle">Estado civil:</p>
-        <input class="fieldContent" [id]="'maritalStatusInput'+i" name=`maritalStatusInput${i}`
-          [(ngModel)]="allStatus[i].marital_status_type_name">
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editMaritalStatus($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
+        *ngFor="let registry of allStatus; index as i;">
+        <span class="field">
+          <p class="fieldTitle">Estado civil:</p>
+          <input class="fieldContent" [id]="'maritalStatusInput'+i" name=`maritalStatusInput${i}`
+            [(ngModel)]="allStatus[i].marital_status_type_name">
 
-      </span>
-    </app-registry>
+        </span>
+      </app-registry></section>
   </section>
 </section>
 

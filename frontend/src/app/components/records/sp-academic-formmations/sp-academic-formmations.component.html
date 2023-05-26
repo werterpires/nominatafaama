@@ -9,9 +9,8 @@
       alt="Criar nova formação acadêmica" (click)="createForm()">
   </div>
   <section>
-    <form *ngIf="creatingFormation" class="formCreation">
-
-      <section class="formArea">
+    <section class="formCreationWrapper" *ngIf="creatingFormation">
+      <app-creation-form>
         <label class="inputLabel">
           Grau acadêmico
           <select class="smallInput" name="degreeSelect" [(ngModel)]="createSpAcademicFormationData.degree_id">
@@ -22,15 +21,11 @@
           Área de formação<input class="smallMediumInput" type="text" name="formationAreaInput"
             [(ngModel)]="createSpAcademicFormationData.course_area">
         </label>
-      </section>
-      <section class="formArea">
         <label class="inputLabel">
           Instituição:<input class="largeInput" type="text" name="institutionInput"
             [(ngModel)]="createSpAcademicFormationData.institution">
         </label>
-      </section>
 
-      <section class="formArea">
         <label class="inputLabel">
           Data de início: <input class="smallInput" type="date" name="beginDateInput"
             [(ngModel)]="createSpAcademicFormationData.begin_date">
@@ -39,39 +34,39 @@
           Data de fim: <input class="smallInput" type="date" name="beginDateInput"
             [(ngModel)]="createSpAcademicFormationData.conclusion_date">
         </label>
-      </section>
-      <button class="saveButton" type="button" (click)="createSpAcademicFormation()">SALVAR</button>
-    </form>
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editSpAcademicFormation($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of spAllFormations; index as i;">
-      <span class="field">
-        <p class="fieldTitle">Grau acadêmico:</p>
-        <select class="smallInput hidden" [id]="'spDegreeSelect'+i" name="'degreeSelect'+i"
-          [(ngModel)]="spAllFormations[i].degree_id">
-          <option *ngFor="let degree of spAllDegrees" [value]=degree.degree_id>{{degree.degree_name}}</option>
-        </select>
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Área de formação:</p>
-        <input class="fieldContent" [id]="'spCourse_areaInput'+i" name=`course_areaInput${i}`
-          [(ngModel)]="spAllFormations[i].course_area">
-      </span>
-      <span class="field flex-grow">
-        <p class="fieldTitle">Instituição</p>
-        <input class="fieldContent" [id]="'spinstitutionInput'+i" name=`institutionInput${i}`
-          [(ngModel)]="spAllFormations[i].institution">
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Data de início:</p>
-        <input class="fieldContent" [id]="'spbegin_dateInput'+i" type="date" name=`begin_dateInput${i}`
-          [(ngModel)]="spAllFormations[i].begin_date">
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Data de conclusão:</p>
-        <input class="fieldContent" [id]="'spconclusion_dateInput'+i" type="date" name=`conclusion_dateInput${i}`
-          [(ngModel)]="spAllFormations[i].conclusion_date" />
-      </span>
-    </app-registry>
+      </app-creation-form>
+    </section>
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editSpAcademicFormation($event.id, $event.saveButtonId)"
+        (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of spAllFormations; index as i;">
+        <span class="field">
+          <p class="fieldTitle">Grau acadêmico:</p>
+          <select class="smallInput hidden" [id]="'spDegreeSelect'+i" name="'degreeSelect'+i"
+            [(ngModel)]="spAllFormations[i].degree_id">
+            <option *ngFor="let degree of spAllDegrees" [value]=degree.degree_id>{{degree.degree_name}}</option>
+          </select>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Área de formação:</p>
+          <input class="fieldContent" [id]="'spCourse_areaInput'+i" name=`course_areaInput${i}`
+            [(ngModel)]="spAllFormations[i].course_area">
+        </span>
+        <span class="field flex-grow">
+          <p class="fieldTitle">Instituição</p>
+          <input class="fieldContent" [id]="'spinstitutionInput'+i" name=`institutionInput${i}`
+            [(ngModel)]="spAllFormations[i].institution">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Data de início:</p>
+          <input class="fieldContent" [id]="'spbegin_dateInput'+i" type="date" name=`begin_dateInput${i}`
+            [(ngModel)]="spAllFormations[i].begin_date">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Data de conclusão:</p>
+          <input class="fieldContent" [id]="'spconclusion_dateInput'+i" type="date" name=`conclusion_dateInput${i}`
+            [(ngModel)]="spAllFormations[i].conclusion_date" />
+        </span>
+      </app-registry></section>
   </section>
 </section>
 

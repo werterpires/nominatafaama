@@ -10,75 +10,67 @@
       (click)="createForm()">
   </div>
   <section>
-    <form *ngIf="creatingFormation" class="formSCriation">
+    <form *ngIf="creatingFormation" class="formCreation">
 
-      <section class="formArea">
-        <label class="inputLabel">
-          Grau acadêmico
-          <select class="smallInput" name="degreeSelect" [(ngModel)]="createStAcademicFormationData.degree_id">
-            <option *ngFor="let degree of allDegrees" [value]=degree.degree_id>{{degree.degree_name}}</option>
-          </select>
-        </label>
-        <label class="inputLabel">
-          Área de formação<input class="smallMediumInput" type="text" name="formationAreaInput"
-            [(ngModel)]="createStAcademicFormationData.course_area">
-        </label>
-      </section>
-      <section class="formArea">
-        <label class="inputLabel">
-          Instituição:<input class="largeInput" type="text" name="institutionInput"
-            [(ngModel)]="createStAcademicFormationData.institution">
-        </label>
+      <label class="inputLabel">
+        Grau acadêmico
+        <select class="smallInput" name="degreeSelect" [(ngModel)]="createStAcademicFormationData.degree_id">
+          <option *ngFor="let degree of allDegrees" [value]=degree.degree_id>{{degree.degree_name}}</option>
+        </select>
+      </label>
+      <label class="inputLabel">
+        Área de formação<input class="smallMediumInput" type="text" name="formationAreaInput"
+          [(ngModel)]="createStAcademicFormationData.course_area">
+      </label>
+      <label class="inputLabel">
+        Instituição:<input class="largeInput" type="text" name="institutionInput"
+          [(ngModel)]="createStAcademicFormationData.institution">
+      </label>
 
-
-      </section>
-
-      <section class="formArea">
-        <label class="inputLabel">
-          Data de início: <input class="smallInput" type="date" name="beginDateInput"
-            [(ngModel)]="createStAcademicFormationData.begin_date">
-        </label>
-        <label class="inputLabel">
-          Data de fim: <input class="smallInput" type="date" name="beginDateInput"
-            [(ngModel)]="createStAcademicFormationData.conclusion_date">
-        </label>
-      </section>
-
+      <label class="inputLabel">
+        Data de início: <input class="smallInput" type="date" name="beginDateInput"
+          [(ngModel)]="createStAcademicFormationData.begin_date">
+      </label>
+      <label class="inputLabel">
+        Data de fim: <input class="smallInput" type="date" name="beginDateInput"
+          [(ngModel)]="createStAcademicFormationData.conclusion_date">
+      </label>
 
       <button class="saveButton" type="button" (click)="createStAcademicFormation()">SALVAR</button>
 
     </form>
 
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editStAcademicFormation($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allFormations; index as i;">
-      <span class="field">
-        <p class="fieldTitle">Grau acadêmico:</p>
-        <select class="fieldContent" [id]="'degreeSelect' +i" name="'degreeSelect'+i"
-          [(ngModel)]="allFormations[i].degree_id">
-          <option *ngFor="let degree of allDegrees" [value]=degree.degree_id>{{degree.degree_name}}</option>
-        </select>
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Área de formação:</p>
-        <input class="fieldContent" [id]="'course_areaInput'+i" name=`course_areaInput${i}`
-          [(ngModel)]="allFormations[i].course_area">
-      </span>
-      <span class="field grid-2col">
-        <p class="fieldTitle">Instituição</p>
-        <input class="fieldContent" [id]="'institutionInput'+i" name=`institutionInput${i}`
-          [(ngModel)]="allFormations[i].institution">
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Data de início:</p>
-        <input class="fieldContent" [id]="'begin_dateInput'+i" type="date" name=`begin_dateInput${i}`
-          [(ngModel)]="allFormations[i].begin_date">
-      </span>
-      <span>
-        <p class="fieldTitle">Data de conclusão:</p>
-        <input class="fieldContent" [id]="'conclusion_dateInput'+i" type="date" name=`conclusion_dateInput${i}`
-          [(ngModel)]="allFormations[i].conclusion_date">
-      </span>
-    </app-registry>
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editStAcademicFormation($event.id, $event.saveButtonId)"
+        (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allFormations; index as i;">
+        <span class="field">
+          <p class="fieldTitle">Grau acadêmico:</p>
+          <select class="fieldContent" [id]="'degreeSelect' +i" name="'degreeSelect'+i"
+            [(ngModel)]="allFormations[i].degree_id">
+            <option *ngFor="let degree of allDegrees" [value]=degree.degree_id>{{degree.degree_name}}</option>
+          </select>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Área de formação:</p>
+          <input class="fieldContent" [id]="'course_areaInput'+i" name=`course_areaInput${i}`
+            [(ngModel)]="allFormations[i].course_area">
+        </span>
+        <span class="field w-full">
+          <p class="fieldTitle">Instituição</p>
+          <input class="fieldContent" [id]="'institutionInput'+i" name=`institutionInput${i}`
+            [(ngModel)]="allFormations[i].institution">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Data de início:</p>
+          <input class="fieldContent" [id]="'begin_dateInput'+i" type="date" name=`begin_dateInput${i}`
+            [(ngModel)]="allFormations[i].begin_date">
+        </span>
+        <span>
+          <p class="fieldTitle">Data de conclusão:</p>
+          <input class="fieldContent" [id]="'conclusion_dateInput'+i" type="date" name=`conclusion_dateInput${i}`
+            [(ngModel)]="allFormations[i].conclusion_date">
+        </span>
+      </app-registry></section>
   </section>
 </section>
 

@@ -18,14 +18,15 @@
 
       <button class="saveButton" type="button" (click)="createMinistryType()">SALVAR</button>
     </form>
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editMinistryType($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allMinistryTypes; index as i;">
-      <span class="field">
-        <p class="fieldTitle">Tipo de ministério:</p>
-        <input class="fieldContent" [id]="'ministryTypeInput'+i" name=`ministryTypeInput${i}`
-          [(ngModel)]="allMinistryTypes[i].ministry_type_name">
-      </span>
-    </app-registry>
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editMinistryType($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
+        *ngFor="let registry of allMinistryTypes; index as i;">
+        <span class="field">
+          <p class="fieldTitle">Tipo de ministério:</p>
+          <input class="fieldContent" [id]="'ministryTypeInput'+i" name=`ministryTypeInput${i}`
+            [(ngModel)]="allMinistryTypes[i].ministry_type_name">
+        </span>
+      </app-registry></section>
   </section>
 </section>
 

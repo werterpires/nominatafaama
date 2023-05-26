@@ -13,44 +13,44 @@
         Nova Associação<input class="mediumInput" type="text" name="associationNameInput"
           [(ngModel)]="createAssociationData.association_name">
       </label>
-      <section class="formArea">
-        <label class="inputLabel">
-          Sigla<input class="smallInput" type="text" name="associationAcronymInput"
-            [(ngModel)]="createAssociationData.association_acronym">
-        </label>
-        <label class="inputLabel">
-          União
-          <select class="smallInput" name="unionSelect" [(ngModel)]="createAssociationData.union_id">
-            <option *ngFor="let union of allUnions" [value]=union.union_id>{{union.union_acronym}} -
-              {{union.union_name}}</option>
-          </select>
-        </label>
-      </section>
+      <label class="inputLabel">
+        Sigla<input class="smallInput" type="text" name="associationAcronymInput"
+          [(ngModel)]="createAssociationData.association_acronym">
+      </label>
+      <label class="inputLabel">
+        União
+        <select class="smallInput" name="unionSelect" [(ngModel)]="createAssociationData.union_id">
+          <option *ngFor="let union of allUnions" [value]=union.union_id>{{union.union_acronym}} -
+            {{union.union_name}}</option>
+        </select>
+      </label>
 
       <button class="saveButton" type="button" (click)="createAssociation()">SALVAR</button>
     </form>
 
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editAssociation($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteAssociation($event)" *ngFor="let registry of allAssociations; index as i;">
-      <span class="field">
-        <p class="fieldTitle">Associação:</p>
-        <input class="fieldContent" [id]="'associationInput'+i" name=`associationInput${i}`
-          [(ngModel)]="registry.association_name" (ngModelChange)="registryApp.fieldChanged=true">
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Sigla:</p>
-        <input class="fieldContent" [id]="'associationAcronymInput'+i" name=`associationInput${i}`
-          [(ngModel)]="registry.association_acronym" (ngModelChange)="registryApp.fieldChanged=true">
-      </span>
-      <span class="field flex-grow">
-        <p class="fieldTitle">União:</p>
-        <select class="fieldContent" [id]="'unionSelect'+i" name=`unionSelect${i}` [(ngModel)]="registry.union_id"
-          (change)="registryApp.fieldChanged=true">
-          <option *ngFor="let union of allUnions" class="fieldContent" [value]=union.union_id>{{union.union_acronym}} -
-            {{union.union_name}}</option>
-        </select>
-      </span>
-    </app-registry>
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editAssociation($event.id, $event.saveButtonId)" (deleteRegistry)="deleteAssociation($event)"
+        *ngFor="let registry of allAssociations; index as i;">
+        <span class="field">
+          <p class="fieldTitle">Associação:</p>
+          <input class="fieldContent" [id]="'associationInput'+i" name=`associationInput${i}`
+            [(ngModel)]="registry.association_name" (ngModelChange)="registryApp.fieldChanged=true">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Sigla:</p>
+          <input class="fieldContent" [id]="'associationAcronymInput'+i" name=`associationInput${i}`
+            [(ngModel)]="registry.association_acronym" (ngModelChange)="registryApp.fieldChanged=true">
+        </span>
+        <span class="field flex-grow">
+          <p class="fieldTitle">União:</p>
+          <select class="fieldContent" [id]="'unionSelect'+i" name=`unionSelect${i}` [(ngModel)]="registry.union_id"
+            (change)="registryApp.fieldChanged=true">
+            <option *ngFor="let union of allUnions" class="fieldContent" [value]=union.union_id>{{union.union_acronym}}
+              -
+              {{union.union_name}}</option>
+          </select>
+        </span>
+      </app-registry></section>
   </section>
 </section>
 <div *ngIf="error" class="error">

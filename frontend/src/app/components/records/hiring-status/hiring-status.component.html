@@ -20,19 +20,20 @@
       <button class="saveButton" type="button" (click)="createHiringStatus()">SALVAR</button>
     </form>
 
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editHiringStatus($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteHiringStatus($event)" *ngFor="let registry of allHiringStatus; index as i;">
-      <span class="field">
-        <p class="fieldTitle">União:</p>
-        <input class="fieldContent" [id]="'hiring_statusInput'+i" name=`hiring_statusInput${i}`
-          [(ngModel)]="allHiringStatus[i].hiring_status_name">
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Descrição:</p>
-        <input class="fieldContent" [id]="'hiring_statusAcronymInput'+i" name=`hiring_statusInput${i}`
-          [(ngModel)]="allHiringStatus[i].hiring_status_description">
-      </span>
-    </app-registry>
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editHiringStatus($event.id, $event.saveButtonId)" (deleteRegistry)="deleteHiringStatus($event)"
+        *ngFor="let registry of allHiringStatus; index as i;">
+        <span class="field">
+          <p class="fieldTitle">União:</p>
+          <input class="fieldContent" [id]="'hiring_statusInput'+i" name=`hiring_statusInput${i}`
+            [(ngModel)]="allHiringStatus[i].hiring_status_name">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Descrição:</p>
+          <input class="fieldContent" [id]="'hiring_statusAcronymInput'+i" name=`hiring_statusInput${i}`
+            [(ngModel)]="allHiringStatus[i].hiring_status_description">
+        </span>
+      </app-registry></section>
   </section>
 </section>
 

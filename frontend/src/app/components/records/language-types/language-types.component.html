@@ -17,14 +17,15 @@
 
       <button class="saveButton" type="button" (click)="createLanguageType()">SALVAR</button>
     </form>
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editLanguageType($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allLanguageTypes; index as i;">
-      <span class="field">
-        <p class="fieldTitle">Tipo de linguagem:</p>
-        <input class="fieldContent" [id]="'languageTypeInput'+i" name=`languageTypeInput${i}`
-          [(ngModel)]="allLanguageTypes[i].language">
-      </span>
-    </app-registry>
+    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+        (editRegistry)="editLanguageType($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
+        *ngFor="let registry of allLanguageTypes; index as i;">
+        <span class="field">
+          <p class="fieldTitle">Tipo de linguagem:</p>
+          <input class="fieldContent" [id]="'languageTypeInput'+i" name=`languageTypeInput${i}`
+            [(ngModel)]="allLanguageTypes[i].language">
+        </span>
+      </app-registry></section>
   </section>
 </section>
 

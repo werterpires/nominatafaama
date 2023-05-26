@@ -17,19 +17,20 @@
       </label>
       <button class="saveButton" type="button" (click)="createUnion()">SALVAR</button>
     </form>
-    <app-registry #registryApp [registryId]="i" (editRegistry)="editUnion($event.id, $event.saveButtonId)"
-      (deleteRegistry)="deleteUnion($event)" *ngFor="let registry of allUnions; index as i;">
-      <span class="field">
-        <p class="fieldTitle">União:</p>
-        <input class="fieldContent" [id]="'unionInput'+i" name=`unionInput${i}` [(ngModel)]="allUnions[i].union_name">
-      </span>
-      <span class="field">
-        <p class="fieldTitle">Sigla:</p>
-        <input class="fieldContent" [id]="'unionAcronymInput'+i" name=`unionInput${i}`
-          [(ngModel)]="allUnions[i].union_acronym">
-      </span>
-
-    </app-registry>
+    <section class="registriesWrapper">
+      <app-registry #registryApp [registryId]="i" (editRegistry)="editUnion($event.id, $event.saveButtonId)"
+        (deleteRegistry)="deleteUnion($event)" *ngFor="let registry of allUnions; index as i;">
+        <span class="field">
+          <p class="fieldTitle">União:</p>
+          <input class="fieldContent" [id]="'unionInput'+i" name=`unionInput${i}` [(ngModel)]="allUnions[i].union_name">
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Sigla:</p>
+          <input class="fieldContent" [id]="'unionAcronymInput'+i" name=`unionInput${i}`
+            [(ngModel)]="allUnions[i].union_acronym">
+        </span>
+      </app-registry>
+    </section>
   </section>
 </section>
 
