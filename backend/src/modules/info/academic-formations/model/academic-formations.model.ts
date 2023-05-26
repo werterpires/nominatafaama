@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
-import { UtilService } from 'src/shared/services/util.service'
+import { toDateString } from 'src/shared/services/util.service'
 import {
   IAcademicFormation,
   ICreateAcademicFormation,
@@ -141,8 +141,8 @@ export class AcademicFormationsModel {
           formation_id: row.formation_id,
           course_area: row.course_area,
           institution: row.institution,
-          begin_date: UtilService.toDateString(row.begin_date),
-          conclusion_date: UtilService.toDateString(row.conclusion_date),
+          begin_date: toDateString(row.begin_date),
+          conclusion_date: toDateString(row.conclusion_date),
           person_id: row.person_id,
           academic_formation_approved: row.academic_formation_approved,
           created_at: row.created_at,
@@ -187,8 +187,8 @@ export class AcademicFormationsModel {
           formation_id: row.formation_id,
           course_area: row.course_area,
           institution: row.institution,
-          begin_date: UtilService.toDateString(row.begin_date),
-          conclusion_date: UtilService.toDateString(row.conclusion_date),
+          begin_date: toDateString(row.begin_date),
+          conclusion_date: toDateString(row.conclusion_date),
           person_id: row.person_id,
           academic_formation_approved: row.academic_formation_approved,
           degree_name: row.degree_name,
