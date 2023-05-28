@@ -13,10 +13,6 @@
   <!-- Hugo -->
   <app-publication-types [permissions]="permissions"></app-publication-types>
 
-  <app-languages
-    *ngIf="permissions.estudante || permissions.administrador"
-    [permissions]="permissions"
-  ></app-languages>
   <!-- fim -->
 
   <app-students
@@ -31,6 +27,10 @@
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-st-courses>
+  <app-languages
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-languages>
   <app-evg-experiences
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
