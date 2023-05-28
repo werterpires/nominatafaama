@@ -137,7 +137,7 @@ export class StudentsComponent {
       },
     })
 
-    this.hiringStatusService.findAllHiringStatus().subscribe({
+    this.hiringStatusService.findAllRegistries().subscribe({
       next: (res) => {
         this.allHiringStatus = res.sort((a, b) => {
           if (a.hiring_status_name < b.hiring_status_name) {
