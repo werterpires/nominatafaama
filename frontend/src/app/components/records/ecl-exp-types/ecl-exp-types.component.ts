@@ -88,14 +88,14 @@ export class EclExpTypesComponent {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
-    const newRegisgry: Partial<IEclExpType> = {
+    const newRegistry: Partial<IEclExpType> = {
       ...this.allRegistries[index],
     }
 
-    delete newRegisgry.created_at
-    delete newRegisgry.updated_at
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
 
-    this.service.updateRegistry(newRegisgry as IEclExpType).subscribe({
+    this.service.updateRegistry(newRegistry as IEclExpType).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true

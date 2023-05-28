@@ -1,11 +1,11 @@
-import {Component, Input} from '@angular/core'
-import {IPermissions} from '../../shared/container/types'
+import { Component, Input } from '@angular/core'
+import { IPermissions } from '../../shared/container/types'
+import { MinistryTypesService } from './ministry-types.service'
 import {
-  IMinistryType,
   ICreateMinistryTypeDto,
+  IMinistryType,
   IUpdateMinistryType,
 } from './types'
-import {MinistryTypesService} from './ministry-types.service'
 
 @Component({
   selector: 'app-ministry-types',
@@ -13,28 +13,33 @@ import {MinistryTypesService} from './ministry-types.service'
   styleUrls: ['./ministry-types.component.css'],
 })
 export class MinistryTypesComponent {
-  constructor(private ministryTypesService: MinistryTypesService) {}
   @Input() permissions!: IPermissions
-  allMinistryTypes: IMinistryType[] = []
-  creatingMinistryType: boolean = false
-  editingMinistryType: boolean = false
-  createMinistryTypeData: ICreateMinistryTypeDto = {
+
+  allRegistries: IMinistryType[] = []
+  title = 'Tipos de Ministério'
+  createRegistryData: ICreateMinistryTypeDto = {
     ministry_type_name: '',
   }
 
-  isLoading: boolean = false
-  done: boolean = false
-  doneMessage: string = ''
-  error: boolean = false
-  errorMessage: string = ''
+  showBox = false
+  showForm = false
+  isLoading = false
+  done = false
+  doneMessage = ''
+  error = false
+  errorMessage = ''
 
-  shownBox: boolean = false
+  constructor(private service: MinistryTypesService) {}
 
   ngOnInit() {
+    this.getAllRegistries()
+  }
+
+  getAllRegistries() {
     this.isLoading = true
-    this.ministryTypesService.findAllMinistryTypes().subscribe({
+    this.service.findAllRegistries().subscribe({
       next: (res) => {
-        this.allMinistryTypes = res
+        this.allRegistries = res
         this.isLoading = false
       },
       error: (err) => {
@@ -45,39 +50,36 @@ export class MinistryTypesComponent {
     })
   }
 
-  showBox() {
-    const box = document.getElementById('boxHeadMinistryTypes')
-    const add = document.getElementById('ministryTypeAddIcon')
-    const see = document.getElementById('seeMoreIconMinistryTypes')
-    this.shownBox = !this.shownBox
-    if (this.shownBox) {
-      box?.classList.replace('smallSectionBox', 'sectionBox')
-      add?.classList.remove('hidden')
-      see?.classList.add('rotatedClock')
-      this.editingMinistryType = false
-    } else {
-      box?.classList.replace('sectionBox', 'smallSectionBox')
-      add?.classList.add('hidden')
-      see?.classList.remove('rotatedClock')
-    }
+  resetCreationRegistry() {
+    Object.keys(this.createRegistryData).forEach((key) => {
+      switch (typeof key) {
+        case 'boolean':
+          Object.defineProperty(this.createRegistryData, key, { value: false })
+          break
+        case 'number':
+          Object.defineProperty(this.createRegistryData, key, { value: 0 })
+          break
+        case 'string':
+          Object.defineProperty(this.createRegistryData, key, { value: '' })
+          break
+      }
+    })
   }
 
-  createForm() {
-    this.creatingMinistryType = true
-  }
-
-  createMinistryType() {
+  createRegistry() {
     this.isLoading = true
-    this.ministryTypesService
-      .createMinistryType(this.createMinistryTypeData)
+    this.service
+      .createRegistry({
+        ...this.createRegistryData,
+      })
       .subscribe({
         next: (res) => {
-          this.doneMessage = 'Tipo de ministério criado com sucesso.'
+          this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.ngOnInit()
-          this.createMinistryTypeData.ministry_type_name = ''
-          this.creatingMinistryType = false
+          this.getAllRegistries()
+          this.showForm = false
+          this.resetCreationRegistry()
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -87,20 +89,25 @@ export class MinistryTypesComponent {
       })
   }
 
-  editMinistryType(i: number, buttonId: string) {
+  editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const editMinistryTypeData: IUpdateMinistryType = {
-      ministry_type_id: this.allMinistryTypes[i].ministry_type_id,
-      ministry_type_name: this.allMinistryTypes[i].ministry_type_name,
+
+    const newRegistry: Partial<IMinistryType> = {
+      ...this.allRegistries[index],
+      ministry_type_id: parseInt(
+        this.allRegistries[index].ministry_type_id.toString(),
+      ),
     }
 
-    this.ministryTypesService.editMinistryType(editMinistryTypeData).subscribe({
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
+    delete newRegistry.ministry_type_approved
+
+    this.service.updateRegistry(newRegistry as IUpdateMinistryType).subscribe({
       next: (res) => {
-        this.doneMessage = 'Tipo de ministério editado com sucesso.'
+        this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.add('hidden')
+        document.getElementById(buttonId)?.classList.add('hidden')
         this.isLoading = false
       },
       error: (err) => {
@@ -111,44 +118,17 @@ export class MinistryTypesComponent {
     })
   }
 
-  changeTagType(paragraphId: string, buttonId: string, inputId: string) {
-    const paragraph = document.getElementById(paragraphId)
-    const input = document.getElementById(inputId) as HTMLInputElement
-
-    if (paragraph !== null && paragraph.textContent && input !== null) {
-      input.classList.remove('hidden')
-      paragraph.classList.add('hidden')
-
-      input.value = paragraph.textContent
-      input.oninput = function () {
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.remove('hidden')
-      }
-
-      input.focus()
-
-      input.onblur = function () {
-        paragraph.textContent = input.value
-        input.classList.add('hidden')
-        paragraph.classList.remove('hidden')
-      }
-    }
-  }
-
-  deleteRegistry(i: number) {
+  deleteRegistry(id: number) {
     this.isLoading = true
-    const associationId = this.allMinistryTypes[i].ministry_type_id
-
-    this.ministryTypesService.deleteRegistry(associationId).subscribe({
+    this.service.deleteRegistry(id).subscribe({
       next: (res) => {
-        this.doneMessage = 'Associação deletada com sucesso.'
+        this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.isLoading = false
         this.ngOnInit()
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível deletar a associação.'
+        this.errorMessage = 'Não foi possível remover o registro.'
         this.error = true
         this.isLoading = false
       },

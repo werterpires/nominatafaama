@@ -93,18 +93,18 @@ export class HiringStatusComponent {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
-    const newRegisgry: Partial<IHiringStatus> = {
+    const newRegistry: Partial<IHiringStatus> = {
       ...this.allRegistries[index],
       hiring_status_id: parseInt(
         this.allRegistries[index].hiring_status_id.toString(),
       ),
     }
 
-    delete newRegisgry.created_at
-    delete newRegisgry.updated_at
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
 
     this.service
-      .updateRegistry(newRegisgry as UpdateHiringStatusDto)
+      .updateRegistry(newRegistry as UpdateHiringStatusDto)
       .subscribe({
         next: (res) => {
           this.doneMessage = 'Registro editado com sucesso.'

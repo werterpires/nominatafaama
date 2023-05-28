@@ -92,17 +92,17 @@ export class EvangExpTypesComponent {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
-    const newRegisgry: Partial<IEvangExpType> = {
+    const newRegistry: Partial<IEvangExpType> = {
       ...this.allRegistries[index],
       evang_exp_type_id: parseInt(
         this.allRegistries[index].evang_exp_type_id.toString(),
       ),
     }
 
-    delete newRegisgry.created_at
-    delete newRegisgry.updated_at
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
 
-    this.service.updateRegistry(newRegisgry as IUpdateEvangExpType).subscribe({
+    this.service.updateRegistry(newRegistry as IUpdateEvangExpType).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true

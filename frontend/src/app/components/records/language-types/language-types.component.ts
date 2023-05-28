@@ -92,15 +92,15 @@ export class LanguageTypesComponent {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
-    const newRegisgry: Partial<ILanguageType> = {
+    const newRegistry: Partial<ILanguageType> = {
       ...this.allRegistries[index],
       language_id: parseInt(this.allRegistries[index].language_id.toString()),
     }
 
-    delete newRegisgry.created_at
-    delete newRegisgry.updated_at
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
 
-    this.service.updateRegistry(newRegisgry as IUpdateLanguageType).subscribe({
+    this.service.updateRegistry(newRegistry as IUpdateLanguageType).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true

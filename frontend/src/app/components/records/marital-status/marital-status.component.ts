@@ -92,17 +92,17 @@ export class MaritalStatusComponent {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
-    const newRegisgry: Partial<IMaritalStatus> = {
+    const newRegistry: Partial<IMaritalStatus> = {
       ...this.allRegistries[index],
       marital_status_type_id: parseInt(
         this.allRegistries[index].marital_status_type_id.toString(),
       ),
     }
 
-    delete newRegisgry.created_at
-    delete newRegisgry.updated_at
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
 
-    this.service.updateRegistry(newRegisgry as IUpdateMaritalStatus).subscribe({
+    this.service.updateRegistry(newRegistry as IUpdateMaritalStatus).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true

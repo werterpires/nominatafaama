@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
+import { Injectable } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 import {
   ICreateMinistryTypeDto,
   IMinistryType,
@@ -14,12 +14,12 @@ import {
 export class MinistryTypesService {
   constructor(private http: HttpClient) {}
 
-  findAllMinistryTypes(): Observable<IMinistryType[]> {
+  findAllRegistries(): Observable<IMinistryType[]> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<IMinistryType[]>(`http://localhost:3000/ministry-types`, {headers})
+      .get<IMinistryType[]>(`http://localhost:3000/ministry-types`, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -33,7 +33,7 @@ export class MinistryTypesService {
       )
   }
 
-  createMinistryType(
+  createRegistry(
     createMinistryTypeData: ICreateMinistryTypeDto,
   ): Observable<IMinistryType> {
     const token = localStorage.getItem('access_token')
@@ -43,7 +43,7 @@ export class MinistryTypesService {
       .post<IMinistryType>(
         `http://localhost:3000/ministry-types`,
         createMinistryTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
@@ -55,7 +55,7 @@ export class MinistryTypesService {
       )
   }
 
-  editMinistryType(
+  updateRegistry(
     editMinistryTypeData: IUpdateMinistryType,
   ): Observable<IMinistryType> {
     const token = localStorage.getItem('access_token')
@@ -65,7 +65,7 @@ export class MinistryTypesService {
       .put<IMinistryType>(
         `http://localhost:3000/ministry-types`,
         editMinistryTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
