@@ -29,6 +29,10 @@ config()
           typeCast: function (field, next) {
             if (field.type === 'TINY' && field.length === 1) {
               return field.string() === '1' // 1 = true, 0 = false
+            } else if (field.type === 'DATE' && field.length > 1) {
+              return field.string() // 1 = true, 0 = false
+            } else if (field.type === 'DATETIME' && field.length > 1) {
+              return field.string().substring(0, 10) // 1 = true, 0 = false
             }
             return next()
           },

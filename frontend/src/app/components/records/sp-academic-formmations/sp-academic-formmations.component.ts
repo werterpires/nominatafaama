@@ -1,7 +1,7 @@
 import { Component, Input, Renderer2 } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { IAcademicDegree } from '../academic-degrees/types'
 import { AcademicDegreeService } from '../academic-degrees/academic-degrees.service'
+import { IAcademicDegree } from '../academic-degrees/types'
 import { SpAcademicFormationsService } from './sp-academic-formmations.service'
 import {
   ISpAcademicFormation,
@@ -15,6 +15,9 @@ import {
   styleUrls: ['./sp-academic-formmations.component.css'],
 })
 export class SpAcademicFormmationsComponent {
+  loga(dado: any) {
+    console.log('Mudou data:', dado)
+  }
   constructor(
     private spAcademicFormationService: SpAcademicFormationsService,
     private renderer: Renderer2,

@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { NgModule } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { ToastrModule } from 'ngx-toastr'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
@@ -15,6 +16,7 @@ import { AssociationsComponent } from './components/records/associations/associa
 import { EclExpTypesComponent } from './components/records/ecl-exp-types/ecl-exp-types.component'
 import { EndowmentTypesComponent } from './components/records/endowment-types/endowment-types.component'
 import { EvangExpTypesComponent } from './components/records/evang-exp-types/evang-exp-types.component'
+import { EvgExperiencesComponent } from './components/records/evg-experiences/evg-experiences.component'
 import { HiringStatusComponent } from './components/records/hiring-status/hiring-status.component'
 import { LanguageTypesComponent } from './components/records/language-types/language-types.component'
 import { LanguagesComponent } from './components/records/languages/languages.component'
@@ -33,8 +35,7 @@ import { CreationFormComponent } from './components/shared/creation-form/creatio
 import { UniqueIdDirective } from './components/shared/directives/unique-id.directive'
 import { LoginMenuComponent } from './components/shared/login-menu/login-menu.component'
 import { MainContentComponent } from './components/shared/main-content/main-content.component'
-import { UpdateFormComponent } from './components/shared/update-form/update-form.component';
-import { EvgExperiencesComponent } from './components/records/evg-experiences/evg-experiences.component'
+import { UpdateFormComponent } from './components/shared/update-form/update-form.component'
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { EvgExperiencesComponent } from './components/records/evg-experiences/ev
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     FormsModule,
     ToastrModule.forRoot(),
   ],

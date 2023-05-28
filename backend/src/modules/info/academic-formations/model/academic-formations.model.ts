@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
-import { toDateString } from 'src/shared/services/util.service'
 import {
   IAcademicFormation,
   ICreateAcademicFormation,
@@ -43,8 +42,8 @@ export class AcademicFormationsModel {
           formation_id: result,
           course_area: course_area,
           institution: institution,
-          begin_date: toDateString(begin_date),
-          conclusion_date: toDateString(conclusion_date),
+          begin_date: begin_date,
+          conclusion_date: conclusion_date,
           person_id: person_id,
           degree_id: degree_id,
           created_at: new Date(),
@@ -97,8 +96,8 @@ export class AcademicFormationsModel {
           formation_id: result.formation_id,
           course_area: result.course_area,
           institution: result.institution,
-          begin_date: toDateString(result.begin_date),
-          conclusion_date: toDateString(result.conclusion_date),
+          begin_date: result.begin_date,
+          conclusion_date: result.conclusion_date,
           person_id: result.person_id,
           academic_formation_approved: result.academic_formation_approved,
           created_at: result.created_at,
@@ -141,8 +140,8 @@ export class AcademicFormationsModel {
           formation_id: row.formation_id,
           course_area: row.course_area,
           institution: row.institution,
-          begin_date: toDateString(row.begin_date),
-          conclusion_date: toDateString(row.conclusion_date),
+          begin_date: row.begin_date,
+          conclusion_date: row.conclusion_date,
           person_id: row.person_id,
           academic_formation_approved: row.academic_formation_approved,
           created_at: row.created_at,
@@ -187,8 +186,8 @@ export class AcademicFormationsModel {
           formation_id: row.formation_id,
           course_area: row.course_area,
           institution: row.institution,
-          begin_date: toDateString(row.begin_date),
-          conclusion_date: toDateString(row.conclusion_date),
+          begin_date: row.begin_date,
+          conclusion_date: row.conclusion_date,
           person_id: row.person_id,
           academic_formation_approved: row.academic_formation_approved,
           degree_name: row.degree_name,

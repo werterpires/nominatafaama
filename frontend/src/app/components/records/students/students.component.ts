@@ -108,21 +108,6 @@ export class StudentsComponent {
 
   getAllOtherData() {
     this.isLoading = true
-    this.studentServices.findStudentByUserId().subscribe({
-      next: (res) => {
-        if (res.student_id) {
-          this.registry = res
-          this.dataService.maritalStatusName =
-            this.registry.marital_status_type_name
-        }
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
-
     this.associationService.findAllRegistries().subscribe({
       next: (res) => {
         this.allAssociations = res.sort((a, b) => {
@@ -220,10 +205,10 @@ export class StudentsComponent {
 
     const newStudent: ICreateStudent = {
       alternative_email: this.registry.alternative_email,
-      baptism_date: new Date(this.registry.baptism_date),
+      baptism_date: this.dataService.dateFormatter(this.registry.baptism_date),
       baptism_place: this.registry.baptism_place,
       birth_city: this.registry.birth_city,
-      birth_date: new Date(this.registry.birth_date),
+      birth_date: this.dataService.dateFormatter(this.registry.birth_date),
       birth_state: this.registry.birth_state,
       hiring_status_id: parseInt(this.registry.hiring_status_id.toString()),
       is_whatsapp: !!this.registry.is_whatsapp,
@@ -271,8 +256,8 @@ export class StudentsComponent {
       birth_state: this.registry.birth_state,
       primary_school_city: this.registry.primary_school_city,
       primary_school_state: this.registry.primary_school_state,
-      birth_date: new Date(this.registry.birth_date),
-      baptism_date: new Date(this.registry.baptism_date),
+      birth_date: this.dataService.dateFormatter(this.registry.birth_date),
+      baptism_date: this.dataService.dateFormatter(this.registry.baptism_date),
       baptism_place: this.registry.baptism_place,
       marital_status_id: Number(this.registry.marital_status_id),
       hiring_status_id: this.registry.hiring_status_id,
