@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
-import {ICreateEclExpTypeDto, IEclExpType, IUpdateEclExpType} from './types'
+import { Injectable } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
+import { ICreateEclExpTypeDto, IEclExpType, IUpdateEclExpType } from './types'
 
 @Injectable({
   providedIn: 'root',
@@ -10,12 +10,12 @@ import {ICreateEclExpTypeDto, IEclExpType, IUpdateEclExpType} from './types'
 export class EclExpTypesService {
   constructor(private http: HttpClient) {}
 
-  findAllEclExpTypes(): Observable<IEclExpType[]> {
+  findAllRegistries(): Observable<IEclExpType[]> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<IEclExpType[]>(`http://localhost:3000/ecl-exp-types`, {headers})
+      .get<IEclExpType[]>(`http://localhost:3000/ecl-exp-types`, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -29,7 +29,7 @@ export class EclExpTypesService {
       )
   }
 
-  createEclExpType(
+  createRegistry(
     createEclExpTypeData: ICreateEclExpTypeDto,
   ): Observable<IEclExpType> {
     const token = localStorage.getItem('access_token')
@@ -39,7 +39,7 @@ export class EclExpTypesService {
       .post<IEclExpType>(
         `http://localhost:3000/ecl-exp-types`,
         createEclExpTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
@@ -54,7 +54,7 @@ export class EclExpTypesService {
       )
   }
 
-  editEclExpType(
+  updateRegistry(
     editEclExpTypeData: IUpdateEclExpType,
   ): Observable<IEclExpType> {
     const token = localStorage.getItem('access_token')
@@ -64,7 +64,7 @@ export class EclExpTypesService {
       .put<IEclExpType>(
         `http://localhost:3000/ecl-exp-types`,
         editEclExpTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
