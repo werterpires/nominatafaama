@@ -64,7 +64,7 @@ export class EvgExperiencesComponent {
   }
 
   getEvgExpTypes() {
-    this.expTypService.findAllEvangExpTypes().subscribe({
+    this.expTypService.findAllRegistries().subscribe({
       next: (res) => {
         this.allTypes = res
       },

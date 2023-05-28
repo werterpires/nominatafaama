@@ -1,9 +1,9 @@
-import {Component, Input, Renderer2} from '@angular/core'
-import {EvangExpTypesService} from './evang-exp-types.service'
-import {IPermissions} from '../../shared/container/types'
+import { Component, Input } from '@angular/core'
+import { IPermissions } from '../../shared/container/types'
+import { EvangExpTypesService } from './evang-exp-types.service'
 import {
-  IEvangExpType,
   ICreateEvangExpTypeDto,
+  IEvangExpType,
   IUpdateEvangExpType,
 } from './types'
 
@@ -13,32 +13,33 @@ import {
   styleUrls: ['./evang-exp-types.component.css'],
 })
 export class EvangExpTypesComponent {
-  constructor(
-    private evangExpTypesService: EvangExpTypesService,
-    private renderer: Renderer2,
-  ) {}
-
   @Input() permissions!: IPermissions
-  allEvangExpTypes: IEvangExpType[] = []
-  creatingEvangExpType: boolean = false
-  editingEvangExpType: boolean = false
-  createEvangExpTypeData: ICreateEvangExpTypeDto = {
+
+  allRegistries: IEvangExpType[] = []
+  title = 'Tipos de Experiências Evangelísticas'
+  createRegistryData: ICreateEvangExpTypeDto = {
     evang_exp_type_name: '',
   }
 
-  isLoading: boolean = false
-  done: boolean = false
-  doneMessage: string = ''
-  error: boolean = false
-  errorMessage: string = ''
+  showBox = false
+  showForm = false
+  isLoading = false
+  done = false
+  doneMessage = ''
+  error = false
+  errorMessage = ''
 
-  shownBox: boolean = false
+  constructor(private service: EvangExpTypesService) {}
 
   ngOnInit() {
+    this.getAllRegistries()
+  }
+
+  getAllRegistries() {
     this.isLoading = true
-    this.evangExpTypesService.findAllEvangExpTypes().subscribe({
+    this.service.findAllRegistries().subscribe({
       next: (res) => {
-        this.allEvangExpTypes = res
+        this.allRegistries = res
         this.isLoading = false
       },
       error: (err) => {
@@ -49,40 +50,36 @@ export class EvangExpTypesComponent {
     })
   }
 
-  showBox() {
-    const box = document.getElementById('boxHeadEvangExpTypes')
-    const add = document.getElementById('evangExpTypeAddIcon')
-    const see = document.getElementById('seeMoreIconEvangExpTypes')
-    this.shownBox = !this.shownBox
-    if (this.shownBox) {
-      box?.classList.replace('smallSectionBox', 'sectionBox')
-      add?.classList.remove('hidden')
-      see?.classList.add('rotatedClock')
-      this.editingEvangExpType = false
-    } else {
-      box?.classList.replace('sectionBox', 'smallSectionBox')
-      add?.classList.add('hidden')
-      see?.classList.remove('rotatedClock')
-    }
+  resetCreationRegistry() {
+    Object.keys(this.createRegistryData).forEach((key) => {
+      switch (typeof key) {
+        case 'boolean':
+          Object.defineProperty(this.createRegistryData, key, { value: false })
+          break
+        case 'number':
+          Object.defineProperty(this.createRegistryData, key, { value: 0 })
+          break
+        case 'string':
+          Object.defineProperty(this.createRegistryData, key, { value: '' })
+          break
+      }
+    })
   }
 
-  createForm() {
-    this.creatingEvangExpType = true
-  }
-
-  createEvangExpType() {
+  createRegistry() {
     this.isLoading = true
-    this.evangExpTypesService
-      .createEvangExpType(this.createEvangExpTypeData)
+    this.service
+      .createRegistry({
+        ...this.createRegistryData,
+      })
       .subscribe({
         next: (res) => {
-          this.doneMessage =
-            'Tipo de experiência evangélica criado com sucesso.'
+          this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.ngOnInit()
-          this.createEvangExpTypeData.evang_exp_type_name = ''
-          this.creatingEvangExpType = false
+          this.getAllRegistries()
+          this.showForm = false
+          this.resetCreationRegistry()
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -92,45 +89,24 @@ export class EvangExpTypesComponent {
       })
   }
 
-  changeTagType(paragraphId: string, buttonId: string, inputId: string) {
-    const paragraph = document.getElementById(paragraphId)
-    const input = document.getElementById(inputId) as HTMLInputElement
-
-    if (paragraph !== null && paragraph.textContent && input !== null) {
-      input.classList.remove('hidden')
-      paragraph.classList.add('hidden')
-
-      input.value = paragraph.textContent
-      input.oninput = function () {
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.remove('hidden')
-      }
-
-      input.focus()
-
-      input.onblur = function () {
-        paragraph.textContent = input.value
-        input.classList.add('hidden')
-        paragraph.classList.remove('hidden')
-      }
-    }
-  }
-
-  editEvangExpType(i: number, buttonId: string) {
+  editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const editEvangExpTypeData: IUpdateEvangExpType = {
-      evang_exp_type_id: this.allEvangExpTypes[i].evang_exp_type_id,
-      evang_exp_type_name: this.allEvangExpTypes[i].evang_exp_type_name,
+
+    const newRegisgry: Partial<IEvangExpType> = {
+      ...this.allRegistries[index],
+      evang_exp_type_id: parseInt(
+        this.allRegistries[index].evang_exp_type_id.toString(),
+      ),
     }
 
-    this.evangExpTypesService.editEvangExpType(editEvangExpTypeData).subscribe({
+    delete newRegisgry.created_at
+    delete newRegisgry.updated_at
+
+    this.service.updateRegistry(newRegisgry as IUpdateEvangExpType).subscribe({
       next: (res) => {
-        this.doneMessage = 'Tipo de experiência evangélica editado com sucesso.'
+        this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.add('hidden')
+        document.getElementById(buttonId)?.classList.add('hidden')
         this.isLoading = false
       },
       error: (err) => {
@@ -141,19 +117,17 @@ export class EvangExpTypesComponent {
     })
   }
 
-  deleteRegistry(i: number) {
+  deleteRegistry(id: number) {
     this.isLoading = true
-    const associationId = this.allEvangExpTypes[i].evang_exp_type_id
-
-    this.evangExpTypesService.deleteRegistry(associationId).subscribe({
+    this.service.deleteRegistry(id).subscribe({
       next: (res) => {
-        this.doneMessage = 'Associação deletada com sucesso.'
+        this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.isLoading = false
         this.ngOnInit()
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível deletar a associação.'
+        this.errorMessage = 'Não foi possível remover o registro.'
         this.error = true
         this.isLoading = false
       },
