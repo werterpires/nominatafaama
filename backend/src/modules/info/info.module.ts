@@ -6,8 +6,14 @@ import { EclExperiencesModule } from './ecl-experiences/ecl-experiences.module';
 import { CoursesModule } from './courses/courses.module';
 import { PreviousMarriageModule } from './previous-marriage/previous-marriage.module';
 import { ProfessionalExperiencesModule } from './professional-experiences/professional-experiences.module';
+import { PastEclExperiencesModule } from './past-ecl-experiences/past-ecl-experiences.module';
+import { PublicationsModule } from './publications/publications.module';
+import { EndowmentsModule } from './endowments/endowments.module';
+import { OrdinationsModule } from './ordinations/ordinations.module';
+import { RelatedMinistriesModule } from './related-ministries/related-ministries.module';
+import { ChildrenModule } from './children/children.module';
 
 @Module({
-  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule]
+  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule, PastEclExperiencesModule, PublicationsModule, EndowmentsModule, OrdinationsModule, RelatedMinistriesModule, ChildrenModule]
 })
 export class InfoModule {}

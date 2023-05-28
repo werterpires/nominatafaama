@@ -1,38 +1,63 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePersonDto } from '../az_dto/createPeopleDto';
-import { PeopleModel } from '../ez_model/people.model';
-import { UpdatePersonDto } from '../az_dto/updatePeopleDto';
-import { IPerson } from '../bz_types/types';
+import {Injectable} from '@nestjs/common'
+import {CreatePersonDto} from '../az_dto/createPeopleDto'
+import {PeopleModel} from '../ez_model/people.model'
+import {UpdatePersonDto} from '../az_dto/updatePeopleDto'
+import {IPerson} from '../bz_types/types'
+import {UsersModel} from 'src/modules/users/ez_model/users.model'
+import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
 
 @Injectable()
 export class PeopleServices {
-  constructor(private readonly peopleModel: PeopleModel) {}
+  constructor(
+    private readonly peopleModel: PeopleModel,
+    private usersModel: UsersModel,
+    private spouseModel: SpousesModel,
+  ) {}
 
-  async createPerson({ name, cpf }: CreatePersonDto) {
+  async createPerson({name, cpf}: CreatePersonDto) {
     const person = await this.peopleModel.createPerson({
       name,
       cpf,
-    });
-    return person;
+    })
+    return person
   }
 
   async findPersonById(id: string): Promise<IPerson> {
-    const parsedId = parseInt(id, 10);
-    const person = await this.peopleModel.findPersonById(parsedId);
+    const parsedId = parseInt(id, 10)
+    const person = await this.peopleModel.findPersonById(parsedId)
     if (person == null) {
-      throw new Error(`Person with id ${id} not found`);
+      throw new Error(`Person with id ${id} not found`)
     }
-    return person;
+    return person
   }
 
   async findAllPeople() {
-    const allPeople = await this.peopleModel.findAllPeople();
-    return allPeople;
+    const allPeople = await this.peopleModel.findAllPeople()
+    return allPeople
   }
 
   async updatePersonById(person: UpdatePersonDto): Promise<IPerson> {
-    const updatedPerson = await this.peopleModel.updatePersonById(person);
+    const updatedPerson = await this.peopleModel.updatePersonById(person)
 
-    return updatedPerson;
+    return updatedPerson
+  }
+
+  async findPersonByUserId(
+    user_id: number,
+    personType: string,
+  ): Promise<number> {
+    let personId!: number
+    try {
+      if (personType === 'student') {
+        personId = (await this.usersModel.findUserById(user_id)).person_id
+      } else if (personType === 'spouse') {
+        personId = (await this.spouseModel.findSpouseByUserId(user_id))
+          .person_id
+      }
+    } catch (error) {
+      throw error
+    }
+
+    return personId
   }
 }
