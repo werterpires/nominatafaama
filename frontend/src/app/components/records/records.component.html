@@ -19,6 +19,9 @@
   <app-students *ngIf="permissions.estudante || permissions.administrador" [permissions]="permissions"></app-students>
   <app-student-academic-formations *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"></app-student-academic-formations>
+  <app-evg-experiences *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"></app-evg-experiences>
+
   <app-spouses *ngIf="permissions.estudante || permissions.administrador" [permissions]="permissions"></app-spouses>
   <app-sp-academic-formations *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"></app-sp-academic-formations>
