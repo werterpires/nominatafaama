@@ -1,17 +1,26 @@
-import { Module } from '@nestjs/common';
-import { StudentsService } from './services/students.service';
-import { StudentsController } from './controllers/students.controller';
-import { StudentsModel } from './model/students.model';
-import { PeopleServices } from '../people/dz_services/people.service';
-import { PeopleModel } from '../people/ez_model/people.model';
-import { UsersService } from '../users/dz_services/users.service';
-import { UsersModel } from '../users/ez_model/users.model';
+import {Module} from '@nestjs/common'
+import {StudentsService} from './services/students.service'
+import {StudentsController} from './controllers/students.controller'
+import {StudentsModel} from './model/students.model'
+import {PeopleServices} from '../people/dz_services/people.service'
+import {PeopleModel} from '../people/ez_model/people.model'
+import {UsersService} from '../users/dz_services/users.service'
+import {UsersModel} from '../users/ez_model/users.model'
+import {SpousesModel} from '../spouses/model/spouses.model'
 
-const services = [StudentsModel, StudentsService, PeopleServices, PeopleModel, UsersService, UsersModel]
+const services = [
+  StudentsModel,
+  StudentsService,
+  PeopleServices,
+  PeopleModel,
+  UsersService,
+  UsersModel,
+  SpousesModel,
+]
 
 @Module({
   controllers: [StudentsController],
   providers: services,
-  exports: services
+  exports: services,
 })
 export class StudentsModule {}

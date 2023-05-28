@@ -7,8 +7,9 @@ import { CoursesModule } from './courses/courses.module';
 import { PreviousMarriageModule } from './previous-marriage/previous-marriage.module';
 import { ProfessionalExperiencesModule } from './professional-experiences/professional-experiences.module';
 import { PastEclExperiencesModule } from './past-ecl-experiences/past-ecl-experiences.module';
+import { PublicationsModule } from './publications/publications.module';
 
 @Module({
-  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule, PastEclExperiencesModule]
+  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule, PastEclExperiencesModule, PublicationsModule]
 })
 export class InfoModule {}
