@@ -19,26 +19,36 @@
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-students>
+
   <app-student-academic-formations
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-student-academic-formations>
+
   <app-st-courses
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-st-courses>
+
   <app-languages
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-languages>
+
   <app-publications
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-publications>
+
   <app-professional-experiences
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-professional-experiences>
+
+  <app-past-ecl-exps
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-past-ecl-exps>
 
   <app-evg-experiences
     *ngIf="permissions.estudante || permissions.administrador"

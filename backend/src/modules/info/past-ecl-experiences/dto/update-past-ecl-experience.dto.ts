@@ -1,11 +1,4 @@
-import {
-  IsNotEmpty,
-  IsInt,
-  IsBoolean,
-  Min,
-  IsDateString,
-  IsOptional,
-} from 'class-validator'
+import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator'
 
 export class UpdatePastEclExpDto {
   @IsNotEmpty()
@@ -20,11 +13,11 @@ export class UpdatePastEclExpDto {
   place: string
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   past_exp_begin_date: string
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   past_exp_end_date: string
 
   @IsNotEmpty()

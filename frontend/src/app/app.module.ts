@@ -38,7 +38,8 @@ import { MainContentComponent } from './components/shared/main-content/main-cont
 import { UpdateFormComponent } from './components/shared/update-form/update-form.component';
 import { StCoursesComponent } from './components/records/st-courses/st-courses.component';
 import { PublicationsComponent } from './components/records/publications/publications.component';
-import { ProfessionalExperiencesComponent } from './components/records/professional-experiences/professional-experiences.component'
+import { ProfessionalExperiencesComponent } from './components/records/professional-experiences/professional-experiences.component';
+import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ecl-exps.component'
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { ProfessionalExperiencesComponent } from './components/records/professio
     StCoursesComponent,
     PublicationsComponent,
     ProfessionalExperiencesComponent,
+    PastEclExpsComponent,
   ],
   imports: [
     BrowserModule,
