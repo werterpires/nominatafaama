@@ -1,8 +1,8 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {Router} from '@angular/router'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Router } from '@angular/router'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 import {
   CreateMaritalStatusDto,
   IMaritalStatus,
@@ -15,7 +15,7 @@ import {
 export class MaritalStatusService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  findAllMaritalStatus(): Observable<IMaritalStatus[]> {
+  findAllRegistries(): Observable<IMaritalStatus[]> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
@@ -35,7 +35,7 @@ export class MaritalStatusService {
       )
   }
 
-  createMaritalStatus(
+  createRegistry(
     createMaritalStatusData: CreateMaritalStatusDto,
   ): Observable<IMaritalStatus> {
     const token = localStorage.getItem('access_token')
@@ -44,7 +44,7 @@ export class MaritalStatusService {
       .post<IMaritalStatus>(
         'http://localhost:3000/marital-status',
         createMaritalStatusData,
-        {headers: head_obj},
+        { headers: head_obj },
       )
       .pipe(
         catchError((error) => {
@@ -56,7 +56,7 @@ export class MaritalStatusService {
       )
   }
 
-  editMaritalStatus(
+  updateRegistry(
     editMaritalStatusData: IUpdateMaritalStatus,
   ): Observable<IMaritalStatus> {
     const token = localStorage.getItem('access_token')
@@ -65,7 +65,7 @@ export class MaritalStatusService {
       .put<IMaritalStatus>(
         'http://localhost:3000/marital-status',
         editMaritalStatusData,
-        {headers: head_obj},
+        { headers: head_obj },
       )
       .pipe(
         catchError((error) => {
