@@ -36,7 +36,8 @@ import { UniqueIdDirective } from './components/shared/directives/unique-id.dire
 import { LoginMenuComponent } from './components/shared/login-menu/login-menu.component'
 import { MainContentComponent } from './components/shared/main-content/main-content.component'
 import { UpdateFormComponent } from './components/shared/update-form/update-form.component';
-import { StCoursesComponent } from './components/records/st-courses/st-courses.component'
+import { StCoursesComponent } from './components/records/st-courses/st-courses.component';
+import { PublicationsComponent } from './components/records/publications/publications.component'
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { StCoursesComponent } from './components/records/st-courses/st-courses.c
     CreationFormComponent,
     EvgExperiencesComponent,
     StCoursesComponent,
+    PublicationsComponent,
   ],
   imports: [
     BrowserModule,

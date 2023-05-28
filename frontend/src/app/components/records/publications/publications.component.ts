@@ -1,24 +1,30 @@
 import { Component, Input } from '@angular/core'
-import { ICourse, ICreateCourse, IUpdateCourse } from './types'
-import { StCoursesService } from './st-courses.service'
-import { DataService } from '../../shared/shared.service.ts/data.service'
 import { IPermissions } from '../../shared/container/types'
+import {
+  CreatePublicationDto,
+  IPublication,
+  UpdatePublicationDto,
+} from './types'
+import { IPublicationType } from '../publication-types/types'
+import { PublicationsService } from './publications.service'
+import { PublicationTypeService } from '../publication-types/publication-types.service'
+import { parse } from 'uuid'
 
 @Component({
-  selector: 'app-st-courses',
-  templateUrl: './st-courses.component.html',
-  styleUrls: ['./st-courses.component.css'],
+  selector: 'app-publications',
+  templateUrl: './publications.component.html',
+  styleUrls: ['./publications.component.css'],
 })
-export class StCoursesComponent {
+export class PublicationsComponent {
   @Input() permissions!: IPermissions
 
-  allRegistries: ICourse[] = []
-  title = 'Cursos e Capacitações'
-  createRegistryData: ICreateCourse = {
-    begin_date: '',
-    course_area: '',
-    institution: '',
-    conclusion_date: '',
+  allRegistries: IPublication[] = []
+  publicationTypeList: Array<IPublicationType> = []
+  title = 'Publicações'
+  createRegistryData: CreatePublicationDto = {
+    link: '',
+    publication_type_id: 0,
+    reference: '',
   }
 
   showBox = false
@@ -30,12 +36,13 @@ export class StCoursesComponent {
   errorMessage = ''
 
   constructor(
-    private service: StCoursesService,
-    private dataService: DataService,
+    private service: PublicationsService,
+    private publicationTypeService: PublicationTypeService,
   ) {}
 
   ngOnInit() {
     this.getAllRegistries()
+    this.getAllLanguageTypes()
   }
 
   getAllRegistries() {
@@ -43,6 +50,21 @@ export class StCoursesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
+
+  getAllLanguageTypes() {
+    this.isLoading = true
+    this.publicationTypeService.findAllPublicationTypes().subscribe({
+      next: (res) => {
+        this.publicationTypeList = res
         this.isLoading = false
       },
       error: (err) => {
@@ -74,14 +96,9 @@ export class StCoursesComponent {
     this.service
       .createRegistry({
         ...this.createRegistryData,
-        begin_date: this.dataService.dateFormatter(
-          this.createRegistryData.begin_date,
+        publication_type_id: parseInt(
+          this.createRegistryData.publication_type_id.toString(),
         ),
-        conclusion_date: this.createRegistryData.conclusion_date
-          ? this.dataService.dateFormatter(
-              this.createRegistryData.conclusion_date,
-            )
-          : null,
       })
       .subscribe({
         next: (res) => {
@@ -102,21 +119,19 @@ export class StCoursesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const newRegistry: Partial<ICourse> = {
+    const newRegistry: Partial<IPublication> = {
       ...this.allRegistries[index],
-      begin_date: this.dataService.dateFormatter(
-        this.allRegistries[index].begin_date,
+      publication_type_id: parseInt(
+        this.allRegistries[index].publication_type_id.toString(),
       ),
-      conclusion_date: this.allRegistries[index].conclusion_date
-        ? this.dataService.dateFormatter(
-            this.allRegistries[index].conclusion_date || '',
-          )
-        : null,
     }
     delete newRegistry.created_at
     delete newRegistry.updated_at
-    delete newRegistry.course_approved
-    this.service.updateRegistry(newRegistry as IUpdateCourse).subscribe({
+    delete newRegistry.instructions
+    delete newRegistry.publication_approved
+    delete newRegistry.publication_type
+
+    this.service.updateRegistry(newRegistry as UpdatePublicationDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
