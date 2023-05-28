@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
+import { Injectable } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 import {
   ICreateLanguageTypeDto,
   ILanguageType,
@@ -14,12 +14,12 @@ import {
 export class LanguageTypesService {
   constructor(private http: HttpClient) {}
 
-  findAllLanguageTypes(): Observable<ILanguageType[]> {
+  findAllRegistries(): Observable<ILanguageType[]> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<ILanguageType[]>(`http://localhost:3000/language-types`, {headers})
+      .get<ILanguageType[]>(`http://localhost:3000/language-types`, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -33,7 +33,7 @@ export class LanguageTypesService {
       )
   }
 
-  createLanguageType(
+  createRegistry(
     createLanguageTypeData: ICreateLanguageTypeDto,
   ): Observable<ILanguageType> {
     const token = localStorage.getItem('access_token')
@@ -43,7 +43,7 @@ export class LanguageTypesService {
       .post<ILanguageType>(
         `http://localhost:3000/language-types`,
         createLanguageTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
@@ -55,7 +55,7 @@ export class LanguageTypesService {
       )
   }
 
-  editLanguageType(
+  updateRegistry(
     editLanguageData: IUpdateLanguageType,
   ): Observable<ILanguageType> {
     const token = localStorage.getItem('access_token')
@@ -65,7 +65,7 @@ export class LanguageTypesService {
       .put<ILanguageType>(
         `http://localhost:3000/language-types`,
         editLanguageData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
