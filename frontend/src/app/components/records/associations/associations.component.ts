@@ -130,7 +130,16 @@ export class AssociationsComponent {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
-    this.service.updateRegistry(this.allRegistries[index]).subscribe({
+    const newRegisgry: Partial<IAssociation> = {
+      ...this.allRegistries[index],
+    }
+
+    delete newRegisgry.union_name
+    delete newRegisgry.union_acronym
+    delete newRegisgry.created_at
+    delete newRegisgry.updated_at
+
+    this.service.updateRegistry(newRegisgry as IAssociation).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
