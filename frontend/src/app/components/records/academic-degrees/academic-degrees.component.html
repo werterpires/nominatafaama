@@ -19,7 +19,7 @@
   </section>
   <section class="registriesWrapper">
     <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.language_id)" *ngFor="let registry of allRegistries; index as i">
+      (deleteRegistry)="deleteRegistry(registry.degree_id)" *ngFor="let registry of allRegistries; index as i">
       <label class="inputLabel">
         Novo grau acadêmico<input class="mediumInput" type="text" name="academicDegreeInput"
           [(ngModel)]="registry.degree_name">
