@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
+import { Injectable } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 import {
   ICreateEndowmentTypeDto,
   IEndowmentType,
@@ -14,12 +14,14 @@ import {
 export class EndowmentTypesService {
   constructor(private http: HttpClient) {}
 
-  findAllEndowmentTypes(): Observable<IEndowmentType[]> {
+  findAllRegistries(): Observable<IEndowmentType[]> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<IEndowmentType[]>(`http://localhost:3000/endowment-types`, {headers})
+      .get<IEndowmentType[]>(`http://localhost:3000/endowment-types`, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -33,7 +35,7 @@ export class EndowmentTypesService {
       )
   }
 
-  createEndowmentType(
+  createRegistry(
     createEndowmentTypeData: ICreateEndowmentTypeDto,
   ): Observable<IEndowmentType> {
     const token = localStorage.getItem('access_token')
@@ -43,7 +45,7 @@ export class EndowmentTypesService {
       .post<IEndowmentType>(
         `http://localhost:3000/endowment-types`,
         createEndowmentTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
@@ -55,7 +57,7 @@ export class EndowmentTypesService {
       )
   }
 
-  editEndowmentType(
+  updateRegistry(
     editEndowmentTypeData: IUpdateEndowmentType,
   ): Observable<IEndowmentType> {
     const token = localStorage.getItem('access_token')
@@ -65,7 +67,7 @@ export class EndowmentTypesService {
       .put<IEndowmentType>(
         `http://localhost:3000/endowment-types`,
         editEndowmentTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
@@ -86,7 +88,7 @@ export class EndowmentTypesService {
     return this.http
       .get<IEndowmentType[]>(
         `http://localhost:3000/endowment-types/filter/${applicationType}`,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
