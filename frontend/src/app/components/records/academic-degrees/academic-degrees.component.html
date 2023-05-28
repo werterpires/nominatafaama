@@ -10,7 +10,7 @@
       (click)="showForm=true">
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form>
+    <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
         Novo grau acadêmico<input class="mediumInput" type="text" name="academicDegreeInput"
           [(ngModel)]="createRegistryData.degree_name">

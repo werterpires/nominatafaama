@@ -10,7 +10,7 @@
       (click)="showForm=true">
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form>
+    <app-creation-form (save)="createRegistry()">
       <label class="w-full">
         Linguagem
         <select class="smallInput" name="degreeSelect" [(ngModel)]="createRegistryData.chosen_language">

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
+import { DataService } from '../../shared/shared.service.ts/data.service'
 import { EvangExpTypesService } from '../evang-exp-types/evang-exp-types.service'
 import { IEvangExpType } from '../evang-exp-types/types'
 import { EvgExperiencesService } from './evg-experiences.service'
@@ -38,6 +39,7 @@ export class EvgExperiencesComponent {
   constructor(
     private service: EvgExperiencesService,
     private expTypService: EvangExpTypesService,
+    private dataService: DataService,
   ) {}
 
   ngOnInit() {
@@ -93,6 +95,12 @@ export class EvgExperiencesComponent {
         evang_exp_type_id: parseInt(
           this.createRegistryData.evang_exp_type_id.toString(),
         ),
+        exp_begin_date: this.dataService.dateFormatter(
+          this.createRegistryData.exp_begin_date,
+        ),
+        exp_end_date: this.dataService.dateFormatter(
+          this.createRegistryData.exp_end_date,
+        ),
       })
       .subscribe({
         next: (res) => {
@@ -118,6 +126,12 @@ export class EvgExperiencesComponent {
       ...this.allRegistries[index],
       evang_exp_type_id: parseInt(
         this.allRegistries[index].evang_exp_type_id.toString(),
+      ),
+      exp_begin_date: this.dataService.dateFormatter(
+        this.createRegistryData.exp_begin_date,
+      ),
+      exp_end_date: this.dataService.dateFormatter(
+        this.createRegistryData.exp_end_date,
       ),
     }
 
