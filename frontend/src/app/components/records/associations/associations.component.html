@@ -1,58 +1,55 @@
-<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadAssociations">
+<section #sectionBox [ngClass]="{smallSectionBox: !showBox, sectionBox: showBox}">
   <div class="boxHead">
-    <span class="headField" (click)="showBox()">
-      <img class="seeMoreIcon" id="seeMoreIconAssociations" src="assets/icons/seeMoreIcon.png" alt="">
-      <p class="sectionTitle1">Associações</p>
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{rotatedClock: showBox}" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir">
+      <p class="sectionTitle1">{{title}}</p>
     </span>
-    <img class="addIcon hidden" id="associationAddIcon" src="assets/icons/addIcon.png" alt="Criar nova associação"
-      (click)="createForm()">
+
+    <img #addIcon class="addIcon" [ngClass]="{hidden: !showBox}" src="assets/icons/addIcon.png" alt="Criar {{title}}"
+      (click)="showForm=true">
   </div>
-  <section>
-    <form *ngIf="creatingAssociation" class="formCreation">
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form>
       <label class="inputLabel">
         Nova Associação<input class="mediumInput" type="text" name="associationNameInput"
-          [(ngModel)]="createAssociationData.association_name">
+          [(ngModel)]="createRegistryData.association_name">
       </label>
       <label class="inputLabel">
         Sigla<input class="smallInput" type="text" name="associationAcronymInput"
-          [(ngModel)]="createAssociationData.association_acronym">
+          [(ngModel)]="createRegistryData.association_acronym">
       </label>
       <label class="inputLabel">
         União
-        <select class="smallInput" name="unionSelect" [(ngModel)]="createAssociationData.union_id">
+        <select class="smallInput" name="unionSelect" [(ngModel)]="createRegistryData.union_id">
           <option *ngFor="let union of allUnions" [value]=union.union_id>{{union.union_acronym}} -
             {{union.union_name}}</option>
         </select>
       </label>
-
-      <button class="saveButton" type="button" (click)="createAssociation()">SALVAR</button>
-    </form>
-
-    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
-        (editRegistry)="editAssociation($event.id, $event.saveButtonId)" (deleteRegistry)="deleteAssociation($event)"
-        *ngFor="let registry of allAssociations; index as i;">
-        <span class="field">
-          <p class="fieldTitle">Associação:</p>
-          <input class="fieldContent" [id]="'associationInput'+i" name=`associationInput${i}`
-            [(ngModel)]="registry.association_name" (ngModelChange)="registryApp.fieldChanged=true">
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Sigla:</p>
-          <input class="fieldContent" [id]="'associationAcronymInput'+i" name=`associationInput${i}`
-            [(ngModel)]="registry.association_acronym" (ngModelChange)="registryApp.fieldChanged=true">
-        </span>
-        <span class="field flex-grow">
-          <p class="fieldTitle">União:</p>
-          <select class="fieldContent" [id]="'unionSelect'+i" name=`unionSelect${i}` [(ngModel)]="registry.union_id"
-            (change)="registryApp.fieldChanged=true">
-            <option *ngFor="let union of allUnions" class="fieldContent" [value]=union.union_id>{{union.union_acronym}}
-              -
-              {{union.union_name}}</option>
-          </select>
-        </span>
-      </app-registry></section>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.union_id)" *ngFor="let registry of allRegistries; index as i;">
+      <label class="inputLabel">
+        Nova Associação<input class="mediumInput" type="text" name="associationNameInput"
+          [(ngModel)]="registry.association_name">
+      </label>
+      <label class="inputLabel">
+        Sigla<input class="smallInput" type="text" name="associationAcronymInput"
+          [(ngModel)]="registry.association_acronym">
+      </label>
+      <label class="inputLabel">
+        União
+        <select class="smallInput" name="unionSelect" [(ngModel)]="registry.union_id">
+          <option *ngFor="let union of allUnions" [value]=union.union_id>{{union.union_acronym}} -
+            {{union.union_name}}</option>
+        </select>
+      </label>
+    </app-update-form>
   </section>
 </section>
+
 <div *ngIf="error" class="error">
   <div class="errorTitle">
     <p>Atenção</p>
@@ -62,7 +59,6 @@
   </div>
   <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
 </div>
-
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>

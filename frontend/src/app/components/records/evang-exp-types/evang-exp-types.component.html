@@ -19,7 +19,7 @@
       <button class="saveButton" type="button" (click)="createEvangExpType()">SALVAR</button>
     </form>
 
-    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="i"
         (editRegistry)="editEvangExpType($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
         *ngFor="let registry of allEvangExpTypes; index as i;">
         <span class="field">
@@ -27,7 +27,7 @@
           <input class="fieldContent" [id]="'evangExpTypeInput'+i" name=`evangExpTypeInput${i}`
             [(ngModel)]="allEvangExpTypes[i].evang_exp_type_name">
         </span>
-      </app-registry></section>
+      </app-update-form></section>
 
   </section>
 </section>

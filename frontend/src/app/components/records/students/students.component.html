@@ -116,7 +116,7 @@
 
     </form>
 
-    <section class="registriesWrapper"><app-registry #registryApp [registryId]="student.student_id"
+    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="student.student_id"
         (editRegistry)="editStudent($event.saveButtonId)" (deleteRegistry)="deleteStudent($event)"
         *ngIf="student.student_id > 0 && shownBox">
         <span class="field">
@@ -222,7 +222,7 @@
           <input class="fieldContent" [id]="'studentMessageInput'" type="text" name=`studentMessageInput`
             [(ngModel)]="student.student_mensage">
         </span>
-      </app-registry></section>
+      </app-update-form></section>
   </section>
 </section>
 <div *ngIf="error" class="error">

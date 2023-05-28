@@ -6,8 +6,8 @@
       <p class="sectionTitle1">{{title}}</p>
     </span>
 
-    <img #addIcon class="addIcon" [ngClass]="{hidden: !showBox}" src="assets/icons/addIcon.png"
-      alt="Criar nova Linguagem" (click)="showForm=true">
+    <img #addIcon class="addIcon" [ngClass]="{hidden: !showBox}" src="assets/icons/addIcon.png" alt="Criar {{title}}"
+      (click)="showForm=true">
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form>
@@ -46,7 +46,7 @@
     </app-creation-form>
   </section>
   <section class="registriesWrapper">
-    <app-registry [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.language_id)" *ngFor="let registry of allRegistries; index as i;">
       <label class="w-full">
         Linguagem
@@ -80,7 +80,7 @@
         Desconhece
         <input type="checkbox" name="create-unknown" [(ngModel)]="registry.unknown" />
       </label>
-    </app-registry>
+    </app-update-form>
   </section>
 </section>
 

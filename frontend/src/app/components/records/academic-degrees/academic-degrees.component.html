@@ -1,32 +1,30 @@
-<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadAcademicDegres">
+<section #sectionBox [ngClass]="{smallSectionBox: !showBox, sectionBox: showBox}">
   <div class="boxHead">
-    <span class="headField" (click)="showBox()">
-      <img class="seeMoreIcon" id="seeMoreIconDegrees" src="assets/icons/seeMoreIcon.png" alt="">
-      <p class="sectionTitle1">Graus acadêmicos</p>
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{rotatedClock: showBox}" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir">
+      <p class="sectionTitle1">{{title}}</p>
     </span>
 
-    <img class="addIcon hidden" id="degreeAddIcon" src="assets/icons/addIcon.png" alt="Criar novo grau acadêmico"
-      (click)="createForm()">
+    <img #addIcon class="addIcon" [ngClass]="{hidden: !showBox}" src="assets/icons/addIcon.png" alt="Criar {{title}}"
+      (click)="showForm=true">
   </div>
-  <section class="boxMain">
-    <form *ngIf="creatingDegree" class="formCreation">
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form>
       <label class="inputLabel">
         Novo grau acadêmico<input class="mediumInput" type="text" name="academicDegreeInput"
-          [(ngModel)]="createAcademicDegreeData.degree_name">
+          [(ngModel)]="createRegistryData.degree_name">
       </label>
-
-      <button class="saveButton" type="button" (click)="createAcademicDegree()">SALVAR</button>
-
-    </form>
-    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
-        (editRegistry)="editAcademicDegree($event.id, $event.saveButtonId)"
-        (deleteRegistry)="deleteAcademicDecree($event)" *ngFor="let registry of allDegrees; index as i;">
-        <span class="field">
-          <p class="fieldTitle">Grau acadêmico:</p>
-          <input class="fieldContent" [id]="'academicDegreeInput'+i" name=`academicDegreeInput${i}`
-            [(ngModel)]="allDegrees[i].degree_name" (ngModelChange)="registryApp.fieldChanged=true">
-        </span>
-      </app-registry></section>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.degree_id)" *ngFor="let registry of allRegistries; index as i;">
+      <label class="inputLabel">
+        Novo grau acadêmico<input class="mediumInput" type="text" name="academicDegreeInput"
+          [(ngModel)]="registry.degree_name">
+      </label>
+    </app-update-form>
   </section>
 </section>
 

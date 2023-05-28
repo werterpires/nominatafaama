@@ -27,7 +27,7 @@
       <button class="saveButton" type="button" (click)="createEndowmentType()">SALVAR</button>
     </form>
 
-    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="i"
         (editRegistry)="editEndowmentType($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
         *ngFor="let registry of allEndowmentTypes; index as i;">
         <span class="field">
@@ -44,7 +44,7 @@
             <option value=2>Feminino</option>
           </select>
         </span>
-      </app-registry></section>
+      </app-update-form></section>
   </section>
 </section>
 

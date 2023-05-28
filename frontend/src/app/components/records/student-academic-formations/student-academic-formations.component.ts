@@ -1,8 +1,8 @@
-import {Component, Input, Renderer2} from '@angular/core'
-import {IPermissions} from '../../shared/container/types'
-import {AcademicDegreeService} from '../academic-degrees/academic-degrees.service'
-import {IAcademicDegree} from '../academic-degrees/types'
-import {StudentAcademicFormationsService} from './student-academic-formations.service'
+import { Component, Input, Renderer2 } from '@angular/core'
+import { IPermissions } from '../../shared/container/types'
+import { AcademicDegreeService } from '../academic-degrees/academic-degrees.service'
+import { IAcademicDegree } from '../academic-degrees/types'
+import { StudentAcademicFormationsService } from './student-academic-formations.service'
 import {
   IStAcademicFormation,
   IStCreateAcademicFormation,
@@ -67,7 +67,7 @@ export class StudentAcademicFormationsComponent {
         },
       })
 
-    this.academicDegreeService.findAllAcademicDegrees().subscribe({
+    this.academicDegreeService.findAllRegistries().subscribe({
       next: (res) => {
         this.allDegrees = res
         this.isLoading = false

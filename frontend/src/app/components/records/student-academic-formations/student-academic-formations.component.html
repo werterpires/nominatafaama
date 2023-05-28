@@ -40,7 +40,7 @@
 
     </form>
 
-    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="i"
         (editRegistry)="editStAcademicFormation($event.id, $event.saveButtonId)"
         (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of allFormations; index as i;">
         <span class="field">
@@ -70,7 +70,7 @@
           <input class="fieldContent" [id]="'conclusion_dateInput'+i" type="date" name=`conclusion_dateInput${i}`
             [(ngModel)]="allFormations[i].conclusion_date">
         </span>
-      </app-registry></section>
+      </app-update-form></section>
   </section>
 </section>
 

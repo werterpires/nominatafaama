@@ -1,12 +1,7 @@
-import {Component, Input, Renderer2} from '@angular/core'
-import {IPermissions} from '../../shared/container/types'
-import {DialogService} from '../../shared/shared.service.ts/dialog.service'
-import {AcademicDegreeService} from './academic-degrees.service'
-import {
-  IAcademicDegree,
-  ICreateAcademicDegreeDto,
-  IUpdateAcademicDegree,
-} from './types'
+import { Component, Input } from '@angular/core'
+import { IPermissions } from '../../shared/container/types'
+import { AcademicDegreeService } from './academic-degrees.service'
+import { IAcademicDegree, ICreateAcademicDegreeDto } from './types'
 
 @Component({
   selector: 'app-academic-degrees',
@@ -14,33 +9,33 @@ import {
   styleUrls: ['./academic-degrees.component.css'],
 })
 export class AcademicDegreesComponent {
-  constructor(
-    private academicDegreesService: AcademicDegreeService,
-    private renderer: Renderer2,
-    private dialogService: DialogService,
-  ) {}
-
   @Input() permissions!: IPermissions
-  allDegrees: IAcademicDegree[] = []
-  creatingDegree: boolean = false
-  editingDegree: boolean = false
-  createAcademicDegreeData: ICreateAcademicDegreeDto = {
+
+  allRegistries: IAcademicDegree[] = []
+  title = 'Graus Acadêmicos'
+  createRegistryData: ICreateAcademicDegreeDto = {
     degree_name: '',
   }
 
-  isLoading: boolean = false
-  done: boolean = false
-  doneMessage: string = ''
-  error: boolean = false
-  errorMessage: string = ''
+  showBox = false
+  showForm = false
+  isLoading = false
+  done = false
+  doneMessage = ''
+  error = false
+  errorMessage = ''
 
-  shownBox: boolean = false
+  constructor(private service: AcademicDegreeService) {}
 
   ngOnInit() {
+    this.getAllRegistries()
+  }
+
+  getAllRegistries() {
     this.isLoading = true
-    this.academicDegreesService.findAllAcademicDegrees().subscribe({
+    this.service.findAllRegistries().subscribe({
       next: (res) => {
-        this.allDegrees = res
+        this.allRegistries = res
         this.isLoading = false
       },
       error: (err) => {
@@ -51,39 +46,36 @@ export class AcademicDegreesComponent {
     })
   }
 
-  showBox() {
-    const box = document.getElementById('boxHeadAcademicDegres')
-    const add = document.getElementById('degreeAddIcon')
-    const see = document.getElementById('seeMoreIconDegrees')
-    this.shownBox = !this.shownBox
-    if (this.shownBox) {
-      box?.classList.replace('smallSectionBox', 'sectionBox')
-      add?.classList.remove('hidden')
-      see?.classList.add('rotatedClock')
-      this.editingDegree = false
-    } else {
-      box?.classList.replace('sectionBox', 'smallSectionBox')
-      add?.classList.add('hidden')
-      see?.classList.remove('rotatedClock')
-    }
+  resetCreationRegistry() {
+    Object.keys(this.createRegistryData).forEach((key) => {
+      switch (typeof key) {
+        case 'boolean':
+          Object.defineProperty(this.createRegistryData, key, { value: false })
+          break
+        case 'number':
+          Object.defineProperty(this.createRegistryData, key, { value: 0 })
+          break
+        case 'string':
+          Object.defineProperty(this.createRegistryData, key, { value: '' })
+          break
+      }
+    })
   }
 
-  createForm() {
-    this.creatingDegree = true
-  }
-
-  createAcademicDegree() {
+  createRegistry() {
     this.isLoading = true
-    this.academicDegreesService
-      .createAcademicDegree(this.createAcademicDegreeData)
+    this.service
+      .createRegistry({
+        ...this.createRegistryData,
+      })
       .subscribe({
         next: (res) => {
-          this.doneMessage = 'Grau Acadêmico criado com sucesso.'
+          this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.ngOnInit()
-          this.createAcademicDegreeData.degree_name = ''
-          this.creatingDegree = false
+          this.getAllRegistries()
+          this.showForm = false
+          this.resetCreationRegistry()
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -93,45 +85,14 @@ export class AcademicDegreesComponent {
       })
   }
 
-  changeTagType(paragraphId: string, buttonId: string, inputId: string) {
-    const paragraph = document.getElementById(paragraphId)
-    const input = document.getElementById(inputId) as HTMLInputElement
-
-    if (paragraph !== null && paragraph.textContent && input !== null) {
-      input.classList.remove('hidden')
-      paragraph.classList.add('hidden')
-
-      input.value = paragraph.textContent
-      input.oninput = function () {
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.remove('hidden')
-      }
-
-      input.focus()
-
-      input.onblur = function () {
-        paragraph.textContent = input.value
-        input.classList.add('hidden')
-        paragraph.classList.remove('hidden')
-      }
-    }
-  }
-
-  editAcademicDegree(i: number, buttonId: string) {
+  editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const editDegreeData: IUpdateAcademicDegree = {
-      degree_id: this.allDegrees[i].degree_id,
-      degree_name: this.allDegrees[i].degree_name,
-    }
 
-    this.academicDegreesService.editAcademicDegree(editDegreeData).subscribe({
+    this.service.updateRegistry(this.allRegistries[index]).subscribe({
       next: (res) => {
-        this.doneMessage = 'Grau acadêmico editado com sucesso.'
+        this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.add('hidden')
+        document.getElementById(buttonId)?.classList.add('hidden')
         this.isLoading = false
       },
       error: (err) => {
@@ -142,33 +103,21 @@ export class AcademicDegreesComponent {
     })
   }
 
-  deleteAcademicDecree(i: number) {
-    this.dialogService
-      .new('Confirma a remoção?', [
-        'Você tem certeza de que deseja remover este registro?',
-      ])
-      .then((confirmation) => {
-        if (this.dialogService.checkConfirmation(confirmation)) {
-          this.isLoading = true
-          const publicationTypeId = this.allDegrees[i].degree_id
-
-          this.academicDegreesService
-            .deleteAcademicDegree(publicationTypeId)
-            .subscribe({
-              next: (res) => {
-                this.doneMessage = 'Registro deletado com sucesso.'
-                this.done = true
-                this.isLoading = false
-                this.ngOnInit()
-              },
-              error: (err) => {
-                this.errorMessage = err.message
-                this.error = true
-                this.isLoading = false
-              },
-            })
-        }
-      })
+  deleteRegistry(id: number) {
+    this.isLoading = true
+    this.service.deleteRegistry(id).subscribe({
+      next: (res) => {
+        this.doneMessage = 'Registro removido com sucesso.'
+        this.done = true
+        this.isLoading = false
+        this.ngOnInit()
+      },
+      error: (err) => {
+        this.errorMessage = 'Não foi possível remover o registro.'
+        this.error = true
+        this.isLoading = false
+      },
+    })
   }
 
   closeError() {

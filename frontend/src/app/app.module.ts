@@ -33,7 +33,7 @@ import { CreationFormComponent } from './components/shared/creation-form/creatio
 import { UniqueIdDirective } from './components/shared/directives/unique-id.directive'
 import { LoginMenuComponent } from './components/shared/login-menu/login-menu.component'
 import { MainContentComponent } from './components/shared/main-content/main-content.component'
-import { RegistryComponent } from './components/shared/registry/registry.component'
+import { UpdateFormComponent } from './components/shared/update-form/update-form.component'
 
 @NgModule({
   declarations: [
@@ -63,7 +63,7 @@ import { RegistryComponent } from './components/shared/registry/registry.compone
     PublicationTypesComponent,
     ConfirmationDialogComponent,
     LoginMenuComponent,
-    RegistryComponent,
+    UpdateFormComponent,
     UniqueIdDirective,
     LanguagesComponent,
     CreationFormComponent,

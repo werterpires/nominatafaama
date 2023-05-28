@@ -1,8 +1,8 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {Router} from '@angular/router'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Router } from '@angular/router'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 import {
   IAcademicDegree,
   ICreateAcademicDegreeDto,
@@ -15,7 +15,7 @@ import {
 export class AcademicDegreeService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  findAllAcademicDegrees(): Observable<IAcademicDegree[]> {
+  findAllRegistries(): Observable<IAcademicDegree[]> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
@@ -35,7 +35,7 @@ export class AcademicDegreeService {
       )
   }
 
-  createAcademicDegree(
+  createRegistry(
     createAcademicDegreeData: ICreateAcademicDegreeDto,
   ): Observable<IAcademicDegree> {
     const token = localStorage.getItem('access_token')
@@ -44,7 +44,7 @@ export class AcademicDegreeService {
       .post<IAcademicDegree>(
         'http://localhost:3000/academic-degrees',
         createAcademicDegreeData,
-        {headers: head_obj},
+        { headers: head_obj },
       )
       .pipe(
         catchError((error) => {
@@ -56,7 +56,7 @@ export class AcademicDegreeService {
       )
   }
 
-  editAcademicDegree(
+  updateRegistry(
     editAcademicDegreeData: IUpdateAcademicDegree,
   ): Observable<IAcademicDegree> {
     const token = localStorage.getItem('access_token')
@@ -65,7 +65,7 @@ export class AcademicDegreeService {
       .put<IAcademicDegree>(
         'http://localhost:3000/academic-degrees',
         editAcademicDegreeData,
-        {headers: head_obj},
+        { headers: head_obj },
       )
       .pipe(
         catchError((error) => {
@@ -77,7 +77,7 @@ export class AcademicDegreeService {
       )
   }
 
-  deleteAcademicDegree(id: number): Observable<IAcademicDegree> {
+  deleteRegistry(id: number): Observable<IAcademicDegree> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http

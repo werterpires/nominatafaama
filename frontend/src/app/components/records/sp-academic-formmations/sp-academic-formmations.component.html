@@ -36,7 +36,7 @@
         </label>
       </app-creation-form>
     </section>
-    <section class="registriesWrapper"><app-registry #registryApp [registryId]="i"
+    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="i"
         (editRegistry)="editSpAcademicFormation($event.id, $event.saveButtonId)"
         (deleteRegistry)="deleteRegistry($event)" *ngFor="let registry of spAllFormations; index as i;">
         <span class="field">
@@ -66,7 +66,7 @@
           <input class="fieldContent" [id]="'spconclusion_dateInput'+i" type="date" name=`conclusion_dateInput${i}`
             [(ngModel)]="spAllFormations[i].conclusion_date" />
         </span>
-      </app-registry></section>
+      </app-update-form></section>
   </section>
 </section>
 

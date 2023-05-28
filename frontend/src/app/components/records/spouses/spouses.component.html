@@ -124,7 +124,7 @@
 
     </form>
 
-    <section class="registriesWrapper"><app-registry #registryApp [registryId]="spouse.spouse_id"
+    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="spouse.spouse_id"
         (editRegistry)="editSpouse($event.saveButtonId)" (deleteRegistry)="deleteSpouse($event)"
         *ngIf="spouse.spouse_id">
         <span class="field" (click)="changeTagType('spouseName', 'saveSpouseButton', 'spouseNameInput')">
@@ -272,7 +272,7 @@
             [(ngModel)]="spouse.baptism_place">
 
         </span>
-      </app-registry></section>
+      </app-update-form></section>
   </section>
 </section>
 <div *ngIf="error" class="error">

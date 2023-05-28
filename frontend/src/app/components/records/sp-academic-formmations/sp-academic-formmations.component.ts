@@ -1,8 +1,8 @@
-import {Component, Input, Renderer2} from '@angular/core'
-import {IPermissions} from '../../shared/container/types'
-import {IAcademicDegree} from '../academic-degrees/types'
-import {AcademicDegreeService} from '../academic-degrees/academic-degrees.service'
-import {SpAcademicFormationsService} from './sp-academic-formmations.service'
+import { Component, Input, Renderer2 } from '@angular/core'
+import { IPermissions } from '../../shared/container/types'
+import { IAcademicDegree } from '../academic-degrees/types'
+import { AcademicDegreeService } from '../academic-degrees/academic-degrees.service'
+import { SpAcademicFormationsService } from './sp-academic-formmations.service'
 import {
   ISpAcademicFormation,
   ISpCreateAcademicFormation,
@@ -65,7 +65,7 @@ export class SpAcademicFormmationsComponent {
       },
     })
 
-    this.academicDegreeService.findAllAcademicDegrees().subscribe({
+    this.academicDegreeService.findAllRegistries().subscribe({
       next: (res) => {
         this.spAllDegrees = res
         this.isLoading = false
