@@ -10,8 +10,9 @@ import { PastEclExperiencesModule } from './past-ecl-experiences/past-ecl-experi
 import { PublicationsModule } from './publications/publications.module';
 import { EndowmentsModule } from './endowments/endowments.module';
 import { OrdinationsModule } from './ordinations/ordinations.module';
+import { RelatedMinistriesModule } from './related-ministries/related-ministries.module';
 
 @Module({
-  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule, PastEclExperiencesModule, PublicationsModule, EndowmentsModule, OrdinationsModule]
+  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule, PastEclExperiencesModule, PublicationsModule, EndowmentsModule, OrdinationsModule, RelatedMinistriesModule]
 })
 export class InfoModule {}
