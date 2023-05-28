@@ -96,7 +96,6 @@ input:focus {
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
   border: 1.5px solid #dcdada;
-  border-radius: 5px;
 
   font-family: 'Poppins';
   font-style: normal;
@@ -112,6 +111,44 @@ input:focus {
   background: unset;
   box-shadow: unset;
   border: unset;
+}
+
+form.registryWrapper label,
+form.registryWrapper span,
+form.registryWrapper p {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: #23435f;
+}
+
+form.registryWrapper input,
+form.registryWrapper select {
+  padding: 0;
+  margin: 0;
+  box-shadow: unset;
+  border: unset;
+  appearance: none;
+  outline: none;
+}
+
+form.registryWrapper input:focus,
+form.registryWrapper select:focus {
+  padding: 0.5rem 1rem;
+  margin: 4px 0;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1.5px solid #dcdada;
+  appearance: auto;
+}
+
+form.registryWrapper input[type='checkbox'],
+form.registryWrapper input[type='checkbox']:focus {
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  border: none;
+  appearance: auto;
 }
 
 .checkboxLabel {
