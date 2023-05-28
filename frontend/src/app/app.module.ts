@@ -35,7 +35,8 @@ import { CreationFormComponent } from './components/shared/creation-form/creatio
 import { UniqueIdDirective } from './components/shared/directives/unique-id.directive'
 import { LoginMenuComponent } from './components/shared/login-menu/login-menu.component'
 import { MainContentComponent } from './components/shared/main-content/main-content.component'
-import { UpdateFormComponent } from './components/shared/update-form/update-form.component'
+import { UpdateFormComponent } from './components/shared/update-form/update-form.component';
+import { StCoursesComponent } from './components/records/st-courses/st-courses.component'
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { UpdateFormComponent } from './components/shared/update-form/update-form
     LanguagesComponent,
     CreationFormComponent,
     EvgExperiencesComponent,
+    StCoursesComponent,
   ],
   imports: [
     BrowserModule,

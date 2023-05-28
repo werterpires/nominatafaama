@@ -1,11 +1,4 @@
-import {
-  IsNotEmpty,
-  IsInt,
-  IsBoolean,
-  Min,
-  IsDateString,
-  IsOptional,
-} from 'class-validator'
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator'
 
 export class UpdateCourseDto {
   @IsNotEmpty()
@@ -20,10 +13,10 @@ export class UpdateCourseDto {
   institution: string
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   begin_date: string
 
-  @IsDateString()
+  @IsString()
   @IsOptional()
   conclusion_date?: string
 
