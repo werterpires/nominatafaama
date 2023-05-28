@@ -128,10 +128,10 @@ export class EvgExperiencesComponent {
         this.allRegistries[index].evang_exp_type_id.toString(),
       ),
       exp_begin_date: this.dataService.dateFormatter(
-        this.createRegistryData.exp_begin_date,
+        this.allRegistries[index].exp_begin_date,
       ),
       exp_end_date: this.dataService.dateFormatter(
-        this.createRegistryData.exp_end_date,
+        this.allRegistries[index].exp_end_date,
       ),
     }
 
