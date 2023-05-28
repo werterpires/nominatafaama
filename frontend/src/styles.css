@@ -17,8 +17,28 @@ p {
   width: 100%;
 }
 
+.w-auto {
+  width: auto;
+}
+
 .flex-grow {
   flex-grow: 1;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.gap-2 {
+  gap: 2rem;
+}
+
+.grow-0 {
+  flex-grow: 0 !important;
+}
+
+.wrap {
+  flex-wrap: wrap;
 }
 
 .specialInput {
@@ -79,6 +99,15 @@ input:focus {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.formCreation .subSection {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
@@ -149,6 +178,23 @@ form.registryWrapper input[type='checkbox']:focus {
   box-shadow: none;
   border: none;
   appearance: auto;
+}
+
+.subSection {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+}
+
+.subSection label,
+.subSection span {
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .subSection {
+    flex-wrap: wrap;
+  }
 }
 
 .checkboxLabel {

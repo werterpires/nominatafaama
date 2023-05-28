@@ -10,7 +10,7 @@
       (click)="showForm=true">
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form>
+    <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
         Nova Associação<input class="mediumInput" type="text" name="associationNameInput"
           [(ngModel)]="createRegistryData.association_name">

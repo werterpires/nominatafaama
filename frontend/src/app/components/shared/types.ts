@@ -1,7 +1,7 @@
-import {EventEmitter} from '@angular/core'
+import { EventEmitter } from '@angular/core'
 
 export interface IUF {
-  id: Number
+  id: number
   nome: string
   sigla: string
   regiao: object

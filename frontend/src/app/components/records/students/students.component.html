@@ -1,249 +1,233 @@
-<section *ngIf="permissions.estudante || permissions.administrador" class="smallSectionBox" id="boxHeadStudents">
+<section #sectionBox [ngClass]="{smallSectionBox: !showBox, sectionBox: showBox}">
   <div class="boxHead">
-    <span class="headField" (click)="showBox()">
-      <img class="seeMoreIcon" id="seeMoreIconStudents" src="assets/icons/seeMoreIcon.png" alt="">
-      <p class="sectionTitle1">Dados gerais</p>
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{rotatedClock: showBox}" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir">
+      <p class="sectionTitle1">{{title}}</p>
     </span>
+
+    <img #addIcon class="addIcon" [ngClass]="{hidden: !showBox || registry.student_id}" src="assets/icons/addIcon.png"
+      alt="Criar {{title}}" (click)="showForm=true">
   </div>
-  <section>
-    <form *ngIf="student.student_id==0 && shownBox" class="formCreation">
-      <label class="inputLabel">
-        Número de telefone<input class="smallInput" type="text" name="studentPhoneNumberInput"
-          [(ngModel)]="createStudentData.phone_number">
-      </label>
-      <label class="inputLabel">
-        É WhatsApp? <input type="checkbox" name="studentIsWhatsCheck" [(ngModel)]="createStudentData.is_whatsapp">
-      </label>
-      <label class="inputLabel">
-        Email Alternativo<input class="smallInput" type="text" name="studentAlternativeEmailInput"
-          [(ngModel)]="createStudentData.alternative_email">
-      </label>
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form *ngIf="!registry.student_id" (save)="createRegistry()">
+      <div class="subSection gap-2">
+        <label class="inputLabel">
+          Número de telefone<input class="smallInput" type="text" name="studentPhoneNumberInput"
+            [(ngModel)]="registry.phone_number">
+        </label>
+        <label class="inputLabel text-center">
+          É WhatsApp? <input type="checkbox" name="studentIsWhatsCheck" [(ngModel)]="registry.is_whatsapp">
+        </label>
+        <label class="inputLabel">
+          Email Alternativo<input class="smallInput" type="text" name="studentAlternativeEmailInput"
+            [(ngModel)]="registry.alternative_email">
+        </label>
+      </div>
 
-      <label class="inputLabel">
-        União de origem
-        <select class="smallInput" name="unionSelect" [(ngModel)]="selectedUnion" (change)="filterAssociation()">
-          <option *ngFor="let union of allUnions" [value]=union>{{union}}</option>
-        </select>
-      </label>
+      <div class="subSection">
+        <label class="inputLabel">
+          União de origem
+          <select class="smallInput" name="unionSelect" [(ngModel)]="registry.union_acronym"
+            (change)="filterAssociation()">
+            <option *ngFor="let union of allUnions" [value]="union" [selected]="registry.union_acronym === union">
+              {{union}}</option>
+          </select>
+        </label>
 
-      <label *ngIf="selectedUnion" class="inputLabel">
-        Associação/Missão de origem
-        <select class="smallMediumInput" name="studentSelect" [(ngModel)]="createStudentData.origin_field_id">
-          <option *ngFor="let student of possibleAssociantions" [value]="student.association_id">
-            {{student.association_acronym}} -{{student.association_name}}</option>
-        </select>
-      </label>
-
-      <label class="inputLabel">
+        <label class="inputLabel">
+          Associação/Missão de origem
+          <select class="smallMediumInput" name="studentSelect" [(ngModel)]="registry.origin_field_id">
+            <option *ngFor="let association of possibleAssociantions" [value]="association.association_id"
+              [selected]="association.association_id == registry.origin_field_id">
+              {{association.association_acronym}} -{{association.association_name}}</option>
+          </select>
+        </label>
+      </div>
+      <label class="inputLabel w-full">
         Justifique por que você acredita ser esse o seu campo de origem
-        <input class="largeInput" name="justificationInput" [(ngModel)]="createStudentData.justification">
+        <input class="largeInput" name="justificationInput" [(ngModel)]="registry.justification">
 
       </label>
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado civil
+          <select class="smallInput" name="maritalStateSelect" [(ngModel)]="registry.marital_status_id">
+            <option *ngFor="let status of allMaritalStatus" [value]=status.marital_status_type_id>
+              {{status.marital_status_type_name}}</option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Data de nascimento
+          <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="registry.birth_date">
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado de nascimento
+          <select class="smallInput" name="birthStateSelect" [(ngModel)]="registry.birth_state"
+            (change)="findCities('birth')">
+            <option *ngFor="let state of allStates" [value]="state.sigla">{{state.nome}} </option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Cidade de nascimento
+          <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="registry.birth_city">
+            <option *ngFor="let city of allBirthCities" [value]=city.nome
+              [selected]="city.nome === registry.birth_city">{{city.nome}}</option>
+          </select>
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado em que completou o ensino fundamental
+          <select class="smallInput" name="birtStateSelect" [(ngModel)]="registry.primary_school_state"
+            (change)="findCities('school')">
+            <option *ngFor="let state of allStates" [value]="state.sigla"
+              [selected]="state.sigla === registry.primary_school_state">{{state.nome}}</option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Cidade em que completou o ensino fundamental
+          <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="registry.primary_school_city">
+            <option *ngFor="let city of allSchoolCities" [value]="city.nome">{{city.nome}}</option>
+          </select>
+        </label>
+      </div>
 
-
-      <label class="inputLabel">
-        Estado civil
-        <select class="smallInput" name="maritalStateSelect" [(ngModel)]="createStudentData.marital_status_id">
-          <option *ngFor="let status of allMaritalStatus" [value]=status.marital_status_type_id>
-            {{status.marital_status_type_name}}</option>
-        </select>
-      </label>
-      <label class="inputLabel">
-        Data de nascimento
-        <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="createStudentData.birth_date">
-      </label>
-
-      <label class="inputLabel">
-        Estado de nascimento
-        <select class="smallInput" name="birthStateSelect" [(ngModel)]="chosenBirthStateId"
-          (change)="findCities('birth')">
-          <option *ngFor="let state of allBirthStates" [value]=state.id>{{state.nome}} </option>
-        </select>
-      </label>
-      <label *ngIf="allBirthCities" class="inputLabel">
-        Cidade de nascimento
-        <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="createStudentData.birth_city">
-          <option *ngFor="let city of allBirthCities" [value]=city.nome>{{city.nome}}</option>
-        </select>
-      </label>
-
-
-
-      <label class="inputLabel">
-        Estado em que completou o ensino fundamental
-        <select class="smallInput" name="birtStateSelect" [(ngModel)]="chosenSchollStateId"
-          (change)="findCities('school')">
-          <option *ngFor="let state of allBirthStates" [value]=state.id>{{state.nome}}</option>
-        </select>
-      </label>
-      <label *ngIf="allSchoolCities" class="inputLabel">
-        Cidade em que completou o ensino fundamental
-        <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="createStudentData.primary_school_city">
-          <option *ngFor="let city of allSchoolCities" [value]=city.nome>{{city.nome}}</option>
-        </select>
-      </label>
-      <label class="inputLabel">
-        Data de batismo
-        <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="createStudentData.baptism_date">
-      </label>
-      <label class="inputLabel">
-        Local de batismo
-        <input class="smallMediumInput" type="text" name="baptimPlaceInput"
-          [(ngModel)]="createStudentData.baptism_place">
-      </label>
-
-
-
-      <label class="inputLabel">
+      <div class="subSection">
+        <label class="inputLabel">
+          Data de batismo
+          <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="registry.baptism_date">
+        </label>
+        <label class="inputLabel">
+          Local de batismo
+          <input class="smallMediumInput" type="text" name="baptimPlaceInput" [(ngModel)]="registry.baptism_place">
+        </label>
+      </div>
+      <label class="inputLabel grow-0">
         Status de contratação
-        <select class="largeInput" name="hiringStatusSelect" [(ngModel)]="createStudentData.hiring_status_id">
-          <option *ngFor="let hiringStatus of allHiringStatus" [value]=hiringStatus.hiring_status_id>
+        <select class="largeInput" name="hiringStatusSelect" [(ngModel)]="registry.hiring_status_id">
+          <option *ngFor="let hiringStatus of allHiringStatus" [value]="hiringStatus.hiring_status_id">
             {{hiringStatus.hiring_status_name}} - {{hiringStatus.hiring_status_description}}</option>
         </select>
       </label>
-
-
-
-      <label class="inputLabel">
+      <label class="inputLabel w-full">
         Mensagem do estudante
-        <input class="largeInput" type="text" name="studentMessageInput"
-          [(ngModel)]="createStudentData.student_mensage">
+        <input class="largeInput" type="text" name="studentMessageInput" [(ngModel)]="registry.student_mensage">
 
       </label>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form (editRegistry)="editRegistry()" (deleteRegistry)="deleteRegistry(registry.student_id)"
+      *ngIf="registry.student_id">
+      <div class="subSection gap-2">
+        <label class="inputLabel">
+          Número de telefone<input class="smallInput" type="text" name="studentPhoneNumberInput"
+            [(ngModel)]="registry.phone_number">
+        </label>
+        <label class="inputLabel text-center">
+          É WhatsApp? <input type="checkbox" name="studentIsWhatsCheck" [(ngModel)]="registry.is_whatsapp">
+        </label>
+        <label class="inputLabel">
+          Email Alternativo<input class="smallInput" type="text" name="studentAlternativeEmailInput"
+            [(ngModel)]="registry.alternative_email">
+        </label>
+      </div>
 
-
-      <button class="saveButton" type="button" (click)="createStudent()">SALVAR</button>
-
-    </form>
-
-    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="student.student_id"
-        (editRegistry)="editStudent($event.saveButtonId)" (deleteRegistry)="deleteStudent($event)"
-        *ngIf="student.student_id > 0 && shownBox">
-        <span class="field">
-          <p class="fieldTitle">Telefone:</p>
-          <input class="fieldContent" [id]="'studentPhoneInput'" name=`studentInput` [(ngModel)]="student.phone_number">
-        </span>
-        <span>
-          <p>É WhatsApp?</p>
-          <input type="checkbox" name="studentIsWhatsCheck" [(ngModel)]="student.is_whatsapp">
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Email Alternativo:</p>
-          <input class="fieldContent" [id]="'studentAlternativeEmailInput'" name=`studentAlternativeEmailInput`
-            [(ngModel)]="student.alternative_email">
-        </span>
-        <span class="field">
-          <p class="fieldTitle">União de origem:</p>
-          <select class="fieldContent" [id]="'originUnionSelect'" name=`originUnionSelect` [(ngModel)]="selectedUnion"
+      <div class="subSection">
+        <label class="inputLabel">
+          União de origem
+          <select class="smallInput" name="unionSelect" [(ngModel)]="registry.union_acronym"
             (change)="filterAssociation()">
-            <option *ngFor="let union of allUnions" class="fieldContent" [value]=union>{{union}}</option>
-            <input class="fieldContent" [id]="'studentAlternativeInput'" name=`studentAlternativeEmailInput`
-              [(ngModel)]="student.alternative_email">
+            <option *ngFor="let union of allUnions" [value]="union" [selected]="registry.union_acronym === union">
+              {{union}}</option>
           </select>
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Associação de origem:</p>
-          <select class="fieldContent" [id]="'originAssociationSelect'" name=`originAssociationSelect`
-            [(ngModel)]="student.origin_field_id">
-            <option *ngFor="let association of possibleAssociantions" class="fieldContent"
-              [value]='association.association_id'>{{association.association_acronym}}</option>
+        </label>
+
+        <label class="inputLabel">
+          Associação/Missão de origem
+          <select class="smallMediumInput" name="studentSelect" [(ngModel)]="registry.origin_field_id">
+            <option *ngFor="let association of possibleAssociantions" [value]="association.association_id"
+              [selected]="association.association_acronym == registry.association_acronym">
+              {{association.association_acronym}} - {{association.association_name}}</option>
           </select>
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Estado Civil</p>
-          <select class="fieldContent" [id]="'maritalStatusSelect'" name=`maritalStatusSelect`
-            [(ngModel)]="student.marital_status_id">
-            <option *ngFor="let status of allMaritalStatus" class="fieldContent"
-              [value]='status.marital_status_type_id'>
+        </label>
+      </div>
+      <label class="inputLabel w-full">
+        Justifique por que você acredita ser esse o seu campo de origem
+        <input class="largeInput" name="justificationInput" [(ngModel)]="registry.justification">
+
+      </label>
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado civil
+          <select class="smallInput" name="maritalStateSelect" [(ngModel)]="registry.marital_status_id">
+            <option *ngFor="let status of allMaritalStatus" [value]=status.marital_status_type_id>
               {{status.marital_status_type_name}}</option>
           </select>
-        </span>
-        <span class="field w-full">
-          <p class="fieldTitle">Justificativa</p>
-          <input class="fieldContent" [id]="'justificationInput'" name=`justificationInput`
-            [(ngModel)]="student.justification">
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Data de nascimento</p>
-          <input class="fieldContent" [id]="'birthDateInput'" name=`birthDateInput` [(ngModel)]="student.birth_date">
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Estado de nascimento</p>
-          <select class="fieldContent" name="birthStateSelect" id="birthStateSelect" [(ngModel)]="chosenBirthStateId"
+        </label>
+        <label class="inputLabel">
+          Data de nascimento
+          <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="registry.birth_date">
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado de nascimento
+          <select class="smallInput" name="birthStateSelect" [(ngModel)]="registry.birth_state"
             (change)="findCities('birth')">
-            <option *ngFor="let state of allBirthStates" class="fieldContent" [value]="state.id">{{state.sigla}}
-            </option>
+            <option *ngFor="let state of allStates" [value]="state.sigla">{{state.nome}} </option>
           </select>
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Cidade de nascimento</p>
-          <select class="fieldContent" name="birthCitySelect" id="birthCitySelect" [(ngModel)]="student.birth_city">
-            <option *ngFor="let city of allBirthCities" class="fieldContent" [value]="city.nome">{{city.nome}} </option>
+        </label>
+        <label class="inputLabel">
+          Cidade de nascimento
+          <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="registry.birth_city">
+            <option *ngFor="let city of allBirthCities" [value]=city.nome
+              [selected]="city.nome === registry.birth_city">{{city.nome}}</option>
           </select>
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Estado de conclusão do ensino fundamental</p>
-          <select class="fieldContent" name="primarySchoolStateSelect" id="primarySchoolStateSelect"
-            [(ngModel)]="chosenSchollStateId" (change)="findCities('school')">
-            <option *ngFor="let state of allBirthStates" class="fieldContent" [value]="state.id">{{state.sigla}}
-            </option>
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado em que completou o ensino fundamental
+          <select class="smallInput" name="birtStateSelect" [(ngModel)]="registry.primary_school_state"
+            (change)="findCities('school')">
+            <option *ngFor="let state of allStates" [value]="state.sigla"
+              [selected]="state.sigla === registry.primary_school_state">{{state.nome}}</option>
           </select>
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Cidade de conclusão do ensino fundamental</p>
-          <select class="fieldContent" name="primarySchoolCitySelect" id="primarySchoolCitySelect"
-            [(ngModel)]="student.primary_school_city">
-            <option *ngFor="let city of allSchoolCities" class="fieldContent" [value]="city.nome">{{city.nome}}
-            </option>
+        </label>
+        <label class="inputLabel">
+          Cidade em que completou o ensino fundamental
+          <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="registry.primary_school_city">
+            <option *ngFor="let city of allSchoolCities" [value]="city.nome">{{city.nome}}</option>
           </select>
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Data de batismo</p>
-          <input class="fieldContent" [id]="'baptismDateInput'" type="date" name=`birthDateInput`
-            [(ngModel)]="student.baptism_date">
+        </label>
+      </div>
 
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Local de batismo</p>
-          <input class="fieldContent" [id]="'baptismPlaceInput'" type="text" name=`baptismPlaceInput`
-            [(ngModel)]="student.baptism_place">
+      <div class="subSection">
+        <label class="inputLabel">
+          Data de batismo
+          <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="registry.baptism_date">
+        </label>
+        <label class="inputLabel">
+          Local de batismo
+          <input class="smallMediumInput" type="text" name="baptimPlaceInput" [(ngModel)]="registry.baptism_place">
+        </label>
+      </div>
+      <label class="inputLabel grow-0">
+        Status de contratação
+        <select class="largeInput" name="hiringStatusSelect" [(ngModel)]="registry.hiring_status_id">
+          <option *ngFor="let hiringStatus of allHiringStatus" [value]="hiringStatus.hiring_status_id">
+            {{hiringStatus.hiring_status_name}} - {{hiringStatus.hiring_status_description}}</option>
+        </select>
+      </label>
+      <label class="inputLabel w-full">
+        Mensagem do estudante
+        <input class="largeInput" type="text" name="studentMessageInput" [(ngModel)]="registry.student_mensage">
 
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Status de contratação</p>
-          <select class="fieldContent" name="hiringStatusSelect" id="hiringStatusSelect"
-            [(ngModel)]="student.hiring_status_id">
-            <option *ngFor="let status of allHiringStatus" class="fieldContent" [value]="status.hiring_status_id">
-              {{status.hiring_status_name}} </option>
-          </select>
-        </span>
-        <span class="field w-full">
-          <p class="fieldTitle">Mensagem do estudante</p>
-          <input class="fieldContent" [id]="'studentMessageInput'" type="text" name=`studentMessageInput`
-            [(ngModel)]="student.student_mensage">
-        </span>
-      </app-update-form></section>
+      </label>
+    </app-update-form>
   </section>
 </section>
-<div *ngIf="error" class="error">
-  <div class="errorTitle">
-    <p>Atenção</p>
-  </div>
-  <div class="errorMessage">
-    <p>{{errorMessage}}</p>
-  </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
-</div>
-
-<div *ngIf="done" class="done">
-  <div class="doneTitle">
-    <p>Parabéns</p>
-  </div>
-  <div class="doneMessage">
-    <p>{{doneMessage}}</p>
-  </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
-</div>
-
-<div *ngIf="isLoading" class="loader1"></div>
-<div *ngIf="isLoading" class="loader2"></div>

@@ -1,17 +1,16 @@
 import { Component, Input } from '@angular/core'
-import { StudentService } from './students.service'
 import { IPermissions } from '../../shared/container/types'
-import { ICreateStudent, IStudent, IUpdateStudent } from './types'
+import { DataService } from '../../shared/shared.service.ts/data.service'
+import { OthersServices } from '../../shared/shared.service.ts/others.service'
+import { ICity, IUF } from '../../shared/types'
 import { AssociationService } from '../associations/associations.service'
 import { IAssociation } from '../associations/types'
 import { HiringStatusService } from '../hiring-status/hiring_status.service'
-import { MaritalStatusService } from '../marital-status/marital-status.service'
 import { IHiringStatus } from '../hiring-status/types'
+import { MaritalStatusService } from '../marital-status/marital-status.service'
 import { IMaritalStatus } from '../marital-status/types'
-import { OthersServices } from '../../shared/shared.service.ts/others.service'
-import { ICity, IUF } from '../../shared/types'
-import { IUnion } from '../unions/types'
-import { DataService } from '../../shared/shared.service.ts/data.service'
+import { StudentService } from './students.service'
+import { ICreateStudent, IStudent, IUpdateStudent } from './types'
 
 @Component({
   selector: 'app-students',
@@ -29,7 +28,7 @@ export class StudentsComponent {
   ) {}
 
   @Input() permissions!: IPermissions
-  student: IStudent = {
+  registry: IStudent = {
     name: '',
     phone_number: '',
     is_whatsapp: false,
@@ -59,33 +58,14 @@ export class StudentsComponent {
     hiring_status_description: '',
     primary_school_state: '',
   }
-  creatingStudent: boolean = false
-  editingStudent: boolean = false
-  createStudentData: ICreateStudent = {
-    phone_number: '',
-    is_whatsapp: false,
-    alternative_email: '',
-    student_mensage: '',
-    origin_field_id: 0,
-    justification: '',
-    birth_city: '',
-    birth_state: '',
-    primary_school_city: '',
-    birth_date: new Date(),
-    baptism_date: new Date(),
-    baptism_place: '',
-    marital_status_id: 0,
-    hiring_status_id: 0,
-    primary_school_state: '',
-  }
 
+  title = 'Dados gerais'
   allAssociations: IAssociation[] = []
+  possibleAssociantions!: IAssociation[]
   allHiringStatus: IHiringStatus[] = []
   allMaritalStatus: IMaritalStatus[] = []
   allUnions: string[] = []
-  selectedUnion!: string
-  possibleAssociantions!: IAssociation[]
-  allBirthStates!: IUF[]
+  allStates!: IUF[]
   chosenBirthStateId!: number
   allBirthCities!: ICity[]
   chosenSchollStateId!: number
@@ -94,22 +74,46 @@ export class StudentsComponent {
   originAssociation!: IAssociation
   chosenUnionToEdit!: string
 
-  isLoading: boolean = false
-  done: boolean = false
-  doneMessage: string = ''
-  error: boolean = false
-  errorMessage: string = ''
-
-  shownBox: boolean = false
+  showBox = false
+  showForm = false
+  isLoading = false
+  done = false
+  doneMessage = ''
+  error = false
+  errorMessage = ''
 
   ngOnInit() {
+    this.getRegistry()
+  }
+
+  getRegistry() {
     this.isLoading = true
     this.studentServices.findStudentByUserId().subscribe({
       next: (res) => {
         if (res.student_id) {
-          this.student = res
+          this.registry = res
           this.dataService.maritalStatusName =
-            this.student.marital_status_type_name
+            this.registry.marital_status_type_name
+        }
+        this.getAllOtherData()
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+        this.getAllOtherData()
+      },
+    })
+  }
+
+  getAllOtherData() {
+    this.isLoading = true
+    this.studentServices.findStudentByUserId().subscribe({
+      next: (res) => {
+        if (res.student_id) {
+          this.registry = res
+          this.dataService.maritalStatusName =
+            this.registry.marital_status_type_name
         }
       },
       error: (err) => {
@@ -135,6 +139,11 @@ export class StudentsComponent {
             this.allUnions.push(association.union_acronym)
           }
         })
+        console.log('Uniões', this.allUnions)
+        if (this.registry.student_id) {
+          this.filterAssociation()
+          console.log('Possíveis associações', this.possibleAssociantions)
+        }
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -184,59 +193,10 @@ export class StudentsComponent {
 
     this.othersService.findAllStates().subscribe({
       next: (res) => {
-        this.allBirthStates = res
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
-  }
-
-  showBox() {
-    const box = document.getElementById('boxHeadStudents')
-    const add = document.getElementById('studentAddIcon')
-    const see = document.getElementById('seeMoreIconStudents')
-    this.shownBox = !this.shownBox
-    if (this.shownBox) {
-      box?.classList.replace('smallSectionBox', 'sectionBox')
-      add?.classList.remove('hidden')
-      see?.classList.add('rotatedClock')
-      this.creatingStudent = false
-    } else {
-      this.creatingStudent = false
-      box?.classList.replace('sectionBox', 'smallSectionBox')
-      add?.classList.add('hidden')
-      see?.classList.remove('rotatedClock')
-    }
-  }
-
-  filterAssociation() {
-    this.createStudentData.origin_field_id = 0
-    this.possibleAssociantions = this.allAssociations.filter((association) => {
-      return association.union_acronym == this.selectedUnion
-    })
-  }
-
-  createForm() {
-    this.creatingStudent = true
-  }
-
-  findCities(cityType: string) {
-    let id!: number
-    if (cityType == 'birth') {
-      id = this.chosenBirthStateId
-    } else if (cityType == 'school') {
-      id = this.chosenSchollStateId
-    }
-
-    this.othersService.findAllCities(id).subscribe({
-      next: (res) => {
-        if (cityType == 'birth') {
-          this.allBirthCities = res
-        } else if (cityType == 'school') {
-          this.allSchoolCities = res
+        this.allStates = res
+        if (this.registry.student_id) {
+          this.findCities('birth')
+          this.findCities('school')
         }
       },
       error: (err) => {
@@ -247,53 +207,41 @@ export class StudentsComponent {
     })
   }
 
-  createStudent() {
+  createRegistry() {
     this.isLoading = true
-    this.createStudentData.origin_field_id = Number(
-      this.createStudentData.origin_field_id,
+    this.isLoading = true
+
+    console.log(
+      'birthDate:',
+      new Date(this.registry.birth_date),
+      'baptism_date:',
+      new Date(this.registry.baptism_date),
     )
-    this.createStudentData.marital_status_id = Number(
-      this.createStudentData.marital_status_id,
-    )
-    this.createStudentData.hiring_status_id = Number(
-      this.createStudentData.hiring_status_id,
-    )
-    const birthState = this.allBirthStates.find((state) => {
-      return state.id == this.chosenBirthStateId
-    })?.sigla
-    if (birthState) {
-      this.createStudentData.birth_state = birthState
+
+    const newStudent: ICreateStudent = {
+      alternative_email: this.registry.alternative_email,
+      baptism_date: new Date(this.registry.baptism_date),
+      baptism_place: this.registry.baptism_place,
+      birth_city: this.registry.birth_city,
+      birth_date: new Date(this.registry.birth_date),
+      birth_state: this.registry.birth_state,
+      hiring_status_id: parseInt(this.registry.hiring_status_id.toString()),
+      is_whatsapp: !!this.registry.is_whatsapp,
+      justification: this.registry.justification,
+      marital_status_id: parseInt(this.registry.marital_status_id.toString()),
+      origin_field_id: parseInt(this.registry.origin_field_id.toString()),
+      phone_number: this.registry.phone_number,
+      primary_school_city: this.registry.primary_school_city,
+      primary_school_state: this.registry.primary_school_state,
+      student_mensage: this.registry.student_mensage,
     }
 
-    const primarySchoolState = this.allBirthStates.find((state) => {
-      return state.id == this.chosenSchollStateId
-    })?.sigla
-    if (primarySchoolState) {
-      this.createStudentData.primary_school_state = primarySchoolState
-    }
-
-    this.studentServices.createStudent(this.createStudentData).subscribe({
+    this.studentServices.createStudent(newStudent).subscribe({
       next: (res) => {
         this.doneMessage = 'Estudante criado com sucesso.'
         this.done = true
         this.isLoading = false
-        this.createStudentData.phone_number = ''
-        this.createStudentData.is_whatsapp = false
-        this.createStudentData.alternative_email = ''
-        this.createStudentData.student_mensage = ''
-        this.createStudentData.origin_field_id = 0
-        this.createStudentData.justification = ''
-        this.createStudentData.birth_city = ''
-        this.createStudentData.birth_state = ''
-        this.createStudentData.primary_school_city = ''
-        this.createStudentData.birth_date = new Date()
-        this.createStudentData.baptism_date = new Date()
-        this.createStudentData.baptism_place = ''
-        this.createStudentData.marital_status_id = 0
-        this.createStudentData.hiring_status_id = 0
-        this.createStudentData.primary_school_state = ''
-        this.creatingStudent = false
-        this.ngOnInit()
+        this.getRegistry()
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível criar o estudante.'
@@ -303,110 +251,37 @@ export class StudentsComponent {
     })
   }
 
-  changeTagType(paragraphId: string, buttonId: string, inputId: string) {
-    const paragraph = document.getElementById(paragraphId)
-    const input = document.getElementById(inputId) as HTMLInputElement
-
-    if (paragraph !== null && paragraph.textContent && input !== null) {
-      input.classList.remove('hidden')
-      paragraph.classList.add('hidden')
-
-      input.value = paragraph.textContent
-      input.oninput = function () {
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.remove('hidden')
-      }
-
-      input.focus()
-
-      input.onblur = function () {
-        paragraph.textContent = input.value
-        input.classList.add('hidden')
-        paragraph.classList.remove('hidden')
-      }
-    }
-  }
-
-  changeTagTypeToSelect(
-    paragraphId: string,
-    buttonId: string,
-    selectId: string,
-  ) {
-    const paragraph = document.getElementById(paragraphId)
-    const select = document.getElementById(selectId) as HTMLSelectElement
-
-    if (paragraph !== null && paragraph.textContent && select !== null) {
-      select.classList.remove('hidden')
-      paragraph.classList.add('hidden')
-
-      select.selectedOptions.namedItem(paragraph.textContent)
-
-      select.onchange = function () {
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.remove('hidden')
-      }
-
-      select.focus()
-
-      select.onblur = function () {
-        paragraph.textContent = select.options[select.selectedIndex].text
-        select.classList.add('hidden')
-        paragraph.classList.remove('hidden')
-      }
-    }
-  }
-
-  editStudent(buttonId: string) {
+  editRegistry() {
     this.isLoading = true
-    this.student.origin_field_id = Number(this.student.origin_field_id)
-    this.student.marital_status_id = Number(this.student.marital_status_id)
-    this.student.hiring_status_id = Number(this.student.hiring_status_id)
-    const birthState = this.allBirthStates.find((state) => {
-      return state.id == this.chosenBirthStateId
-    })?.sigla
-    if (birthState) {
-      this.student.birth_state = birthState
-    }
-
-    const baptismState = this.allBirthStates.find((state) => {
-      return state.id == this.chosenSchollStateId
-    })?.sigla
-
-    if (baptismState) {
-      this.student.primary_school_state = baptismState
-    }
-
-    const isWhats = this.student.is_whatsapp == 1
+    this.registry.origin_field_id = Number(this.registry.origin_field_id)
+    this.registry.marital_status_id = Number(this.registry.marital_status_id)
+    this.registry.hiring_status_id = Number(this.registry.hiring_status_id)
+    const isWhats = this.registry.is_whatsapp == 1
 
     const editStudentData: IUpdateStudent = {
-      student_id: this.student.student_id,
-      phone_number: this.student.phone_number,
+      student_id: this.registry.student_id,
+      phone_number: this.registry.phone_number,
       is_whatsapp: isWhats,
-      alternative_email: this.student.alternative_email,
-      student_mensage: this.student.student_mensage,
-      person_id: this.student.person_id,
-      origin_field_id: this.student.origin_field_id,
-      justification: this.student.justification,
-      birth_city: this.student.birth_city,
-      birth_state: this.student.birth_state,
-      primary_school_city: this.student.primary_school_city,
-      primary_school_state: this.student.primary_school_state,
-      birth_date: new Date(this.student.birth_date),
-      baptism_date: new Date(this.student.baptism_date),
-      baptism_place: this.student.baptism_place,
-      marital_status_id: Number(this.student.marital_status_id),
-      hiring_status_id: this.student.hiring_status_id,
+      alternative_email: this.registry.alternative_email,
+      student_mensage: this.registry.student_mensage,
+      person_id: this.registry.person_id,
+      origin_field_id: this.registry.origin_field_id,
+      justification: this.registry.justification,
+      birth_city: this.registry.birth_city,
+      birth_state: this.registry.birth_state,
+      primary_school_city: this.registry.primary_school_city,
+      primary_school_state: this.registry.primary_school_state,
+      birth_date: new Date(this.registry.birth_date),
+      baptism_date: new Date(this.registry.baptism_date),
+      baptism_place: this.registry.baptism_place,
+      marital_status_id: Number(this.registry.marital_status_id),
+      hiring_status_id: this.registry.hiring_status_id,
     }
 
     this.studentServices.updateStudent(editStudentData).subscribe({
       next: (res) => {
         this.doneMessage = 'Estudante editado com sucesso.'
         this.done = true
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.add('hidden')
         this.isLoading = false
         this.ngOnInit()
       },
@@ -418,9 +293,9 @@ export class StudentsComponent {
     })
   }
 
-  deleteStudent(i: number) {
+  deleteRegistry(id: number) {
     this.isLoading = true
-    const studentId = this.student.student_id
+    const studentId = this.registry.student_id
 
     this.studentServices.deleteStudent(studentId).subscribe({
       next: (res) => {
@@ -434,6 +309,44 @@ export class StudentsComponent {
         this.isLoading = false
       },
     })
+  }
+
+  filterAssociation() {
+    this.possibleAssociantions = this.allAssociations.filter((association) => {
+      return association.union_acronym == this.registry.union_acronym
+    })
+  }
+
+  findCities(cityType: 'birth' | 'school', specificSigla?: string) {
+    let sigla!: string
+    if (specificSigla) {
+      sigla = specificSigla
+    } else if (cityType == 'birth') {
+      sigla = this.registry.birth_state
+    } else if (cityType == 'school') {
+      sigla = this.registry.primary_school_state
+    }
+
+    const state = this.allStates.find((state) => state.sigla === sigla)
+
+    if (state) {
+      this.othersService.findAllCities(state.id).subscribe({
+        next: (res) => {
+          if (cityType == 'birth') {
+            this.allBirthCities = res
+          } else if (cityType == 'school') {
+            this.allSchoolCities = res
+          }
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
+    } else {
+      console.error('State Id not found.')
+    }
   }
 
   closeError() {
