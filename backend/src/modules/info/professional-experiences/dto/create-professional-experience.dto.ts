@@ -5,6 +5,7 @@ import {
   IsBoolean,
   IsDateString,
   IsOptional,
+  IsString,
 } from 'class-validator'
 
 export class CreateProfessionalExperienceDto {
@@ -15,10 +16,10 @@ export class CreateProfessionalExperienceDto {
   job_institution: string
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   job_begin_date: string
 
-  @IsDateString()
+  @IsString()
   @IsOptional()
-  job_end_date?: string
+  job_end_date: string
 }

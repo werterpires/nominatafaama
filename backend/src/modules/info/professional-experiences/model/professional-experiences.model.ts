@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreateProfessionalExperience,
   IProfessionalExperience,
@@ -185,6 +185,7 @@ export class ProfessionalExperiencesModel {
           experience_id,
         )
       } catch (error) {
+        console.log(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }

@@ -35,6 +35,10 @@
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-publications>
+  <app-professional-experiences
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-professional-experiences>
 
   <app-evg-experiences
     *ngIf="permissions.estudante || permissions.administrador"

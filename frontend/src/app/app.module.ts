@@ -37,7 +37,8 @@ import { LoginMenuComponent } from './components/shared/login-menu/login-menu.co
 import { MainContentComponent } from './components/shared/main-content/main-content.component'
 import { UpdateFormComponent } from './components/shared/update-form/update-form.component';
 import { StCoursesComponent } from './components/records/st-courses/st-courses.component';
-import { PublicationsComponent } from './components/records/publications/publications.component'
+import { PublicationsComponent } from './components/records/publications/publications.component';
+import { ProfessionalExperiencesComponent } from './components/records/professional-experiences/professional-experiences.component'
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { PublicationsComponent } from './components/records/publications/publica
     EvgExperiencesComponent,
     StCoursesComponent,
     PublicationsComponent,
+    ProfessionalExperiencesComponent,
   ],
   imports: [
     BrowserModule,
