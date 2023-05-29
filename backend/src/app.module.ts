@@ -12,6 +12,7 @@ import { AuthModule } from './shared/auth/auth.module'
 import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard'
 import { RolesGuard } from './shared/roles/gz_guards/roles.guard'
 import { RolesModule } from './shared/roles/roles.module'
+import { StudentPhotosModule } from './components/modules/info/student-photos/student-photos.module';
 
 config()
 
@@ -47,6 +48,7 @@ config()
     StudentsModule,
     SpousesModule,
     InfoModule,
+    StudentPhotosModule,
   ],
   providers: [
     {

@@ -35,22 +35,23 @@ import { CreationFormComponent } from './components/shared/creation-form/creatio
 import { UniqueIdDirective } from './components/shared/directives/unique-id.directive'
 import { LoginMenuComponent } from './components/shared/login-menu/login-menu.component'
 import { MainContentComponent } from './components/shared/main-content/main-content.component'
-import { UpdateFormComponent } from './components/shared/update-form/update-form.component';
-import { StCoursesComponent } from './components/records/st-courses/st-courses.component';
-import { PublicationsComponent } from './components/records/publications/publications.component';
-import { ProfessionalExperiencesComponent } from './components/records/professional-experiences/professional-experiences.component';
-import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ecl-exps.component';
-import { EclExperiencesComponent } from './components/records/ecl-experiences/ecl-experiences.component';
-import { OrdinationsComponent } from './components/records/ordinations/ordinations.component';
-import { RelatedMinistriesComponent } from './components/records/related-ministries/related-ministries.component';
-import { EndowmentsComponent } from './components/records/endowments/endowments.component';
-import { PsCoursesComponent } from './components/records/ps-courses/ps-courses.component';
-import { SpLanguagesComponent } from './components/records/sp-languages/sp-languages.component';
-import { SpPublicationsComponent } from './components/records/sp-publications/sp-publications.component';
-import { SpProfessionalExperiencesComponent } from './components/records/sp-professional-experiences/sp-professional-experiences.component';
-import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-past-ecl-exp.component';
-import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-endowments.component';
+import { UpdateFormComponent } from './components/shared/update-form/update-form.component'
+import { StCoursesComponent } from './components/records/st-courses/st-courses.component'
+import { PublicationsComponent } from './components/records/publications/publications.component'
+import { ProfessionalExperiencesComponent } from './components/records/professional-experiences/professional-experiences.component'
+import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ecl-exps.component'
+import { EclExperiencesComponent } from './components/records/ecl-experiences/ecl-experiences.component'
+import { OrdinationsComponent } from './components/records/ordinations/ordinations.component'
+import { RelatedMinistriesComponent } from './components/records/related-ministries/related-ministries.component'
+import { EndowmentsComponent } from './components/records/endowments/endowments.component'
+import { PsCoursesComponent } from './components/records/ps-courses/ps-courses.component'
+import { SpLanguagesComponent } from './components/records/sp-languages/sp-languages.component'
+import { SpPublicationsComponent } from './components/records/sp-publications/sp-publications.component'
+import { SpProfessionalExperiencesComponent } from './components/records/sp-professional-experiences/sp-professional-experiences.component'
+import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-past-ecl-exp.component'
+import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-endowments.component'
 import { SpRelatedMinistriesComponent } from './components/records/sp-related-ministries/sp-related-ministries.component'
+import { PreviousMarriageComponent } from './components/records/previous-marriage/previous-marriage.component'
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { SpRelatedMinistriesComponent } from './components/records/sp-related-mi
     SpPastEclExpComponent,
     SpEndowmentsComponent,
     SpRelatedMinistriesComponent,
+    PreviousMarriageComponent,
   ],
   imports: [
     BrowserModule,

@@ -26,6 +26,7 @@
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
+<<<<<<< Updated upstream
       <label class="inputLabel">
         Nome<input
           class="smallMediumInput"
@@ -98,6 +99,88 @@
           </option>
         </select>
       </label>
+=======
+      <div class="subSection">
+        <label class="inputLabel">
+          Nome<input
+            class="smallMediumInput"
+            type="text"
+            name="spouseNameInput"
+            [(ngModel)]="createRegistryData.name"
+          />
+        </label>
+
+        <label class="inputLabel">
+          CPF<input
+            class="smallInput"
+            type="text"
+            name="spouseCpfInput"
+            [(ngModel)]="createRegistryData.cpf"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Número de telefone<input
+            class="smallInput"
+            type="text"
+            name="spousePhoneNumberInput"
+            [(ngModel)]="createRegistryData.phone_number"
+          />
+        </label>
+        <label class="inputLabel">
+          É WhatsApp?
+          <input
+            type="checkbox"
+            name="spouseIsWhatsCheck"
+            [(ngModel)]="createRegistryData.is_whatsapp"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Email<input
+            class="smallInput"
+            type="text"
+            name="spouseAlternativeEmailInput"
+            [(ngModel)]="createRegistryData.alternative_email"
+          />
+        </label>
+      </div>
+      <div class="subSecion">
+        <label class="inputLabel">
+          União de origem
+          <select
+            class="smallInput"
+            name="unionSelect"
+            [(ngModel)]="selectedUnion"
+            (change)="filterAssociation()"
+          >
+            <option *ngFor="let union of allUnions" [value]="union">
+              {{ union }}
+            </option>
+          </select>
+        </label>
+
+        <label class="inputLabel">
+          Associação/Missão de origem
+          <select
+            class="smallMediumInput"
+            name="spouseSelect"
+            [(ngModel)]="createRegistryData.origin_field_id"
+          >
+            <option
+              *ngFor="let association of possibleAssociantions"
+              [value]="association.association_id"
+            >
+              {{ association.association_acronym }} -{{
+                association.association_name
+              }}
+            </option>
+          </select>
+        </label>
+      </div>
+>>>>>>> Stashed changes
 
       <label class="inputLabel">
         Justifique por que você acredita ser esse o seu campo de origem
@@ -108,6 +191,7 @@
         />
       </label>
 
+<<<<<<< Updated upstream
       <label class="inputLabel">
         Data de nascimento
         <input
@@ -169,6 +253,75 @@
           </option>
         </select>
       </label>
+=======
+      <div class="subSection">
+        <label class="inputLabel">
+          Data de nascimento
+          <input
+            class="dateInput"
+            type="date"
+            name="birthDateInput"
+            [(ngModel)]="createRegistryData.birth_date"
+          />
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado de nascimento
+          <select
+            class="smallInput"
+            name="birthStateSelect"
+            [(ngModel)]="createRegistryData.birth_state"
+            (change)="findCities('birth')"
+          >
+            <option *ngFor="let state of allStates" [value]="state.sigla">
+              {{ state.nome }}
+            </option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Cidade de nascimento
+          <select
+            class="smallMediumInput"
+            name="birthCitySelect"
+            [(ngModel)]="createRegistryData.birth_city"
+          >
+            <option *ngFor="let city of allBirthCities" [value]="city.nome">
+              {{ city.nome }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado em que completou o ensino fundamental
+          <select
+            class="smallInput"
+            name="birtStateSelect"
+            [(ngModel)]="createRegistryData.primary_school_state"
+            (change)="findCities('school')"
+          >
+            <option *ngFor="let state of allStates" [value]="state.sigla">
+              {{ state.nome }}
+            </option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Cidade em que completou o ensino fundamental
+          <select
+            class="smallMediumInput"
+            name="schoollCitySelect"
+            [(ngModel)]="createRegistryData.primary_school_city"
+          >
+            <option *ngFor="let city of allSchoolCities" [value]="city.nome">
+              {{ city.nome }}
+            </option>
+          </select>
+        </label>
+      </div>
+>>>>>>> Stashed changes
 
       <label class="inputLabel">
         Data de casamento
@@ -179,6 +332,7 @@
           [(ngModel)]="createRegistryData.civil_marriage_date"
         />
       </label>
+<<<<<<< Updated upstream
 
       <label class="inputLabel">
         Estado do casamento
@@ -241,6 +395,74 @@
           [(ngModel)]="createRegistryData.baptism_place"
         />
       </label>
+=======
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado do casamento
+          <select
+            class="smallInput"
+            name="birtStateSelect"
+            [(ngModel)]="createRegistryData.civil_marriage_state"
+            (change)="findCities('merry')"
+          >
+            <option *ngFor="let state of allStates" [value]="state.sigla">
+              {{ state.nome }}
+            </option>
+          </select>
+        </label>
+        <label *ngIf="allMerryCities" class="inputLabel">
+          Cidade do casamento
+          <select
+            class="smallMediumInput"
+            name="merrylCitySelect"
+            [(ngModel)]="createRegistryData.civil_marriage_city"
+          >
+            <option *ngFor="let city of allMerryCities" [value]="city.nome">
+              {{ city.nome }}
+            </option>
+          </select>
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Cartório de registro do casamento civil
+          <input
+            class="smallMediumInput"
+            type="text"
+            name="registryInput"
+            [(ngModel)]="createRegistryData.registry"
+          />
+        </label>
+        <label class="inputLabel">
+          Número do registro civil<input
+            class="smallInput"
+            type="text"
+            name="regitryNumberInput"
+            [(ngModel)]="createRegistryData.registry_number"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Data de batismo
+          <input
+            class="dateInput"
+            type="date"
+            name="baptismDateInput"
+            [(ngModel)]="createRegistryData.baptism_date"
+          />
+        </label>
+        <label class="inputLabel">
+          Local de batismo
+          <input
+            class="smallMediumInput"
+            type="text"
+            name="baptimPlaceInput"
+            [(ngModel)]="createRegistryData.baptism_place"
+          />
+        </label>
+      </div>
+>>>>>>> Stashed changes
     </app-creation-form>
   </section>
   <section class="registriesWrapper">
@@ -250,6 +472,7 @@
       (editRegistry)="editRegistry()"
       (deleteRegistry)="deleteRegistry(registry.spouse_id)"
     >
+<<<<<<< Updated upstream
       <label class="inputLabel">
         Nome<input
           class="smallMediumInput"
@@ -327,6 +550,88 @@
           </option>
         </select>
       </label>
+=======
+      <div class="subSection">
+        <label class="inputLabel">
+          Nome<input
+            class="smallMediumInput"
+            type="text"
+            name="spouseNameInput"
+            [(ngModel)]="registry.person_name"
+          />
+        </label>
+
+        <label class="inputLabel">
+          CPF<input
+            class="smallInput"
+            type="text"
+            name="spouseCpfInput"
+            [(ngModel)]="registry.person_cpf"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Número de telefone<input
+            class="smallInput"
+            type="text"
+            name="spousePhoneNumberInput"
+            [(ngModel)]="registry.phone_number"
+          />
+        </label>
+        <label class="inputLabel">
+          É WhatsApp?
+          <input
+            type="checkbox"
+            name="spouseIsWhatsCheck"
+            [(ngModel)]="registry.is_whatsapp"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Email<input
+            class="smallInput"
+            type="text"
+            name="spouseAlternativeEmailInput"
+            [(ngModel)]="registry.alternative_email"
+          />
+        </label>
+      </div>
+      <div class="subSecion">
+        <label class="inputLabel">
+          União de origem
+          <select
+            class="smallInput"
+            name="unionSelect"
+            [(ngModel)]="selectedUnion"
+            (change)="filterAssociation()"
+          >
+            <option *ngFor="let union of allUnions" [value]="union">
+              {{ union }}
+            </option>
+          </select>
+        </label>
+
+        <label class="inputLabel">
+          Associação/Missão de origem
+          <select
+            class="smallMediumInput"
+            name="spouseSelect"
+            [(ngModel)]="registry.origin_field_id"
+          >
+            <option
+              *ngFor="let association of possibleAssociantions"
+              [value]="association.association_id"
+            >
+              {{ association.association_acronym }} -{{
+                association.association_name
+              }}
+            </option>
+          </select>
+        </label>
+      </div>
+>>>>>>> Stashed changes
 
       <label class="inputLabel">
         Justifique por que você acredita ser esse o seu campo de origem
@@ -337,6 +642,7 @@
         />
       </label>
 
+<<<<<<< Updated upstream
       <label class="inputLabel">
         Data de nascimento
         <input
@@ -414,6 +720,75 @@
           </option>
         </select>
       </label>
+=======
+      <div class="subSection">
+        <label class="inputLabel">
+          Data de nascimento
+          <input
+            class="dateInput"
+            type="date"
+            name="birthDateInput"
+            [(ngModel)]="registry.birth_date"
+          />
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado de nascimento
+          <select
+            class="smallInput"
+            name="birthStateSelect"
+            [(ngModel)]="registry.birth_state"
+            (change)="findCities('birth')"
+          >
+            <option *ngFor="let state of allStates" [value]="state.sigla">
+              {{ state.nome }}
+            </option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Cidade de nascimento
+          <select
+            class="smallMediumInput"
+            name="birthCitySelect"
+            [(ngModel)]="registry.birth_city"
+          >
+            <option *ngFor="let city of allBirthCities" [value]="city.nome">
+              {{ city.nome }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado em que completou o ensino fundamental
+          <select
+            class="smallInput"
+            name="birtStateSelect"
+            [(ngModel)]="registry.primary_school_state"
+            (change)="findCities('school')"
+          >
+            <option *ngFor="let state of allStates" [value]="state.sigla">
+              {{ state.nome }}
+            </option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Cidade em que completou o ensino fundamental
+          <select
+            class="smallMediumInput"
+            name="schoollCitySelect"
+            [(ngModel)]="registry.primary_school_city"
+          >
+            <option *ngFor="let city of allSchoolCities" [value]="city.nome">
+              {{ city.nome }}
+            </option>
+          </select>
+        </label>
+      </div>
+>>>>>>> Stashed changes
 
       <label class="inputLabel">
         Data de casamento
@@ -424,6 +799,7 @@
           [(ngModel)]="registry.civil_marriage_date"
         />
       </label>
+<<<<<<< Updated upstream
 
       <label class="inputLabel">
         Estado do casamento
@@ -494,6 +870,74 @@
           [(ngModel)]="registry.baptism_place"
         />
       </label>
+=======
+      <div class="subSection">
+        <label class="inputLabel">
+          Estado do casamento
+          <select
+            class="smallInput"
+            name="birtStateSelect"
+            [(ngModel)]="registry.civil_marriage_state"
+            (change)="findCities('merry')"
+          >
+            <option *ngFor="let state of allStates" [value]="state.sigla">
+              {{ state.nome }}
+            </option>
+          </select>
+        </label>
+        <label *ngIf="allMerryCities" class="inputLabel">
+          Cidade do casamento
+          <select
+            class="smallMediumInput"
+            name="merrylCitySelect"
+            [(ngModel)]="registry.civil_marriage_city"
+          >
+            <option *ngFor="let city of allMerryCities" [value]="city.nome">
+              {{ city.nome }}
+            </option>
+          </select>
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Cartório de registro do casamento civil
+          <input
+            class="smallMediumInput"
+            type="text"
+            name="registryInput"
+            [(ngModel)]="registry.registry"
+          />
+        </label>
+        <label class="inputLabel">
+          Número do registro civil<input
+            class="smallInput"
+            type="text"
+            name="regitryNumberInput"
+            [(ngModel)]="registry.registry_number"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Data de batismo
+          <input
+            class="dateInput"
+            type="date"
+            name="baptismDateInput"
+            [(ngModel)]="registry.baptism_date"
+          />
+        </label>
+        <label class="inputLabel">
+          Local de batismo
+          <input
+            class="smallMediumInput"
+            type="text"
+            name="baptimPlaceInput"
+            [(ngModel)]="registry.baptism_place"
+          />
+        </label>
+      </div>
+>>>>>>> Stashed changes
     </app-update-form>
   </section>
 </section>

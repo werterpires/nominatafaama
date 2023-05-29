@@ -1,7 +1,7 @@
-import {IsNotEmpty, IsDateString} from 'class-validator'
+import { IsNotEmpty, IsString } from 'class-validator'
 
 export class CreatePreviousMarriageDto {
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   marriage_end_date: string
 }

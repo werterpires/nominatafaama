@@ -153,6 +153,14 @@
     "
     [permissions]="permissions"
   ></app-sp-related-ministries>
+  <app-previous-marriage
+    *ngIf="
+      (dataService.maritalStatusName == 'Divorciado' ||
+        dataService.maritalStatusName == 'Viúvo') &&
+      (permissions.estudante || permissions.administrador)
+    "
+    [permissions]="permissions"
+  ></app-previous-marriage>
 
   <div></div>
 </div>

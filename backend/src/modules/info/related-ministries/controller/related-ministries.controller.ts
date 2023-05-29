@@ -8,15 +8,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import {NotFoundException, InternalServerErrorException} from '@nestjs/common'
-import {CurrentUser} from 'src/shared/auth/decorators/current-user.decorator'
-import {ERoles} from 'src/shared/auth/types/roles.enum'
-import {UserFromJwt} from 'src/shared/auth/types/types'
-import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
-import {IRelatedMinistry} from '../types/types'
-import {CreateRelatedMinistryDto} from '../dto/create-related-ministry.dto'
-import {RelatedMinistriesService} from '../services/related-ministries.service'
-import {UpdateRelatedMinistryDto} from '../dto/update-related-ministry.dto'
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { IRelatedMinistry } from '../types/types'
+import { CreateRelatedMinistryDto } from '../dto/create-related-ministry.dto'
+import { RelatedMinistriesService } from '../services/related-ministries.service'
+import { UpdateRelatedMinistryDto } from '../dto/update-related-ministry.dto'
 
 @Controller('related-ministries')
 export class RelatedMinistriesController {
@@ -123,7 +123,7 @@ export class RelatedMinistriesController {
     try {
       const message =
         await this.relatedMinistriesService.deleteRelatedMinistryById(id)
-      return {message}
+      return { message }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }

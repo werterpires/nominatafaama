@@ -8,15 +8,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import {NotFoundException, InternalServerErrorException} from '@nestjs/common'
-import {CurrentUser} from 'src/shared/auth/decorators/current-user.decorator'
-import {ERoles} from 'src/shared/auth/types/roles.enum'
-import {UserFromJwt} from 'src/shared/auth/types/types'
-import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
-import {CreatePreviousMarriageDto} from '../dto/create-previous-marriage.dto'
-import {UpdatePreviousMarriageDto} from '../dto/update-previous-marriage.dto'
-import {IPreviousMarriage} from '../types/types'
-import {PreviousMarriagesService} from '../services/previous-marriage.service'
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { CreatePreviousMarriageDto } from '../dto/create-previous-marriage.dto'
+import { UpdatePreviousMarriageDto } from '../dto/update-previous-marriage.dto'
+import { IPreviousMarriage } from '../types/types'
+import { PreviousMarriagesService } from '../services/previous-marriage.service'
 
 @Controller('previous-marriages')
 export class PreviousMarriagesController {
@@ -29,7 +29,7 @@ export class PreviousMarriagesController {
     @CurrentUser() user: UserFromJwt,
   ) {
     try {
-      const {user_id} = user
+      const { user_id } = user
       const previousMarriage =
         await this.previousMarriagesService.createPreviousMarriage(
           input,
@@ -47,7 +47,7 @@ export class PreviousMarriagesController {
     @CurrentUser() user: UserFromJwt,
   ): Promise<IPreviousMarriage[]> {
     try {
-      const {user_id} = user
+      const { user_id } = user
       const previousMarriages =
         await this.previousMarriagesService.findPreviousMarriagesByStudentId(
           user_id,
@@ -114,7 +114,7 @@ export class PreviousMarriagesController {
     try {
       const message =
         await this.previousMarriagesService.deletePreviousMarriageById(id)
-      return {message}
+      return { message }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }

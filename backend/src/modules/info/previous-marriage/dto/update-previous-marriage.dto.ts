@@ -1,11 +1,4 @@
-import {
-  IsNotEmpty,
-  IsInt,
-  IsBoolean,
-  Min,
-  IsDateString,
-  IsOptional,
-} from 'class-validator'
+import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator'
 
 export class UpdatePreviousMarriageDto {
   @IsNotEmpty()
@@ -14,7 +7,7 @@ export class UpdatePreviousMarriageDto {
   previous_marriage_id: number
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   marriage_end_date: string
 
   @IsNotEmpty()
