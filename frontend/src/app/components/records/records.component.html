@@ -119,5 +119,14 @@
     [permissions]="permissions"
   ></app-sp-publications>
 
+  <app-sp-professional-experiences
+    *ngIf="
+      (dataService.maritalStatusName == 'Casado' ||
+        dataService.maritalStatusName == 'Noivo') &&
+      (permissions.estudante || permissions.administrador)
+    "
+    [permissions]="permissions"
+  ></app-sp-professional-experiences>
+
   <div></div>
 </div>
