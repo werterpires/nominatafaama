@@ -1,298 +1,283 @@
-<section
-  *ngIf="(permissions.estudante || permissions.administrador) && (dataService.maritalStatusName === 'Casado' || dataService.maritalStatusName === 'Noivo')"
-  class="smallSectionBox" id="boxHeadSpouses">
+<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
   <div class="boxHead">
-    <span class="headField" (click)="showBox()">
-      <img class="seeMoreIcon" id="seeMoreIconSpouses" src="assets/icons/seeMoreIcon.png" alt="">
-      <p class="sectionTitle1">Dados da esposa</p>
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <p class="sectionTitle1">{{ title }}</p>
     </span>
+
+    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}" (click)="showForm = true" />
   </div>
-  <section>
-    <form *ngIf=" spouse.spouse_id==0 && shownBox" class="formCreation">
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
-        Nome<input class="smallMediumInput" type="text" name="spouseNameInput" [(ngModel)]="createSpouseData.name">
+        Nome<input class="smallMediumInput" type="text" name="spouseNameInput" [(ngModel)]="createRegistryData.name">
       </label>
 
       <label class="inputLabel">
-        CPF<input class="smallInput" type="text" name="spouseCpfInput" [(ngModel)]="createSpouseData.cpf">
+        CPF<input class="smallInput" type="text" name="spouseCpfInput" [(ngModel)]="createRegistryData.cpf">
       </label>
       <label class="inputLabel">
         Número de telefone<input class="smallInput" type="text" name="spousePhoneNumberInput"
-          [(ngModel)]="createSpouseData.phone_number">
+          [(ngModel)]="createRegistryData.phone_number">
       </label>
       <label class="inputLabel">
-        É WhatsApp? <input type="checkbox" name="spouseIsWhatsCheck" [(ngModel)]="createSpouseData.is_whatsapp">
+        É WhatsApp? <input type="checkbox" name="spouseIsWhatsCheck" [(ngModel)]="createRegistryData.is_whatsapp">
       </label>
       <label class="inputLabel">
-        Email Alternativo<input class="smallInput" type="text" name="spouseAlternativeEmailInput"
-          [(ngModel)]="createSpouseData.alternative_email">
+        Email<input class="smallInput" type="text" name="spouseAlternativeEmailInput"
+          [(ngModel)]="createRegistryData.alternative_email">
       </label>
       <label class="inputLabel">
         União de origem
         <select class="smallInput" name="unionSelect" [(ngModel)]="selectedUnion" (change)="filterAssociation()">
-          <option *ngFor="let union of allUnions" [value]=union>{{union}}</option>
+          <option *ngFor="let union of allUnions" [value]="union">{{union}}</option>
         </select>
       </label>
 
-      <label *ngIf="selectedUnion" class="inputLabel">
+      <label class="inputLabel">
         Associação/Missão de origem
-        <select class="smallMediumInput" name="spouseSelect" [(ngModel)]="createSpouseData.origin_field_id">
-          <option *ngFor="let spouse of possibleAssociantions" [value]="spouse.association_id">
-            {{spouse.association_acronym}} -{{spouse.association_name}}</option>
+        <select class="smallMediumInput" name="spouseSelect" [(ngModel)]="createRegistryData.origin_field_id">
+          <option *ngFor="let association of possibleAssociantions" [value]="association.association_id">
+            {{association.association_acronym}} -{{association.association_name}}</option>
         </select>
       </label>
 
       <label class="inputLabel">
         Justifique por que você acredita ser esse o seu campo de origem
-        <input class="largeInput" name="justificationInput" [(ngModel)]="createSpouseData.justification">
+        <input class="largeInput" name="justificationInput" [(ngModel)]="createRegistryData.justification">
 
       </label>
 
 
       <label class="inputLabel">
         Data de nascimento
-        <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="createSpouseData.birth_date">
+        <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="createRegistryData.birth_date">
       </label>
 
       <label class="inputLabel">
         Estado de nascimento
-        <select class="smallInput" name="birthStateSelect" [(ngModel)]="chosenBirthStateId"
+        <select class="smallInput" name="birthStateSelect" [(ngModel)]="createRegistryData.birth_state"
           (change)="findCities('birth')">
-          <option *ngFor="let state of allBirthStates" [value]=state.id>{{state.nome}} </option>
+          <option *ngFor="let state of allStates" [value]="state.sigla">{{state.nome}} </option>
         </select>
       </label>
-      <label *ngIf="allBirthCities" class="inputLabel">
+      <label class="inputLabel">
         Cidade de nascimento
-        <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="createSpouseData.birth_city">
-          <option *ngFor="let city of allBirthCities" [value]=city.nome>{{city.nome}}</option>
+        <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="createRegistryData.birth_city">
+          <option *ngFor="let city of allBirthCities" [value]="city.nome">{{city.nome}}</option>
         </select>
       </label>
 
       <label class="inputLabel">
         Estado em que completou o ensino fundamental
-        <select class="smallInput" name="birtStateSelect" [(ngModel)]="chosenSchollStateId"
+        <select class="smallInput" name="birtStateSelect" [(ngModel)]="createRegistryData.primary_school_state"
           (change)="findCities('school')">
-          <option *ngFor="let state of allBirthStates" [value]=state.id>{{state.nome}}</option>
+          <option *ngFor="let state of allStates" [value]="state.sigla">{{state.nome}}</option>
         </select>
       </label>
-      <label *ngIf="allSchoolCities" class="inputLabel">
+      <label class="inputLabel">
         Cidade em que completou o ensino fundamental
-        <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="createSpouseData.primary_school_city">
-          <option *ngFor="let city of allSchoolCities" [value]=city.nome>{{city.nome}}</option>
+        <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="createRegistryData.primary_school_city">
+          <option *ngFor="let city of allSchoolCities" [value]="city.nome">{{city.nome}}</option>
         </select>
       </label>
 
       <label class="inputLabel">
         Data de casamento
-        <input class="dateInput" type="date" name="merryDateInput" [(ngModel)]="createSpouseData.civil_marriage_date">
+        <input class="dateInput" type="date" name="merryDateInput" [(ngModel)]="createRegistryData.civil_marriage_date">
       </label>
 
       <label class="inputLabel">
         Estado do casamento
-        <select class="smallInput" name="birtStateSelect" [(ngModel)]="chosenMerryStateId"
+        <select class="smallInput" name="birtStateSelect" [(ngModel)]="createRegistryData.civil_marriage_state"
           (change)="findCities('merry')">
-          <option *ngFor="let state of allBirthStates" [value]=state.id>{{state.nome}}</option>
+          <option *ngFor="let state of allStates" [value]="state.sigla">{{state.nome}}</option>
         </select>
       </label>
       <label *ngIf="allMerryCities" class="inputLabel">
         Cidade do casamento
-        <select class="smallMediumInput" name="merrylCitySelect" [(ngModel)]="createSpouseData.civil_marriage_city">
-          <option *ngFor="let city of allMerryCities" [value]=city.nome>{{city.nome}}</option>
+        <select class="smallMediumInput" name="merrylCitySelect" [(ngModel)]="createRegistryData.civil_marriage_city">
+          <option *ngFor="let city of allMerryCities" [value]="city.nome">{{city.nome}}</option>
         </select>
       </label>
       <label class="inputLabel">
         Cartório de registro do casamento civil <input class="smallMediumInput" type="text" name="registryInput"
-          [(ngModel)]="createSpouseData.registry">
+          [(ngModel)]="createRegistryData.registry">
       </label>
       <label class="inputLabel">
         Número do registro civil<input class="smallInput" type="text" name="regitryNumberInput"
-          [(ngModel)]="createSpouseData.registry_number">
+          [(ngModel)]="createRegistryData.registry_number">
       </label>
 
 
       <label class="inputLabel">
         Data de batismo
-        <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="createSpouseData.baptism_date">
+        <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="createRegistryData.baptism_date">
       </label>
       <label class="inputLabel">
         Local de batismo
         <input class="smallMediumInput" type="text" name="baptimPlaceInput"
-          [(ngModel)]="createSpouseData.baptism_place">
+          [(ngModel)]="createRegistryData.baptism_place">
+      </label>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form [registryId]="registry.spouse_id" *ngIf="registry" (editRegistry)="editRegistry()"
+      (deleteRegistry)="deleteRegistry(registry.spouse_id)">
+      <label class="inputLabel">
+        Nome<input class="smallMediumInput" type="text" name="spouseNameInput" [(ngModel)]="registry.person_name">
       </label>
 
-      <button class="saveButton" type="button" (click)="createSpouse()">SALVAR</button>
+      <label class="inputLabel">
+        CPF<input class="smallInput" type="text" name="spouseCpfInput" [(ngModel)]="registry.person_cpf">
+      </label>
+      <label class="inputLabel">
+        Número de telefone<input class="smallInput" type="text" name="spousePhoneNumberInput"
+          [(ngModel)]="registry.phone_number">
+      </label>
+      <label class="inputLabel">
+        É WhatsApp? <input type="checkbox" name="spouseIsWhatsCheck" [(ngModel)]="registry.is_whatsapp">
+      </label>
+      <label class="inputLabel">
+        Email Alternativo<input class="smallInput" type="text" name="spouseAlternativeEmailInput"
+          [(ngModel)]="registry.alternative_email">
+      </label>
+      <label class="inputLabel">
+        União de origem
+        <select class="smallInput" name="unionSelect" [(ngModel)]="registry.union_acronym"
+          (change)="filterAssociation()">
+          <option *ngFor="let union of allUnions" [value]="union" [selected]="union === registry.union_acronym">
+            {{union}}
+          </option>
+        </select>
+      </label>
 
-    </form>
+      <label class="inputLabel">
+        Associação/Missão de origem
+        <select class="smallMediumInput" name="spouseSelect" [(ngModel)]="registry.origin_field_id">
+          <option *ngFor="let association of possibleAssociantions" [value]="association.association_id"
+            [selected]="association.association_id === registry.origin_field_id">
+            {{association.association_acronym}} -{{association.association_name}}
+          </option>
+        </select>
+      </label>
 
-    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="spouse.spouse_id"
-        (editRegistry)="editSpouse($event.saveButtonId)" (deleteRegistry)="deleteSpouse($event)"
-        *ngIf="spouse.spouse_id">
-        <span class="field" (click)="changeTagType('spouseName', 'saveSpouseButton', 'spouseNameInput')">
-          <p class="fieldTitle">Nome:</p>
-          <p class="fieldContent" [id]="'spouseName'">{{spouse.person_name}}</p>
-          <input class="fieldContent hidden" [id]="'spouseNameInput'" name=`spouseInput`
-            [(ngModel)]="spouse.person_name">
-        </span>
-        <span class="field"
-          (click)="changeTagType('spouseAlternativeEmail', 'saveSpouseButton', 'spouseAlternativeEmailInput')">
-          <p class="fieldTitle">Email Alternativo:</p>
-          <p class="fieldContent" [id]="'spouseAlternativeEmail'">{{spouse.alternative_email}}</p>
-          <input class="fieldContent hidden" [id]="'spouseAlternativeEmailInput'" name=`spouseAlternativeEmailInput`
-            [(ngModel)]="spouse.alternative_email">
-        </span>
-        <span class="field" (click)="changeTagType('spousePhone', 'saveSpouseButton', 'spousePhoneInput')">
-          <p class="fieldTitle">Telefone:</p>
-          <p class="fieldContent" [id]="'spousePhone'">{{spouse.phone_number}}</p>
-          <input class="fieldContent hidden" [id]="'spousePhoneInput'" name=`spouseInput`
-            [(ngModel)]="spouse.phone_number">
-        </span>
-        <span>
-          <p>É WhatsApp?</p>
-          <input type="checkbox" name="spouseIsWhatsCheck" [(ngModel)]="spouse.is_whatsapp">
-        </span>
-        <span class="field" (click)="changeTagTypeToSelect('originUnion', 'saveSpouseButton', 'originUnionSelect')">
-          <p class="fieldTitle">União de origem:</p>
-          <p class="fieldContent" [id]="'originUnion'">{{spouse.union_acronym}} </p>
-          <select class="fieldContent hidden" [id]="'originUnionSelect'" name=`originUnionSelect`
-            [(ngModel)]="selectedUnion" (change)="filterAssociation()">
-            <option *ngFor="let union of allUnions" class="fieldContent" [value]=union>{{union}}</option>
-            <input class="fieldContent hidden" [id]="'spouseAlternativeInput'" name=`spouseAlternativeEmailInput`
-              [(ngModel)]="spouse.alternative_email">
-          </select>
-        </span>
-        <span class="field"
-          (click)="changeTagTypeToSelect('originAssociation', 'saveSpouseButton', 'originAssociationSelect')">
-          <p class="fieldTitle">Associação de origem:</p>
-          <p class="fieldContent" [id]="'originAssociation'">{{spouse.association_acronym}} </p>
-          <select class="fieldContent hidden" [id]="'originAssociationSelect'" name=`originAssociationSelect`
-            [(ngModel)]="spouse.origin_field_id">
-            <option *ngFor="let association of possibleAssociantions" class="fieldContent"
-              [value]='association.association_id'>{{association.association_acronym}}</option>
-          </select>
-        </span>
-        <span class="field" (click)="changeTagType('justification', 'saveSpouseButton', 'justificationInput')">
-          <p class="fieldTitle">Justificativa:</p>
-          <p class="fieldContent" [id]="'justification'">{{spouse.justification}} </p>
-          <input class="fieldContent hidden" [id]="'justificationInput'" name=`justificationInput`
-            [(ngModel)]="spouse.justification">
-        </span>
-        <span class="field" (click)="changeTagType('birthDate', 'saveSpouseButton', 'birthDateInput')">
-          <p class="fieldTitle">Data de nascimento:</p>
-          <p class="fieldContent" [id]="'birthDate'">
-            {{spouse.birth_date.slice(8,10)}}/{{spouse.birth_date.slice(5,7)}}/{{spouse.birth_date.slice(0,4)}}</p>
-          <input class="fieldContent hidden" [id]="'birthDateInput'" type="date" name=`birthDateInput`
-            [(ngModel)]="spouse.birth_date">
-        </span>
-        <span class="field" (click)="changeTagTypeToSelect('birthState', 'saveSpouseButton', 'birthStateSelect')">
-          <p class="fieldTitle">Estado de nascimento:</p>
-          <p class="fieldContent" id="birthState">{{spouse.birth_state}}</p>
-          <select class="fieldContent hidden" name="birthStateSelect" id="birthStateSelect"
-            [(ngModel)]="chosenBirthStateId" (change)="findCities('birth')">
-            <option *ngFor="let state of allBirthStates" class="fieldContent" [value]="state.id">{{state.sigla}}
-            </option>
-          </select>
-        </span>
-        <span class="field" (click)="changeTagTypeToSelect('birthCity', 'saveSpouseButton', 'birthCitySelect')">
-          <p class="fieldTitle">Cidade de nascimento:</p>
-          <p class="fieldContent" id="birthCity">{{spouse.birth_city}}</p>
-          <select class="fieldContent hidden" name="birthCitySelect" id="birthCitySelect"
-            [(ngModel)]="spouse.birth_city">
-            <option *ngFor="let city of allBirthCities" class="fieldContent" [value]="city.nome">{{city.nome}} </option>
-          </select>
-        </span>
-        <span class="field"
-          (click)="changeTagTypeToSelect('primarySchoolState', 'saveSpouseButton', 'primarySchoolStateSelect')">
-          <p class="fieldTitle">UF de concl. ensino fundamental:</p>
-          <p class="fieldContent" id="primarySchoolState">{{spouse.primary_school_state}}</p>
-          <select class="fieldContent hidden" name="primarySchoolStateSelect" id="primarySchoolStateSelect"
-            [(ngModel)]="chosenSchollStateId" (change)="findCities('school')">
-            <option *ngFor="let state of allBirthStates" class="fieldContent" [value]="state.id">{{state.sigla}}
-            </option>
-          </select>
-        </span>
-        <span class="field"
-          (click)="changeTagTypeToSelect('primarySchoolCity', 'saveSpouseButton', 'primarySchoolCitySelect')">
-          <p class="fieldTitle">Cidade de concl. do ensino fundamental:</p>
-          <p class="fieldContent" id="primarySchoolCity">{{spouse.primary_school_city}}</p>
-          <select class="fieldContent hidden" name="primarySchoolCitySelect" id="primarySchoolCitySelect"
-            [(ngModel)]="spouse.primary_school_city">
-            <option *ngFor="let city of allSchoolCities" class="fieldContent" [value]="city.nome">{{city.nome}}
-            </option>
-          </select>
-        </span>
-        <span class="field" (click)="changeTagType('merryDate', 'saveSpouseButton', 'merryDateInput')">
-          <p class="fieldTitle">Data do casamento:</p>
-          <p class="fieldContent" [id]="'merryDate'">
-            {{spouse.civil_marriage_date?.slice(8,10)}}/{{spouse.civil_marriage_date?.slice(5,7)}}/{{spouse.civil_marriage_date?.slice(0,4)}}
-          </p>
-          <input class="fieldContent hidden" [id]="'merryDateInput'" type="date" name=`merryDateInput`
-            [(ngModel)]="spouse.civil_marriage_date">
-        </span>
-        <span class="field" (click)="changeTagTypeToSelect('merryState', 'saveSpouseButton', 'merryStateSelect')">
-          <p class="fieldTitle">Estado do casamento:</p>
-          <p class="fieldContent" id="merryState">{{spouse.civil_marriage_state}}</p>
-          <select class="fieldContent hidden" name="merryStateSelect" id="merryStateSelect"
-            [(ngModel)]="chosenMerryStateId" (change)="findCities('merry')">
-            <option *ngFor="let state of allBirthStates" class="fieldContent" [value]="state.id">{{state.sigla}}
-            </option>
-          </select>
-        </span>
-        <span class="field" (click)="changeTagTypeToSelect('merryCity', 'saveSpouseButton', 'merryCitySelect')">
-          <p class="fieldTitle">Cidade do casamento:</p>
-          <p class="fieldContent" id="merryCity">{{spouse.civil_marriage_city}}</p>
-          <select class="fieldContent hidden" name="merryCitySelect" id="merryCitySelect"
-            [(ngModel)]="spouse.civil_marriage_city">
-            <option *ngFor="let city of allMerryCities" class="fieldContent" [value]="city.nome">{{city.nome}} </option>
-          </select>
-        </span>
-        <span class="field" (click)="changeTagType('registry', 'saveSpouseButton', 'registryInput')">
-          <p class="fieldTitle">Cartório:</p>
-          <p class="fieldContent" [id]="'registry'">{{spouse.registry}}</p>
-          <input class="fieldContent hidden" [id]="'registryInput'" name=`registryInput` [(ngModel)]="spouse.registry">
-        </span>
-        <span class="field" (click)="changeTagType('registryNumber', 'saveSpouseButton', 'registryNumberInput')">
-          <p class="fieldTitle">Registro do casamento:</p>
-          <p class="fieldContent" [id]="'registryNumber'">{{spouse.registry_number}}</p>
-          <input class="fieldContent hidden" [id]="'registryNumberInput'" name=`registryNumberInput`
-            [(ngModel)]="spouse.registry_number">
-        </span>
-        <span class="field" (click)="changeTagType('baptismDate', 'saveSpouseButton', 'baptismDateInput')">
-          <p class="fieldTitle">Data de batismo:</p>
-          <p class="fieldContent" id="baptismDate">
-            {{spouse.baptism_date.slice(8,10)}}/{{spouse.baptism_date.slice(5,7)}}/{{spouse.baptism_date.slice(0,4)}}
-          </p>
-          <input class="fieldContent hidden" [id]="'baptismDateInput'" type="date" name=`birthDateInput`
-            [(ngModel)]="spouse.baptism_date">
+      <label class="inputLabel">
+        Justifique por que você acredita ser esse o seu campo de origem
+        <input class="largeInput" name="justificationInput" [(ngModel)]="registry.justification">
 
-        </span>
-        <span class="field" (click)="changeTagType('baptismPlace', 'saveSpouseButton', 'baptismPlaceInput')">
-          <p class="fieldTitle">Local de batismo:</p>
-          <p class="fieldContent" id="baptismPlace">{{spouse.baptism_place}}</p>
-          <input class="fieldContent hidden" [id]="'baptismPlaceInput'" type="text" name=`baptismPlaceInput`
-            [(ngModel)]="spouse.baptism_place">
+      </label>
 
-        </span>
-      </app-update-form></section>
+
+      <label class="inputLabel">
+        Data de nascimento
+        <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="registry.birth_date">
+      </label>
+
+      <label class="inputLabel">
+        Estado de nascimento
+        <select class="smallInput" name="birthStateSelect" [(ngModel)]="registry.birth_state"
+          (change)="findCities('birth')">
+          <option *ngFor="let state of allStates" [value]="state.sigla"
+            [selected]="state.sigla === registry.birth_state">
+            {{state.nome}} </option>
+        </select>
+      </label>
+      <label *ngIf="allBirthCities" class="inputLabel">
+        Cidade de nascimento
+        <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="registry.birth_city">
+          <option *ngFor="let city of allBirthCities" [value]="city.nome"
+            [selected]="city.nome === registry.birth_city">
+            {{city.nome}}
+          </option>
+        </select>
+      </label>
+
+      <label class="inputLabel">
+        Estado em que completou o ensino fundamental
+        <select class="smallInput" name="birtStateSelect" [(ngModel)]="registry.primary_school_state"
+          (change)="findCities('school')">
+          <option *ngFor="let state of allStates" [value]="state.sigla"
+            [selected]="state.sigla === registry.primary_school_state">
+            {{state.nome}}
+          </option>
+        </select>
+      </label>
+      <label *ngIf="allSchoolCities" class="inputLabel">
+        Cidade em que completou o ensino fundamental
+        <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="registry.primary_school_city">
+          <option *ngFor="let city of allSchoolCities" [value]="city.nome"
+            [selected]="city.nome === registry.primary_school_city">
+            {{city.nome}}
+          </option>
+        </select>
+      </label>
+
+      <label class="inputLabel">
+        Data de casamento
+        <input class="dateInput" type="date" name="merryDateInput" [(ngModel)]="registry.civil_marriage_date">
+      </label>
+
+      <label class="inputLabel">
+        Estado do casamento
+        <select class="smallInput" name="birtStateSelect" [(ngModel)]="registry.civil_marriage_state"
+          (change)="findCities('merry')">
+          <option *ngFor="let state of allStates" [value]="state.sigla"
+            [selected]="state.sigla === registry.civil_marriage_state">
+            {{state.nome}}
+          </option>
+        </select>
+      </label>
+      <label *ngIf="allMerryCities" class="inputLabel">
+        Cidade do casamento
+        <select class="smallMediumInput" name="merrylCitySelect" [(ngModel)]="registry.civil_marriage_city">
+          <option *ngFor="let city of allMerryCities" [value]="city.nome"
+            [selected]="city.nome === registry.civil_marriage_city">
+            {{city.nome}}
+          </option>
+        </select>
+      </label>
+      <label class="inputLabel">
+        Cartório de registro do casamento civil <input class="smallMediumInput" type="text" name="registryInput"
+          [(ngModel)]="registry.registry">
+      </label>
+      <label class="inputLabel">
+        Número do registro civil<input class="smallInput" type="text" name="regitryNumberInput"
+          [(ngModel)]="registry.registry_number">
+      </label>
+
+
+      <label class="inputLabel">
+        Data de batismo
+        <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="registry.baptism_date">
+      </label>
+      <label class="inputLabel">
+        Local de batismo
+        <input class="smallMediumInput" type="text" name="baptimPlaceInput" [(ngModel)]="registry.baptism_place">
+      </label>
+    </app-update-form>
   </section>
 </section>
+
 <div *ngIf="error" class="error">
   <div class="errorTitle">
     <p>Atenção</p>
   </div>
   <div class="errorMessage">
-    <p>{{errorMessage}}</p>
+    <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
 </div>
-
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>
   </div>
   <div class="doneMessage">
-    <p>{{doneMessage}}</p>
+    <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

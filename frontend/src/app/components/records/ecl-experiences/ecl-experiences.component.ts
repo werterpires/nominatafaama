@@ -1,13 +1,9 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import {
-  CreateEclExperienceDto,
-  IEclExperience,
-  UpdateEclExperiencesDto,
-} from './types'
-import { IEclExpType, IEclExperienceList } from '../ecl-exp-types/types'
-import { EclExperiencesService } from './ecl-experiences.service'
 import { EclExpTypesService } from '../ecl-exp-types/ecl-exp-types.service'
+import { IEclExperienceList } from '../ecl-exp-types/types'
+import { EclExperiencesService } from './ecl-experiences.service'
+import { IEclExperience, UpdateEclExperiencesDto } from './types'
 
 @Component({
   selector: 'app-ecl-experiences',
@@ -46,6 +42,7 @@ export class EclExperiencesComponent {
         this.isLoading = true
         this.service.findAllRegistries().subscribe({
           next: (ress) => {
+            this.allRegistriesWithChecks.splice(0)
             res.forEach((registry) => {
               this.allRegistriesWithChecks.push({
                 ...registry,
@@ -91,6 +88,7 @@ export class EclExperiencesComponent {
     this.service.updateRegistry(newRegistry).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
+        this.getAllEclExpTypes()
         this.done = true
         this.isLoading = false
       },

@@ -41,6 +41,10 @@ p {
   flex-wrap: wrap;
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .specialInput {
   width: 289px;
   height: 3vh;
@@ -607,6 +611,15 @@ button:active {
   gap: 1rem;
   align-items: center;
   justify-content: center;
+}
+
+.registryStartButtons button,
+.registryEndButtons button {
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  box-shadow: unset;
+  cursor: pointer;
 }
 
 .approvedRadio {
