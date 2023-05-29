@@ -1,50 +1,50 @@
-import {Injectable} from '@nestjs/common';
-import {Knex} from 'knex';
-import {InjectModel} from 'nest-knexjs';
-import {ICreateSpouse, ISpouse, IUpdateSpouse} from '../types/types';
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import { ICreateSpouse, ISpouse, IUpdateSpouse } from '../types/types'
 
 @Injectable()
 export class SpousesModel {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
   async createSpouse(createSpouse: ICreateSpouse): Promise<void> {
-    let spouse: ISpouse | null = null;
-    let sentError: Error | null = null;
+    let spouse: ISpouse | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         const [personId] = await trx('people').insert({
           name: createSpouse.name,
           cpf: createSpouse.cpf,
-        });
+        })
 
-        const {cpf, name, ...spouseData} = createSpouse;
+        const { cpf, name, ...spouseData } = createSpouse
         const [result] = await trx('spouses').insert({
           ...spouseData,
           person_id: personId,
           spouse_approved: null,
-        });
+        })
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        await trx.rollback();
-        console.log(error);
+        await trx.rollback()
+        console.log(error)
         if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Estudante já existe');
+          sentError = new Error('Estudante já existe')
         } else {
-          sentError = new Error(error.sqlMessage);
+          sentError = new Error(error.sqlMessage)
         }
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
   }
 
   async findSpouseById(id: number): Promise<ISpouse | null> {
-    let spouse: ISpouse | null = null;
-    let sentError: Error | null = null;
+    let spouse: ISpouse | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -56,6 +56,7 @@ export class SpousesModel {
             'unions.*',
             'people.name as person_name',
             'people.person_id as person_id',
+            'people.cpf as person_cpf',
           )
           .leftJoin('users', 'spouses.person_id', 'users.person_id')
           .leftJoin('people', 'spouses.person_id', 'people.person_id')
@@ -65,10 +66,10 @@ export class SpousesModel {
             'associations.association_id',
           )
           .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-          .where('spouses.spouse_id', '=', id);
+          .where('spouses.spouse_id', '=', id)
 
         if (result.length < 1) {
-          throw new Error('Cônjuge não encontrado');
+          throw new Error('Cônjuge não encontrado')
         }
 
         spouse = {
@@ -101,26 +102,26 @@ export class SpousesModel {
           registry_number: result.registry_number,
           student_id: result.student_id,
           civil_marriage_state: result.civil_marriage_state,
-        };
+        }
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        sentError = new Error(error.message);
-        await trx.rollback();
-        throw error;
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return spouse;
+    return spouse
   }
 
   async findSpouseByUserId(userId: number): Promise<ISpouse> {
-    let spouse: ISpouse | null = null;
-    let sentError: Error | null = null;
+    let spouse: ISpouse | null = null
+    let sentError: Error | null = null
 
     try {
       const result = await this.knex('spouses')
@@ -130,6 +131,7 @@ export class SpousesModel {
           'unions.*',
           'people.name as person_name',
           'people.person_id as person_id',
+          'people.cpf as person_cpf',
         )
         .leftJoin('students', 'spouses.student_id', 'students.student_id')
         .leftJoin('users', 'students.person_id', 'users.person_id')
@@ -140,22 +142,22 @@ export class SpousesModel {
           'associations.association_id',
         )
         .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-        .where('users.user_id', '=', userId);
+        .where('users.user_id', '=', userId)
 
-      spouse = result;
+      spouse = result
     } catch (error) {
-      console.log(error);
-      sentError = new Error(error.message);
+      console.log(error)
+      sentError = new Error(error.message)
     }
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
-    return spouse!;
+    return spouse!
   }
 
   async findAllSpouses(): Promise<ISpouse[]> {
-    let spouseList: ISpouse[] = [];
-    let sentError: Error | null = null;
+    let spouseList: ISpouse[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -181,7 +183,7 @@ export class SpousesModel {
             'spouses.updated_at',
             'people.name', // Adiciona a coluna 'name' da tabela 'people'
           )
-          .leftJoin('people', 'spouses.person_id', 'people.person_id'); // Faz o left join com a tabela 'people'
+          .leftJoin('people', 'spouses.person_id', 'people.person_id') // Faz o left join com a tabela 'people'
 
         spouseList = results.map((row: any) => ({
           spouse_id: row.spouse_id,
@@ -215,25 +217,25 @@ export class SpousesModel {
           registry_number: row.registry_number,
           student_id: row.student_id,
           civil_marriage_state: row.civil_marriage_state,
-        }));
+        }))
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        await trx.rollback();
-        sentError = new Error(error.sqlMessage);
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return spouseList;
+    return spouseList
   }
 
   async updateSpouseById(updateSpouse: IUpdateSpouse): Promise<ISpouse> {
-    let updatedSpouse: ISpouse | null = null;
-    let sentError: Error | null = null;
+    let updatedSpouse: ISpouse | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -258,7 +260,7 @@ export class SpousesModel {
           spouse_approved,
           primary_school_state,
           civil_marriage_state,
-        } = updateSpouse;
+        } = updateSpouse
 
         await trx('spouses').where('spouse_id', spouse_id).update({
           phone_number,
@@ -280,49 +282,49 @@ export class SpousesModel {
           spouse_approved,
           primary_school_state,
           civil_marriage_state,
-        });
+        })
 
-        updatedSpouse = await this.findSpouseById(spouse_id);
+        updatedSpouse = await this.findSpouseById(spouse_id)
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.log(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
+        console.log(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
     if (updatedSpouse === null) {
-      throw new Error('Falha ao atualizar cônjuge.');
+      throw new Error('Falha ao atualizar cônjuge.')
     }
 
-    return updatedSpouse;
+    return updatedSpouse
   }
 
   async deleteSpouseById(id: number): Promise<string> {
-    let sentError: Error | null = null;
-    let message: string = '';
+    let sentError: Error | null = null
+    let message: string = ''
 
     await this.knex.transaction(async (trx) => {
       try {
-        await trx('spouses').where('spouse_id', id).del();
+        await trx('spouses').where('spouse_id', id).del()
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        sentError = new Error(error.message);
-        await trx.rollback();
+        sentError = new Error(error.message)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    message = 'Cônjuge excluído com sucesso.';
-    return message;
+    message = 'Cônjuge excluído com sucesso.'
+    return message
   }
 }
