@@ -1,41 +1,25 @@
-<section
-  #sectionBox
-  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
->
+<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
   <div class="boxHead">
     <span class="headField" (click)="showBox = !showBox">
-      <img
-        #expandIcon
-        class="seeMoreIcon"
-        [ngClass]="{ rotatedClock: showBox }"
-        id="seeMoreIconFormations"
-        src="assets/icons/seeMoreIcon.png"
-        alt="Expandir"
-      />
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
       <p class="sectionTitle1">{{ title }}</p>
     </span>
   </div>
   <section class="registriesWrapper">
-    <form
-      class="registryWrapper"
-      (input)="saveButton.classList.remove('hidden')"
-      (submit)="editRegistry()"
-      *ngIf="allRegistriesWithChecks.length > 0"
-    >
+    <form class="registryWrapper" (input)="saveButton.classList.remove('hidden')" (submit)="editRegistry()"
+      *ngIf="allRegistriesWithChecks.length > 0">
       <section class="formCreation">
-        <label *ngFor="let registry of allRegistriesWithChecks" class="w-full">
-          {{ registry.ecl_exp_type_name }}
-          <input name="eclExp" type="checkbox" [(ngModel)]="registry.checked" />
-        </label>
+        <div class="subSection" *ngFor="let registry of allRegistriesWithChecks; index as i">
+          <label>
+            {{ registry.ecl_exp_type_name }}
+          </label>
+          <input name="eclExp{{i}}" type="checkbox" [(ngModel)]="registry.checked" />
+        </div>
       </section>
       <section class="registryEndButtons">
-        <button type="submit">
-          <img
-            #saveButton
-            class="iconButton hidden"
-            src="assets/icons/saveIcon.svg"
-            alt="ícone para salvar registro"
-          />
+        <button class="iconButton" type="submit">
+          <img #saveButton class="iconButton hidden" src="assets/icons/saveIcon.svg" alt="ícone para salvar registro" />
         </button>
       </section>
     </form>
@@ -49,12 +33,7 @@
   <div class="errorMessage">
     <p>{{ errorMessage }}</p>
   </div>
-  <img
-    class="closeIcon"
-    src="assets/icons/closeIcon.png"
-    alt="Fechar"
-    (click)="closeError()"
-  />
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">
@@ -63,12 +42,7 @@
   <div class="doneMessage">
     <p>{{ doneMessage }}</p>
   </div>
-  <img
-    class="closeIcon"
-    src="assets/icons/closeIcon.png"
-    alt="Fechar"
-    (click)="closeDone()"
-  />
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>
