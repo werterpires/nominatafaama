@@ -78,16 +78,14 @@ export class EvgExperiencesService {
       )
   }
 
-  deleteRegistry(registryId: number): Observable<string> {
+  deleteRegistry(registryId: number): Observable<ArrayBuffer> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(
-        `http://localhost:3000/evangelistic-experiences/${registryId}`,
-        {
-          headers,
-        },
-      )
+      .delete(`http://localhost:3000/evangelistic-experiences/${registryId}`, {
+        headers,
+        responseType: 'arraybuffer',
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

@@ -62,7 +62,7 @@ export class PublicationsComponent {
 
   getAllLanguageTypes() {
     this.isLoading = true
-    this.publicationTypeService.findAllPublicationTypes().subscribe({
+    this.publicationTypeService.findAllRegistries().subscribe({
       next: (res) => {
         this.publicationTypeList = res
         this.isLoading = false
