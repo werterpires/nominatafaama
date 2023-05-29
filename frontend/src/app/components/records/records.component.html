@@ -76,16 +76,39 @@
   ></app-related-ministries>
 
   <app-spouses
-    *ngIf="permissions.estudante || permissions.administrador"
+    *ngIf="
+      (dataService.maritalStatusName == 'Casado' ||
+        dataService.maritalStatusName == 'Noivo') &&
+      (permissions.estudante || permissions.administrador)
+    "
     [permissions]="permissions"
   ></app-spouses>
   <app-sp-academic-formations
-    *ngIf="permissions.estudante || permissions.administrador"
+    *ngIf="
+      (dataService.maritalStatusName == 'Casado' ||
+        dataService.maritalStatusName == 'Noivo') &&
+      (permissions.estudante || permissions.administrador)
+    "
     [permissions]="permissions"
   ></app-sp-academic-formations>
 
   <app-ps-courses
-    *ngIf="permissions.estudante || permissions.administrador"
+    *ngIf="
+      (dataService.maritalStatusName == 'Casado' ||
+        dataService.maritalStatusName == 'Noivo') &&
+      (permissions.estudante || permissions.administrador)
+    "
     [permissions]="permissions"
   ></app-ps-courses>
+
+  <app-sp-languages
+    *ngIf="
+      (dataService.maritalStatusName == 'Casado' ||
+        dataService.maritalStatusName == 'Noivo') &&
+      (permissions.estudante || permissions.administrador)
+    "
+    [permissions]="permissions"
+  ></app-sp-languages>
+
+  <div></div>
 </div>
