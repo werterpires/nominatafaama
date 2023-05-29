@@ -60,6 +60,11 @@
     [permissions]="permissions"
   ></app-ecl-experiences>
 
+  <app-ordinations
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-ordinations>
+
   <app-spouses
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
