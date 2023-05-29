@@ -1,39 +1,40 @@
-<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadHiringStatus">
+<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
   <div class="boxHead">
-    <span class="headField" (click)="showBox()">
-      <img class="seeMoreIcon" id="seeMoreIconHiringStatus" src="assets/icons/seeMoreIcon.png" alt="">
-      <p class="sectionTitle1">Status de contratação</p>
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <p class="sectionTitle1">{{ title }}</p>
     </span>
-    <img class="addIcon hidden" id="hiring_statusAddIcon" src="assets/icons/addIcon.png"
-      alt="Criar novo status de contratação" (click)="createForm()">
+
+    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}" (click)="showForm = true" />
   </div>
-  <section>
-    <form *ngIf="creatingHiringStatus" class="formCreation">
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
         Novo Status de contratação<input class="smallInput" type="text" name="hiring_statusNameInput"
-          [(ngModel)]="createHiringStatusData.hiring_status_name">
+          [(ngModel)]="createRegistryData.hiring_status_name">
       </label>
       <label class="inputLabel">
         Descrição<input class="largeInput" type="text" name="hiring_statusAcronymInput"
-          [(ngModel)]="createHiringStatusData.hiring_status_description">
+          [(ngModel)]="createRegistryData.hiring_status_description">
       </label>
-      <button class="saveButton" type="button" (click)="createHiringStatus()">SALVAR</button>
-    </form>
-
-    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="i"
-        (editRegistry)="editHiringStatus($event.id, $event.saveButtonId)" (deleteRegistry)="deleteHiringStatus($event)"
-        *ngFor="let registry of allHiringStatus; index as i;">
-        <span class="field">
-          <p class="fieldTitle">União:</p>
-          <input class="fieldContent" [id]="'hiring_statusInput'+i" name=`hiring_statusInput${i}`
-            [(ngModel)]="allHiringStatus[i].hiring_status_name">
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Descrição:</p>
-          <input class="fieldContent" [id]="'hiring_statusAcronymInput'+i" name=`hiring_statusInput${i}`
-            [(ngModel)]="allHiringStatus[i].hiring_status_description">
-        </span>
-      </app-update-form></section>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.hiring_status_id)" *ngFor="let registry of allRegistries; index as i">
+      <span class="field">
+        <p class="fieldTitle">União:</p>
+        <input class="fieldContent" [id]="'hiring_statusInput'+i" name=`hiring_statusInput${i}`
+          [(ngModel)]="registry.hiring_status_name">
+      </span>
+      <span class="field">
+        <p class="fieldTitle">Descrição:</p>
+        <input class="fieldContent" [id]="'hiring_statusAcronymInput'+i" name=`hiring_statusInput${i}`
+          [(ngModel)]="registry.hiring_status_description">
+      </span>
+    </app-update-form>
   </section>
 </section>
 
@@ -42,19 +43,18 @@
     <p>Atenção</p>
   </div>
   <div class="errorMessage">
-    <p>{{errorMessage}}</p>
+    <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
 </div>
-
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>
   </div>
   <div class="doneMessage">
-    <p>{{doneMessage}}</p>
+    <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

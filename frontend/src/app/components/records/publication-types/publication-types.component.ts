@@ -1,8 +1,6 @@
-import {Component, Input} from '@angular/core'
-import {IPermissions} from '../../shared/container/types'
-import {DialogService} from '../../shared/shared.service.ts/dialog.service'
-import {RegistryField} from '../../shared/types'
-import {PublicationTypeService} from './publication-types.service'
+import { Component, Input } from '@angular/core'
+import { IPermissions } from '../../shared/container/types'
+import { PublicationTypeService } from './publication-types.service'
 import {
   CreatePublicationTypeDto,
   IPublicationType,
@@ -15,37 +13,34 @@ import {
   styleUrls: ['./publication-types.component.css'],
 })
 export class PublicationTypesComponent {
-  constructor(
-    private service: PublicationTypeService,
-    private dialogService: DialogService,
-  ) {}
-
   @Input() permissions!: IPermissions
-  allPublicationTypes: IPublicationType[] = []
-  fields: Array<RegistryField> = [
-    {title: 'Tipo de Publicação', column: 'publication_type'},
-    {title: 'Instruções', column: 'instructions'},
-  ]
-  creatingPublicationType: boolean = false
-  editingPublicationType: boolean = false
-  createPublicationTypeData: CreatePublicationTypeDto = {
-    publication_type: '',
+
+  allRegistries: IPublicationType[] = []
+  title = 'Tipos de Publicação'
+  createRegistryData: CreatePublicationTypeDto = {
     instructions: '',
+    publication_type: '',
   }
 
-  isLoading: boolean = false
-  done: boolean = false
-  doneMessage: string = ''
-  error: boolean = false
-  errorMessage: string = ''
+  showBox = false
+  showForm = false
+  isLoading = false
+  done = false
+  doneMessage = ''
+  error = false
+  errorMessage = ''
 
-  shownBox: boolean = false
+  constructor(private service: PublicationTypeService) {}
 
   ngOnInit() {
+    this.getAllRegistries()
+  }
+
+  getAllRegistries() {
     this.isLoading = true
-    this.service.findAllPublicationTypes().subscribe({
+    this.service.findAllRegistries().subscribe({
       next: (res) => {
-        this.allPublicationTypes = res
+        this.allRegistries = res
         this.isLoading = false
       },
       error: (err) => {
@@ -56,40 +51,36 @@ export class PublicationTypesComponent {
     })
   }
 
-  showBox() {
-    const box = document.getElementById('boxHeadPublicationTypes')
-    const add = document.getElementById('publicationTypeAddIcon')
-    const see = document.getElementById('seeMoreIconPublicationTypes')
-    this.shownBox = !this.shownBox
-    if (this.shownBox) {
-      box?.classList.replace('smallSectionBox', 'sectionBox')
-      add?.classList.remove('hidden')
-      see?.classList.add('rotatedClock')
-    } else {
-      this.creatingPublicationType = false
-      this.editingPublicationType = false
-      box?.classList.replace('sectionBox', 'smallSectionBox')
-      add?.classList.add('hidden')
-      see?.classList.remove('rotatedClock')
-    }
+  resetCreationRegistry() {
+    Object.keys(this.createRegistryData).forEach((key) => {
+      switch (typeof key) {
+        case 'boolean':
+          Object.defineProperty(this.createRegistryData, key, { value: false })
+          break
+        case 'number':
+          Object.defineProperty(this.createRegistryData, key, { value: 0 })
+          break
+        case 'string':
+          Object.defineProperty(this.createRegistryData, key, { value: '' })
+          break
+      }
+    })
   }
 
-  createForm() {
-    this.creatingPublicationType = true
-  }
-
-  createPublicationType() {
+  createRegistry() {
     this.isLoading = true
     this.service
-      .createPublicationType(this.createPublicationTypeData)
+      .createRegistry({
+        ...this.createRegistryData,
+      })
       .subscribe({
         next: (res) => {
-          this.doneMessage = 'Tipo de publicação criado com sucesso.'
+          this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.ngOnInit()
-          this.createPublicationTypeData.publication_type = ''
-          this.creatingPublicationType = false
+          this.getAllRegistries()
+          this.showForm = false
+          this.resetCreationRegistry()
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -99,57 +90,51 @@ export class PublicationTypesComponent {
       })
   }
 
-  editPublicationType(i: number, buttonId: string) {
+  editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const editPublicationTypeData: UpdatePublicationTypeDto = {
-      publication_type_id: this.allPublicationTypes[i].publication_type_id,
-      publication_type: this.allPublicationTypes[i].publication_type,
-      instructions: this.allPublicationTypes[i].instructions,
+
+    const newRegistry: Partial<IPublicationType> = {
+      ...this.allRegistries[index],
+      publication_type_id: parseInt(
+        this.allRegistries[index].publication_type_id.toString(),
+      ),
     }
 
-    this.service.updatePublicationType(editPublicationTypeData).subscribe({
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
+
+    this.service
+      .updateRegistry(newRegistry as UpdatePublicationTypeDto)
+      .subscribe({
+        next: (res) => {
+          this.doneMessage = 'Registro editado com sucesso.'
+          this.done = true
+          document.getElementById(buttonId)?.classList.add('hidden')
+          this.isLoading = false
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
+  }
+
+  deleteRegistry(id: number) {
+    this.isLoading = true
+    this.service.deleteRegistry(id).subscribe({
       next: (res) => {
-        this.doneMessage = 'Tipo de publicação editado com sucesso.'
+        this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.add('hidden')
         this.isLoading = false
+        this.ngOnInit()
       },
       error: (err) => {
-        this.errorMessage = err.message
+        this.errorMessage = 'Não foi possível remover o registro.'
         this.error = true
         this.isLoading = false
       },
     })
-  }
-
-  deletePublicationType(i: number) {
-    this.dialogService
-      .new('Confirma a remoção?', [
-        'Você tem certeza de que deseja remover este registro?',
-      ])
-      .then((confirmation) => {
-        if (this.dialogService.checkConfirmation(confirmation)) {
-          this.isLoading = true
-          const publicationTypeId =
-            this.allPublicationTypes[i].publication_type_id
-
-          this.service.deletePublicationType(publicationTypeId).subscribe({
-            next: (res) => {
-              this.doneMessage = 'Registro deletado com sucesso.'
-              this.done = true
-              this.isLoading = false
-              this.ngOnInit()
-            },
-            error: (err) => {
-              this.errorMessage = err.message
-              this.error = true
-              this.isLoading = false
-            },
-          })
-        }
-      })
   }
 
   closeError() {
@@ -158,9 +143,5 @@ export class PublicationTypesComponent {
 
   closeDone() {
     this.done = false
-  }
-
-  coisa(texto: string) {
-    console.log(texto)
   }
 }

@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
+import { Injectable } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 import {
   ICreateEvangExpTypeDto,
   IEvangExpType,
@@ -14,12 +14,14 @@ import {
 export class EvangExpTypesService {
   constructor(private http: HttpClient) {}
 
-  findAllEvangExpTypes(): Observable<IEvangExpType[]> {
+  findAllRegistries(): Observable<IEvangExpType[]> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<IEvangExpType[]>(`http://localhost:3000/evang-exp-types`, {headers})
+      .get<IEvangExpType[]>(`http://localhost:3000/evang-exp-types`, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -32,7 +34,8 @@ export class EvangExpTypesService {
         }),
       )
   }
-  createEvangExpType(
+
+  createRegistry(
     createEvangExpTypeData: ICreateEvangExpTypeDto,
   ): Observable<IEvangExpType> {
     const token = localStorage.getItem('access_token')
@@ -42,7 +45,7 @@ export class EvangExpTypesService {
       .post<IEvangExpType>(
         `http://localhost:3000/evang-exp-types`,
         createEvangExpTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
@@ -57,7 +60,7 @@ export class EvangExpTypesService {
       )
   }
 
-  editEvangExpType(
+  updateRegistry(
     editEvangExpTypeData: IUpdateEvangExpType,
   ): Observable<IEvangExpType> {
     const token = localStorage.getItem('access_token')
@@ -67,7 +70,7 @@ export class EvangExpTypesService {
       .put<IEvangExpType>(
         `http://localhost:3000/evang-exp-types`,
         editEvangExpTypeData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {

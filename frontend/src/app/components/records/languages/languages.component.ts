@@ -61,7 +61,7 @@ export class LanguagesComponent {
 
   getAllLanguageTypes() {
     this.isLoading = true
-    this.languageTypeService.findAllLanguageTypes().subscribe({
+    this.languageTypeService.findAllRegistries().subscribe({
       next: (res) => {
         this.languageTypeList = res
         this.isLoading = false

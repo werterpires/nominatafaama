@@ -137,7 +137,7 @@ export class StudentsComponent {
       },
     })
 
-    this.hiringStatusService.findAllHiringStatus().subscribe({
+    this.hiringStatusService.findAllRegistries().subscribe({
       next: (res) => {
         this.allHiringStatus = res.sort((a, b) => {
           if (a.hiring_status_name < b.hiring_status_name) {
@@ -156,7 +156,7 @@ export class StudentsComponent {
       },
     })
 
-    this.maritalStatusService.findAllMaritalStatus().subscribe({
+    this.maritalStatusService.findAllRegistries().subscribe({
       next: (res) => {
         this.allMaritalStatus = res.sort((a, b) => {
           if (a.marital_status_type_name < b.marital_status_type_name) {

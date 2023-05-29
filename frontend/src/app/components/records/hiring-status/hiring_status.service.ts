@@ -1,13 +1,13 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {Observable, throwError} from 'rxjs'
-import {catchError} from 'rxjs/operators'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable, throwError } from 'rxjs'
+import { catchError } from 'rxjs/operators'
 import {
   CreateHiringStatusDto,
   IHiringStatus,
   UpdateHiringStatusDto,
 } from './types'
-import {IUnion} from '../unions/types'
+import { IUnion } from '../unions/types'
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +15,11 @@ import {IUnion} from '../unions/types'
 export class HiringStatusService {
   constructor(private http: HttpClient) {}
 
-  findAllHiringStatus(): Observable<IHiringStatus[]> {
+  findAllRegistries(): Observable<IHiringStatus[]> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .get<IHiringStatus[]>('http://localhost:3000/hiring-status', {headers})
+      .get<IHiringStatus[]>('http://localhost:3000/hiring-status', { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -33,7 +33,7 @@ export class HiringStatusService {
       )
   }
 
-  createHiringStatus(
+  createRegistry(
     createHiringStatusData: CreateHiringStatusDto,
   ): Observable<IHiringStatus> {
     const token = localStorage.getItem('access_token')
@@ -42,7 +42,7 @@ export class HiringStatusService {
       .post<IHiringStatus>(
         'http://localhost:3000/hiring-status',
         createHiringStatusData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
@@ -54,7 +54,7 @@ export class HiringStatusService {
       )
   }
 
-  updateHiringStatus(
+  updateRegistry(
     updateHiringStatusData: UpdateHiringStatusDto,
   ): Observable<IHiringStatus> {
     const token = localStorage.getItem('access_token')
@@ -63,7 +63,7 @@ export class HiringStatusService {
       .put<IHiringStatus>(
         'http://localhost:3000/hiring-status',
         updateHiringStatusData,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {
@@ -76,13 +76,13 @@ export class HiringStatusService {
       )
   }
 
-  deleteHiringStatus(hiring_status_id: number): Observable<string> {
+  deleteRegistry(hiring_status_id: number): Observable<string> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .delete<string>(
         `http://localhost:3000/hiring-status/${hiring_status_id}`,
-        {headers},
+        { headers },
       )
       .pipe(
         catchError((error) => {

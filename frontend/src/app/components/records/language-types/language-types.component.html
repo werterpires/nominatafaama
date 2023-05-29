@@ -1,31 +1,31 @@
-<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadLanguageTypes">
+<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
   <div class="boxHead">
-    <span class="headField" (click)="showBox()">
-      <img class="seeMoreIcon" id="seeMoreIconLanguageTypes" src="assets/icons/seeMoreIcon.png" alt="">
-      <p class="sectionTitle1">Tipos de linguagem</p>
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img class="addIcon hidden" id="languageTypeAddIcon" src="assets/icons/addIcon.png"
-      alt="Criar novo tipo de linguagem" (click)="createForm()">
+    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}" (click)="showForm = true" />
   </div>
-  <section>
-    <form *ngIf="creatingLanguageType" class="formCreation">
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
         Novo tipo de linguagem
-        <input class="mediumInput" type="text" name="languageTypeInput" [(ngModel)]="createLanguageTypeData.language">
+        <input class="mediumInput" type="text" name="languageTypeInput" [(ngModel)]="createRegistryData.language">
       </label>
-
-      <button class="saveButton" type="button" (click)="createLanguageType()">SALVAR</button>
-    </form>
-    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="i"
-        (editRegistry)="editLanguageType($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
-        *ngFor="let registry of allLanguageTypes; index as i;">
-        <span class="field">
-          <p class="fieldTitle">Tipo de linguagem:</p>
-          <input class="fieldContent" [id]="'languageTypeInput'+i" name=`languageTypeInput${i}`
-            [(ngModel)]="allLanguageTypes[i].language">
-        </span>
-      </app-update-form></section>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.language_id)" *ngFor="let registry of allRegistries; index as i">
+      <span class="field">
+        <p class="fieldTitle">Tipo de linguagem:</p>
+        <input class="fieldContent" [id]="'languageTypeInput'+i" name=`languageTypeInput${i}`
+          [(ngModel)]="registry.language">
+      </span>
+    </app-update-form>
   </section>
 </section>
 
@@ -34,18 +34,18 @@
     <p>Atenção</p>
   </div>
   <div class="errorMessage">
-    <p>{{errorMessage}}</p>
+    <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>
   </div>
   <div class="doneMessage">
-    <p>{{doneMessage}}</p>
+    <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

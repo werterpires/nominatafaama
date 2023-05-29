@@ -1,13 +1,13 @@
-<section #sectionBox [ngClass]="{smallSectionBox: !showBox, sectionBox: showBox}">
+<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
   <div class="boxHead">
     <span class="headField" (click)="showBox = !showBox">
-      <img #expandIcon class="seeMoreIcon" [ngClass]="{rotatedClock: showBox}" id="seeMoreIconFormations"
-        src="assets/icons/seeMoreIcon.png" alt="Expandir">
-      <p class="sectionTitle1">{{title}}</p>
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img #addIcon class="addIcon" [ngClass]="{hidden: !showBox}" src="assets/icons/addIcon.png" alt="Criar {{title}}"
-      (click)="showForm=true">
+    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}" (click)="showForm = true" />
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
@@ -19,7 +19,7 @@
   </section>
   <section class="registriesWrapper">
     <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.degree_id)" *ngFor="let registry of allRegistries; index as i;">
+      (deleteRegistry)="deleteRegistry(registry.degree_id)" *ngFor="let registry of allRegistries; index as i">
       <label class="inputLabel">
         Novo grau acadêmico<input class="mediumInput" type="text" name="academicDegreeInput"
           [(ngModel)]="registry.degree_name">
@@ -33,18 +33,18 @@
     <p>Atenção</p>
   </div>
   <div class="errorMessage">
-    <p>{{errorMessage}}</p>
+    <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>
   </div>
   <div class="doneMessage">
-    <p>{{doneMessage}}</p>
+    <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

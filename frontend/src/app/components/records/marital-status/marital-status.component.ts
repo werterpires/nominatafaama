@@ -1,11 +1,11 @@
-import {Component, Input, Renderer2} from '@angular/core'
-import {IPermissions} from '../../shared/container/types'
+import { Component, Input } from '@angular/core'
+import { IPermissions } from '../../shared/container/types'
+import { MaritalStatusService } from './marital-status.service'
 import {
   CreateMaritalStatusDto,
   IMaritalStatus,
   IUpdateMaritalStatus,
 } from './types'
-import {MaritalStatusService} from './marital-status.service'
 
 @Component({
   selector: 'app-marital-status',
@@ -13,32 +13,33 @@ import {MaritalStatusService} from './marital-status.service'
   styleUrls: ['./marital-status.component.css'],
 })
 export class MaritalStatusComponent {
-  constructor(
-    private maritalStatusService: MaritalStatusService,
-    private renderer: Renderer2,
-  ) {}
-
   @Input() permissions!: IPermissions
-  allStatus: IMaritalStatus[] = []
-  creatingStatus: boolean = false
-  editingStatus: boolean = false
-  createMaritalStatusData: CreateMaritalStatusDto = {
+
+  allRegistries: IMaritalStatus[] = []
+  title = 'Estados Civis'
+  createRegistryData: CreateMaritalStatusDto = {
     marital_status_type_name: '',
   }
 
-  isLoading: boolean = false
-  done: boolean = false
-  doneMessage: string = ''
-  error: boolean = false
-  errorMessage: string = ''
+  showBox = false
+  showForm = false
+  isLoading = false
+  done = false
+  doneMessage = ''
+  error = false
+  errorMessage = ''
 
-  shownBox: boolean = false
+  constructor(private service: MaritalStatusService) {}
 
   ngOnInit() {
+    this.getAllRegistries()
+  }
+
+  getAllRegistries() {
     this.isLoading = true
-    this.maritalStatusService.findAllMaritalStatus().subscribe({
+    this.service.findAllRegistries().subscribe({
       next: (res) => {
-        this.allStatus = res
+        this.allRegistries = res
         this.isLoading = false
       },
       error: (err) => {
@@ -49,39 +50,36 @@ export class MaritalStatusComponent {
     })
   }
 
-  showBox() {
-    const box = document.getElementById('boxHeadMaritalStatus')
-    const add = document.getElementById('statusAddIcon')
-    const see = document.getElementById('seeMoreIconStatus')
-    this.shownBox = !this.shownBox
-    if (this.shownBox) {
-      box?.classList.replace('smallSectionBox', 'sectionBox')
-      add?.classList.remove('hidden')
-      see?.classList.add('rotatedClock')
-      this.editingStatus = false
-    } else {
-      box?.classList.replace('sectionBox', 'smallSectionBox')
-      add?.classList.add('hidden')
-      see?.classList.remove('rotatedClock')
-    }
+  resetCreationRegistry() {
+    Object.keys(this.createRegistryData).forEach((key) => {
+      switch (typeof key) {
+        case 'boolean':
+          Object.defineProperty(this.createRegistryData, key, { value: false })
+          break
+        case 'number':
+          Object.defineProperty(this.createRegistryData, key, { value: 0 })
+          break
+        case 'string':
+          Object.defineProperty(this.createRegistryData, key, { value: '' })
+          break
+      }
+    })
   }
 
-  createForm() {
-    this.creatingStatus = true
-  }
-
-  createMaritalStatus() {
+  createRegistry() {
     this.isLoading = true
-    this.maritalStatusService
-      .createMaritalStatus(this.createMaritalStatusData)
+    this.service
+      .createRegistry({
+        ...this.createRegistryData,
+      })
       .subscribe({
         next: (res) => {
-          this.doneMessage = 'Estado civil criado com sucesso.'
+          this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.ngOnInit()
-          this.createMaritalStatusData.marital_status_type_name = ''
-          this.creatingStatus = false
+          this.getAllRegistries()
+          this.showForm = false
+          this.resetCreationRegistry()
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -91,45 +89,24 @@ export class MaritalStatusComponent {
       })
   }
 
-  changeTagType(paragraphId: string, buttonId: string, inputId: string) {
-    const paragraph = document.getElementById(paragraphId)
-    const input = document.getElementById(inputId) as HTMLInputElement
-
-    if (paragraph !== null && paragraph.textContent && input !== null) {
-      input.classList.remove('hidden')
-      paragraph.classList.add('hidden')
-
-      input.value = paragraph.textContent
-      input.oninput = function () {
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.remove('hidden')
-      }
-
-      input.focus()
-
-      input.onblur = function () {
-        paragraph.textContent = input.value
-        input.classList.add('hidden')
-        paragraph.classList.remove('hidden')
-      }
-    }
-  }
-
-  editMaritalStatus(i: number, buttonId: string) {
+  editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const editStatusData: IUpdateMaritalStatus = {
-      marital_status_type_id: this.allStatus[i].marital_status_type_id,
-      marital_status_type_name: this.allStatus[i].marital_status_type_name,
+
+    const newRegistry: Partial<IMaritalStatus> = {
+      ...this.allRegistries[index],
+      marital_status_type_id: parseInt(
+        this.allRegistries[index].marital_status_type_id.toString(),
+      ),
     }
 
-    this.maritalStatusService.editMaritalStatus(editStatusData).subscribe({
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
+
+    this.service.updateRegistry(newRegistry as IUpdateMaritalStatus).subscribe({
       next: (res) => {
-        this.doneMessage = 'Estado civil editado com sucesso.'
+        this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        const button = document
-          .getElementById(buttonId)
-          ?.classList.add('hidden')
+        document.getElementById(buttonId)?.classList.add('hidden')
         this.isLoading = false
       },
       error: (err) => {
@@ -140,19 +117,17 @@ export class MaritalStatusComponent {
     })
   }
 
-  deleteRegistry(i: number) {
+  deleteRegistry(id: number) {
     this.isLoading = true
-    const associationId = this.allStatus[i].marital_status_type_id
-
-    this.maritalStatusService.deleteRegistry(associationId).subscribe({
+    this.service.deleteRegistry(id).subscribe({
       next: (res) => {
-        this.doneMessage = 'Associação deletada com sucesso.'
+        this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.isLoading = false
         this.ngOnInit()
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível deletar a associação.'
+        this.errorMessage = 'Não foi possível remover o registro.'
         this.error = true
         this.isLoading = false
       },

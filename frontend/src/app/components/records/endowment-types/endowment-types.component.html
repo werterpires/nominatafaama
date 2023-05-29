@@ -1,50 +1,47 @@
-<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadEndowmentTypes">
+<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
   <div class="boxHead">
-    <span class="headField" (click)="showBox()">
-      <img class="seeMoreIcon" id="seeMoreIconEndowmentTypes" src="assets/icons/seeMoreIcon.png" alt="">
-      <p class="sectionTitle1">Tipos de investidura</p>
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img class="addIcon hidden" id="endowmentTypeAddIcon" src="assets/icons/addIcon.png"
-      alt="Criar novo tipo de investidura" (click)="createForm()">
+    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}" (click)="showForm = true" />
   </div>
-  <section>
-    <form *ngIf="creatingEndowmentType" class="formCreation">
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
         Novo tipo de investidura
         <input class="mediumInput" type="text" name="endowmentTypeInput"
-          [(ngModel)]="createEndowmentTypeData.endowment_type_name">
+          [(ngModel)]="createRegistryData.endowment_type_name">
       </label>
       <label class="inputLabel">
         Essa investidura se aplica a que gênero?
-        <select class="smallInput" name="endowmentTypeSelect" [(ngModel)]="createEndowmentTypeData.application">
+        <select class="smallInput" name="endowmentTypeSelect" [(ngModel)]="createRegistryData.application">
           <option value=0>Ambos</option>
           <option value=1>Masculino</option>
           <option value=2>Feminino</option>
         </select>
       </label>
-
-      <button class="saveButton" type="button" (click)="createEndowmentType()">SALVAR</button>
-    </form>
-
-    <section class="registriesWrapper"><app-update-form #registryApp [registryId]="i"
-        (editRegistry)="editEndowmentType($event.id, $event.saveButtonId)" (deleteRegistry)="deleteRegistry($event)"
-        *ngFor="let registry of allEndowmentTypes; index as i;">
-        <span class="field">
-          <p class="fieldTitle">Tipo de investidura:</p>
-          <input class="fieldContent" [id]="'endowmentTypeInput'+i" name=`endowmentTypeInput${i}`
-            [(ngModel)]="allEndowmentTypes[i].endowment_type_name">
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Género a que se aplica:</p>
-          <select class="fieldContent" [id]="'applicationSelect'+i" name=`endowmentTypeInput${i}`
-            [(ngModel)]="allEndowmentTypes[i].application">
-            <option value=0>Ambos</option>
-            <option value=1>Masculino</option>
-            <option value=2>Feminino</option>
-          </select>
-        </span>
-      </app-update-form></section>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.endowment_type_id)" *ngFor="let registry of allRegistries; index as i">
+      <label class="inputLabel">
+        Novo tipo de investidura
+        <input class="mediumInput" type="text" name="endowmentTypeInput" [(ngModel)]="registry.endowment_type_name">
+      </label>
+      <label class="inputLabel">
+        Essa investidura se aplica a que gênero?
+        <select class="smallInput" name="endowmentTypeSelect" [(ngModel)]="registry.application">
+          <option value=0>Ambos</option>
+          <option value=1>Masculino</option>
+          <option value=2>Feminino</option>
+        </select>
+      </label>
+    </app-update-form>
   </section>
 </section>
 
@@ -53,18 +50,18 @@
     <p>Atenção</p>
   </div>
   <div class="errorMessage">
-    <p>{{errorMessage}}</p>
+    <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>
   </div>
   <div class="doneMessage">
-    <p>{{doneMessage}}</p>
+    <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>
