@@ -268,7 +268,6 @@ export class StudentsComponent {
         this.doneMessage = 'Estudante editado com sucesso.'
         this.done = true
         this.isLoading = false
-        this.ngOnInit()
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível atualizar o estudante.'
@@ -308,8 +307,10 @@ export class StudentsComponent {
       sigla = specificSigla
     } else if (cityType == 'birth') {
       sigla = this.registry.birth_state
+      this.allBirthCities = []
     } else if (cityType == 'school') {
       sigla = this.registry.primary_school_state
+      this.allSchoolCities = []
     }
 
     const state = this.allStates.find((state) => state.sigla === sigla)
@@ -319,8 +320,22 @@ export class StudentsComponent {
         next: (res) => {
           if (cityType == 'birth') {
             this.allBirthCities = res
+            if (
+              !this.allBirthCities.find(
+                (cit) => cit.nome === this.registry.birth_city,
+              )
+            ) {
+              this.registry.birth_city = ''
+            }
           } else if (cityType == 'school') {
             this.allSchoolCities = res
+            if (
+              !this.allSchoolCities.find(
+                (cit) => cit.nome === this.registry.primary_school_city,
+              )
+            ) {
+              this.registry.primary_school_city = ''
+            }
           }
         },
         error: (err) => {

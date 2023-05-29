@@ -1,72 +1,37 @@
-<section
-  #sectionBox
-  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
->
+<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
   <div class="boxHead">
     <span class="headField" (click)="showBox = !showBox">
-      <img
-        #expandIcon
-        class="seeMoreIcon"
-        [ngClass]="{ rotatedClock: showBox }"
-        id="seeMoreIconFormations"
-        src="assets/icons/seeMoreIcon.png"
-        alt="Expandir"
-      />
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img
-      #addIcon
-      class="addIcon"
-      [ngClass]="{ hidden: !showBox || registry.student_id }"
-      src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
-      (click)="showForm = true"
-    />
+    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox || registry.student_id }" src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}" (click)="showForm = true" />
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form *ngIf="!registry.student_id" (save)="createRegistry()">
       <div class="subSection gap-2">
         <label class="inputLabel">
-          Número de telefone<input
-            class="smallInput"
-            type="text"
-            name="studentPhoneNumberInput"
-            [(ngModel)]="registry.phone_number"
-          />
+          Número de telefone<input class="smallInput" type="text" name="studentPhoneNumberInput"
+            [(ngModel)]="registry.phone_number" />
         </label>
         <label class="inputLabel text-center">
           É WhatsApp?
-          <input
-            type="checkbox"
-            name="studentIsWhatsCheck"
-            [(ngModel)]="registry.is_whatsapp"
-          />
+          <input type="checkbox" name="studentIsWhatsCheck" [(ngModel)]="registry.is_whatsapp" />
         </label>
         <label class="inputLabel">
-          Email Alternativo<input
-            class="smallInput"
-            type="text"
-            name="studentAlternativeEmailInput"
-            [(ngModel)]="registry.alternative_email"
-          />
+          Email Alternativo<input class="smallInput" type="text" name="studentAlternativeEmailInput"
+            [(ngModel)]="registry.alternative_email" />
         </label>
       </div>
 
       <div class="subSection">
         <label class="inputLabel">
           União de origem
-          <select
-            class="smallInput"
-            name="unionSelect"
-            [(ngModel)]="registry.union_acronym"
-            (change)="filterAssociation()"
-          >
-            <option
-              *ngFor="let union of allUnions"
-              [value]="union"
-              [selected]="registry.union_acronym === union"
-            >
+          <select class="smallInput" name="unionSelect" [(ngModel)]="registry.union_acronym"
+            (change)="filterAssociation()">
+            <option *ngFor="let union of allUnions" [value]="union" [selected]="registry.union_acronym === union">
               {{ union }}
             </option>
           </select>
@@ -74,20 +39,12 @@
 
         <label class="inputLabel">
           Associação/Missão de origem
-          <select
-            class="smallMediumInput"
-            name="studentSelect"
-            [(ngModel)]="registry.origin_field_id"
-          >
-            <option
-              *ngFor="let association of possibleAssociantions"
-              [value]="association.association_id"
-              [selected]="
+          <select class="smallMediumInput" name="studentSelect" [(ngModel)]="registry.origin_field_id">
+            <option *ngFor="let association of possibleAssociantions" [value]="association.association_id" [selected]="
                 association.association_id == registry.origin_field_id
-              "
-            >
+              ">
               {{ association.association_acronym }} -{{
-                association.association_name
+              association.association_name
               }}
             </option>
           </select>
@@ -95,47 +52,27 @@
       </div>
       <label class="inputLabel w-full">
         Justifique por que você acredita ser esse o seu campo de origem
-        <input
-          class="largeInput"
-          name="justificationInput"
-          [(ngModel)]="registry.justification"
-        />
+        <input class="largeInput" name="justificationInput" [(ngModel)]="registry.justification" />
       </label>
       <div class="subSection">
         <label class="inputLabel">
           Estado civil
-          <select
-            class="smallInput"
-            name="maritalStateSelect"
-            [(ngModel)]="registry.marital_status_id"
-          >
-            <option
-              *ngFor="let status of allMaritalStatus"
-              [value]="status.marital_status_type_id"
-            >
+          <select class="smallInput" name="maritalStateSelect" [(ngModel)]="registry.marital_status_id">
+            <option *ngFor="let status of allMaritalStatus" [value]="status.marital_status_type_id">
               {{ status.marital_status_type_name }}
             </option>
           </select>
         </label>
         <label class="inputLabel">
           Data de nascimento
-          <input
-            class="dateInput"
-            type="date"
-            name="birthDateInput"
-            [(ngModel)]="registry.birth_date"
-          />
+          <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="registry.birth_date" />
         </label>
       </div>
       <div class="subSection">
         <label class="inputLabel">
           Estado de nascimento
-          <select
-            class="smallInput"
-            name="birthStateSelect"
-            [(ngModel)]="registry.birth_state"
-            (change)="findCities('birth')"
-          >
+          <select class="smallInput" name="birthStateSelect" [(ngModel)]="registry.birth_state"
+            (change)="findCities('birth')">
             <option *ngFor="let state of allStates" [value]="state.sigla">
               {{ state.nome }}
             </option>
@@ -143,16 +80,9 @@
         </label>
         <label class="inputLabel">
           Cidade de nascimento
-          <select
-            class="smallMediumInput"
-            name="birthCitySelect"
-            [(ngModel)]="registry.birth_city"
-          >
-            <option
-              *ngFor="let city of allBirthCities"
-              [value]="city.nome"
-              [selected]="city.nome === registry.birth_city"
-            >
+          <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="registry.birth_city">
+            <option *ngFor="let city of allBirthCities" [value]="city.nome"
+              [selected]="city.nome === registry.birth_city">
               {{ city.nome }}
             </option>
           </select>
@@ -161,28 +91,17 @@
       <div class="subSection">
         <label class="inputLabel">
           Estado em que completou o ensino fundamental
-          <select
-            class="smallInput"
-            name="birtStateSelect"
-            [(ngModel)]="registry.primary_school_state"
-            (change)="findCities('school')"
-          >
-            <option
-              *ngFor="let state of allStates"
-              [value]="state.sigla"
-              [selected]="state.sigla === registry.primary_school_state"
-            >
+          <select class="smallInput" name="birtStateSelect" [(ngModel)]="registry.primary_school_state"
+            (change)="findCities('school')">
+            <option *ngFor="let state of allStates" [value]="state.sigla"
+              [selected]="state.sigla === registry.primary_school_state">
               {{ state.nome }}
             </option>
           </select>
         </label>
         <label class="inputLabel">
           Cidade em que completou o ensino fundamental
-          <select
-            class="smallMediumInput"
-            name="schoollCitySelect"
-            [(ngModel)]="registry.primary_school_city"
-          >
+          <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="registry.primary_school_city">
             <option *ngFor="let city of allSchoolCities" [value]="city.nome">
               {{ city.nome }}
             </option>
@@ -193,34 +112,17 @@
       <div class="subSection">
         <label class="inputLabel">
           Data de batismo
-          <input
-            class="dateInput"
-            type="date"
-            name="baptismDateInput"
-            [(ngModel)]="registry.baptism_date"
-          />
+          <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="registry.baptism_date" />
         </label>
         <label class="inputLabel">
           IASD onde foi batizado
-          <input
-            class="smallMediumInput"
-            type="text"
-            name="baptimPlaceInput"
-            [(ngModel)]="registry.baptism_place"
-          />
+          <input class="smallMediumInput" type="text" name="baptimPlaceInput" [(ngModel)]="registry.baptism_place" />
         </label>
       </div>
       <label class="inputLabel grow-0">
         Status de contratação
-        <select
-          class="largeInput"
-          name="hiringStatusSelect"
-          [(ngModel)]="registry.hiring_status_id"
-        >
-          <option
-            *ngFor="let hiringStatus of allHiringStatus"
-            [value]="hiringStatus.hiring_status_id"
-          >
+        <select class="largeInput" name="hiringStatusSelect" [(ngModel)]="registry.hiring_status_id">
+          <option *ngFor="let hiringStatus of allHiringStatus" [value]="hiringStatus.hiring_status_id">
             {{ hiringStatus.hiring_status_name }} -
             {{ hiringStatus.hiring_status_description }}
           </option>
@@ -228,62 +130,34 @@
       </label>
       <label class="inputLabel w-full">
         Mensagem do estudante
-        <input
-          class="largeInput"
-          type="text"
-          name="studentMessageInput"
-          [(ngModel)]="registry.student_mensage"
-        />
+        <input class="largeInput" type="text" name="studentMessageInput" [(ngModel)]="registry.student_mensage" />
       </label>
     </app-creation-form>
   </section>
   <section class="registriesWrapper">
-    <app-update-form
-      (editRegistry)="editRegistry()"
-      (deleteRegistry)="deleteRegistry(registry.student_id)"
-      *ngIf="registry.student_id"
-    >
+    <app-update-form (editRegistry)="editRegistry()" (deleteRegistry)="deleteRegistry(registry.student_id)"
+      *ngIf="registry.student_id">
       <div class="subSection gap-2">
         <label class="inputLabel">
-          Número de telefone<input
-            class="smallInput"
-            type="text"
-            name="studentPhoneNumberInput"
-            [(ngModel)]="registry.phone_number"
-          />
+          Número de telefone<input class="smallInput" type="text" name="studentPhoneNumberInput"
+            [(ngModel)]="registry.phone_number" />
         </label>
         <label class="inputLabel text-center">
           É WhatsApp?
-          <input
-            type="checkbox"
-            name="studentIsWhatsCheck"
-            [(ngModel)]="registry.is_whatsapp"
-          />
+          <input type="checkbox" name="studentIsWhatsCheck" [(ngModel)]="registry.is_whatsapp" />
         </label>
         <label class="inputLabel">
-          Email Alternativo<input
-            class="smallInput"
-            type="text"
-            name="studentAlternativeEmailInput"
-            [(ngModel)]="registry.alternative_email"
-          />
+          Email Alternativo<input class="smallInput" type="text" name="studentAlternativeEmailInput"
+            [(ngModel)]="registry.alternative_email" />
         </label>
       </div>
 
       <div class="subSection">
         <label class="inputLabel">
           União de origem
-          <select
-            class="smallInput"
-            name="unionSelect"
-            [(ngModel)]="registry.union_acronym"
-            (change)="filterAssociation()"
-          >
-            <option
-              *ngFor="let union of allUnions"
-              [value]="union"
-              [selected]="registry.union_acronym === union"
-            >
+          <select class="smallInput" name="unionSelect" [(ngModel)]="registry.union_acronym"
+            (change)="filterAssociation()">
+            <option *ngFor="let union of allUnions" [value]="union" [selected]="registry.union_acronym === union">
               {{ union }}
             </option>
           </select>
@@ -291,18 +165,10 @@
 
         <label class="inputLabel">
           Associação/Missão de origem
-          <select
-            class="smallMediumInput"
-            name="studentSelect"
-            [(ngModel)]="registry.origin_field_id"
-          >
-            <option
-              *ngFor="let association of possibleAssociantions"
-              [value]="association.association_id"
-              [selected]="
+          <select class="smallMediumInput" name="studentSelect" [(ngModel)]="registry.origin_field_id">
+            <option *ngFor="let association of possibleAssociantions" [value]="association.association_id" [selected]="
                 association.association_acronym == registry.association_acronym
-              "
-            >
+              ">
               {{ association.association_acronym }} -
               {{ association.association_name }}
             </option>
@@ -311,64 +177,38 @@
       </div>
       <label class="inputLabel w-full">
         Justifique por que você acredita ser esse o seu campo de origem
-        <input
-          class="largeInput"
-          name="justificationInput"
-          [(ngModel)]="registry.justification"
-        />
+        <input class="largeInput" name="justificationInput" [(ngModel)]="registry.justification" />
       </label>
       <div class="subSection">
         <label class="inputLabel">
           Estado civil
-          <select
-            class="smallInput"
-            name="maritalStateSelect"
-            [(ngModel)]="registry.marital_status_id"
-          >
-            <option
-              *ngFor="let status of allMaritalStatus"
-              [value]="status.marital_status_type_id"
-            >
+          <select class="smallInput" name="maritalStateSelect" [(ngModel)]="registry.marital_status_id">
+            <option *ngFor="let status of allMaritalStatus" [value]="status.marital_status_type_id">
               {{ status.marital_status_type_name }}
             </option>
           </select>
         </label>
         <label class="inputLabel">
           Data de nascimento
-          <input
-            class="dateInput"
-            type="date"
-            name="birthDateInput"
-            [(ngModel)]="registry.birth_date"
-          />
+          <input class="dateInput" type="date" name="birthDateInput" [(ngModel)]="registry.birth_date" />
         </label>
       </div>
       <div class="subSection">
         <label class="inputLabel">
           Estado de nascimento
-          <select
-            class="smallInput"
-            name="birthStateSelect"
-            [(ngModel)]="registry.birth_state"
-            (change)="findCities('birth')"
-          >
-            <option *ngFor="let state of allStates" [value]="state.sigla">
+          <select class="smallInput" name="birthStateSelect" [(ngModel)]="registry.birth_state"
+            (change)="findCities('birth')">
+            <option *ngFor="let state of allStates" [value]="state.sigla"
+              [selected]="state.sigla === registry.birth_state">
               {{ state.nome }}
             </option>
           </select>
         </label>
         <label class="inputLabel">
           Cidade de nascimento
-          <select
-            class="smallMediumInput"
-            name="birthCitySelect"
-            [(ngModel)]="registry.birth_city"
-          >
-            <option
-              *ngFor="let city of allBirthCities"
-              [value]="city.nome"
-              [selected]="city.nome === registry.birth_city"
-            >
+          <select class="smallMediumInput" name="birthCitySelect" [(ngModel)]="registry.birth_city">
+            <option *ngFor="let city of allBirthCities" [value]="city.nome"
+              [selected]="city.nome === registry.birth_city">
               {{ city.nome }}
             </option>
           </select>
@@ -377,28 +217,17 @@
       <div class="subSection">
         <label class="inputLabel">
           Estado em que completou o ensino fundamental
-          <select
-            class="smallInput"
-            name="birtStateSelect"
-            [(ngModel)]="registry.primary_school_state"
-            (change)="findCities('school')"
-          >
-            <option
-              *ngFor="let state of allStates"
-              [value]="state.sigla"
-              [selected]="state.sigla === registry.primary_school_state"
-            >
+          <select class="smallInput" name="schoolStateSelect" [(ngModel)]="registry.primary_school_state"
+            (change)="findCities('school')">
+            <option *ngFor="let state of allStates" [value]="state.sigla"
+              [selected]="state.sigla === registry.primary_school_state">
               {{ state.nome }}
             </option>
           </select>
         </label>
         <label class="inputLabel">
           Cidade em que completou o ensino fundamental
-          <select
-            class="smallMediumInput"
-            name="schoollCitySelect"
-            [(ngModel)]="registry.primary_school_city"
-          >
+          <select class="smallMediumInput" name="schoollCitySelect" [(ngModel)]="registry.primary_school_city">
             <option *ngFor="let city of allSchoolCities" [value]="city.nome">
               {{ city.nome }}
             </option>
@@ -409,34 +238,17 @@
       <div class="subSection">
         <label class="inputLabel">
           Data de batismo
-          <input
-            class="dateInput"
-            type="date"
-            name="baptismDateInput"
-            [(ngModel)]="registry.baptism_date"
-          />
+          <input class="dateInput" type="date" name="baptismDateInput" [(ngModel)]="registry.baptism_date" />
         </label>
         <label class="inputLabel">
           IASD onde foi batizado
-          <input
-            class="smallMediumInput"
-            type="text"
-            name="baptimPlaceInput"
-            [(ngModel)]="registry.baptism_place"
-          />
+          <input class="smallMediumInput" type="text" name="baptimPlaceInput" [(ngModel)]="registry.baptism_place" />
         </label>
       </div>
       <label class="inputLabel grow-0">
         Status de contratação
-        <select
-          class="largeInput"
-          name="hiringStatusSelect"
-          [(ngModel)]="registry.hiring_status_id"
-        >
-          <option
-            *ngFor="let hiringStatus of allHiringStatus"
-            [value]="hiringStatus.hiring_status_id"
-          >
+        <select class="largeInput" name="hiringStatusSelect" [(ngModel)]="registry.hiring_status_id">
+          <option *ngFor="let hiringStatus of allHiringStatus" [value]="hiringStatus.hiring_status_id">
             {{ hiringStatus.hiring_status_name }} -
             {{ hiringStatus.hiring_status_description }}
           </option>
@@ -444,13 +256,30 @@
       </label>
       <label class="inputLabel w-full">
         Mensagem do estudante
-        <input
-          class="largeInput"
-          type="text"
-          name="studentMessageInput"
-          [(ngModel)]="registry.student_mensage"
-        />
+        <input class="largeInput" type="text" name="studentMessageInput" [(ngModel)]="registry.student_mensage" />
       </label>
     </app-update-form>
   </section>
 </section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
