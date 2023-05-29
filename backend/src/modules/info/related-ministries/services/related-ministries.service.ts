@@ -1,13 +1,13 @@
-import {Injectable} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import {
   IRelatedMinistry,
   ICreateRelatedMinistry,
   IUpdateRelatedMinistry,
 } from '../types/types'
-import {RelatedMinistriesModel} from '../model/related-ministries.model'
-import {CreateRelatedMinistryDto} from '../dto/create-related-ministry.dto'
-import {UpdateRelatedMinistryDto} from '../dto/update-related-ministry.dto'
-import {PeopleServices} from 'src/modules/people/dz_services/people.service'
+import { RelatedMinistriesModel } from '../model/related-ministries.model'
+import { CreateRelatedMinistryDto } from '../dto/create-related-ministry.dto'
+import { UpdateRelatedMinistryDto } from '../dto/update-related-ministry.dto'
+import { PeopleServices } from 'src/modules/people/dz_services/people.service'
 
 @Injectable()
 export class RelatedMinistriesService {
@@ -107,7 +107,9 @@ export class RelatedMinistriesService {
         )
 
       const updatedRelatedMinistry =
-        this.relatedMinistriesModel.findRelatedMinistryById(relatedMinistryId)
+        this.relatedMinistriesModel.findRelatedMinistryById(
+          dto.related_ministry_id,
+        )
 
       return updatedRelatedMinistry
     } catch (error) {
