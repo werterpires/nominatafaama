@@ -1,15 +1,15 @@
-import {Injectable} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import {
   IPublication,
   ICreatePublication,
   IUpdatePublication,
 } from '../types/types'
-import {UsersService} from 'src/modules/users/dz_services/users.service'
-import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
-import {PublicationsModel} from '../model/publications.model'
-import {CreatePublicationDto} from '../dto/create-publication.dto'
-import {UpdatePublicationDto} from '../dto/update-publication.dto'
-import {PeopleServices} from 'src/modules/people/dz_services/people.service'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
+import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
+import { PublicationsModel } from '../model/publications.model'
+import { CreatePublicationDto } from '../dto/create-publication.dto'
+import { UpdatePublicationDto } from '../dto/update-publication.dto'
+import { PeopleServices } from 'src/modules/people/dz_services/people.service'
 
 @Injectable()
 export class PublicationsService {
@@ -28,6 +28,7 @@ export class PublicationsService {
         user_id,
         personType,
       )
+      console.log(personType)
 
       const createPublicationData: ICreatePublication = {
         ...dto,

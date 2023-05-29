@@ -1,34 +1,29 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { LanguageTypesService } from '../language-types/language-types.service'
-import { ILanguageType } from '../language-types/types'
-import { LanguageService } from '../languages/language.service'
+import { PublicationTypeService } from '../publication-types/publication-types.service'
+import { IPublicationType } from '../publication-types/types'
 import {
-  ILanguage,
-  ICreateLanguageDto,
-  IUpdateLanguageDto,
-} from '../languages/types'
-import { SpLanguageService } from './sp-language.service'
+  CreatePublicationDto,
+  IPublication,
+  UpdatePublicationDto,
+} from '../publications/types'
+import { SpPublicationsService } from './sp-publications.service'
 
 @Component({
-  selector: 'app-sp-languages',
-  templateUrl: './sp-languages.component.html',
-  styleUrls: ['./sp-languages.component.css'],
+  selector: 'app-sp-publications',
+  templateUrl: './sp-publications.component.html',
+  styleUrls: ['./sp-publications.component.css'],
 })
-export class SpLanguagesComponent {
+export class SpPublicationsComponent {
   @Input() permissions!: IPermissions
 
-  allRegistries: ILanguage[] = []
-  languageTypeList: Array<ILanguageType> = []
-  title = 'Linguagens'
-  createRegistryData: ICreateLanguageDto = {
-    chosen_language: 0,
-    read: false,
-    understand: false,
-    speak: false,
-    write: false,
-    fluent: false,
-    unknown: false,
+  allRegistries: IPublication[] = []
+  publicationTypeList: Array<IPublicationType> = []
+  title = 'Publicações'
+  createRegistryData: CreatePublicationDto = {
+    link: '',
+    publication_type_id: 0,
+    reference: '',
   }
 
   showBox = false
@@ -40,8 +35,8 @@ export class SpLanguagesComponent {
   errorMessage = ''
 
   constructor(
-    private service: SpLanguageService,
-    private languageTypeService: LanguageTypesService,
+    private service: SpPublicationsService,
+    private publicationTypeService: PublicationTypeService,
   ) {}
 
   ngOnInit() {
@@ -66,9 +61,9 @@ export class SpLanguagesComponent {
 
   getAllLanguageTypes() {
     this.isLoading = true
-    this.languageTypeService.findAllRegistries().subscribe({
+    this.publicationTypeService.findAllRegistries().subscribe({
       next: (res) => {
-        this.languageTypeList = res
+        this.publicationTypeList = res
         this.isLoading = false
       },
       error: (err) => {
@@ -100,8 +95,8 @@ export class SpLanguagesComponent {
     this.service
       .createRegistry({
         ...this.createRegistryData,
-        chosen_language: parseInt(
-          this.createRegistryData.chosen_language.toString(),
+        publication_type_id: parseInt(
+          this.createRegistryData.publication_type_id.toString(),
         ),
       })
       .subscribe({
@@ -123,17 +118,19 @@ export class SpLanguagesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-
-    const newRegistry: Partial<ILanguage> = {
+    const newRegistry: Partial<IPublication> = {
       ...this.allRegistries[index],
+      publication_type_id: parseInt(
+        this.allRegistries[index].publication_type_id.toString(),
+      ),
     }
-
     delete newRegistry.created_at
     delete newRegistry.updated_at
-    delete newRegistry.language_approved
-    delete newRegistry.language
+    delete newRegistry.instructions
+    delete newRegistry.publication_approved
+    delete newRegistry.publication_type
 
-    this.service.updateRegistry(newRegistry as IUpdateLanguageDto).subscribe({
+    this.service.updateRegistry(newRegistry as UpdatePublicationDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true

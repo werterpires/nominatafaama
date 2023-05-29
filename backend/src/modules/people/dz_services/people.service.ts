@@ -1,10 +1,10 @@
-import {Injectable} from '@nestjs/common'
-import {CreatePersonDto} from '../az_dto/createPeopleDto'
-import {PeopleModel} from '../ez_model/people.model'
-import {UpdatePersonDto} from '../az_dto/updatePeopleDto'
-import {IPerson} from '../bz_types/types'
-import {UsersModel} from 'src/modules/users/ez_model/users.model'
-import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
+import { Injectable } from '@nestjs/common'
+import { CreatePersonDto } from '../az_dto/createPeopleDto'
+import { PeopleModel } from '../ez_model/people.model'
+import { UpdatePersonDto } from '../az_dto/updatePeopleDto'
+import { IPerson } from '../bz_types/types'
+import { UsersModel } from 'src/modules/users/ez_model/users.model'
+import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
 
 @Injectable()
 export class PeopleServices {
@@ -14,7 +14,7 @@ export class PeopleServices {
     private spouseModel: SpousesModel,
   ) {}
 
-  async createPerson({name, cpf}: CreatePersonDto) {
+  async createPerson({ name, cpf }: CreatePersonDto) {
     const person = await this.peopleModel.createPerson({
       name,
       cpf,
@@ -51,8 +51,10 @@ export class PeopleServices {
       if (personType === 'student') {
         personId = (await this.usersModel.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
+        console.log(personType)
         personId = (await this.spouseModel.findSpouseByUserId(user_id))
           .person_id
+        console.log(personId)
       }
     } catch (error) {
       throw error

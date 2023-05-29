@@ -45,7 +45,9 @@ import { OrdinationsComponent } from './components/records/ordinations/ordinatio
 import { RelatedMinistriesComponent } from './components/records/related-ministries/related-ministries.component';
 import { EndowmentsComponent } from './components/records/endowments/endowments.component';
 import { PsCoursesComponent } from './components/records/ps-courses/ps-courses.component';
-import { SpLanguagesComponent } from './components/records/sp-languages/sp-languages.component'
+import { SpLanguagesComponent } from './components/records/sp-languages/sp-languages.component';
+import { SpPublicationsComponent } from './components/records/sp-publications/sp-publications.component';
+import { SpProfessionalExperiencesComponent } from './components/records/sp-professional-experiences/sp-professional-experiences.component'
 
 @NgModule({
   declarations: [
@@ -90,6 +92,8 @@ import { SpLanguagesComponent } from './components/records/sp-languages/sp-langu
     EndowmentsComponent,
     PsCoursesComponent,
     SpLanguagesComponent,
+    SpPublicationsComponent,
+    SpProfessionalExperiencesComponent,
   ],
   imports: [
     BrowserModule,

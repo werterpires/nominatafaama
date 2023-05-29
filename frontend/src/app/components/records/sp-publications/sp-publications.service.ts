@@ -1,30 +1,25 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable, throwError } from 'rxjs'
-import { catchError } from 'rxjs/operators'
+import { Observable, catchError, throwError } from 'rxjs'
 import {
-  CreatePublicationDto,
   IPublication,
+  CreatePublicationDto,
   UpdatePublicationDto,
-} from './types'
+} from '../publications/types'
 
 @Injectable({
   providedIn: 'root',
 })
-export class PublicationsService {
+export class SpPublicationsService {
   constructor(private http: HttpClient) {}
 
   findAllRegistries(): Observable<IPublication[]> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-    console.log('criando livro pro Marido')
     return this.http
-      .get<IPublication[]>(
-        'http://localhost:3000/publications/person/student',
-        {
-          headers: head_obj,
-        },
-      )
+      .get<IPublication[]>('http://localhost:3000/publications/person/spouse', {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -38,9 +33,10 @@ export class PublicationsService {
   createRegistry(newRegistry: CreatePublicationDto): Observable<IPublication> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    console.log('criando livro pra esposa')
     return this.http
       .post<IPublication>(
-        'http://localhost:3000/publications/student',
+        'http://localhost:3000/publications/spouse',
         newRegistry,
         {
           headers: head_obj,

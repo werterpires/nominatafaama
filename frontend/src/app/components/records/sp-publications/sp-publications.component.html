@@ -1,0 +1,140 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+
+    <img
+      #addIcon
+      class="addIcon"
+      [ngClass]="{ hidden: !showBox }"
+      src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}"
+      (click)="showForm = true"
+    />
+  </div>
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
+      <div class="subSection">
+        <label class="w-full">
+          Tipo de publicação:
+          <select
+            name="degreeSelect"
+            [(ngModel)]="createRegistryData.publication_type_id"
+          >
+            <option
+              *ngFor="let publicationType of publicationTypeList"
+              [value]="publicationType.publication_type_id"
+            >
+              {{ publicationType.publication_type }}
+            </option>
+          </select>
+        </label>
+      </div>
+      <div class="subSection">
+        <label>
+          Referência
+          <input
+            type="text"
+            name="courseArea"
+            [(ngModel)]="createRegistryData.reference"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label>
+          Link
+          <input
+            type="text"
+            name="courseArea"
+            [(ngModel)]="createRegistryData.link"
+          />
+        </label>
+      </div>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.publication_id)"
+      *ngFor="let registry of allRegistries; index as i"
+    >
+      <div class="subSection">
+        <label class="w-full">
+          Tipo de publicação:
+          <select
+            name="degreeSelect"
+            [(ngModel)]="registry.publication_type_id"
+          >
+            <option
+              *ngFor="let publicationType of publicationTypeList"
+              [value]="publicationType.publication_type_id"
+            >
+              {{ publicationType.publication_type }}
+            </option>
+          </select>
+        </label>
+      </div>
+      <div class="subSection">
+        <label>
+          Referência
+          <input
+            type="text"
+            name="courseArea"
+            [(ngModel)]="registry.reference"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label>
+          Link
+          <input type="text" name="courseArea" [(ngModel)]="registry.link" />
+        </label>
+      </div>
+    </app-update-form>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
