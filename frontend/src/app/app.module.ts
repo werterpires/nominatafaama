@@ -40,7 +40,9 @@ import { StCoursesComponent } from './components/records/st-courses/st-courses.c
 import { PublicationsComponent } from './components/records/publications/publications.component';
 import { ProfessionalExperiencesComponent } from './components/records/professional-experiences/professional-experiences.component';
 import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ecl-exps.component';
-import { EclExperiencesComponent } from './components/records/ecl-experiences/ecl-experiences.component'
+import { EclExperiencesComponent } from './components/records/ecl-experiences/ecl-experiences.component';
+import { OrdinationsComponent } from './components/records/ordinations/ordinations.component';
+import { RelatedMinistriesComponent } from './components/records/related-ministries/related-ministries.component'
 
 @NgModule({
   declarations: [
@@ -80,6 +82,8 @@ import { EclExperiencesComponent } from './components/records/ecl-experiences/ec
     ProfessionalExperiencesComponent,
     PastEclExpsComponent,
     EclExperiencesComponent,
+    OrdinationsComponent,
+    RelatedMinistriesComponent,
   ],
   imports: [
     BrowserModule,
