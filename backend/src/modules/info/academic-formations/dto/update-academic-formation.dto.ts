@@ -1,12 +1,4 @@
-import {
-  IsOptional,
-  IsString,
-  Length,
-  IsDateString,
-  IsInt,
-  Min,
-  IsBoolean,
-} from 'class-validator'
+import { IsInt, IsOptional, IsString, Length, Min } from 'class-validator'
 
 export class UpdateAcademicFormationDto {
   @IsString()
@@ -17,11 +9,11 @@ export class UpdateAcademicFormationDto {
   @Length(1, 250)
   institution: string
 
-  @IsDateString()
+  @IsString()
   begin_date: string
 
   @IsOptional()
-  @IsDateString()
+  @IsString()
   conclusion_date: string | null
 
   @IsInt()
