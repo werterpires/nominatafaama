@@ -43,7 +43,9 @@ import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ec
 import { EclExperiencesComponent } from './components/records/ecl-experiences/ecl-experiences.component';
 import { OrdinationsComponent } from './components/records/ordinations/ordinations.component';
 import { RelatedMinistriesComponent } from './components/records/related-ministries/related-ministries.component';
-import { EndowmentsComponent } from './components/records/endowments/endowments.component'
+import { EndowmentsComponent } from './components/records/endowments/endowments.component';
+import { PsCoursesComponent } from './components/records/ps-courses/ps-courses.component';
+import { SpLanguagesComponent } from './components/records/sp-languages/sp-languages.component'
 
 @NgModule({
   declarations: [
@@ -86,6 +88,8 @@ import { EndowmentsComponent } from './components/records/endowments/endowments.
     OrdinationsComponent,
     RelatedMinistriesComponent,
     EndowmentsComponent,
+    PsCoursesComponent,
+    SpLanguagesComponent,
   ],
   imports: [
     BrowserModule,

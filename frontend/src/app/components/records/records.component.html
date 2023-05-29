@@ -83,4 +83,9 @@
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-sp-academic-formations>
+
+  <app-ps-courses
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-ps-courses>
 </div>
