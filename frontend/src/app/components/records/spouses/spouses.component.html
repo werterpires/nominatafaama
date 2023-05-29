@@ -26,7 +26,7 @@
         É WhatsApp? <input type="checkbox" name="spouseIsWhatsCheck" [(ngModel)]="createRegistryData.is_whatsapp">
       </label>
       <label class="inputLabel">
-        Email Alternativo<input class="smallInput" type="text" name="spouseAlternativeEmailInput"
+        Email<input class="smallInput" type="text" name="spouseAlternativeEmailInput"
           [(ngModel)]="createRegistryData.alternative_email">
       </label>
       <label class="inputLabel">
@@ -72,7 +72,7 @@
 
       <label class="inputLabel">
         Estado em que completou o ensino fundamental
-        <select class="smallInput" name="birtStateSelect" [(ngModel)]="createRegistryData.birth_state"
+        <select class="smallInput" name="birtStateSelect" [(ngModel)]="createRegistryData.primary_school_state"
           (change)="findCities('school')">
           <option *ngFor="let state of allStates" [value]="state.sigla">{{state.nome}}</option>
         </select>

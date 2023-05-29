@@ -245,19 +245,34 @@ export class SpousesComponent {
   }
 
   filterAssociation() {
-    this.possibleAssociantions = this.allAssociations.filter((association) => {
-      return association.union_acronym == this.registry.union_acronym
-    })
+    if (this.registry) {
+      this.possibleAssociantions = this.allAssociations.filter(
+        (association) => {
+          return association.union_acronym == this.registry.union_acronym
+        },
+      )
+    } else if (this.selectedUnion) {
+      this.possibleAssociantions = this.allAssociations.filter(
+        (association) => {
+          return association.union_acronym == this.selectedUnion
+        },
+      )
+    }
   }
 
   findCities(cityType: string) {
     let sigla = ''
     if (cityType == 'birth') {
-      sigla = this.registry.birth_state
+      sigla = this.registry?.birth_state || this.createRegistryData.birth_state
     } else if (cityType == 'school') {
-      sigla = this.registry.primary_school_state
+      sigla =
+        this.registry?.primary_school_state ||
+        this.createRegistryData.primary_school_state
     } else if (cityType == 'merry') {
-      sigla = this.registry.civil_marriage_state || ''
+      sigla =
+        this.registry?.civil_marriage_state ||
+        this.createRegistryData.civil_marriage_state ||
+        ''
     }
 
     const state = this.allStates.find((st) => st.sigla === sigla)
