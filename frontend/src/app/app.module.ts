@@ -48,7 +48,8 @@ import { PsCoursesComponent } from './components/records/ps-courses/ps-courses.c
 import { SpLanguagesComponent } from './components/records/sp-languages/sp-languages.component';
 import { SpPublicationsComponent } from './components/records/sp-publications/sp-publications.component';
 import { SpProfessionalExperiencesComponent } from './components/records/sp-professional-experiences/sp-professional-experiences.component';
-import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-past-ecl-exp.component'
+import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-past-ecl-exp.component';
+import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-endowments.component'
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-p
     SpPublicationsComponent,
     SpProfessionalExperiencesComponent,
     SpPastEclExpComponent,
+    SpEndowmentsComponent,
   ],
   imports: [
     BrowserModule,
