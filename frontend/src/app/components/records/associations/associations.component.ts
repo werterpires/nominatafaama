@@ -65,7 +65,7 @@ export class AssociationsComponent {
 
   getAllUnions() {
     this.isLoading = true
-    this.unionService.findAllUnions().subscribe({
+    this.unionService.findAllRegistries().subscribe({
       next: (res) => {
         this.allUnions = res.sort((a, b) => {
           if (a.union_name < b.union_name) {

@@ -1,36 +1,41 @@
-<section *ngIf="permissions.secretaria || permissions.administrador" class="smallSectionBox" id="boxHeadUnions">
+<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
   <div class="boxHead">
-    <span class="headField" (click)="showBox()">
-      <img class="seeMoreIcon" id="seeMoreIconUnions" src="assets/icons/seeMoreIcon.png" alt="">
-      <p class="sectionTitle1">Uniões</p>
+    <span class="headField" (click)="showBox = !showBox">
+      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <p class="sectionTitle1">{{ title }}</p>
     </span>
-    <img class="addIcon hidden" id="unionAddIcon" src="assets/icons/addIcon.png" alt="Criar nova união"
-      (click)="createForm()">
+
+    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}" (click)="showForm = true" />
   </div>
-  <section>
-    <form *ngIf="creatingUnion" class="formCreation">
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
-        Nova União<input class="mediumInput" type="text" name="unionNameInput" [(ngModel)]="createUnionData.union_name">
+        Nova União<input class="mediumInput" type="text" name="unionNameInput"
+          [(ngModel)]="createRegistryData.union_name">
       </label>
       <label class="inputLabel">
-        SIGLA<input class="smallInput" type="text" name="unionAcronymInput" [(ngModel)]="createUnionData.union_acronym">
+        SIGLA<input class="smallInput" type="text" name="unionAcronymInput"
+          [(ngModel)]="createRegistryData.union_acronym">
       </label>
-      <button class="saveButton" type="button" (click)="createUnion()">SALVAR</button>
-    </form>
-    <section class="registriesWrapper">
-      <app-update-form #registryApp [registryId]="i" (editRegistry)="editUnion($event.id, $event.saveButtonId)"
-        (deleteRegistry)="deleteUnion($event)" *ngFor="let registry of allUnions; index as i;">
-        <span class="field">
-          <p class="fieldTitle">União:</p>
-          <input class="fieldContent" [id]="'unionInput'+i" name=`unionInput${i}` [(ngModel)]="allUnions[i].union_name">
-        </span>
-        <span class="field">
-          <p class="fieldTitle">Sigla:</p>
-          <input class="fieldContent" [id]="'unionAcronymInput'+i" name=`unionInput${i}`
-            [(ngModel)]="allUnions[i].union_acronym">
-        </span>
-      </app-update-form>
-    </section>
+
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.union_id)" *ngFor="let registry of allRegistries; index as i">
+      <span class="field">
+        <p class="fieldTitle">União:</p>
+        <input class="fieldContent" [id]="'unionInput'+i" name=`unionInput${i}` [(ngModel)]="registry.union_name">
+      </span>
+      <span class="field">
+        <p class="fieldTitle">Sigla:</p>
+        <input class="fieldContent" [id]="'unionAcronymInput'+i" name=`unionInput${i}`
+          [(ngModel)]="registry.union_acronym">
+      </span>
+
+    </app-update-form>
   </section>
 </section>
 
@@ -39,19 +44,18 @@
     <p>Atenção</p>
   </div>
   <div class="errorMessage">
-    <p>{{errorMessage}}</p>
+    <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
 </div>
-
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>
   </div>
   <div class="doneMessage">
-    <p>{{doneMessage}}</p>
+    <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>
