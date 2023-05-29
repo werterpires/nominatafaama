@@ -55,6 +55,11 @@
     [permissions]="permissions"
   ></app-evg-experiences>
 
+  <app-ecl-experiences
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-ecl-experiences>
+
   <app-spouses
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"

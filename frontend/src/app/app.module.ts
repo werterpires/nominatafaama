@@ -39,7 +39,8 @@ import { UpdateFormComponent } from './components/shared/update-form/update-form
 import { StCoursesComponent } from './components/records/st-courses/st-courses.component';
 import { PublicationsComponent } from './components/records/publications/publications.component';
 import { ProfessionalExperiencesComponent } from './components/records/professional-experiences/professional-experiences.component';
-import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ecl-exps.component'
+import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ecl-exps.component';
+import { EclExperiencesComponent } from './components/records/ecl-experiences/ecl-experiences.component'
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ec
     PublicationsComponent,
     ProfessionalExperiencesComponent,
     PastEclExpsComponent,
+    EclExperiencesComponent,
   ],
   imports: [
     BrowserModule,
