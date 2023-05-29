@@ -1,10 +1,9 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreateEclExperience,
   IEclExperience,
-  IUpdateEclExperience,
   IUpdateEclExperiences,
 } from '../types/types'
 
@@ -15,31 +14,33 @@ export class EclExperiencesModel {
   async createEclExperience(
     createEclExperienceData: ICreateEclExperience,
   ): Promise<IEclExperience> {
-    let eclExperience: IEclExperience | null = null
+    let eclExperiences: IEclExperience[] | null = null
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {person_id, ecl_exp_type_id, ecl_exp_approved} =
+        const { person_id, ecl_exp_type_id, ecl_exp_approved } =
           createEclExperienceData
 
-        const [result] = await trx('ecl_experiences').insert({
-          person_id,
-          ecl_exp_type_id,
-          ecl_exp_approved,
+        const experiences: {
+          person_id: number
+          ecl_exp_type_id: number
+          ecl_exp_approved: boolean | null
+        }[] = []
+
+        ecl_exp_type_id.forEach((exp) => {
+          experiences.push({
+            ecl_exp_approved: ecl_exp_approved,
+            person_id: person_id,
+            ecl_exp_type_id: exp,
+          })
         })
 
-        eclExperience = {
-          ecl_exp_id: result,
-          person_id,
-          ecl_exp_type_id,
-          ecl_exp_approved: null,
-          created_at: new Date(),
-          updated_at: new Date(),
-          ecl_exp_type_name: 'experiência',
-        }
+        const [result] = await trx('ecl_experiences').insert(experiences)
 
         await trx.commit()
+
+        eclExperiences = await this.findEclExperiencesByPersonId(person_id)
       } catch (error) {
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
@@ -54,7 +55,10 @@ export class EclExperiencesModel {
       throw sentError
     }
 
-    return eclExperience!
+    if (eclExperiences == null) {
+      throw new Error('Experiências eclesiásticas não encontradas.')
+    }
+    return eclExperiences
   }
 
   async findEclExperienceById(id: number): Promise<IEclExperience | null> {
@@ -184,21 +188,36 @@ export class EclExperiencesModel {
     return eclExperiencesList
   }
 
-  async updateEclExperienceById(
-    updateEclExperience: IUpdateEclExperience,
-  ): Promise<IEclExperience> {
+  async updateEclExperienceByPersonId(
+    updateEclExperience: IUpdateEclExperiences,
+  ): Promise<void> {
     let updatedEclExperience: IEclExperience | null = null
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {ecl_exp_id, ecl_exp_type_id} = updateEclExperience
+        const { person_id, ecl_exp_type_ids, ecl_exp_approved } =
+          updateEclExperience
 
-        await trx('ecl_experiences').where('ecl_exp_id', ecl_exp_id).update({
-          ecl_exp_type_id,
+        const experiences: {
+          person_id: number
+          ecl_exp_type_id: number
+          ecl_exp_approved: boolean | null
+        }[] = []
+
+        ecl_exp_type_ids.forEach((exp) => {
+          experiences.push({
+            ecl_exp_approved: ecl_exp_approved,
+            person_id: person_id,
+            ecl_exp_type_id: exp,
+          })
         })
+        console.log(updateEclExperience, experiences)
+        await trx('ecl_experiences').where('person_id', person_id).delete()
 
-        updatedEclExperience = await this.findEclExperienceById(ecl_exp_id)
+        if (experiences.length > 0) {
+          const result = await trx('ecl_experiences').insert(experiences)
+        }
 
         await trx.commit()
       } catch (error) {
@@ -210,12 +229,6 @@ export class EclExperiencesModel {
     if (sentError) {
       throw sentError
     }
-
-    if (!updatedEclExperience) {
-      throw new Error('Ecl Experience not found')
-    }
-
-    return updatedEclExperience
   }
 
   async updateEclExperiences(input: IUpdateEclExperiences): Promise<void> {
@@ -223,7 +236,7 @@ export class EclExperiencesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {person_id, ecl_exp_type_ids} = input
+        const { person_id, ecl_exp_type_ids } = input
 
         await trx('ecl_experiences')
           .where('person_id', person_id)

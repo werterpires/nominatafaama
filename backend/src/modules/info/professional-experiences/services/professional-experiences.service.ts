@@ -1,14 +1,14 @@
-import {Injectable} from '@nestjs/common'
-import {ProfessionalExperiencesModel} from '../model/professional-experiences.model'
-import {CreateProfessionalExperienceDto} from '../dto/create-professional-experience.dto'
-import {UpdateProfessionalExperienceDto} from '../dto/update-professional-experience.dto'
+import { Injectable } from '@nestjs/common'
+import { ProfessionalExperiencesModel } from '../model/professional-experiences.model'
+import { CreateProfessionalExperienceDto } from '../dto/create-professional-experience.dto'
+import { UpdateProfessionalExperienceDto } from '../dto/update-professional-experience.dto'
 import {
   IProfessionalExperience,
   ICreateProfessionalExperience,
   IUpdateProfessionalExperience,
 } from '../types/types'
-import {UsersService} from 'src/modules/users/dz_services/users.service'
-import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
+import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
 
 @Injectable()
 export class ProfessionalExperiencesService {
@@ -109,6 +109,8 @@ export class ProfessionalExperiencesService {
         job_end_date: dto.job_end_date ? new Date(dto.job_end_date) : null,
         experience_approved: null,
       }
+
+      console.log(dto)
 
       const updatedExperience =
         await this.experiencesModel.updateProfessionalExperienceById(

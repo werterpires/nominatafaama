@@ -1,24 +1,28 @@
 import { Component, Input } from '@angular/core'
-import { ICourse, ICreateCourse, IUpdateCourse } from './types'
-import { StCoursesService } from './st-courses.service'
-import { DataService } from '../../shared/shared.service.ts/data.service'
 import { IPermissions } from '../../shared/container/types'
+import {
+  CreateProfessionalExperienceDto,
+  IProfessionalExperience,
+  UpdateProfessionalExperienceDto,
+} from './types'
+import { ProfessionalExperiencesService } from './professional-experiences.service'
+import { DataService } from '../../shared/shared.service.ts/data.service'
 
 @Component({
-  selector: 'app-st-courses',
-  templateUrl: './st-courses.component.html',
-  styleUrls: ['./st-courses.component.css'],
+  selector: 'app-professional-experiences',
+  templateUrl: './professional-experiences.component.html',
+  styleUrls: ['./professional-experiences.component.css'],
 })
-export class StCoursesComponent {
+export class ProfessionalExperiencesComponent {
   @Input() permissions!: IPermissions
 
-  allRegistries: ICourse[] = []
-  title = 'Cursos e Capacitações'
-  createRegistryData: ICreateCourse = {
-    begin_date: '',
-    course_area: '',
-    institution: '',
-    conclusion_date: '',
+  allRegistries: IProfessionalExperience[] = []
+  title = 'Experiências profissionais'
+  createRegistryData: CreateProfessionalExperienceDto = {
+    job: '',
+    job_begin_date: '',
+    job_end_date: '',
+    job_institution: '',
   }
 
   showBox = false
@@ -30,7 +34,7 @@ export class StCoursesComponent {
   errorMessage = ''
 
   constructor(
-    private service: StCoursesService,
+    private service: ProfessionalExperiencesService,
     private dataService: DataService,
   ) {}
 
@@ -74,14 +78,12 @@ export class StCoursesComponent {
     this.service
       .createRegistry({
         ...this.createRegistryData,
-        begin_date: this.dataService.dateFormatter(
-          this.createRegistryData.begin_date,
+        job_begin_date: this.dataService.dateFormatter(
+          this.createRegistryData.job_begin_date,
         ),
-        conclusion_date: this.createRegistryData.conclusion_date
-          ? this.dataService.dateFormatter(
-              this.createRegistryData.conclusion_date,
-            )
-          : null,
+        job_end_date: this.dataService.dateFormatter(
+          this.createRegistryData.job_begin_date,
+        ),
       })
       .subscribe({
         next: (res) => {
@@ -102,33 +104,36 @@ export class StCoursesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const newRegistry: Partial<ICourse> = {
+    const newRegistry: Partial<IProfessionalExperience> = {
       ...this.allRegistries[index],
-      begin_date: this.dataService.dateFormatter(
-        this.allRegistries[index].begin_date,
+      job_begin_date: this.dataService.dateFormatter(
+        this.allRegistries[index].job_begin_date,
       ),
-      conclusion_date: this.allRegistries[index].conclusion_date
-        ? this.dataService.dateFormatter(
-            this.allRegistries[index].conclusion_date || '',
-          )
-        : null,
+      job_end_date: this.dataService.dateFormatter(
+        this.allRegistries[index].job_begin_date,
+      ),
     }
     delete newRegistry.created_at
     delete newRegistry.updated_at
-    delete newRegistry.course_approved
-    this.service.updateRegistry(newRegistry as IUpdateCourse).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Registro editado com sucesso.'
-        this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
-        this.isLoading = false
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
+    delete newRegistry.experience_approved
+
+    console.log(newRegistry)
+
+    this.service
+      .updateRegistry(newRegistry as UpdateProfessionalExperienceDto)
+      .subscribe({
+        next: (res) => {
+          this.doneMessage = 'Registro editado com sucesso.'
+          this.done = true
+          document.getElementById(buttonId)?.classList.add('hidden')
+          this.isLoading = false
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
   }
 
   deleteRegistry(id: number) {

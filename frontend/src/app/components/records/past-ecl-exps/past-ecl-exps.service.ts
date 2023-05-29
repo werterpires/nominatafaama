@@ -2,24 +2,20 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
-import {
-  CreateEvangelisticExperienceDto,
-  IEvangelisticExperience,
-  UpdateEvangelisticExperienceDto,
-} from './types'
+import { CreatePastEclExpDto, IPastEclExp, UpdatePastEclExpDto } from './types'
 
 @Injectable({
   providedIn: 'root',
 })
-export class EvgExperiencesService {
+export class PastEclExpService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IEvangelisticExperience[]> {
+  findAllRegistries(): Observable<IPastEclExp[]> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IEvangelisticExperience[]>(
-        'http://localhost:3000/evangelistic-experiences/person',
+      .get<IPastEclExp[]>(
+        'http://localhost:3000/past-ecl-exps/person/student',
         {
           headers: head_obj,
         },
@@ -34,14 +30,12 @@ export class EvgExperiencesService {
       )
   }
 
-  createRegistry(
-    newRegistry: CreateEvangelisticExperienceDto,
-  ): Observable<IEvangelisticExperience> {
+  createRegistry(newRegistry: CreatePastEclExpDto): Observable<IPastEclExp> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .post<IEvangelisticExperience>(
-        'http://localhost:3000/evangelistic-experiences',
+      .post<IPastEclExp>(
+        'http://localhost:3000/past-ecl-exps/student',
         newRegistry,
         {
           headers: head_obj,
@@ -58,13 +52,13 @@ export class EvgExperiencesService {
   }
 
   updateRegistry(
-    updatedRegistry: UpdateEvangelisticExperienceDto,
-  ): Observable<UpdateEvangelisticExperienceDto> {
+    updatedRegistry: UpdatePastEclExpDto,
+  ): Observable<UpdatePastEclExpDto> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .put<UpdateEvangelisticExperienceDto>(
-        'http://localhost:3000/evangelistic-experiences',
+      .put<UpdatePastEclExpDto>(
+        'http://localhost:3000/past-ecl-exps',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -78,13 +72,12 @@ export class EvgExperiencesService {
       )
   }
 
-  deleteRegistry(registryId: number): Observable<ArrayBuffer> {
+  deleteRegistry(registryId: number): Observable<string> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete(`http://localhost:3000/evangelistic-experiences/${registryId}`, {
+      .delete<string>(`http://localhost:3000/past-ecl-exps/${registryId}`, {
         headers,
-        responseType: 'arraybuffer',
       })
       .pipe(
         catchError((error) => {

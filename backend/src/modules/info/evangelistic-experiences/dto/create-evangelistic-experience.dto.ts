@@ -20,11 +20,11 @@ export class CreateEvangelisticExperienceDto {
   place: string
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   exp_begin_date: string
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   exp_end_date: string
 
   @IsNotEmpty()

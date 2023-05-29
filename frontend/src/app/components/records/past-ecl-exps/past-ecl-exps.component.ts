@@ -1,24 +1,24 @@
 import { Component, Input } from '@angular/core'
-import { ICourse, ICreateCourse, IUpdateCourse } from './types'
-import { StCoursesService } from './st-courses.service'
-import { DataService } from '../../shared/shared.service.ts/data.service'
 import { IPermissions } from '../../shared/container/types'
+import { CreatePastEclExpDto, IPastEclExp, UpdatePastEclExpDto } from './types'
+import { PastEclExpService } from './past-ecl-exps.service'
+import { DataService } from '../../shared/shared.service.ts/data.service'
 
 @Component({
-  selector: 'app-st-courses',
-  templateUrl: './st-courses.component.html',
-  styleUrls: ['./st-courses.component.css'],
+  selector: 'app-past-ecl-exps',
+  templateUrl: './past-ecl-exps.component.html',
+  styleUrls: ['./past-ecl-exps.component.css'],
 })
-export class StCoursesComponent {
+export class PastEclExpsComponent {
   @Input() permissions!: IPermissions
 
-  allRegistries: ICourse[] = []
-  title = 'Cursos e Capacitações'
-  createRegistryData: ICreateCourse = {
-    begin_date: '',
-    course_area: '',
-    institution: '',
-    conclusion_date: '',
+  allRegistries: IPastEclExp[] = []
+  title = 'Experiências profissionais e evangelísticas passadas'
+  createRegistryData: CreatePastEclExpDto = {
+    function: '',
+    past_exp_begin_date: '',
+    past_exp_end_date: '',
+    place: '',
   }
 
   showBox = false
@@ -30,7 +30,7 @@ export class StCoursesComponent {
   errorMessage = ''
 
   constructor(
-    private service: StCoursesService,
+    private service: PastEclExpService,
     private dataService: DataService,
   ) {}
 
@@ -74,14 +74,12 @@ export class StCoursesComponent {
     this.service
       .createRegistry({
         ...this.createRegistryData,
-        begin_date: this.dataService.dateFormatter(
-          this.createRegistryData.begin_date,
+        past_exp_begin_date: this.dataService.dateFormatter(
+          this.createRegistryData.past_exp_begin_date,
         ),
-        conclusion_date: this.createRegistryData.conclusion_date
-          ? this.dataService.dateFormatter(
-              this.createRegistryData.conclusion_date,
-            )
-          : null,
+        past_exp_end_date: this.dataService.dateFormatter(
+          this.createRegistryData.past_exp_end_date,
+        ),
       })
       .subscribe({
         next: (res) => {
@@ -102,21 +100,22 @@ export class StCoursesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
-    const newRegistry: Partial<ICourse> = {
+    const newRegistry: Partial<IPastEclExp> = {
       ...this.allRegistries[index],
-      begin_date: this.dataService.dateFormatter(
-        this.allRegistries[index].begin_date,
+      past_exp_begin_date: this.dataService.dateFormatter(
+        this.allRegistries[index].past_exp_begin_date,
       ),
-      conclusion_date: this.allRegistries[index].conclusion_date
-        ? this.dataService.dateFormatter(
-            this.allRegistries[index].conclusion_date || '',
-          )
-        : null,
+      past_exp_end_date: this.dataService.dateFormatter(
+        this.allRegistries[index].past_exp_end_date,
+      ),
     }
     delete newRegistry.created_at
     delete newRegistry.updated_at
-    delete newRegistry.course_approved
-    this.service.updateRegistry(newRegistry as IUpdateCourse).subscribe({
+    delete newRegistry.past_ecl_approved
+
+    console.log(newRegistry)
+
+    this.service.updateRegistry(newRegistry as UpdatePastEclExpDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true

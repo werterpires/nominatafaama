@@ -8,14 +8,10 @@ export interface IEclExperience {
   updated_at: Date
 }
 
-export interface ICreateEclExperience {
-  person_id: number
+export interface UpdateEclExperiencesDto {
   ecl_exp_type_id: number[]
-  ecl_exp_approved: boolean | null
 }
 
-export interface IUpdateEclExperiences {
-  person_id: number
+export interface CreateEclExperienceDto {
   ecl_exp_type_ids: number[]
-  ecl_exp_approved: boolean | null
 }

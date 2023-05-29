@@ -5,6 +5,7 @@ import {
   Min,
   IsDateString,
   IsOptional,
+  IsString,
 } from 'class-validator'
 
 export class UpdateProfessionalExperienceDto {
@@ -20,12 +21,12 @@ export class UpdateProfessionalExperienceDto {
   job_institution: string
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   job_begin_date: string
 
-  @IsDateString()
   @IsOptional()
-  job_end_date?: string
+  @IsString()
+  job_end_date: string | null
 
   @IsNotEmpty()
   @IsInt()

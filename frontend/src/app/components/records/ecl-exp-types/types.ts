@@ -13,3 +13,7 @@ export interface IUpdateEclExpType {
   ecl_exp_type_id: number
   ecl_exp_type_name: string
 }
+
+export interface IEclExperienceList extends IEclExpType {
+  checked: boolean
+}
