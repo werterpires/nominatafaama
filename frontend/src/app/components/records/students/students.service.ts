@@ -10,43 +10,7 @@ import { ICreateStudent, IStudent, IUpdateStudent } from './types'
 export class StudentService {
   constructor(private http: HttpClient) {}
 
-  findAllStudents(): Observable<IStudent[]> {
-    const token = localStorage.getItem('access_token')
-    const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
-    return this.http
-      .get<IStudent[]>('http://localhost:3000/students', { headers })
-      .pipe(
-        catchError((error) => {
-          console.log('Veja o erro completo', error)
-          return throwError(
-            () =>
-              new Error(
-                'Não foi possível encontrar os estudantes cadastrados.',
-              ),
-          )
-        }),
-      )
-  }
-
-  findStudentById(): Observable<IStudent> {
-    const token = localStorage.getItem('access_token')
-    const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
-    return this.http
-      .get<IStudent>('http://localhost:3000/students', { headers })
-      .pipe(
-        catchError((error) => {
-          console.log('Veja o erro completo', error)
-          return throwError(
-            () =>
-              new Error(
-                'Não foi possível encontrar os estudantes cadastrados.',
-              ),
-          )
-        }),
-      )
-  }
-
-  findStudentByUserId(): Observable<IStudent> {
+  findRegistry(): Observable<IStudent> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http

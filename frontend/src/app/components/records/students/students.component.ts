@@ -88,7 +88,7 @@ export class StudentsComponent {
 
   getRegistry() {
     this.isLoading = true
-    this.studentServices.findStudentByUserId().subscribe({
+    this.studentServices.findRegistry().subscribe({
       next: (res) => {
         if (res.student_id) {
           this.registry = res
