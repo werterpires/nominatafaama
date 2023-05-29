@@ -245,6 +245,8 @@ export class SpousesModel {
           is_whatsapp,
           alternative_email,
           person_id,
+          name,
+          cpf,
           origin_field_id,
           justification,
           birth_city,
@@ -262,27 +264,31 @@ export class SpousesModel {
           civil_marriage_state,
         } = updateSpouse
 
-        await trx('spouses').where('spouse_id', spouse_id).update({
-          phone_number,
-          is_whatsapp,
-          alternative_email,
-          person_id,
-          origin_field_id,
-          justification,
-          birth_city,
-          birth_state,
-          primary_school_city,
-          birth_date,
-          baptism_date,
-          baptism_place,
-          civil_marriage_date,
-          civil_marriage_city,
-          registry,
-          registry_number,
-          spouse_approved,
-          primary_school_state,
-          civil_marriage_state,
-        })
+        await trx('spouses')
+          .update({
+            phone_number,
+            is_whatsapp,
+            alternative_email,
+            person_id,
+            origin_field_id,
+            justification,
+            birth_city,
+            birth_state,
+            primary_school_city,
+            birth_date,
+            baptism_date,
+            baptism_place,
+            civil_marriage_date,
+            civil_marriage_city,
+            registry,
+            registry_number,
+            spouse_approved,
+            primary_school_state,
+            civil_marriage_state,
+          })
+          .where({ spouse_id })
+
+        await trx('people').update({ cpf, name }).where({ person_id })
 
         updatedSpouse = await this.findSpouseById(spouse_id)
 

@@ -28,6 +28,8 @@ export interface ISpouse {
   union_name: string
   union_acronym: string
   union_id: number
+  student_id: number
+  association_id: number
 }
 
 export interface ICreateSpouse {

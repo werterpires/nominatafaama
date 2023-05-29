@@ -81,6 +81,8 @@ export class SpousesComponent {
 
           console.log(this.registry.baptism_date)
         }
+        this.getOtherData()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -91,6 +93,7 @@ export class SpousesComponent {
   }
 
   getOtherData() {
+    this.isLoading = true
     this.associationService.findAllRegistries().subscribe({
       next: (res) => {
         this.allAssociations = res.sort((a, b) => {
@@ -109,6 +112,7 @@ export class SpousesComponent {
         })
         this.filterAssociation()
         console.log('Possible associations:', this.possibleAssociantions)
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -184,17 +188,29 @@ export class SpousesComponent {
   editRegistry() {
     this.isLoading = true
 
-    const newRegistry: Partial<ISpouse> = {
-      ...this.registry,
-      union_id: parseInt(this.registry.union_id.toString()),
-      person_id: parseInt(this.registry.person_id.toString()),
-      spouse_id: parseInt(this.registry.spouse_id.toString()),
-      origin_field_id: parseInt(this.registry.origin_field_id.toString()),
-      birth_date: this.dataService.dateFormatter(this.registry.birth_date),
-      baptism_date: this.dataService.dateFormatter(this.registry.baptism_date),
-      civil_marriage_date: this.dataService.dateFormatter(
-        this.registry.civil_marriage_date || '',
-      ),
+    const newRegistry: IUpdateSpouse = {
+      alternative_email: this.registry.alternative_email,
+      baptism_date: this.registry.baptism_date,
+      baptism_place: this.registry.baptism_place,
+      birth_city: this.registry.birth_city,
+      birth_date: this.registry.birth_date,
+      birth_state: this.registry.birth_state,
+      civil_marriage_city: this.registry.civil_marriage_city,
+      civil_marriage_date: this.registry.civil_marriage_date,
+      civil_marriage_state: this.registry.civil_marriage_state,
+      cpf: this.registry.person_cpf,
+      is_whatsapp: this.registry.is_whatsapp,
+      justification: this.registry.justification,
+      name: this.registry.person_name,
+      origin_field_id: this.registry.origin_field_id,
+      person_id: this.registry.person_id,
+      phone_number: this.registry.phone_number,
+      primary_school_city: this.registry.primary_school_city,
+      primary_school_state: this.registry.primary_school_state,
+      registry: this.registry.registry,
+      registry_number: this.registry.registry_number,
+      spouse_approved: !!this.registry.spouse_approved,
+      spouse_id: this.registry.spouse_id,
     }
 
     this.service.updateRegistry(newRegistry as IUpdateSpouse).subscribe({
