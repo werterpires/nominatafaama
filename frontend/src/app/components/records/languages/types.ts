@@ -9,6 +9,9 @@ export interface ILanguage {
   unknown: boolean
   person_id: number
   language: string
+  language_approved: boolean | null
+  created_at: string
+  updated_at: string
 }
 
 export interface IUpdateLanguageDto {

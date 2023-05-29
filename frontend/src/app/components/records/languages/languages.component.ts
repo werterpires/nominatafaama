@@ -3,7 +3,7 @@ import { IPermissions } from '../../shared/container/types'
 import { LanguageTypesService } from '../language-types/language-types.service'
 import { ILanguageType } from '../language-types/types'
 import { LanguageService } from './language.service'
-import { ICreateLanguageDto, ILanguage } from './types'
+import { ICreateLanguageDto, ILanguage, IUpdateLanguageDto } from './types'
 
 @Component({
   selector: 'app-languages',
@@ -119,7 +119,16 @@ export class LanguagesComponent {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
-    this.service.updateRegistry(this.allRegistries[index]).subscribe({
+    const newRegistry: Partial<ILanguage> = {
+      ...this.allRegistries[index],
+    }
+
+    delete newRegistry.created_at
+    delete newRegistry.updated_at
+    delete newRegistry.language_approved
+    delete newRegistry.language
+
+    this.service.updateRegistry(newRegistry as IUpdateLanguageDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
