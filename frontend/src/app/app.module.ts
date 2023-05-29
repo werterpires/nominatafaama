@@ -42,7 +42,8 @@ import { ProfessionalExperiencesComponent } from './components/records/professio
 import { PastEclExpsComponent } from './components/records/past-ecl-exps/past-ecl-exps.component';
 import { EclExperiencesComponent } from './components/records/ecl-experiences/ecl-experiences.component';
 import { OrdinationsComponent } from './components/records/ordinations/ordinations.component';
-import { RelatedMinistriesComponent } from './components/records/related-ministries/related-ministries.component'
+import { RelatedMinistriesComponent } from './components/records/related-ministries/related-ministries.component';
+import { EndowmentsComponent } from './components/records/endowments/endowments.component'
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { RelatedMinistriesComponent } from './components/records/related-ministr
     EclExperiencesComponent,
     OrdinationsComponent,
     RelatedMinistriesComponent,
+    EndowmentsComponent,
   ],
   imports: [
     BrowserModule,

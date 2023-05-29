@@ -1,7 +1,7 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
-import {ICreateEndowment, IEndowment, IUpdateEndowment} from '../types/types'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import { ICreateEndowment, IEndowment, IUpdateEndowment } from '../types/types'
 
 @Injectable()
 export class EndowmentsModel {
@@ -15,7 +15,7 @@ export class EndowmentsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {endowment_type_id, person_id, endowment_approved} =
+        const { endowment_type_id, person_id, endowment_approved } =
           createEndowmentData
 
         endowment = await trx('endowments').insert({
@@ -197,8 +197,12 @@ export class EndowmentsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {endowment_id, endowment_type_id, person_id, endowment_approved} =
-          updateEndowment
+        const {
+          endowment_id,
+          endowment_type_id,
+          person_id,
+          endowment_approved,
+        } = updateEndowment
 
         updatedEndowment = await trx('endowments')
           .where('endowment_id', endowment_id)

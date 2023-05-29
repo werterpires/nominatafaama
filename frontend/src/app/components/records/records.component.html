@@ -65,6 +65,11 @@
     [permissions]="permissions"
   ></app-ordinations>
 
+  <app-endowments
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-endowments>
+
   <app-related-ministries
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"

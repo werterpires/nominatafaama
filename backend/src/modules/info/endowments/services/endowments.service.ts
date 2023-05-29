@@ -1,9 +1,9 @@
-import {Injectable} from '@nestjs/common'
-import {IEndowment, ICreateEndowment, IUpdateEndowment} from '../types/types'
-import {EndowmentsModel} from '../model/endowments.model'
-import {CreateEndowmentDto} from '../dto/create-endowment.dto'
-import {UpdateEndowmentDto} from '../dto/update-endowment.dto'
-import {PeopleServices} from 'src/modules/people/dz_services/people.service'
+import { Injectable } from '@nestjs/common'
+import { IEndowment, ICreateEndowment, IUpdateEndowment } from '../types/types'
+import { EndowmentsModel } from '../model/endowments.model'
+import { CreateEndowmentDto } from '../dto/create-endowment.dto'
+import { UpdateEndowmentDto } from '../dto/update-endowment.dto'
+import { PeopleServices } from 'src/modules/people/dz_services/people.service'
 
 @Injectable()
 export class EndowmentsService {
@@ -93,8 +93,9 @@ export class EndowmentsService {
         updateEndowmentData,
       )
 
-      const updatedEndowment =
-        this.endowmentsModel.findEndowmentById(endowmentId)
+      const updatedEndowment = this.endowmentsModel.findEndowmentById(
+        dto.endowment_id,
+      )
 
       return updatedEndowment
     } catch (error) {
