@@ -23,13 +23,10 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install
           cd frontend
           npm install
           npm run build
           cd ..
-          Remove-Item -Force -Recurse frontend\node_modules,frontend\.vscode,frontend\src,frontend\*.* -ErrorAction Continue
-          Remove-Item -Force -Recurse backend,.github,.vscode
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
@@ -38,4 +35,4 @@ jobs:
           app-name: 'nominata-faama'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C75CD0E4D91F4E12B9E71705AAC25D26 }}
-          package: .
+          package: frontend/dist/frontend
