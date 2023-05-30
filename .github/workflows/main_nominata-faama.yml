@@ -24,15 +24,10 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          cd backend
-          npm install
-          npx knex migrate:latest
-          npm run build
-          cd ..
           cd frontend
           npm install
           npm run build
-          Remove-Item -Force -Recurse node_modules
+          Remove-Item -Force -Recurse node_modules,.angular,.vscode,src,*.* -ErrorAction Continue
           cd ..
 
       - name: 'Deploy to Azure Web App'
