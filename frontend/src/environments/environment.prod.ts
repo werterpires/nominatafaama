@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  API: '',
+  API: 'https://nominata-faama.azurewebsites.net:3000',
 }
