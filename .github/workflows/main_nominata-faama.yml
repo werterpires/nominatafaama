@@ -32,7 +32,7 @@ jobs:
           cd frontend
           npm install
           npm run build
-          rd frontend\node_modules /q /s
+          Remove-Item -Force -Recurse "frontend\node_modules"
           cd ..
 
       - name: 'Deploy to Azure Web App'
