@@ -13,6 +13,6 @@ async function bootstrap() {
       transform: true, // Faz a transformação dos params e query quando são numeros ou outras coisas
     }),
   )
-  await app.listen(3000)
+  await app.listen(process.env.PORT || 3000)
 }
 void bootstrap()
