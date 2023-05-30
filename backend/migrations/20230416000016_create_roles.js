@@ -3,12 +3,12 @@
  * @returns { Promise<void> }
  */
 exports.up = async function (knex) {
-  await knex.schema.createTable('roles', (table) => {
-    table.increments('role_id').primary();
-    table.string('role_name', 150).notNullable();
-    table.string('role_description', 255).notNullable();
-    table.timestamps(true, true);
-  });
+  await knex.schema.createTableIfNotExists('roles', (table) => {
+    table.increments('role_id').primary()
+    table.string('role_name', 150).notNullable()
+    table.string('role_description', 255).notNullable()
+    table.timestamps(true, true)
+  })
 
   const roles = [
     {
@@ -45,16 +45,16 @@ exports.up = async function (knex) {
       role_name: 'administrador',
       role_description: 'Usuário com todos os poderes do sistema.',
     },
-  ];
+  ]
 
-  const rolesInseridas = await knex('roles').insert(roles);
-  console.log('Roles inseridas:', rolesInseridas);
-};
+  const rolesInseridas = await knex('roles').insert(roles)
+  console.log('Roles inseridas:', rolesInseridas)
+}
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  return knex.schema.dropTable('roles');
-};
+  return knex.schema.dropTable('roles')
+}

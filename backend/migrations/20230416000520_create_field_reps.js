@@ -3,29 +3,25 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  
-  return knex.schema.createTable('field_reps', (table) => {
-    table.increments('rep_id').primary();
-    table.string('phone_number', 15).notNullable();
-    table.integer('person_id').unsigned().notNullable();
+  return knex.schema.createTableIfNotExists('field_reps', (table) => {
+    table.increments('rep_id').primary()
+    table.string('phone_number', 15).notNullable()
+    table.integer('person_id').unsigned().notNullable()
 
     table
       .foreign('person_id')
       .references('people.person_id')
       .onDelete('RESTRICT')
-      .onUpdate('RESTRICT');
-   
+      .onUpdate('RESTRICT')
 
-    table.timestamps(true, true);
-  });
-};
+    table.timestamps(true, true)
+  })
+}
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-
-  return knex.schema.dropTable('field_reps');
-  
-};
+  return knex.schema.dropTable('field_reps')
+}

@@ -3,12 +3,11 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  
-  return knex.schema.createTable('vacancies_students', (table) => {
-    table.increments('vacancy_student_id').primary();
-    table.string('comments', 500).notNullable();
-    table.integer('vacancy_id').unsigned().notNullable();
-    table.integer('student_id').unsigned().notNullable();
+  return knex.schema.createTableIfNotExists('vacancies_students', (table) => {
+    table.increments('vacancy_student_id').primary()
+    table.string('comments', 500).notNullable()
+    table.integer('vacancy_id').unsigned().notNullable()
+    table.integer('student_id').unsigned().notNullable()
 
     table
       .foreign('vacancy_id')
@@ -22,16 +21,14 @@ exports.up = function (knex) {
       .onDelete('RESTRICT')
       .onUpdate('RESTRICT')
 
-    table.timestamps(true, true);
-  });
-};
+    table.timestamps(true, true)
+  })
+}
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-
-  return knex.schema.dropTable('vacancies_students');
-  
-};
+  return knex.schema.dropTable('vacancies_students')
+}

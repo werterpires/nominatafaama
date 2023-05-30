@@ -3,9 +3,8 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  
-  return knex.schema.createTable('events', (table) => {
-    table.increments('event_id').primary();
+  return knex.schema.createTableIfNotExists('events', (table) => {
+    table.increments('event_id').primary()
     table.date('event_date').notNullable()
     table.string('event_time')
     table.string('event_place')
@@ -20,16 +19,13 @@ exports.up = function (knex) {
       .onUpdate('RESTRICT')
 
     table.timestamps(true, true)
-
-  });
-};
+  })
+}
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-
-  return knex.schema.dropTable('events');
-  
-};
+  return knex.schema.dropTable('events')
+}

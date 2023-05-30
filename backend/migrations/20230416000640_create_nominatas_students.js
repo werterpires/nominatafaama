@@ -3,9 +3,8 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  
-  return knex.schema.createTable('nominatas_students', (table) => {
-    table.increments('nominata_student_id').primary();
+  return knex.schema.createTableIfNotExists('nominatas_students', (table) => {
+    table.increments('nominata_student_id').primary()
     table.integer('nominata_id').unsigned().notNullable()
     table.integer('student_id').unsigned().notNullable()
 
@@ -21,16 +20,13 @@ exports.up = function (knex) {
       .onUpdate('RESTRICT')
 
     table.timestamps(true, true)
-
-  });
-};
+  })
+}
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-
-  return knex.schema.dropTable('nominatas_students');
-  
-};
+  return knex.schema.dropTable('nominatas_students')
+}

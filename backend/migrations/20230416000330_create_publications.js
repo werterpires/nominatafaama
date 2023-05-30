@@ -3,7 +3,7 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable('publications', (table) => {
+  return knex.schema.createTableIfNotExists('publications', (table) => {
     table.increments('publication_id').primary()
     table.integer('publication_type_id').unsigned().notNullable()
     table.string('reference', 500).notNullable()
