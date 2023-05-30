@@ -29,6 +29,7 @@ jobs:
           npm run build
           Remove-Item -Force -Recurse node_modules,.vscode,src,*.* -ErrorAction Continue
           cd ..
+          Remove-Item -Force -Recurse backend,.github,.vscode
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
