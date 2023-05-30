@@ -27,8 +27,8 @@ jobs:
           cd frontend
           npm install
           npm run build
-          Remove-Item -Force -Recurse node_modules,.vscode,src,*.* -ErrorAction Continue
           cd ..
+          Remove-Item -Force -Recurse frontend\node_modules,frontend\.vscode,frontend\src,frontend\*.* -ErrorAction Continue
           Remove-Item -Force -Recurse backend,.github,.vscode
 
       - name: 'Deploy to Azure Web App'
