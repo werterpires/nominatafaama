@@ -1,0 +1,20 @@
+{
+  "name": "nominatasytem",
+  "version": "1.0.0",
+  "description": "## Instruções para executar localmente",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd backend && npm run build && cd ../frontend && npm run build && cd .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/werterpires/nominatafaama.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/werterpires/nominatafaama/issues"
+  },
+  "homepage": "https://github.com/werterpires/nominatafaama#readme"
+}
