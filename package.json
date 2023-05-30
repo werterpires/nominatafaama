@@ -4,8 +4,8 @@
   "description": "## Instruções para executar localmente",
   "main": "index.js",
   "scripts": {
-    "start":"npx pm2 start server.js; npx pm2 start backend/dist/main.js",
-    "build": "cd backend; npx knex migrate:latest; npm run build; cd ../frontend; npm run build; cd .."
+    "start": "npx pm2 start server.js; npx pm2 start backend/dist/main.js",
+    "build": "cd backend; npm install; npx knex migrate:latest; npm run build; cd ../frontend; npm install; npm run build; cd .."
   },
   "repository": {
     "type": "git",
