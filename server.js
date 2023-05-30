@@ -1,10 +1,23 @@
 const express = require('express')
 const app = express()
 const path = require('path')
-app.use('/', express.static(path.join(__dirname, 'frontend/dist/frontend')))
+
+const distFolder = path.join(__dirname, 'frontend/dist/frontend')
+
+app.get(
+  '*.*',
+  express.static(distFolder, {
+    maxAge: '1y',
+  }),
+)
+
+app.get('*', (req, res) => {
+  res.send(path.join(distFolder, 'index.html'))
+})
 
 const port = process.env.PORT || 5000
 
 app.listen(port, (call) => {
-  console.log('application rodando na porta ', port)
+  console.log('Aplicação rodando na porta', port)
+  console.log('Servindo estáticos na pasta', distFolder)
 })
