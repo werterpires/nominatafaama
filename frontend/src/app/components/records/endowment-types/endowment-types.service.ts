@@ -7,6 +7,7 @@ import {
   IEndowmentType,
   IUpdateEndowmentType,
 } from './types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class EndowmentTypesService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<IEndowmentType[]>(`http://localhost:3000/endowment-types`, {
+      .get<IEndowmentType[]>(environment.API + `/endowment-types`, {
         headers,
       })
       .pipe(
@@ -43,7 +44,7 @@ export class EndowmentTypesService {
 
     return this.http
       .post<IEndowmentType>(
-        `http://localhost:3000/endowment-types`,
+        environment.API + `/endowment-types`,
         createEndowmentTypeData,
         { headers },
       )
@@ -65,7 +66,7 @@ export class EndowmentTypesService {
 
     return this.http
       .put<IEndowmentType>(
-        `http://localhost:3000/endowment-types`,
+        environment.API + `/endowment-types`,
         editEndowmentTypeData,
         { headers },
       )
@@ -87,7 +88,7 @@ export class EndowmentTypesService {
 
     return this.http
       .get<IEndowmentType[]>(
-        `http://localhost:3000/endowment-types/filter/${applicationType}`,
+        environment.API + `/endowment-types/filter/${applicationType}`,
         { headers },
       )
       .pipe(
@@ -107,7 +108,7 @@ export class EndowmentTypesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/endowment-types/${registryId}`, {
+      .delete<string>(environment.API + `/endowment-types/${registryId}`, {
         headers,
       })
       .pipe(

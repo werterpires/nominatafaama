@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { ICreateEclExpTypeDto, IEclExpType, IUpdateEclExpType } from './types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class EclExpTypesService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<IEclExpType[]>(`http://localhost:3000/ecl-exp-types`, { headers })
+      .get<IEclExpType[]>(environment.API + `/ecl-exp-types`, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -37,7 +38,7 @@ export class EclExpTypesService {
 
     return this.http
       .post<IEclExpType>(
-        `http://localhost:3000/ecl-exp-types`,
+        environment.API + `/ecl-exp-types`,
         createEclExpTypeData,
         { headers },
       )
@@ -62,7 +63,7 @@ export class EclExpTypesService {
 
     return this.http
       .put<IEclExpType>(
-        `http://localhost:3000/ecl-exp-types`,
+        environment.API + `/ecl-exp-types`,
         editEclExpTypeData,
         { headers },
       )
@@ -83,7 +84,7 @@ export class EclExpTypesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/ecl-exp-types/${eclExpTypeId}`, {
+      .delete<string>(environment.API + `/ecl-exp-types/${eclExpTypeId}`, {
         headers,
       })
       .pipe(

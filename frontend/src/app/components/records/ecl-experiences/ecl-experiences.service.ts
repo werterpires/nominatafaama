@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreateEclExperienceDto,
   IEclExperience,
@@ -18,7 +19,7 @@ export class EclExperiencesService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IEclExperience[]>('http://localhost:3000/ecl-experiences/person/', {
+      .get<IEclExperience[]>(environment.API + '/ecl-experiences/person/', {
         headers: head_obj,
       })
       .pipe(
@@ -38,7 +39,7 @@ export class EclExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IEclExperience>(
-        'http://localhost:3000/ecl-experiences/',
+        environment.API + '/ecl-experiences/',
         newRegistry,
         {
           headers: head_obj,
@@ -61,7 +62,7 @@ export class EclExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateEclExperiencesDto>(
-        'http://localhost:3000/ecl-experiences',
+        environment.API + '/ecl-experiences',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -79,7 +80,7 @@ export class EclExperiencesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/ecl-experiences/${registryId}`, {
+      .delete<string>(environment.API + `/ecl-experiences/${registryId}`, {
         headers,
       })
       .pipe(

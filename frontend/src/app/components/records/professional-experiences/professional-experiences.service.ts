@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreateProfessionalExperienceDto,
   IProfessionalExperience,
@@ -19,7 +20,7 @@ export class ProfessionalExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IProfessionalExperience[]>(
-        'http://localhost:3000/professional-experiences/person/student',
+        environment.API + '/professional-experiences/person/student',
         {
           headers: head_obj,
         },
@@ -41,7 +42,7 @@ export class ProfessionalExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IProfessionalExperience>(
-        'http://localhost:3000/professional-experiences/student',
+        environment.API + '/professional-experiences/student',
         newRegistry,
         {
           headers: head_obj,
@@ -64,7 +65,7 @@ export class ProfessionalExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateProfessionalExperienceDto>(
-        'http://localhost:3000/professional-experiences',
+        environment.API + '/professional-experiences',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -83,7 +84,7 @@ export class ProfessionalExperiencesService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .delete<string>(
-        `http://localhost:3000/professional-experiences/${registryId}`,
+        environment.API + `/professional-experiences/${registryId}`,
         {
           headers,
         },

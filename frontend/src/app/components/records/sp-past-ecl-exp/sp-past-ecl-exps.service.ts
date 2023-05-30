@@ -2,9 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
-  IPastEclExp,
   CreatePastEclExpDto,
+  IPastEclExp,
   UpdatePastEclExpDto,
 } from '../past-ecl-exps/types'
 
@@ -18,7 +19,7 @@ export class SpPastEclExpService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IPastEclExp[]>('http://localhost:3000/past-ecl-exps/person/spouse', {
+      .get<IPastEclExp[]>(environment.API + '/past-ecl-exps/person/spouse', {
         headers: head_obj,
       })
       .pipe(
@@ -36,7 +37,7 @@ export class SpPastEclExpService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IPastEclExp>(
-        'http://localhost:3000/past-ecl-exps/spouse',
+        environment.API + '/past-ecl-exps/spouse',
         newRegistry,
         {
           headers: head_obj,
@@ -59,7 +60,7 @@ export class SpPastEclExpService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdatePastEclExpDto>(
-        'http://localhost:3000/past-ecl-exps',
+        environment.API + '/past-ecl-exps',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -77,7 +78,7 @@ export class SpPastEclExpService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/past-ecl-exps/${registryId}`, {
+      .delete<string>(environment.API + `/past-ecl-exps/${registryId}`, {
         headers,
       })
       .pipe(

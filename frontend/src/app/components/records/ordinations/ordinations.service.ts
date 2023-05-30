@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import { CreateOrdinationDto, IOrdination, UpdateOrdinationDto } from './types'
 
 @Injectable({
@@ -14,7 +15,7 @@ export class OrdinationsService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IOrdination[]>('http://localhost:3000/ordinations/person/student', {
+      .get<IOrdination[]>(environment.API + '/ordinations/person/student', {
         headers: head_obj,
       })
       .pipe(
@@ -32,7 +33,7 @@ export class OrdinationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IOrdination>(
-        'http://localhost:3000/ordinations/student',
+        environment.API + '/ordinations/student',
         newRegistry,
         {
           headers: head_obj,
@@ -55,7 +56,7 @@ export class OrdinationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateOrdinationDto>(
-        'http://localhost:3000/ordinations',
+        environment.API + '/ordinations',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -73,7 +74,7 @@ export class OrdinationsService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/ordinations/${registryId}`, {
+      .delete<string>(environment.API + `/ordinations/${registryId}`, {
         headers,
       })
       .pipe(

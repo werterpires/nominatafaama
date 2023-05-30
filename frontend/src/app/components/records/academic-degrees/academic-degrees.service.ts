@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   IAcademicDegree,
   ICreateAcademicDegreeDto,
@@ -19,7 +20,7 @@ export class AcademicDegreeService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IAcademicDegree[]>('http://localhost:3000/academic-degrees', {
+      .get<IAcademicDegree[]>(environment.API + '/academic-degrees', {
         headers: head_obj,
       })
       .pipe(
@@ -42,7 +43,7 @@ export class AcademicDegreeService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IAcademicDegree>(
-        'http://localhost:3000/academic-degrees',
+        environment.API + '/academic-degrees',
         createAcademicDegreeData,
         { headers: head_obj },
       )
@@ -63,7 +64,7 @@ export class AcademicDegreeService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<IAcademicDegree>(
-        'http://localhost:3000/academic-degrees',
+        environment.API + '/academic-degrees',
         editAcademicDegreeData,
         { headers: head_obj },
       )
@@ -81,7 +82,7 @@ export class AcademicDegreeService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .delete<IAcademicDegree>('http://localhost:3000/academic-degrees/' + id, {
+      .delete<IAcademicDegree>(environment.API + '/academic-degrees/' + id, {
         headers: head_obj,
       })
       .pipe(

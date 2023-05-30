@@ -7,6 +7,7 @@ import {
   IMinistryType,
   IUpdateMinistryType,
 } from './types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class MinistryTypesService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<IMinistryType[]>(`http://localhost:3000/ministry-types`, { headers })
+      .get<IMinistryType[]>(environment.API + `/ministry-types`, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -41,7 +42,7 @@ export class MinistryTypesService {
 
     return this.http
       .post<IMinistryType>(
-        `http://localhost:3000/ministry-types`,
+        environment.API + `/ministry-types`,
         createMinistryTypeData,
         { headers },
       )
@@ -63,7 +64,7 @@ export class MinistryTypesService {
 
     return this.http
       .put<IMinistryType>(
-        `http://localhost:3000/ministry-types`,
+        environment.API + `/ministry-types`,
         editMinistryTypeData,
         { headers },
       )
@@ -81,7 +82,7 @@ export class MinistryTypesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/ministry-types/${registryId}`, {
+      .delete<string>(environment.API + `/ministry-types/${registryId}`, {
         headers,
       })
       .pipe(

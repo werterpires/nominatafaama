@@ -7,6 +7,7 @@ import {
   CreateProfessionalExperienceDto,
   UpdateProfessionalExperienceDto,
 } from '../professional-experiences/types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class SpProfessionalExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IProfessionalExperience[]>(
-        'http://localhost:3000/professional-experiences/person/spouse',
+        environment.API + '/professional-experiences/person/spouse',
         {
           headers: head_obj,
         },
@@ -41,7 +42,7 @@ export class SpProfessionalExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IProfessionalExperience>(
-        'http://localhost:3000/professional-experiences/spouse',
+        environment.API + '/professional-experiences/spouse',
         newRegistry,
         {
           headers: head_obj,
@@ -64,7 +65,7 @@ export class SpProfessionalExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateProfessionalExperienceDto>(
-        'http://localhost:3000/professional-experiences',
+        environment.API + '/professional-experiences',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -83,7 +84,7 @@ export class SpProfessionalExperiencesService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .delete<string>(
-        `http://localhost:3000/professional-experiences/${registryId}`,
+        environment.API + `/professional-experiences/${registryId}`,
         {
           headers,
         },

@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreateEvangelisticExperienceDto,
   IEvangelisticExperience,
@@ -19,7 +20,7 @@ export class EvgExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IEvangelisticExperience[]>(
-        'http://localhost:3000/evangelistic-experiences/person',
+        environment.API + '/evangelistic-experiences/person',
         {
           headers: head_obj,
         },
@@ -41,7 +42,7 @@ export class EvgExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IEvangelisticExperience>(
-        'http://localhost:3000/evangelistic-experiences',
+        environment.API + '/evangelistic-experiences',
         newRegistry,
         {
           headers: head_obj,
@@ -64,7 +65,7 @@ export class EvgExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateEvangelisticExperienceDto>(
-        'http://localhost:3000/evangelistic-experiences',
+        environment.API + '/evangelistic-experiences',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -82,7 +83,7 @@ export class EvgExperiencesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete(`http://localhost:3000/evangelistic-experiences/${registryId}`, {
+      .delete(environment.API + `/evangelistic-experiences/${registryId}`, {
         headers,
         responseType: 'arraybuffer',
       })

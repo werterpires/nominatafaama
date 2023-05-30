@@ -2,12 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreateHiringStatusDto,
   IHiringStatus,
   UpdateHiringStatusDto,
 } from './types'
-import { IUnion } from '../unions/types'
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class HiringStatusService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .get<IHiringStatus[]>('http://localhost:3000/hiring-status', { headers })
+      .get<IHiringStatus[]>(environment.API + '/hiring-status', { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -40,7 +40,7 @@ export class HiringStatusService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .post<IHiringStatus>(
-        'http://localhost:3000/hiring-status',
+        environment.API + '/hiring-status',
         createHiringStatusData,
         { headers },
       )
@@ -61,7 +61,7 @@ export class HiringStatusService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .put<IHiringStatus>(
-        'http://localhost:3000/hiring-status',
+        environment.API + '/hiring-status',
         updateHiringStatusData,
         { headers },
       )
@@ -80,10 +80,9 @@ export class HiringStatusService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(
-        `http://localhost:3000/hiring-status/${hiring_status_id}`,
-        { headers },
-      )
+      .delete<string>(environment.API + `/hiring-status/${hiring_status_id}`, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

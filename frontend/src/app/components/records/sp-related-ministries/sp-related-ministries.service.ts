@@ -7,6 +7,7 @@ import {
   CreateRelatedMinistryDto,
   UpdateRelatedMinistryDto,
 } from '../related-ministries/types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class SpRelatedMinistriesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IRelatedMinistry[]>(
-        'http://localhost:3000/related-ministries/person/spouse',
+        environment.API + '/related-ministries/person/spouse',
         {
           headers: head_obj,
         },
@@ -44,7 +45,7 @@ export class SpRelatedMinistriesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IRelatedMinistry>(
-        'http://localhost:3000/related-ministries/spouse',
+        environment.API + '/related-ministries/spouse',
         newRegistry,
         {
           headers: head_obj,
@@ -67,7 +68,7 @@ export class SpRelatedMinistriesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateRelatedMinistryDto>(
-        'http://localhost:3000/related-ministries',
+        environment.API + '/related-ministries',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -85,12 +86,9 @@ export class SpRelatedMinistriesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(
-        `http://localhost:3000/related-ministries/${registryId}`,
-        {
-          headers,
-        },
-      )
+      .delete<string>(environment.API + `/related-ministries/${registryId}`, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

@@ -7,6 +7,7 @@ import {
   IAssociation,
   UpdateAssociationDto,
 } from './types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class AssociationService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .get<IAssociation[]>('http://localhost:3000/associations', { headers })
+      .get<IAssociation[]>(environment.API + '/associations', { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -39,7 +40,7 @@ export class AssociationService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .post<IAssociation>(
-        'http://localhost:3000/associations',
+        environment.API + '/associations',
         createAssociationData,
         { headers },
       )
@@ -60,7 +61,7 @@ export class AssociationService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .put<IAssociation>(
-        'http://localhost:3000/associations',
+        environment.API + '/associations',
         updateAssociationData,
         { headers },
       )
@@ -78,7 +79,7 @@ export class AssociationService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/associations/${associationId}`, {
+      .delete<string>(environment.API + `/associations/${associationId}`, {
         headers,
       })
       .pipe(

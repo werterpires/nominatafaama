@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreateMaritalStatusDto,
   IMaritalStatus,
@@ -19,7 +20,7 @@ export class MaritalStatusService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IMaritalStatus[]>('http://localhost:3000/marital-status', {
+      .get<IMaritalStatus[]>(environment.API + '/marital-status', {
         headers: head_obj,
       })
       .pipe(
@@ -42,7 +43,7 @@ export class MaritalStatusService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IMaritalStatus>(
-        'http://localhost:3000/marital-status',
+        environment.API + '/marital-status',
         createMaritalStatusData,
         { headers: head_obj },
       )
@@ -63,7 +64,7 @@ export class MaritalStatusService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<IMaritalStatus>(
-        'http://localhost:3000/marital-status',
+        environment.API + '/marital-status',
         editMaritalStatusData,
         { headers: head_obj },
       )
@@ -81,7 +82,7 @@ export class MaritalStatusService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/marital-status/${registryId}`, {
+      .delete<string>(environment.API + `/marital-status/${registryId}`, {
         headers,
       })
       .pipe(

@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import { ICreateLanguageDto, ILanguage, IUpdateLanguageDto } from './types'
 
 @Injectable({
@@ -14,7 +15,7 @@ export class LanguageService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<ILanguage[]>('http://localhost:3000/languages/person/student', {
+      .get<ILanguage[]>(environment.API + '/languages/person/student', {
         headers: head_obj,
       })
       .pipe(
@@ -31,7 +32,7 @@ export class LanguageService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .post<ILanguage>('http://localhost:3000/languages/student', newRegistry, {
+      .post<ILanguage>(environment.API + '/languages/student', newRegistry, {
         headers: head_obj,
       })
       .pipe(
@@ -51,7 +52,7 @@ export class LanguageService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<IUpdateLanguageDto>(
-        'http://localhost:3000/languages',
+        environment.API + '/languages',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -69,7 +70,7 @@ export class LanguageService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/languages/${registryId}`, {
+      .delete<string>(environment.API + `/languages/${registryId}`, {
         headers,
       })
       .pipe(

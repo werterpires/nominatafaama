@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreateEndowmentDto,
   IEndowment,
@@ -18,7 +19,7 @@ export class SpEndowmentsService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IEndowment[]>('http://localhost:3000/endowments/person/spouse', {
+      .get<IEndowment[]>(environment.API + '/endowments/person/spouse', {
         headers: head_obj,
       })
       .pipe(
@@ -35,13 +36,9 @@ export class SpEndowmentsService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .post<IEndowment>(
-        'http://localhost:3000/endowments/spouse',
-        newRegistry,
-        {
-          headers: head_obj,
-        },
-      )
+      .post<IEndowment>(environment.API + '/endowments/spouse', newRegistry, {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -59,7 +56,7 @@ export class SpEndowmentsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateEndowmentDto>(
-        'http://localhost:3000/endowments',
+        environment.API + '/endowments',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -77,7 +74,7 @@ export class SpEndowmentsService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/endowments/${registryId}`, {
+      .delete<string>(environment.API + `/endowments/${registryId}`, {
         headers,
       })
       .pipe(

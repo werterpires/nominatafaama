@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreatePublicationTypeDto,
   IPublicationType,
@@ -18,7 +19,7 @@ export class PublicationTypeService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .get<IPublicationType[]>('http://localhost:3000/publication-types', {
+      .get<IPublicationType[]>(environment.API + '/publication-types', {
         headers,
       })
       .pipe(
@@ -39,7 +40,7 @@ export class PublicationTypeService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .post<IPublicationType>(
-        'http://localhost:3000/publication-types',
+        environment.API + '/publication-types',
         createPublicationTypeData,
         { headers },
       )
@@ -58,7 +59,7 @@ export class PublicationTypeService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .put<IPublicationType>(
-        'http://localhost:3000/publication-types',
+        environment.API + '/publication-types',
         updatePublicationTypeData,
         { headers },
       )
@@ -77,7 +78,7 @@ export class PublicationTypeService {
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
       .delete<string>(
-        `http://localhost:3000/publication-types/${publicationTypeId}`,
+        environment.API + `/publication-types/${publicationTypeId}`,
         { headers },
       )
       .pipe(

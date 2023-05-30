@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   ISpAcademicFormation,
   ISpCreateAcademicFormation,
@@ -20,7 +21,7 @@ export class SpAcademicFormationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<ISpAcademicFormation[]>(
-        'http://localhost:3000/academic-formations/spouse',
+        environment.API + '/academic-formations/spouse',
         { headers: head_obj },
       )
       .pipe(
@@ -41,7 +42,7 @@ export class SpAcademicFormationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<ISpAcademicFormation>(
-        'http://localhost:3000/academic-formations/spouse',
+        environment.API + '/academic-formations/spouse',
         createAcademicFormationData,
         { headers: head_obj },
       )
@@ -62,7 +63,7 @@ export class SpAcademicFormationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<ISpAcademicFormation>(
-        'http://localhost:3000/academic-formations',
+        environment.API + '/academic-formations',
         editAcademicFormationData,
         { headers: head_obj },
       )
@@ -80,12 +81,9 @@ export class SpAcademicFormationsService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(
-        `http://localhost:3000/academic-formations/${registryId}`,
-        {
-          headers,
-        },
-      )
+      .delete<string>(environment.API + `/academic-formations/${registryId}`, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

@@ -6,6 +6,7 @@ import {
   CreatePublicationDto,
   UpdatePublicationDto,
 } from '../publications/types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class SpPublicationsService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IPublication[]>('http://localhost:3000/publications/person/spouse', {
+      .get<IPublication[]>(environment.API + '/publications/person/spouse', {
         headers: head_obj,
       })
       .pipe(
@@ -36,7 +37,7 @@ export class SpPublicationsService {
     console.log('criando livro pra esposa')
     return this.http
       .post<IPublication>(
-        'http://localhost:3000/publications/spouse',
+        environment.API + '/publications/spouse',
         newRegistry,
         {
           headers: head_obj,
@@ -59,7 +60,7 @@ export class SpPublicationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdatePublicationDto>(
-        'http://localhost:3000/publications',
+        environment.API + '/publications',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -77,7 +78,7 @@ export class SpPublicationsService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/publications/${registryId}`, {
+      .delete<string>(environment.API + `/publications/${registryId}`, {
         headers,
       })
       .pipe(

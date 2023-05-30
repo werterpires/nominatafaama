@@ -3,6 +3,7 @@ import { catchError } from 'rxjs/operators'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { ICreateSpouse, ISpouse, IUpdateSpouse } from './types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class SpouseService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .get<ISpouse[]>('http://localhost:3000/spouses', { headers })
+      .get<ISpouse[]>(environment.API + '/spouses', { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -30,7 +31,7 @@ export class SpouseService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .get<ISpouse>('http://localhost:3000/spouses/edit', { headers })
+      .get<ISpouse>(environment.API + '/spouses/edit', { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -46,7 +47,7 @@ export class SpouseService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .post<ISpouse>('http://localhost:3000/spouses', createSpouseData, {
+      .post<ISpouse>(environment.API + '/spouses', createSpouseData, {
         headers,
       })
       .pipe(
@@ -63,7 +64,7 @@ export class SpouseService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .put<ISpouse>('http://localhost:3000/spouses', updateSpouseData, {
+      .put<ISpouse>(environment.API + '/spouses', updateSpouseData, {
         headers,
       })
       .pipe(
@@ -80,7 +81,7 @@ export class SpouseService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/spouses/${spouseId}`, { headers })
+      .delete<string>(environment.API + `/spouses/${spouseId}`, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

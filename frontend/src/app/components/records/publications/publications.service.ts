@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreatePublicationDto,
   IPublication,
@@ -19,12 +20,9 @@ export class PublicationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     console.log('criando livro pro Marido')
     return this.http
-      .get<IPublication[]>(
-        'http://localhost:3000/publications/person/student',
-        {
-          headers: head_obj,
-        },
-      )
+      .get<IPublication[]>(environment.API + '/publications/person/student', {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -40,7 +38,7 @@ export class PublicationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IPublication>(
-        'http://localhost:3000/publications/student',
+        environment.API + '/publications/student',
         newRegistry,
         {
           headers: head_obj,
@@ -63,7 +61,7 @@ export class PublicationsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdatePublicationDto>(
-        'http://localhost:3000/publications',
+        environment.API + '/publications',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -81,7 +79,7 @@ export class PublicationsService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/publications/${registryId}`, {
+      .delete<string>(environment.API + `/publications/${registryId}`, {
         headers,
       })
       .pipe(

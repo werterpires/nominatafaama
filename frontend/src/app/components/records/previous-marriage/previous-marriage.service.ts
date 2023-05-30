@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreatePreviousMarriageDto,
   IPreviousMarriage,
@@ -18,7 +19,7 @@ export class PreviousMarriageService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IPreviousMarriage[]>('http://localhost:3000/previous-marriages/', {
+      .get<IPreviousMarriage[]>(environment.API + '/previous-marriages/', {
         headers: head_obj,
       })
       .pipe(
@@ -38,7 +39,7 @@ export class PreviousMarriageService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IPreviousMarriage>(
-        'http://localhost:3000/previous-marriages/',
+        environment.API + '/previous-marriages/',
         newRegistry,
         {
           headers: head_obj,
@@ -61,7 +62,7 @@ export class PreviousMarriageService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdatePreviousMarriageDto>(
-        'http://localhost:3000/previous-marriages',
+        environment.API + '/previous-marriages',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -79,12 +80,9 @@ export class PreviousMarriageService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(
-        `http://localhost:3000/previous-marriages/${registryId}`,
-        {
-          headers,
-        },
-      )
+      .delete<string>(environment.API + `/previous-marriages/${registryId}`, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

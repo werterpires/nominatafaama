@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import { CreateEndowmentDto, IEndowment, UpdateEndowmentDto } from './types'
 
 @Injectable({
@@ -14,7 +15,7 @@ export class EndowmentsService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IEndowment[]>('http://localhost:3000/endowments/person/student', {
+      .get<IEndowment[]>(environment.API + '/endowments/person/student', {
         headers: head_obj,
       })
       .pipe(
@@ -31,13 +32,9 @@ export class EndowmentsService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .post<IEndowment>(
-        'http://localhost:3000/endowments/student',
-        newRegistry,
-        {
-          headers: head_obj,
-        },
-      )
+      .post<IEndowment>(environment.API + '/endowments/student', newRegistry, {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -55,7 +52,7 @@ export class EndowmentsService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateEndowmentDto>(
-        'http://localhost:3000/endowments',
+        environment.API + '/endowments',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -73,7 +70,7 @@ export class EndowmentsService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/endowments/${registryId}`, {
+      .delete<string>(environment.API + `/endowments/${registryId}`, {
         headers,
       })
       .pipe(

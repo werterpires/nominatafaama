@@ -7,6 +7,7 @@ import {
   ILanguageType,
   IUpdateLanguageType,
 } from './types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class LanguageTypesService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<ILanguageType[]>(`http://localhost:3000/language-types`, { headers })
+      .get<ILanguageType[]>(environment.API + `/language-types`, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -41,7 +42,7 @@ export class LanguageTypesService {
 
     return this.http
       .post<ILanguageType>(
-        `http://localhost:3000/language-types`,
+        environment.API + `/language-types`,
         createLanguageTypeData,
         { headers },
       )
@@ -63,7 +64,7 @@ export class LanguageTypesService {
 
     return this.http
       .put<ILanguageType>(
-        `http://localhost:3000/language-types`,
+        environment.API + `/language-types`,
         editLanguageData,
         { headers },
       )
@@ -81,7 +82,7 @@ export class LanguageTypesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/language-types/${registryId}`, {
+      .delete<string>(environment.API + `/language-types/${registryId}`, {
         headers,
       })
       .pipe(

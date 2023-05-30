@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
+import { environment } from 'src/environments/environment.prod'
 import {
   CreateRelatedMinistryDto,
   IRelatedMinistry,
@@ -19,7 +20,7 @@ export class RelatedMinistriesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IRelatedMinistry[]>(
-        'http://localhost:3000/related-ministries/person/student',
+        environment.API + '/related-ministries/person/student',
         {
           headers: head_obj,
         },
@@ -44,7 +45,7 @@ export class RelatedMinistriesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IRelatedMinistry>(
-        'http://localhost:3000/related-ministries/student',
+        environment.API + '/related-ministries/student',
         newRegistry,
         {
           headers: head_obj,
@@ -67,7 +68,7 @@ export class RelatedMinistriesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateRelatedMinistryDto>(
-        'http://localhost:3000/related-ministries',
+        environment.API + '/related-ministries',
         updatedRegistry,
         { headers: head_obj },
       )
@@ -85,12 +86,9 @@ export class RelatedMinistriesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(
-        `http://localhost:3000/related-ministries/${registryId}`,
-        {
-          headers,
-        },
-      )
+      .delete<string>(environment.API + `/related-ministries/${registryId}`, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

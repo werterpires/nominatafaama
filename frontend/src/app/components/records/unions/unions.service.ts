@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { CreateUnionDto, IUnion, UpdateUnionDto } from './types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class UnionService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .get<IUnion[]>('http://localhost:3000/unions', { headers })
+      .get<IUnion[]>(environment.API + '/unions', { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -30,7 +31,7 @@ export class UnionService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .post<IUnion>('http://localhost:3000/unions', createUnionData, {
+      .post<IUnion>(environment.API + '/unions', createUnionData, {
         headers,
       })
       .pipe(
@@ -45,7 +46,7 @@ export class UnionService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .put<IUnion>('http://localhost:3000/unions', updateUnionData, { headers })
+      .put<IUnion>(environment.API + '/unions', updateUnionData, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -60,7 +61,7 @@ export class UnionService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/unions/${unionId}`, { headers })
+      .delete<string>(environment.API + `/unions/${unionId}`, { headers })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

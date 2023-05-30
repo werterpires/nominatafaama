@@ -4,6 +4,7 @@ import { Router } from '@angular/router'
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs'
 import { ILoginDto } from '../../login/login.Dto'
 import { IUserApproved } from '../container/types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
@@ -31,7 +32,7 @@ export class LoginService {
 
   login(loginData: ILoginDto) {
     return this.http
-      .post<{ access_token: string }>('http://localhost:3000/login', loginData)
+      .post<{ access_token: string }>(environment.API + '/login', loginData)
       .pipe(
         catchError((error) => {
           if ((error.statusText = 'Unauthorized')) {
@@ -59,7 +60,7 @@ export class LoginService {
       this.userToken = token
       localStorage.setItem('access_token', this.userToken)
       this.http
-        .get<IUserApproved>('http://localhost:3000/users/roles', {
+        .get<IUserApproved>(environment.API + '/users/roles', {
           headers: { Authorization: 'bearer ' + token },
         })
         .subscribe({

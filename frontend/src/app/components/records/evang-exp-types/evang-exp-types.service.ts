@@ -7,6 +7,7 @@ import {
   IEvangExpType,
   IUpdateEvangExpType,
 } from './types'
+import { environment } from 'src/environments/environment.prod'
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class EvangExpTypesService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
 
     return this.http
-      .get<IEvangExpType[]>(`http://localhost:3000/evang-exp-types`, {
+      .get<IEvangExpType[]>(environment.API + `/evang-exp-types`, {
         headers,
       })
       .pipe(
@@ -43,7 +44,7 @@ export class EvangExpTypesService {
 
     return this.http
       .post<IEvangExpType>(
-        `http://localhost:3000/evang-exp-types`,
+        environment.API + `/evang-exp-types`,
         createEvangExpTypeData,
         { headers },
       )
@@ -68,7 +69,7 @@ export class EvangExpTypesService {
 
     return this.http
       .put<IEvangExpType>(
-        `http://localhost:3000/evang-exp-types`,
+        environment.API + `/evang-exp-types`,
         editEvangExpTypeData,
         { headers },
       )
@@ -89,7 +90,7 @@ export class EvangExpTypesService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(`http://localhost:3000/evang-exp-types/${registryId}`, {
+      .delete<string>(environment.API + `/evang-exp-types/${registryId}`, {
         headers,
       })
       .pipe(
