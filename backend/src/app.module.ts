@@ -46,7 +46,7 @@ const prodConfig: KnexModuleOptions = {
       user: process.env.SQL_USER,
       password: process.env.SQL_PASS,
       database: process.env.SQL_DB,
-      options: { encrypt: process.env.DEV_MODE ? false : true },
+      options: { encrypt: true },
     },
   },
 }

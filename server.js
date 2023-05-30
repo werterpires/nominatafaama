@@ -12,7 +12,7 @@ app.get(
 )
 
 app.get('*', (req, res) => {
-  res.send(path.join(distFolder, 'index.html'))
+  res.sendFile(`${distFolder}/index.html`)
 })
 
 const port = process.env.PORT || 5000
