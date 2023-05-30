@@ -4,7 +4,7 @@
   "description": "## Instruções para executar localmente",
   "main": "index.js",
   "scripts": {
-    "build": "cd backend && npx knex migrate:latest && npm run build && cd ../frontend && npm run build && cd .."
+    "build": "cd backend; npx knex migrate:latest; npm run build; cd ../frontend; npm run build; cd .."
   },
   "repository": {
     "type": "git",
