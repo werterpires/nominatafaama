@@ -32,6 +32,7 @@ jobs:
           cd frontend
           npm install
           npm run build
+          rmdir /q /s frontend\node_modules
           cd ..
 
       - name: 'Deploy to Azure Web App'
