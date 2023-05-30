@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npx pm2 start server.js; npx pm2 start backend/dist/main.js",
-    "build": "cd backend; npm install; npx knex migrate:latest; npm run build; cd ../frontend; npm install; npm run build; cd .."
+    "build": "cd backend; npm install; npx knex migrate:latest; npm run build; cd ..; cd frontend; npm install; npm run build; cd .."
   },
   "repository": {
     "type": "git",
