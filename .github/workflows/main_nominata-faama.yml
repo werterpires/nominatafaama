@@ -27,7 +27,7 @@ jobs:
           cd frontend
           npm install
           npm run build
-          Remove-Item -Force -Recurse node_modules,.angular,.vscode,src,*.* -ErrorAction Continue
+          Remove-Item -Force -Recurse node_modules,.vscode,src,*.* -ErrorAction Continue
           cd ..
 
       - name: 'Deploy to Azure Web App'
