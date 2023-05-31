@@ -67,7 +67,7 @@ export class UsersApprovesComponent {
         this.allUsers = res
 
         this.admUsersNull = this.userServices.filterUsers(
-          false,
+          null,
           this.allUsers,
           6,
         )
@@ -82,7 +82,7 @@ export class UsersApprovesComponent {
           6,
         )
         this.repUsersNull = this.userServices.filterUsers(
-          false,
+          null,
           this.allUsers,
           5,
         )
@@ -97,7 +97,7 @@ export class UsersApprovesComponent {
           5,
         )
         this.dirUsersNull = this.userServices.filterUsers(
-          false,
+          null,
           this.allUsers,
           4,
         )
@@ -112,7 +112,7 @@ export class UsersApprovesComponent {
           4,
         )
         this.secUsersNull = this.userServices.filterUsers(
-          false,
+          null,
           this.allUsers,
           3,
         )
@@ -127,7 +127,7 @@ export class UsersApprovesComponent {
           3,
         )
         this.docUsersNull = this.userServices.filterUsers(
-          false,
+          null,
           this.allUsers,
           2,
         )
@@ -142,7 +142,7 @@ export class UsersApprovesComponent {
           2,
         )
         this.estUsersNull = this.userServices.filterUsers(
-          false,
+          null,
           this.allUsers,
           1,
         )

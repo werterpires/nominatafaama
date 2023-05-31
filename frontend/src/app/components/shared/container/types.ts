@@ -18,7 +18,7 @@ export interface IOptions {
 }
 
 export interface IUser {
-  user_approved?: boolean
+  user_approved?: boolean | null
   user_id: number
   principal_email: string
   person_id: number

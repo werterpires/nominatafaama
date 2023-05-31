@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { Observable, catchError, max, throwError } from 'rxjs'
-import { IUser, IUserApproved } from '../container/types'
+import { Observable, catchError, throwError } from 'rxjs'
 import { environment } from 'src/environments/environment'
+import { IUser } from '../container/types'
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +24,11 @@ export class UsersServices {
       )
   }
 
-  filterUsers(isApproved: boolean, allUsers: IUser[], maxId: number): IUser[] {
+  filterUsers(
+    isApproved: boolean | null,
+    allUsers: IUser[],
+    maxId: number,
+  ): IUser[] {
     const filteredUsers = allUsers.filter((user) => {
       return (
         user.user_approved === isApproved &&
