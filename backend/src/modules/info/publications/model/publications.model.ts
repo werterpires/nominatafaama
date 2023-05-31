@@ -27,19 +27,15 @@ export class PublicationsModel {
           person_id,
         } = createPublicationData
 
-        const [result] = await trx('publications').insert(
-          {
+        const [result] = await trx('publications')
+          .insert({
             publication_type_id,
             reference,
             link,
             publication_approved,
             person_id,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('publication_id')
 
         await trx.commit()
 

@@ -22,17 +22,13 @@ export class PreviousMarriagesModel {
         const { marriage_end_date, previous_marriage_approved, student_id } =
           createPreviousMarriageData
 
-        const [result] = await trx('previous_marriages').insert(
-          {
+        const [result] = await trx('previous_marriages')
+          .insert({
             student_id,
             marriage_end_date,
             previous_marriage_approved,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('previous_marriage_id')
 
         await trx.commit()
 

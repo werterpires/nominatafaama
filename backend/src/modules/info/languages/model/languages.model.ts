@@ -26,8 +26,8 @@ export class LanguagesModel {
           person_id,
         } = createLanguageData
 
-        const [result] = await trx('languages').insert(
-          {
+        const [result] = await trx('languages')
+          .insert({
             chosen_language,
             read,
             understand,
@@ -37,12 +37,8 @@ export class LanguagesModel {
             unknown,
             person_id,
             language_approved: false,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('language_id')
 
         await trx.commit()
 

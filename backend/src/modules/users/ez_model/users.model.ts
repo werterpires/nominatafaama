@@ -31,27 +31,21 @@ export class UsersModel {
           includeTriggerModifications: true,
         })
 
-        const [result] = await trx('users').insert(
-          {
+        const [result] = await trx('users')
+          .insert({
             password_hash,
             principal_email,
             person_id: person,
             user_approved: null,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('user_id')
 
         const roles = role_id.map((role) => ({
           user_id: result,
           role_id: role,
         }))
 
-        await trx('users_roles').insert(roles, '*', {
-          includeTriggerModifications: true,
-        })
+        await trx('users_roles').insert(roles)
 
         await trx.commit()
       } catch (error) {
@@ -402,9 +396,7 @@ export class UsersModel {
                 user_id: id,
                 role_id,
               }))
-              await trx('users_roles').insert(roles, '*', {
-                includeTriggerModifications: true,
-              })
+              await trx('users_roles').insert(roles)
             }
           })
         }

@@ -16,17 +16,13 @@ export class StudentsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [result] = await trx('students').insert(
-          {
+        const [result] = await trx('students')
+          .insert({
             ...createStudent,
             student_approved: null,
             student_active: true,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('student_id')
 
         await trx.commit()
 

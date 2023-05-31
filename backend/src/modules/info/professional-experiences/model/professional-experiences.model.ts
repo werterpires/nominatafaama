@@ -28,20 +28,16 @@ export class ProfessionalExperiencesModel {
           experience_approved,
         } = createExperienceData
 
-        const [result] = await trx('professional_experiences').insert(
-          {
+        const [result] = await trx('professional_experiences')
+          .insert({
             job,
             job_institution,
             job_begin_date,
             job_end_date,
             person_id,
             experience_approved,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('experience_id')
 
         await trx.commit()
 

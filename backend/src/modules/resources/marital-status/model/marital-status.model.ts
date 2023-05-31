@@ -19,15 +19,11 @@ export class MaritalStatusModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [result] = await trx('marital_status_types').insert(
-          {
+        const [result] = await trx('marital_status_types')
+          .insert({
             marital_status_type_name,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('marital_status_type_id')
 
         maritalStatus = {
           marital_status_type_id: result,

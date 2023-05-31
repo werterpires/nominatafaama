@@ -22,20 +22,16 @@ export class CoursesModel {
           course_approved,
         } = createCourseData
 
-        const [result] = await trx('courses').insert(
-          {
+        const [result] = await trx('courses')
+          .insert({
             course_area,
             institution,
             begin_date,
             conclusion_date,
             person_id,
             course_approved,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('course_id')
 
         await trx.commit()
 

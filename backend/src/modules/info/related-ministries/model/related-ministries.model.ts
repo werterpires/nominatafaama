@@ -26,18 +26,14 @@ export class RelatedMinistriesModel {
           related_ministry_approved,
         } = createRelatedMinistryData
 
-        ;[relatedMinistryId] = await trx('related_ministries').insert(
-          {
+        ;[relatedMinistryId] = await trx('related_ministries')
+          .insert({
             person_id,
             ministry_type_id,
             priority,
             related_ministry_approved,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('related_ministry_id')
 
         await trx.commit()
       } catch (error) {

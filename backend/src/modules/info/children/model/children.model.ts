@@ -23,24 +23,20 @@ export class ChildrenModel {
           cpf,
         } = createChildData
 
-        const personId = await trx('people').insert({ name, cpf }, '*', {
-          includeTriggerModifications: true,
-        })
+        const [personId] = await trx('people')
+          .insert({ name, cpf })
+          .returning('person_id')
 
-        ;[childId] = await trx('children').insert(
-          {
+        ;[childId] = await trx('children')
+          .insert({
             child_birth_date,
             study_grade,
             marital_status_id,
             person_id: personId,
             student_id,
             child_approved,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('child_id')
 
         await trx.commit()
       } catch (error) {

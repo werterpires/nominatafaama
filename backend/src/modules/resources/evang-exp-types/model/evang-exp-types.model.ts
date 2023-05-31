@@ -19,15 +19,11 @@ export class EvangExpTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [result] = await trx('evang_exp_types').insert(
-          {
+        const [result] = await trx('evang_exp_types')
+          .insert({
             evang_exp_type_name,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('evang_exp_type_id')
 
         evangExpType = {
           evang_exp_type_id: result,

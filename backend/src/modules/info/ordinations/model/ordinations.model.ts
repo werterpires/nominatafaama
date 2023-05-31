@@ -22,19 +22,15 @@ export class OrdinationsModel {
         const { ordination_name, place, year, person_id, ordination_approved } =
           createOrdinationData
 
-        const [insertedId] = await trx('ordinations').insert(
-          {
+        const [insertedId] = await trx('ordinations')
+          .insert({
             ordination_name,
             place,
             year,
             person_id,
             ordination_approved: ordination_approved,
-          },
-          '*',
-          {
-            includeTriggerModifications: true,
-          },
-        )
+          })
+          .returning('ordination_id')
 
         ordinationId = insertedId
 
