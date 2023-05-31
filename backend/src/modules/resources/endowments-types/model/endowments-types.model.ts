@@ -20,7 +20,7 @@ export class EndowmentTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [{ endowment_type_id }] = await trx('endowment_types')
+        const [endowment_type_id] = await trx('endowment_types')
           .insert({
             endowment_type_name,
             application,

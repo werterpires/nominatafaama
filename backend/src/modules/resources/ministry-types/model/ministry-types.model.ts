@@ -20,7 +20,7 @@ export class MinistryTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [{ ministry_type_id }] = await trx('ministry_types')
+        const [ministry_type_id] = await trx('ministry_types')
           .insert({
             ministry_type_name,
             ministry_type_approved,

@@ -28,7 +28,7 @@ export class PastEclExpsModel {
           past_ecl_approved,
         } = createPastEclExpData
 
-        const [{ past_ecl_id }] = await trx('past_ecl_exps')
+        const [past_ecl_id] = await trx('past_ecl_exps')
           .insert({
             function: expFunction,
             place,

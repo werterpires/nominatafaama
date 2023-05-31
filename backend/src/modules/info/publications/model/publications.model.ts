@@ -27,7 +27,7 @@ export class PublicationsModel {
           person_id,
         } = createPublicationData
 
-        const [{ publication_id }] = await trx('publications')
+        const [publication_id] = await trx('publications')
           .insert({
             publication_type_id,
             reference,

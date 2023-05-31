@@ -26,7 +26,7 @@ export class LanguagesModel {
           person_id,
         } = createLanguageData
 
-        const [{ language_id }] = await trx('languages')
+        const [language_id] = await trx('languages')
           .insert({
             chosen_language,
             read,

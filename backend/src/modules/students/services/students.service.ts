@@ -58,7 +58,8 @@ export class StudentsService {
       const student = await this.studentsModel.findStudentById(id)
       return student as IStudent
     } catch (error) {
-      throw new Error(`Failed to find student with id ${id}: ${error.message}`)
+      console.error(error)
+      return null as any
     }
   }
 
@@ -67,7 +68,8 @@ export class StudentsService {
       const student = await this.studentsModel.findStudentByUserId(id)
       return student as IStudent
     } catch (error) {
-      throw new Error(`Failed to find student with id ${id}: ${error.message}`)
+      console.error(error)
+      return null as any
     }
   }
 

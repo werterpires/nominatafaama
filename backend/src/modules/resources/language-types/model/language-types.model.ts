@@ -19,7 +19,7 @@ export class LanguageTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [{ language_id }] = await trx('language_types')
+        const [language_id] = await trx('language_types')
           .insert({
             language,
           })

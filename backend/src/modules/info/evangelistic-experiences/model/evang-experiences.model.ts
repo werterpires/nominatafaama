@@ -29,7 +29,7 @@ export class EvangelisticExperiencesModel {
           evang_exp_approved,
         } = createEvangelisticExperienceData
 
-        const [{ evang_exp_id }] = await trx('evangelistic_experiences')
+        const [evang_exp_id] = await trx('evangelistic_experiences')
           .insert({
             project,
             place,

@@ -26,7 +26,7 @@ export class RelatedMinistriesModel {
           related_ministry_approved,
         } = createRelatedMinistryData
 
-        ;[{ related_ministry_id }] = await trx('related_ministries')
+        ;[related_ministry_id] = await trx('related_ministries')
           .insert({
             person_id,
             ministry_type_id,

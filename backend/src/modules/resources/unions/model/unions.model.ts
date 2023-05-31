@@ -16,7 +16,7 @@ export class UnionsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [{ union_id }] = await trx('unions')
+        const [union_id] = await trx('unions')
           .insert({
             union_name,
             union_acronym,

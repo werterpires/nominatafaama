@@ -18,7 +18,7 @@ export class EndowmentsModel {
         const { endowment_type_id, person_id, endowment_approved } =
           createEndowmentData
 
-        ;[{ endowment_id }] = await trx('endowments')
+        ;[endowment_id] = await trx('endowments')
           .insert({
             endowment_type_id,
             person_id,

@@ -23,11 +23,11 @@ export class ChildrenModel {
           cpf,
         } = createChildData
 
-        const [{ person_id }] = await trx('people')
+        const [person_id] = await trx('people')
           .insert({ name, cpf })
           .returning('person_id')
 
-        ;[{ child_id }] = await trx('children')
+        ;[child_id] = await trx('children')
           .insert({
             child_birth_date,
             study_grade,

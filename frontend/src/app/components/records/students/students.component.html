@@ -10,7 +10,7 @@
       alt="Criar {{ title }}" (click)="showForm = true" />
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form *ngIf="!registry.student_id" (save)="createRegistry()">
+    <app-creation-form *ngIf="!registry?.student_id" (save)="createRegistry()">
       <div class="subSection gap-2">
         <label class="inputLabel">
           Número de telefone<input class="smallInput" type="text" name="studentPhoneNumberInput"

@@ -20,7 +20,7 @@ export class PublicationTypeModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [{ publication_type_id }] = await trx('publication_types')
+        const [publication_type_id] = await trx('publication_types')
           .insert({
             publication_type,
             instructions,

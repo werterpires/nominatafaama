@@ -22,7 +22,7 @@ export class OrdinationsModel {
         const { ordination_name, place, year, person_id, ordination_approved } =
           createOrdinationData
 
-        const [{ ordination_id }] = await trx('ordinations')
+        const [ordination_id] = await trx('ordinations')
           .insert({
             ordination_name,
             place,

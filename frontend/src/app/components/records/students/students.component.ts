@@ -90,7 +90,7 @@ export class StudentsComponent {
     this.isLoading = true
     this.studentServices.findRegistry().subscribe({
       next: (res) => {
-        if (res.student_id) {
+        if (res && res.student_id) {
           this.registry = res
           this.dataService.maritalStatusName =
             this.registry.marital_status_type_name

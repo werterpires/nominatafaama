@@ -22,7 +22,7 @@ export class CoursesModel {
           course_approved,
         } = createCourseData
 
-        const [{ course_id }] = await trx('courses')
+        const [course_id] = await trx('courses')
           .insert({
             course_area,
             institution,

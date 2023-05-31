@@ -27,11 +27,11 @@ export class UsersModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [{ person_id }] = await trx('people')
+        const [person_id] = await trx('people')
           .insert({ name, cpf })
           .returning('person_id')
         console.log('person:', person_id)
-        const [{ user_id }] = await trx('users')
+        const [user_id] = await trx('users')
           .insert({
             password_hash,
             principal_email,
@@ -77,7 +77,7 @@ export class UsersModel {
           .select(
             'users.user_id',
             'users.principal_email',
-            'users.person',
+            'users.person_id',
             'people.name',
             'people.cpf',
             'roles.role_id',

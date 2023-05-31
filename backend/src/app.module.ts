@@ -12,6 +12,8 @@ import { AuthModule } from './shared/auth/auth.module'
 import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard'
 import { RolesGuard } from './shared/roles/gz_guards/roles.guard'
 import { RolesModule } from './shared/roles/roles.module'
+import * as fs from 'fs'
+import * as path from 'path'
 
 config()
 
@@ -26,6 +28,9 @@ const mysqlConfig: KnexModuleOptions = {
         ? process.env.SQL_DEV_PASS
         : process.env.SQL_PASS,
       database: process.env.DEV ? process.env.SQL_DEV_DB : process.env.SQL_DB,
+      ssl: {
+        ca: fs.readFileSync(path.join(__dirname, '../mysql_ca_cert.pem')),
+      },
       typeCast: function (field, next) {
         if (field.type === 'TINY' && field.length === 1) {
           return field.string() === '1' // 1 = true, 0 = false

@@ -28,7 +28,7 @@ export class AcademicFormationsModel {
           degree_id,
         } = createAcademicFormationData
 
-        const [{ formation_id }] = await trx('academic_formations')
+        const [formation_id] = await trx('academic_formations')
           .insert({
             course_area,
             institution,

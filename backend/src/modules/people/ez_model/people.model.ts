@@ -12,7 +12,7 @@ export class PeopleModel {
 
     person = await this.knex.transaction(async (trx) => {
       try {
-        const [{ person_id }] = await trx
+        const [person_id] = await trx
           .table('people')
           .insert({
             name,
