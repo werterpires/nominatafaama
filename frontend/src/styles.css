@@ -21,6 +21,14 @@ p {
   width: auto;
 }
 
+.flex {
+  display: flex;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
 .flex-grow {
   flex-grow: 1;
 }
@@ -41,8 +49,17 @@ p {
   flex-wrap: wrap;
 }
 
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
 .flex-row {
   flex-direction: row;
+}
+
+.px-4 {
+  padding-right: 1rem;
+  padding-left: 1rem;
 }
 
 .specialInput {

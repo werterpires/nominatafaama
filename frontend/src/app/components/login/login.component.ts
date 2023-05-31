@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Output} from '@angular/core'
-import {Router} from '@angular/router'
-import {LoginService} from '../shared/shared.service.ts/login.service'
-import {ValidateService} from '../shared/shared.service.ts/validate.services'
-import {ILoginDto} from './login.Dto'
+import { Component, EventEmitter, Output } from '@angular/core'
+import { Router } from '@angular/router'
+import { LoginService } from '../shared/shared.service.ts/login.service'
+import { ValidateService } from '../shared/shared.service.ts/validate.services'
+import { ILoginDto } from './login.Dto'
 
 @Component({
   selector: 'app-login',
@@ -79,6 +79,10 @@ export class LoginComponent {
         this.isLoading = false
       },
     })
+  }
+
+  cancel() {
+    this.router.navigateByUrl('/')
   }
 
   showPassword() {
