@@ -9,16 +9,10 @@ exports.up = function (knex) {
     table.integer('person_id').unsigned().notNullable()
     table.integer('endowment_type_id').unsigned().notNullable()
     table.boolean('endowment_approved')
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
     table
       .foreign('endowment_type_id')
       .references('endowment_types.endowment_type_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
 
     table.timestamps(true, true)
   })

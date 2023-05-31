@@ -8,16 +8,8 @@ exports.up = function (knex) {
     table.integer('rep_id').unsigned().notNullable()
     table.integer('student_id').unsigned().notNullable()
 
-    table
-      .foreign('rep_id')
-      .references('field_reps.rep_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
-    table
-      .foreign('student_id')
-      .references('students.student_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('rep_id').references('field_reps.rep_id')
+    table.foreign('student_id').references('students.student_id')
 
     table.timestamps(true, true)
   })

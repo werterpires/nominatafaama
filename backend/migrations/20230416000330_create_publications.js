@@ -11,17 +11,11 @@ exports.up = function (knex) {
     table.boolean('publication_approved')
     table.integer('person_id').unsigned()
 
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
 
     table
       .foreign('publication_type_id')
       .references('publication_types.publication_type_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
 
     table.timestamps(true, true)
   })

@@ -14,16 +14,10 @@ exports.up = function (knex) {
       table.boolean('rep_approved').notNullable()
       table.date('rep_active_validate').notNullable()
 
-      table
-        .foreign('rep_id')
-        .references('field_reps.rep_id')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT')
+      table.foreign('rep_id').references('field_reps.rep_id')
       table
         .foreign('represented_field_id')
         .references('associations.association_id')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT')
 
       table.timestamps(true, true)
     },

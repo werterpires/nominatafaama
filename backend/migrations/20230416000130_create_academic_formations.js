@@ -13,16 +13,8 @@ exports.up = function (knex) {
     table.integer('person_id').unsigned().notNullable()
     table.boolean('academic_formation_approved').notNullable()
 
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
-    table
-      .foreign('degree_id')
-      .references('academic_degrees.degree_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
+    table.foreign('degree_id').references('academic_degrees.degree_id')
 
     table.timestamps(true, true)
   })

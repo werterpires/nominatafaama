@@ -10,11 +10,7 @@ exports.up = function (knex) {
     table.string('professor_photo_address', 700).notNullable()
     table.boolean('approved').notNullable()
 
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
 
     table.timestamps(true, true)
   })

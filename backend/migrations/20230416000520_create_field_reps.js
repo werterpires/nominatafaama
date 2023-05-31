@@ -8,11 +8,7 @@ exports.up = function (knex) {
     table.string('phone_number', 15).notNullable()
     table.integer('person_id').unsigned().notNullable()
 
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
 
     table.timestamps(true, true)
   })

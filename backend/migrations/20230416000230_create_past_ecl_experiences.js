@@ -12,11 +12,7 @@ exports.up = function (knex) {
     table.date('past_exp_end_date').notNullable()
     table.integer('person_id').unsigned().notNullable()
     table.boolean('past_ecl_approved')
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
 
     table.timestamps(true, true)
   })

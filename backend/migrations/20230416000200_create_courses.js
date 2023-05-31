@@ -11,11 +11,7 @@ exports.up = function (knex) {
     table.date('conclusion_date')
     table.integer('person_id').unsigned().notNullable()
     table.boolean('course_approved')
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
 
     table.timestamps(true, true)
   })

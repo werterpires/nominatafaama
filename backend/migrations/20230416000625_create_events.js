@@ -12,11 +12,7 @@ exports.up = function (knex) {
 
     table.integer('nominata_id').unsigned().notNullable()
 
-    table
-      .foreign('nominata_id')
-      .references('nominatas.nominata_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('nominata_id').references('nominatas.nominata_id')
 
     table.timestamps(true, true)
   })

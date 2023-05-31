@@ -8,11 +8,7 @@ exports.up = function (knex) {
     table.string('association_name', 250).notNullable()
     table.string('association_acronym', 150).notNullable()
     table.integer('union_id').unsigned().notNullable()
-    table
-      .foreign('union_id')
-      .references('unions.union_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('union_id').references('unions.union_id')
     table.timestamps(true, true)
   })
 }

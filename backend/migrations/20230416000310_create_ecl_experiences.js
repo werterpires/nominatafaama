@@ -8,16 +8,8 @@ exports.up = function (knex) {
     table.integer('person_id').unsigned().notNullable()
     table.integer('ecl_exp_type_id').unsigned().notNullable()
     table.boolean('ecl_exp_approved')
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
-    table
-      .foreign('ecl_exp_type_id')
-      .references('ecl_exp_types.ecl_exp_type_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
+    table.foreign('ecl_exp_type_id').references('ecl_exp_types.ecl_exp_type_id')
 
     table.timestamps(true, true)
   })

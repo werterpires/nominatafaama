@@ -8,11 +8,7 @@ exports.up = function (knex) {
     table.date('marriage_end_date').notNullable()
     table.integer('student_id').unsigned().notNullable()
     table.boolean('previous_marriage_approved')
-    table
-      .foreign('student_id')
-      .references('students.student_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('student_id').references('students.student_id')
 
     table.timestamps(true, true)
   })

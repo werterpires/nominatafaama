@@ -11,22 +11,10 @@ exports.up = function (knex) {
     table.integer('rep_id').unsigned().notNullable()
     table.integer('ministry_id').unsigned().notNullable()
 
-    table
-      .foreign('rep_id')
-      .references('field_reps.rep_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('rep_id').references('field_reps.rep_id')
 
-    table
-      .foreign('field_id')
-      .references('associations.association_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
-    table
-      .foreign('ministry_id')
-      .references('ministry_types.ministry_type_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('field_id').references('associations.association_id')
+    table.foreign('ministry_id').references('ministry_types.ministry_type_id')
 
     table.timestamps(true, true)
   })

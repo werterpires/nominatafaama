@@ -27,21 +27,9 @@ exports.up = function (knex) {
     table.string('registry_number', 150)
     table.boolean('spouse_approved')
 
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
-    table
-      .foreign('origin_field_id')
-      .references('associations.association_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
-    table
-      .foreign('student_id')
-      .references('students.student_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
+    table.foreign('origin_field_id').references('associations.association_id')
+    table.foreign('student_id').references('students.student_id')
     table.timestamps(true, true)
   })
 }

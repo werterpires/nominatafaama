@@ -11,16 +11,10 @@ exports.up = function (knex) {
     table.integer('priority').notNullable()
     table.boolean('related_ministry_approved')
 
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
     table
       .foreign('ministry_type_id')
       .references('ministry_types.ministry_type_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
 
     table.timestamps(true, true)
   })

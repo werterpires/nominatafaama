@@ -13,8 +13,6 @@ exports.up = function (knex) {
     table
       .foreign('vacancy_student_id')
       .references('vacancies_students.vacancy_student_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
 
     table.timestamps(true, true)
   })

@@ -24,26 +24,14 @@ exports.up = function (knex) {
     table.boolean('student_approved')
     table.boolean('student_active').notNullable()
 
-    table
-      .foreign('person_id')
-      .references('people.person_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
-    table
-      .foreign('origin_field_id')
-      .references('associations.association_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
+    table.foreign('person_id').references('people.person_id')
+    table.foreign('origin_field_id').references('associations.association_id')
     table
       .foreign('marital_status_id')
       .references('marital_status_types.marital_status_type_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
     table
       .foreign('hiring_status_id')
       .references('hiring_status.hiring_status_id')
-      .onDelete('RESTRICT')
-      .onUpdate('RESTRICT')
 
     table.timestamps(true, true)
   })

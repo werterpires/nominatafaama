@@ -11,17 +11,9 @@ exports.up = function (knex) {
       table.integer('field_id').unsigned().notNullable()
       table.integer('nominata_id').unsigned().notNullable()
 
-      table
-        .foreign('field_id')
-        .references('associations.association_id')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT')
+      table.foreign('field_id').references('associations.association_id')
 
-      table
-        .foreign('nominata_id')
-        .references('nominatas.nominata_id')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT')
+      table.foreign('nominata_id').references('nominatas.nominata_id')
 
       table.timestamps(true, true)
     },
