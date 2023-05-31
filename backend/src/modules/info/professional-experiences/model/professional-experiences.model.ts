@@ -28,7 +28,7 @@ export class ProfessionalExperiencesModel {
           experience_approved,
         } = createExperienceData
 
-        const [result] = await trx('professional_experiences')
+        const result = await trx('professional_experiences')
           .insert({
             job,
             job_institution,
@@ -37,7 +37,7 @@ export class ProfessionalExperiencesModel {
             person_id,
             experience_approved,
           })
-          .returning('experience_id')
+          .returning('experience_id')[0].experience_id
 
         await trx.commit()
 

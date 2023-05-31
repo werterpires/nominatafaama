@@ -19,11 +19,11 @@ export class AcademicDegreesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [result] = await trx('academic_degrees')
+        const result = await trx('academic_degrees')
           .insert({
             degree_name,
           })
-          .returning('degree_id')
+          .returning('degree_id')[0].degree_id
 
         academicDegree = {
           degree_id: result,

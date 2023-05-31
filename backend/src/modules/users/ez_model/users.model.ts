@@ -27,18 +27,18 @@ export class UsersModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [person] = await trx('people').insert({ name, cpf }, '*', {
-          includeTriggerModifications: true,
-        })
+        const person = await trx('people')
+          .insert({ name, cpf })
+          .returning('person_id')[0].person_id
 
-        const [result] = await trx('users')
+        const result = await trx('users')
           .insert({
             password_hash,
             principal_email,
             person_id: person,
             user_approved: null,
           })
-          .returning('user_id')
+          .returning('user_id')[0].user_id
 
         const roles = role_id.map((role) => ({
           user_id: result,

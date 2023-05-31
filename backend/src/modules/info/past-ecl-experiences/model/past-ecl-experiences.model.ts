@@ -28,7 +28,7 @@ export class PastEclExpsModel {
           past_ecl_approved,
         } = createPastEclExpData
 
-        const [result] = await trx('past_ecl_exps')
+        const result = await trx('past_ecl_exps')
           .insert({
             function: expFunction,
             place,
@@ -37,7 +37,7 @@ export class PastEclExpsModel {
             person_id,
             past_ecl_approved,
           })
-          .returning('past_ecl_id')
+          .returning('past_ecl_id')[0].past_ecl_id
 
         await trx.commit()
 

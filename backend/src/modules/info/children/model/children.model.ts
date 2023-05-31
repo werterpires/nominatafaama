@@ -23,9 +23,9 @@ export class ChildrenModel {
           cpf,
         } = createChildData
 
-        const [personId] = await trx('people')
+        const personId = await trx('people')
           .insert({ name, cpf })
-          .returning('person_id')
+          .returning('person_id')[0].person_id
 
         ;[childId] = await trx('children')
           .insert({
@@ -36,7 +36,7 @@ export class ChildrenModel {
             student_id,
             child_approved,
           })
-          .returning('child_id')
+          .returning('child_id')[0].child_id
 
         await trx.commit()
       } catch (error) {

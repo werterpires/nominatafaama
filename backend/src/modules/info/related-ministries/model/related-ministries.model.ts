@@ -33,7 +33,7 @@ export class RelatedMinistriesModel {
             priority,
             related_ministry_approved,
           })
-          .returning('related_ministry_id')
+          .returning('related_ministry_id')[0].related_ministry_id
 
         await trx.commit()
       } catch (error) {

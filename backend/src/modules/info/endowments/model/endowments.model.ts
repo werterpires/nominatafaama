@@ -24,7 +24,7 @@ export class EndowmentsModel {
             person_id,
             endowment_approved,
           })
-          .returning('endowment_id')
+          .returning('endowment_id')[0].endowment_id
 
         await trx.commit()
       } catch (error) {
