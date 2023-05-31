@@ -28,9 +28,11 @@ const mysqlConfig: KnexModuleOptions = {
         ? process.env.SQL_DEV_PASS
         : process.env.SQL_PASS,
       database: process.env.DEV ? process.env.SQL_DEV_DB : process.env.SQL_DB,
-      ssl: {
-        ca: fs.readFileSync(path.join(__dirname, '../mysql_ca_cert.pem')),
-      },
+      ssl: process.env.DEV
+        ? undefined
+        : {
+            ca: fs.readFileSync(path.join(__dirname, 'mysql_ca_cert.pem')),
+          },
       typeCast: function (field, next) {
         if (field.type === 'TINY' && field.length === 1) {
           // retorna tipo booleano ou null
