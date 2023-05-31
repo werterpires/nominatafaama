@@ -35,9 +35,11 @@ const mysqlConfig: KnexModuleOptions = {
         if (field.type === 'TINY' && field.length === 1) {
           // retorna tipo booleano ou null
           switch (field.string()) {
-            case '':
             case null:
             case undefined:
+            case '':
+            case 'null':
+            case 'NULL':
               return null
             case '0':
               return false
