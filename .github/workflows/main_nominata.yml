@@ -35,4 +35,4 @@ jobs:
           app-name: 'nominata'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5D9D80FA85A64D97810A2B9AC9B51495 }}
-          package: .
+          package: backend
