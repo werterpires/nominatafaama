@@ -27,7 +27,7 @@ export class PublicationsModel {
           person_id,
         } = createPublicationData
 
-        const result = await trx('publications')
+        const [{ publication_id }] = await trx('publications')
           .insert({
             publication_type_id,
             reference,
@@ -35,11 +35,11 @@ export class PublicationsModel {
             publication_approved,
             person_id,
           })
-          .returning('publication_id')[0].publication_id
+          .returning('publication_id')
 
         await trx.commit()
 
-        publication = await this.findPublicationById(result)
+        publication = await this.findPublicationById(publication_id)
       } catch (error) {
         console.error(error)
         await trx.rollback()

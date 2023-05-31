@@ -19,9 +19,9 @@ export class AssociationsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const result = await trx('associations')
+        await trx('associations')
           .insert(createAssociation)
-          .returning('association_id')[0].association_id
+          .returning('association_id')
 
         await trx.commit()
       } catch (error) {

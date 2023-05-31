@@ -7,7 +7,7 @@ import {
   IAssociation,
   UpdateAssociationDto,
 } from './types'
-import { environment } from 'src/environments/environment.prod'
+import { environment } from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root',

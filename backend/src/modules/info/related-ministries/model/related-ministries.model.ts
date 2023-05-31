@@ -14,7 +14,7 @@ export class RelatedMinistriesModel {
   async createRelatedMinistry(
     createRelatedMinistryData: ICreateRelatedMinistry,
   ): Promise<number> {
-    let relatedMinistryId!: number
+    let related_ministry_id!: number
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
@@ -26,14 +26,14 @@ export class RelatedMinistriesModel {
           related_ministry_approved,
         } = createRelatedMinistryData
 
-        ;[relatedMinistryId] = await trx('related_ministries')
+        ;[{ related_ministry_id }] = await trx('related_ministries')
           .insert({
             person_id,
             ministry_type_id,
             priority,
             related_ministry_approved,
           })
-          .returning('related_ministry_id')[0].related_ministry_id
+          .returning('related_ministry_id')
 
         await trx.commit()
       } catch (error) {
@@ -51,11 +51,11 @@ export class RelatedMinistriesModel {
       throw sentError
     }
 
-    if (!relatedMinistryId) {
+    if (!related_ministry_id) {
       throw new Error('Não foi possível criar ministério relacionado.')
     }
 
-    return relatedMinistryId
+    return related_ministry_id
   }
 
   async findRelatedMinistryById(id: number): Promise<IRelatedMinistry> {

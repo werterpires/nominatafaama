@@ -22,7 +22,7 @@ export class CoursesModel {
           course_approved,
         } = createCourseData
 
-        const result = await trx('courses')
+        const [{ course_id }] = await trx('courses')
           .insert({
             course_area,
             institution,
@@ -31,11 +31,11 @@ export class CoursesModel {
             person_id,
             course_approved,
           })
-          .returning('course_id')[0].course_id
+          .returning('course_id')
 
         await trx.commit()
 
-        course = await this.findCourseById(result)
+        course = await this.findCourseById(course_id)
       } catch (error) {
         console.error(error)
         await trx.rollback()

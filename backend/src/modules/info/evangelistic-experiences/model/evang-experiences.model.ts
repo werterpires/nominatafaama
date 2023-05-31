@@ -29,7 +29,7 @@ export class EvangelisticExperiencesModel {
           evang_exp_approved,
         } = createEvangelisticExperienceData
 
-        const result = await trx('evangelistic_experiences')
+        const [{ evang_exp_id }] = await trx('evangelistic_experiences')
           .insert({
             project,
             place,
@@ -39,10 +39,10 @@ export class EvangelisticExperiencesModel {
             evang_exp_type_id,
             evang_exp_approved,
           })
-          .returning('evang_exp_id')[0].evang_exp_id
+          .returning('evang_exp_id')
 
         evangelisticExperience = {
-          evang_exp_id: result,
+          evang_exp_id: evang_exp_id,
           project,
           place,
           exp_begin_date,

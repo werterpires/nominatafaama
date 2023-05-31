@@ -16,17 +16,17 @@ export class StudentsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const result = await trx('students')
+        const [{ student_id }] = await trx('students')
           .insert({
             ...createStudent,
             student_approved: null,
             student_active: true,
           })
-          .returning('student_id')[0].student_id
+          .returning('student_id')
 
         await trx.commit()
 
-        student = await this.findStudentById(result)
+        student = await this.findStudentById(student_id)
       } catch (error) {
         console.error(error)
         console.error(error)

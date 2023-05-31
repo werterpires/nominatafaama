@@ -20,15 +20,15 @@ export class HiringStatusModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const result = await trx('hiring_status')
+        const [{ hiring_status_id }] = await trx('hiring_status')
           .insert({
             hiring_status_name,
             hiring_status_description,
           })
-          .returning('hiring_status_id')[0].hiring_status_id
+          .returning('hiring_status_id')
 
         hiringStatus = {
-          hiring_status_id: result,
+          hiring_status_id: hiring_status_id,
           hiring_status_name,
           hiring_status_description,
           created_at: new Date(),

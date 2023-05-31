@@ -26,7 +26,7 @@ export class LanguagesModel {
           person_id,
         } = createLanguageData
 
-        const result = await trx('languages')
+        const [{ language_id }] = await trx('languages')
           .insert({
             chosen_language,
             read,
@@ -38,11 +38,11 @@ export class LanguagesModel {
             person_id,
             language_approved: false,
           })
-          .returning('language_id')[0].language_id
+          .returning('language_id')
 
         await trx.commit()
 
-        language = await this.findLanguageById(result)
+        language = await this.findLanguageById(language_id)
       } catch (error) {
         console.error(error)
         await trx.rollback()

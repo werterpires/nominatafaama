@@ -10,7 +10,7 @@ export class EndowmentsModel {
   async createEndowment(
     createEndowmentData: ICreateEndowment,
   ): Promise<number> {
-    let endowment!: number
+    let endowment_id!: number
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
@@ -18,13 +18,13 @@ export class EndowmentsModel {
         const { endowment_type_id, person_id, endowment_approved } =
           createEndowmentData
 
-        ;[endowment] = await trx('endowments')
+        ;[{ endowment_id }] = await trx('endowments')
           .insert({
             endowment_type_id,
             person_id,
             endowment_approved,
           })
-          .returning('endowment_id')[0].endowment_id
+          .returning('endowment_id')
 
         await trx.commit()
       } catch (error) {
@@ -42,11 +42,11 @@ export class EndowmentsModel {
       throw sentError
     }
 
-    if (!endowment) {
+    if (!endowment_id) {
       throw new Error('Não foi possível criar ivestidura.')
     }
 
-    return endowment
+    return endowment_id
   }
 
   async findEndowmentById(id: number): Promise<IEndowment> {

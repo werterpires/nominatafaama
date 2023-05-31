@@ -12,15 +12,15 @@ export class PeopleModel {
 
     person = await this.knex.transaction(async (trx) => {
       try {
-        const result = await trx
+        const [{ person_id }] = await trx
           .table('people')
           .insert({
             name,
             cpf,
           })
-          .returning('person_id')[0].person_id
+          .returning('person_id')
 
-        person = result as IPerson
+        person = person_id as IPerson
         await trx.commit()
       } catch (error) {
         console.error(error)

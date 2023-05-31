@@ -4,7 +4,7 @@ import { Router } from '@angular/router'
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs'
 import { ILoginDto } from '../../login/login.Dto'
 import { IUserApproved } from '../container/types'
-import { environment } from 'src/environments/environment.prod'
+import { environment } from 'src/environments/environment'
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {

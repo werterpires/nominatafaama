@@ -28,7 +28,7 @@ export class AcademicFormationsModel {
           degree_id,
         } = createAcademicFormationData
 
-        const result = await trx('academic_formations')
+        const [{ formation_id }] = await trx('academic_formations')
           .insert({
             course_area,
             institution,
@@ -38,10 +38,10 @@ export class AcademicFormationsModel {
             degree_id,
             academic_formation_approved: false,
           })
-          .returning('formation_id')[0].formation_id
+          .returning('formation_id')
 
         academicFormation = {
-          formation_id: result,
+          formation_id: formation_id,
           course_area: course_area,
           institution: institution,
           begin_date: begin_date,

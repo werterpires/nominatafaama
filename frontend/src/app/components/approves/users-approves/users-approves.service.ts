@@ -4,7 +4,7 @@ import { ApproveUserDto } from './types'
 import { Router } from '@angular/router'
 import { throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
-import { environment } from 'src/environments/environment.prod'
+import { environment } from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root',

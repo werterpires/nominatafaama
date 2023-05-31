@@ -36,9 +36,7 @@ export class EclExperiencesModel {
           })
         })
 
-        const result = await trx('ecl_experiences')
-          .insert(experiences)
-          .returning('ecl_exp_id')[0].ecl_exp_id
+        await trx('ecl_experiences').insert(experiences)
 
         await trx.commit()
 
@@ -222,9 +220,7 @@ export class EclExperiencesModel {
         await trx('ecl_experiences').where('person_id', person_id).delete()
 
         if (experiences.length > 0) {
-          const result = await trx('ecl_experiences')
-            .insert(experiences)
-            .returning('ecl_exp_id')[0].ecl_exp_id
+          await trx('ecl_experiences').insert(experiences)
         }
 
         await trx.commit()
@@ -269,9 +265,7 @@ export class EclExperiencesModel {
         }))
         console.log(newEclExperiences)
         if (newEclExperiences.length > 0) {
-          await trx('ecl_experiences')
-            .insert(newEclExperiences)
-            .returning('exl_exp_id')[0].exl_exp_id
+          await trx('ecl_experiences').insert(newEclExperiences)
         }
 
         await trx.commit()

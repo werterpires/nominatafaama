@@ -22,7 +22,7 @@ export class OrdinationsModel {
         const { ordination_name, place, year, person_id, ordination_approved } =
           createOrdinationData
 
-        const insertedId = await trx('ordinations')
+        const [{ ordination_id }] = await trx('ordinations')
           .insert({
             ordination_name,
             place,
@@ -30,9 +30,9 @@ export class OrdinationsModel {
             person_id,
             ordination_approved: ordination_approved,
           })
-          .returning('ordination_id')[0].ordination_id
+          .returning('ordination_id')
 
-        ordinationId = insertedId
+        ordinationId = ordination_id
 
         await trx.commit()
       } catch (error) {

@@ -13,21 +13,21 @@ export class SpousesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const personId = await trx('people')
+        const [{ person_id }] = await trx('people')
           .insert({
             name: createSpouse.name,
             cpf: createSpouse.cpf,
           })
-          .returning('person_id')[0].person_id
+          .returning('person_id')
 
         const { cpf, name, ...spouseData } = createSpouse
-        const result = await trx('spouses')
+        await trx('spouses')
           .insert({
             ...spouseData,
-            person_id: personId,
+            person_id: person_id,
             spouse_approved: null,
           })
-          .returning('spouse_id')[0].spouse_id
+          .returning('spouse_id')
 
         await trx.commit()
       } catch (error) {

@@ -19,14 +19,14 @@ export class EclExpTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const result = await trx('ecl_exp_types')
+        const [{ ecl_exp_type_id }] = await trx('ecl_exp_types')
           .insert({
             ecl_exp_type_name,
           })
-          .returning('ecl_exp_type_id')[0].ecl_exp_type_id
+          .returning('ecl_exp_type_id')
 
         eclExpType = {
-          ecl_exp_type_id: result,
+          ecl_exp_type_id: ecl_exp_type_id,
           ecl_exp_type_name,
           created_at: new Date(),
           updated_at: new Date(),

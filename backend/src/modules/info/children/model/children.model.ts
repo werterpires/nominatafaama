@@ -8,7 +8,7 @@ export class ChildrenModel {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
   async createChild(createChildData: ICreateChild): Promise<number> {
-    let childId!: number
+    let child_id!: number
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
@@ -23,20 +23,20 @@ export class ChildrenModel {
           cpf,
         } = createChildData
 
-        const personId = await trx('people')
+        const [{ person_id }] = await trx('people')
           .insert({ name, cpf })
-          .returning('person_id')[0].person_id
+          .returning('person_id')
 
-        ;[childId] = await trx('children')
+        ;[{ child_id }] = await trx('children')
           .insert({
             child_birth_date,
             study_grade,
             marital_status_id,
-            person_id: personId,
+            person_id: person_id,
             student_id,
             child_approved,
           })
-          .returning('child_id')[0].child_id
+          .returning('child_id')
 
         await trx.commit()
       } catch (error) {
@@ -54,11 +54,11 @@ export class ChildrenModel {
       throw sentError
     }
 
-    if (!childId) {
+    if (!child_id) {
       throw new Error('Failed to create child')
     }
 
-    return childId
+    return child_id
   }
 
   async findChildById(id: number): Promise<IChild> {

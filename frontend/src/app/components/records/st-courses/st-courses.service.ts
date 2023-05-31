@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { ICourse, ICreateCourse, IUpdateCourse } from './types'
-import { environment } from 'src/environments/environment.prod'
+import { environment } from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root',
