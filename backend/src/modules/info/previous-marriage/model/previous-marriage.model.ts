@@ -38,6 +38,7 @@ export class PreviousMarriagesModel {
 
         previousMarriage = await this.findPreviousMarriageById(result)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Previous marriage already exists')
@@ -82,6 +83,7 @@ export class PreviousMarriagesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -110,6 +112,7 @@ export class PreviousMarriagesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.sqlMessage)
         await trx.rollback()
       }
@@ -132,6 +135,7 @@ export class PreviousMarriagesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.sqlMessage)
         await trx.rollback()
       }
@@ -173,6 +177,7 @@ export class PreviousMarriagesModel {
           previous_marriage_id,
         )
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -204,6 +209,7 @@ export class PreviousMarriagesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         console.log(error)
         sentError = new Error(error.message)

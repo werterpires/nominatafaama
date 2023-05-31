@@ -55,6 +55,7 @@ export class UsersModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code == 'ER_DUP_ENTRY') {
           sentError = new Error('CPF ou Email já cadastrado')
@@ -132,6 +133,7 @@ export class UsersModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -208,6 +210,7 @@ export class UsersModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         throw error
       }
@@ -287,6 +290,7 @@ export class UsersModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -335,6 +339,7 @@ export class UsersModel {
         await trx.commit()
         return user
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -406,6 +411,7 @@ export class UsersModel {
 
         updatedUser = await this.findUserById(id)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -443,6 +449,7 @@ export class UsersModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }
@@ -481,12 +488,14 @@ export class UsersModel {
         try {
           await trx('people').where('person_id', userPeople.person_id).del()
         } catch (error) {
+          console.error(error)
           message =
             'Não foi possível deletar o nome e o cpf associados ao usuário. Provavelmente Essa pessoa possui ligação com algum estudante.'
         }
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

@@ -45,6 +45,7 @@ export class PublicationsModel {
 
         publication = await this.findPublicationById(result)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Publication already exists')
@@ -100,6 +101,7 @@ export class PublicationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         console.log(error)
         sentError = new Error(error.message)
         await trx.rollback()
@@ -151,6 +153,7 @@ export class PublicationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -198,6 +201,7 @@ export class PublicationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -237,6 +241,7 @@ export class PublicationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         console.log(error)
         await trx.rollback()
         sentError = new Error(error.message)
@@ -273,6 +278,7 @@ export class PublicationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

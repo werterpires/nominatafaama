@@ -41,6 +41,7 @@ export class HiringStatusModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Status de contratação já existente.')
@@ -82,6 +83,7 @@ export class HiringStatusModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -113,6 +115,7 @@ export class HiringStatusModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -147,6 +150,7 @@ export class HiringStatusModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -172,6 +176,7 @@ export class HiringStatusModel {
         await trx('hiring_status').where('hiring_status_id', id).del()
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

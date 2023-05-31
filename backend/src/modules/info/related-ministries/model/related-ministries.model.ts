@@ -41,6 +41,7 @@ export class RelatedMinistriesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Related ministry already exists')
@@ -94,6 +95,7 @@ export class RelatedMinistriesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         console.log(error)
         sentError = new Error(error.message)
         await trx.rollback()
@@ -139,6 +141,7 @@ export class RelatedMinistriesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -182,6 +185,7 @@ export class RelatedMinistriesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -221,6 +225,7 @@ export class RelatedMinistriesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         console.log(error)
         await trx.rollback()
         sentError = new Error(error.message)
@@ -257,6 +262,7 @@ export class RelatedMinistriesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

@@ -47,6 +47,7 @@ export class PastEclExpsModel {
 
         pastEclExp = await this.findPastEclExpById(result)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('PastEclExp already exists')
@@ -92,6 +93,7 @@ export class PastEclExpsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -118,6 +120,7 @@ export class PastEclExpsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.sqlMessage)
         await trx.rollback()
       }
@@ -140,6 +143,7 @@ export class PastEclExpsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.sqlMessage)
         await trx.rollback()
       }
@@ -183,6 +187,7 @@ export class PastEclExpsModel {
 
         updatedPastEclExp = await this.findPastEclExpById(past_ecl_id)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -214,6 +219,7 @@ export class PastEclExpsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }

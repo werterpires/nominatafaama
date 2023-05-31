@@ -40,6 +40,7 @@ export class OrdinationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -83,6 +84,7 @@ export class OrdinationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }
@@ -121,6 +123,7 @@ export class OrdinationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -157,6 +160,7 @@ export class OrdinationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -198,6 +202,7 @@ export class OrdinationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -233,6 +238,7 @@ export class OrdinationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

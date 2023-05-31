@@ -60,6 +60,8 @@ export class AcademicFormationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Academic Formation already exists')
@@ -114,6 +116,7 @@ export class AcademicFormationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -158,6 +161,7 @@ export class AcademicFormationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -205,6 +209,7 @@ export class AcademicFormationsModel {
         await trx.commit()
       } catch (error) {
         console.error(error)
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -251,6 +256,7 @@ export class AcademicFormationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -286,6 +292,7 @@ export class AcademicFormationsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

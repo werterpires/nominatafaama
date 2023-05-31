@@ -33,6 +33,7 @@ export class StudentsModel {
         student = await this.findStudentById(result)
       } catch (error) {
         console.error(error)
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Estudante já existe')
@@ -198,6 +199,7 @@ export class StudentsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -258,6 +260,7 @@ export class StudentsModel {
         await trx.commit()
       } catch (error) {
         console.error(error)
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -285,6 +288,7 @@ export class StudentsModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

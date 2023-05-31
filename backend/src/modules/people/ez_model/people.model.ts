@@ -26,6 +26,7 @@ export class PeopleModel {
         person = result as IPerson
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
 
         return error
@@ -48,6 +49,7 @@ export class PeopleModel {
         }
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
 
         throw error
@@ -72,6 +74,7 @@ export class PeopleModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         throw error
       }
@@ -103,6 +106,7 @@ export class PeopleModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
 
         throw error

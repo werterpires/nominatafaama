@@ -48,6 +48,7 @@ export class LanguagesModel {
 
         language = await this.findLanguageById(result)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Language already exists')
@@ -102,6 +103,7 @@ export class LanguagesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -148,6 +150,7 @@ export class LanguagesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.sqlMessage)
         await trx.rollback()
       }
@@ -194,6 +197,7 @@ export class LanguagesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -241,6 +245,7 @@ export class LanguagesModel {
 
         updatedLanguage = await this.findLanguageById(language_id)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -272,6 +277,7 @@ export class LanguagesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         console.log(error)
         sentError = new Error(error.message)

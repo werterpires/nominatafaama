@@ -44,6 +44,7 @@ export class EclExperiencesModel {
 
         eclExperiences = await this.findEclExperiencesByPersonId(person_id)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Eclesiastic Experience already exists')
@@ -95,6 +96,7 @@ export class EclExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -136,6 +138,7 @@ export class EclExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -178,6 +181,7 @@ export class EclExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -225,6 +229,7 @@ export class EclExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -271,6 +276,7 @@ export class EclExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -300,6 +306,7 @@ export class EclExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

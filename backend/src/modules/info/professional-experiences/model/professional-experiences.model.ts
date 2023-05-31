@@ -47,6 +47,7 @@ export class ProfessionalExperiencesModel {
 
         experience = await this.findProfessionalExperienceById(result)
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Professional experience already exists')
@@ -94,6 +95,7 @@ export class ProfessionalExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -122,6 +124,7 @@ export class ProfessionalExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.sqlMessage)
         await trx.rollback()
       }
@@ -144,6 +147,7 @@ export class ProfessionalExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.sqlMessage)
         await trx.rollback()
       }
@@ -191,6 +195,7 @@ export class ProfessionalExperiencesModel {
           experience_id,
         )
       } catch (error) {
+        console.error(error)
         console.log(error)
         await trx.rollback()
         sentError = new Error(error.message)
@@ -223,6 +228,7 @@ export class ProfessionalExperiencesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }

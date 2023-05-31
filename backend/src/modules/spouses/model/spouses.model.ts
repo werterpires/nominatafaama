@@ -39,6 +39,7 @@ export class SpousesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         console.log(error)
         if (error.code === 'ER_DUP_ENTRY') {
@@ -118,6 +119,7 @@ export class SpousesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -158,6 +160,7 @@ export class SpousesModel {
 
       spouse = result
     } catch (error) {
+      console.error(error)
       console.log(error)
       sentError = new Error(error.message)
     }
@@ -233,6 +236,7 @@ export class SpousesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -306,6 +310,7 @@ export class SpousesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         console.log(error)
         await trx.rollback()
         sentError = new Error(error.message)
@@ -333,6 +338,7 @@ export class SpousesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }

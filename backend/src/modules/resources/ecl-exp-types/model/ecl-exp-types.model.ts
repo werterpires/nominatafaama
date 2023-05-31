@@ -38,6 +38,7 @@ export class EclExpTypesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('EclExpType already exists')
@@ -78,6 +79,7 @@ export class EclExpTypesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         sentError = new Error(error.message)
         await trx.rollback()
         throw error
@@ -108,6 +110,7 @@ export class EclExpTypesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)
       }
@@ -139,6 +142,7 @@ export class EclExpTypesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }
@@ -165,6 +169,7 @@ export class EclExpTypesModel {
 
         await trx.commit()
       } catch (error) {
+        console.error(error)
         if (error.code == 'ER_ROW_IS_REFERENCED_2') {
           sentError = new Error(
             'Alguém está usando o tipo de experiência eclesiástica que você está tentando apagar.',
