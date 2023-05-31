@@ -24,11 +24,7 @@ export class UsersServices {
       )
   }
 
-  filterUsers(
-    isApproved: number | null,
-    allUsers: IUser[],
-    maxId: number,
-  ): IUser[] {
+  filterUsers(isApproved: boolean, allUsers: IUser[], maxId: number): IUser[] {
     const filteredUsers = allUsers.filter((user) => {
       return (
         user.user_approved === isApproved &&
