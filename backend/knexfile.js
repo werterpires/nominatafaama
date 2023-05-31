@@ -4,13 +4,13 @@ require('dotenv').config()
  * @type { Object.<string, import("knex").Knex.Config> }
  */
 
-const devConfig = {
+const mysqlConfig = {
   client: 'mysql2',
   connection: {
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
+    host: process.env.DEV ? process.env.SQL_DEV_HOST : process.env.SQL_HOST,
+    user: process.env.DEV ? process.env.SQL_DEV_USER : process.env.SQL_USER,
+    password: process.env.DEV ? process.env.SQL_DEV_PASS : process.env.SQL_PASS,
+    database: process.env.DEV ? process.env.SQL_DEV_DB : process.env.SQL_DB,
   },
   pool: {
     min: 2,
@@ -21,7 +21,7 @@ const devConfig = {
   },
 }
 
-const prodConfig = {
+const mssqlConfig = {
   client: 'mssql',
   connection: {
     host: process.env.SQL_HOST,
@@ -39,4 +39,4 @@ const prodConfig = {
   },
 }
 
-module.exports = process.env.DEV ? devConfig : prodConfig
+module.exports = mysqlConfig

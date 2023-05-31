@@ -15,15 +15,17 @@ import { RolesModule } from './shared/roles/roles.module'
 
 config()
 
-const devConfig: KnexModuleOptions = {
+const mysqlConfig: KnexModuleOptions = {
   config: {
     client: 'mysql',
     useNullAsDefault: true,
     connection: {
-      host: process.env.MYSQL_HOST,
-      user: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DATABASE,
+      host: process.env.DEV ? process.env.SQL_DEV_HOST : process.env.SQL_HOST,
+      user: process.env.DEV ? process.env.SQL_DEV_USER : process.env.SQL_USER,
+      password: process.env.DEV
+        ? process.env.SQL_DEV_PASS
+        : process.env.SQL_PASS,
+      database: process.env.DEV ? process.env.SQL_DEV_DB : process.env.SQL_DB,
       typeCast: function (field, next) {
         if (field.type === 'TINY' && field.length === 1) {
           return field.string() === '1' // 1 = true, 0 = false
@@ -38,7 +40,7 @@ const devConfig: KnexModuleOptions = {
   },
 }
 
-const prodConfig: KnexModuleOptions = {
+const mssqlConfig: KnexModuleOptions = {
   config: {
     client: 'mssql',
     connection: {
@@ -53,7 +55,7 @@ const prodConfig: KnexModuleOptions = {
 
 @Module({
   imports: [
-    KnexModule.forRoot(process.env.DEV ? devConfig : prodConfig),
+    KnexModule.forRoot(mysqlConfig),
     UsersModule,
     PeopleModule,
     AuthModule,

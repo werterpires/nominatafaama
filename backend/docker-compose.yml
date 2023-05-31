@@ -16,10 +16,10 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      SQL_DEV_PASS: ${SQL_DEV_PASS}
+      SQL_DEV_DB: ${SQL_DEV_DB}
+      SQL_DEV_USER: ${SQL_DEV_USER}
+      SQL_DEV_PASS: ${SQL_DEV_PASS}
 volumes:
   faamadb:
     name: nominata_faama_system
