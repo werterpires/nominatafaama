@@ -17,7 +17,7 @@ config()
 
 const mysqlConfig: KnexModuleOptions = {
   config: {
-    client: 'mysql',
+    client: 'mysql2',
     useNullAsDefault: true,
     connection: {
       host: process.env.DEV ? process.env.SQL_DEV_HOST : process.env.SQL_HOST,

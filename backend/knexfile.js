@@ -1,4 +1,6 @@
 require('dotenv').config()
+const fs = require('fs')
+const path = require('path')
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -11,6 +13,9 @@ const mysqlConfig = {
     user: process.env.DEV ? process.env.SQL_DEV_USER : process.env.SQL_USER,
     password: process.env.DEV ? process.env.SQL_DEV_PASS : process.env.SQL_PASS,
     database: process.env.DEV ? process.env.SQL_DEV_DB : process.env.SQL_DB,
+    ssl: {
+      ca: fs.readFileSync(path.join(__dirname, 'mysql_ca_cert.pem')),
+    },
   },
   pool: {
     min: 2,
