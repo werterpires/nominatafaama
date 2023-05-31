@@ -18,11 +18,17 @@ export class EndowmentsModel {
         const { endowment_type_id, person_id, endowment_approved } =
           createEndowmentData
 
-        endowment = await trx('endowments').insert({
-          endowment_type_id,
-          person_id,
-          endowment_approved,
-        })
+        ;[endowment] = await trx('endowments').insert(
+          {
+            endowment_type_id,
+            person_id,
+            endowment_approved,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         await trx.commit()
       } catch (error) {

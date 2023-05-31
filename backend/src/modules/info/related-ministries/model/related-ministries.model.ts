@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreateRelatedMinistry,
   IRelatedMinistry,
@@ -26,12 +26,18 @@ export class RelatedMinistriesModel {
           related_ministry_approved,
         } = createRelatedMinistryData
 
-        relatedMinistryId = await trx('related_ministries').insert({
-          person_id,
-          ministry_type_id,
-          priority,
-          related_ministry_approved,
-        })
+        ;[relatedMinistryId] = await trx('related_ministries').insert(
+          {
+            person_id,
+            ministry_type_id,
+            priority,
+            related_ministry_approved,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         await trx.commit()
       } catch (error) {

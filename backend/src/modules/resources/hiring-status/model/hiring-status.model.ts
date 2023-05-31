@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreateHiringStatus,
   IHiringStatus,
@@ -20,10 +20,16 @@ export class HiringStatusModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [result] = await trx('hiring_status').insert({
-          hiring_status_name,
-          hiring_status_description,
-        })
+        const [result] = await trx('hiring_status').insert(
+          {
+            hiring_status_name,
+            hiring_status_description,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         hiringStatus = {
           hiring_status_id: result,
@@ -135,7 +141,7 @@ export class HiringStatusModel {
 
         await trx('hiring_status')
           .where('hiring_status_id', hiring_status_id)
-          .update({hiring_status_name, hiring_status_description})
+          .update({ hiring_status_name, hiring_status_description })
 
         updatedHirignStatus = await this.findHiringStatusById(hiring_status_id)
 

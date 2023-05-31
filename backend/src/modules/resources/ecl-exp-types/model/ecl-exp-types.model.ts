@@ -1,7 +1,11 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
-import {IEclExpType, ICreateEclExpType, IUpdateEclExpType} from '../types/types'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import {
+  IEclExpType,
+  ICreateEclExpType,
+  IUpdateEclExpType,
+} from '../types/types'
 
 @Injectable()
 export class EclExpTypesModel {
@@ -15,9 +19,15 @@ export class EclExpTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [result] = await trx('ecl_exp_types').insert({
-          ecl_exp_type_name,
-        })
+        const [result] = await trx('ecl_exp_types').insert(
+          {
+            ecl_exp_type_name,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         eclExpType = {
           ecl_exp_type_id: result,
@@ -118,12 +128,12 @@ export class EclExpTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {ecl_exp_type_name} = updateEclExpType
-        const {ecl_exp_type_id} = updateEclExpType
+        const { ecl_exp_type_name } = updateEclExpType
+        const { ecl_exp_type_id } = updateEclExpType
 
         await trx('ecl_exp_types')
           .where('ecl_exp_type_id', ecl_exp_type_id)
-          .update({ecl_exp_type_name})
+          .update({ ecl_exp_type_name })
 
         updatedEclExpType = await this.findEclExpTypeById(ecl_exp_type_id)
 

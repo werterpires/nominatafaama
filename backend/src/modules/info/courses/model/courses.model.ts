@@ -1,7 +1,7 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
-import {ICreateCourse, ICourse, IUpdateCourse} from '../types/types'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import { ICreateCourse, ICourse, IUpdateCourse } from '../types/types'
 
 @Injectable()
 export class CoursesModel {
@@ -22,14 +22,20 @@ export class CoursesModel {
           course_approved,
         } = createCourseData
 
-        const [result] = await trx('courses').insert({
-          course_area,
-          institution,
-          begin_date,
-          conclusion_date,
-          person_id,
-          course_approved,
-        })
+        const [result] = await trx('courses').insert(
+          {
+            course_area,
+            institution,
+            begin_date,
+            conclusion_date,
+            person_id,
+            course_approved,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         await trx.commit()
 

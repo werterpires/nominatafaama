@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreateEvangelisticExperience,
   IEvangelisticExperience,
@@ -29,15 +29,21 @@ export class EvangelisticExperiencesModel {
           evang_exp_approved,
         } = createEvangelisticExperienceData
 
-        const [result] = await trx('evangelistic_experiences').insert({
-          project,
-          place,
-          exp_begin_date,
-          exp_end_date,
-          person_id,
-          evang_exp_type_id,
-          evang_exp_approved,
-        })
+        const [result] = await trx('evangelistic_experiences').insert(
+          {
+            project,
+            place,
+            exp_begin_date,
+            exp_end_date,
+            person_id,
+            evang_exp_type_id,
+            evang_exp_approved,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         evangelisticExperience = {
           evang_exp_id: result,

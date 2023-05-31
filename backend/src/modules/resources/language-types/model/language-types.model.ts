@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ILanguageType,
   ICreateLanguageType,
@@ -19,9 +19,15 @@ export class LanguageTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [result] = await trx('language_types').insert({
-          language,
-        })
+        const [result] = await trx('language_types').insert(
+          {
+            language,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         languageType = {
           language_id: result,
@@ -122,11 +128,11 @@ export class LanguageTypesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {language, language_id} = updateLanguageType
+        const { language, language_id } = updateLanguageType
 
         await trx('language_types')
           .where('language_id', language_id)
-          .update({language})
+          .update({ language })
 
         updatedLanguageType = await this.findLanguageTypeById(language_id)
 

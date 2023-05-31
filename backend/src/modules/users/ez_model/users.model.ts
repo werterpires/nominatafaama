@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   IAproveUser,
   IBasicUser,
@@ -9,7 +9,7 @@ import {
   IUser,
   IValidateUser,
 } from '../bz_types/types'
-import {IRole} from 'src/shared/roles/bz_types/types'
+import { IRole } from 'src/shared/roles/bz_types/types'
 
 @Injectable()
 export class UsersModel {
@@ -27,21 +27,31 @@ export class UsersModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [person] = await trx('people').insert({name, cpf})
-
-        const [result] = await trx('users').insert({
-          password_hash,
-          principal_email,
-          person_id: person,
-          user_approved: null,
+        const [person] = await trx('people').insert({ name, cpf }, '*', {
+          includeTriggerModifications: true,
         })
+
+        const [result] = await trx('users').insert(
+          {
+            password_hash,
+            principal_email,
+            person_id: person,
+            user_approved: null,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         const roles = role_id.map((role) => ({
           user_id: result,
           role_id: role,
         }))
 
-        await trx('users_roles').insert(roles)
+        await trx('users_roles').insert(roles, '*', {
+          includeTriggerModifications: true,
+        })
 
         await trx.commit()
       } catch (error) {
@@ -300,8 +310,8 @@ export class UsersModel {
         // Atualiza a coluna user_approved na tabela users
         const updateResult = await trx
           .table('users')
-          .where({user_id})
-          .update({user_approved}, [
+          .where({ user_id })
+          .update({ user_approved }, [
             'user_id',
             'principal_email',
             'password_hash',
@@ -334,7 +344,7 @@ export class UsersModel {
       throw sentError
     }
     if (user === null) {
-      throw new Error(`Usuário com id: ${{user_id}} não foi encontrado.`)
+      throw new Error(`Usuário com id: ${{ user_id }} não foi encontrado.`)
     }
     return user
   }
@@ -348,13 +358,13 @@ export class UsersModel {
         if (updateUser.password_hash) {
           await this.knex('users')
             .where('user_id', id)
-            .update({password_hash: updateUser.password_hash})
+            .update({ password_hash: updateUser.password_hash })
         }
 
         if (updateUser.principal_email) {
           await this.knex('users')
             .where('user_id', id)
-            .update({principal_email: updateUser.principal_email})
+            .update({ principal_email: updateUser.principal_email })
         }
 
         if (updateUser.name || updateUser.cpf) {
@@ -366,13 +376,13 @@ export class UsersModel {
           if (updateUser.name) {
             await this.knex('people')
               .where('person_id', userPeople.person_id)
-              .update({name: updateUser.name})
+              .update({ name: updateUser.name })
           }
 
           if (updateUser.cpf) {
             await this.knex('people')
               .where('person_id', userPeople.person_id)
-              .update({cpf: updateUser.cpf})
+              .update({ cpf: updateUser.cpf })
           }
         }
 
@@ -387,7 +397,9 @@ export class UsersModel {
                 user_id: id,
                 role_id,
               }))
-              await trx('users_roles').insert(roles)
+              await trx('users_roles').insert(roles, '*', {
+                includeTriggerModifications: true,
+              })
             }
           })
         }

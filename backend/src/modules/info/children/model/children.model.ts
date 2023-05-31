@@ -1,7 +1,7 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
-import {ICreateChild, IChild, IUpdateChild} from '../types/types'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import { ICreateChild, IChild, IUpdateChild } from '../types/types'
 
 @Injectable()
 export class ChildrenModel {
@@ -23,16 +23,24 @@ export class ChildrenModel {
           cpf,
         } = createChildData
 
-        const personId = await trx('people').insert({name, cpf})
-
-        childId = await trx('children').insert({
-          child_birth_date,
-          study_grade,
-          marital_status_id,
-          person_id: personId,
-          student_id,
-          child_approved,
+        const personId = await trx('people').insert({ name, cpf }, '*', {
+          includeTriggerModifications: true,
         })
+
+        ;[childId] = await trx('children').insert(
+          {
+            child_birth_date,
+            study_grade,
+            marital_status_id,
+            person_id: personId,
+            student_id,
+            child_approved,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         await trx.commit()
       } catch (error) {

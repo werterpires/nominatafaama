@@ -1,7 +1,11 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
-import {ICreateOrdination, IOrdination, IUpdateOrdination} from '../types/types'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import {
+  ICreateOrdination,
+  IOrdination,
+  IUpdateOrdination,
+} from '../types/types'
 
 @Injectable()
 export class OrdinationsModel {
@@ -15,16 +19,22 @@ export class OrdinationsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {ordination_name, place, year, person_id, ordination_approved} =
+        const { ordination_name, place, year, person_id, ordination_approved } =
           createOrdinationData
 
-        const [insertedId] = await trx('ordinations').insert({
-          ordination_name,
-          place,
-          year,
-          person_id,
-          ordination_approved: ordination_approved,
-        })
+        const [insertedId] = await trx('ordinations').insert(
+          {
+            ordination_name,
+            place,
+            year,
+            person_id,
+            ordination_approved: ordination_approved,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         ordinationId = insertedId
 

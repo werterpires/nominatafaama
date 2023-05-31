@@ -1,7 +1,7 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
-import {ICreateLanguage, ILanguage, IUpdateLanguage} from '../types/types'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import { ICreateLanguage, ILanguage, IUpdateLanguage } from '../types/types'
 
 @Injectable()
 export class LanguagesModel {
@@ -26,17 +26,23 @@ export class LanguagesModel {
           person_id,
         } = createLanguageData
 
-        const [result] = await trx('languages').insert({
-          chosen_language,
-          read,
-          understand,
-          speak,
-          write,
-          fluent,
-          unknown,
-          person_id,
-          language_approved: false,
-        })
+        const [result] = await trx('languages').insert(
+          {
+            chosen_language,
+            read,
+            understand,
+            speak,
+            write,
+            fluent,
+            unknown,
+            person_id,
+            language_approved: false,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         await trx.commit()
 

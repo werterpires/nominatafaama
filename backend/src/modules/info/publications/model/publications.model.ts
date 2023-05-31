@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreatePublication,
   IPublication,
@@ -27,13 +27,19 @@ export class PublicationsModel {
           person_id,
         } = createPublicationData
 
-        const [result] = await trx('publications').insert({
-          publication_type_id,
-          reference,
-          link,
-          publication_approved,
-          person_id,
-        })
+        const [result] = await trx('publications').insert(
+          {
+            publication_type_id,
+            reference,
+            link,
+            publication_approved,
+            person_id,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         await trx.commit()
 

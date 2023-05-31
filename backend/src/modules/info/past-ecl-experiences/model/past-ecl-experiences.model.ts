@@ -1,7 +1,11 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
-import {ICreatePastEclExp, IPastEclExp, IUpdatePastEclExp} from '../types/types'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import {
+  ICreatePastEclExp,
+  IPastEclExp,
+  IUpdatePastEclExp,
+} from '../types/types'
 
 @Injectable()
 export class PastEclExpsModel {
@@ -24,14 +28,20 @@ export class PastEclExpsModel {
           past_ecl_approved,
         } = createPastEclExpData
 
-        const [result] = await trx('past_ecl_exps').insert({
-          function: expFunction,
-          place,
-          past_exp_begin_date,
-          past_exp_end_date,
-          person_id,
-          past_ecl_approved,
-        })
+        const [result] = await trx('past_ecl_exps').insert(
+          {
+            function: expFunction,
+            place,
+            past_exp_begin_date,
+            past_exp_end_date,
+            person_id,
+            past_ecl_approved,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         await trx.commit()
 

@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common'
-import {Knex} from 'knex'
-import {InjectModel} from 'nest-knexjs'
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreatePreviousMarriage,
   IPreviousMarriage,
@@ -19,14 +19,20 @@ export class PreviousMarriagesModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const {marriage_end_date, previous_marriage_approved, student_id} =
+        const { marriage_end_date, previous_marriage_approved, student_id } =
           createPreviousMarriageData
 
-        const [result] = await trx('previous_marriages').insert({
-          student_id,
-          marriage_end_date,
-          previous_marriage_approved,
-        })
+        const [result] = await trx('previous_marriages').insert(
+          {
+            student_id,
+            marriage_end_date,
+            previous_marriage_approved,
+          },
+          '*',
+          {
+            includeTriggerModifications: true,
+          },
+        )
 
         await trx.commit()
 

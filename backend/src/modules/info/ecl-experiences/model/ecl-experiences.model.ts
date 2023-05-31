@@ -36,7 +36,9 @@ export class EclExperiencesModel {
           })
         })
 
-        const [result] = await trx('ecl_experiences').insert(experiences)
+        const [result] = await trx('ecl_experiences').insert(experiences, '*', {
+          includeTriggerModifications: true,
+        })
 
         await trx.commit()
 
@@ -216,7 +218,9 @@ export class EclExperiencesModel {
         await trx('ecl_experiences').where('person_id', person_id).delete()
 
         if (experiences.length > 0) {
-          const result = await trx('ecl_experiences').insert(experiences)
+          const result = await trx('ecl_experiences').insert(experiences, '*', {
+            includeTriggerModifications: true,
+          })
         }
 
         await trx.commit()
@@ -260,7 +264,9 @@ export class EclExperiencesModel {
         }))
         console.log(newEclExperiences)
         if (newEclExperiences.length > 0) {
-          await trx('ecl_experiences').insert(newEclExperiences)
+          await trx('ecl_experiences').insert(newEclExperiences, '*', {
+            includeTriggerModifications: true,
+          })
         }
 
         await trx.commit()
