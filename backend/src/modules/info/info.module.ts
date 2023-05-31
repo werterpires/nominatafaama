@@ -12,8 +12,9 @@ import { EndowmentsModule } from './endowments/endowments.module';
 import { OrdinationsModule } from './ordinations/ordinations.module';
 import { RelatedMinistriesModule } from './related-ministries/related-ministries.module';
 import { ChildrenModule } from './children/children.module';
+import { StudentPhotosModule } from './student-photos/student-photos.module';
 
 @Module({
-  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule, PastEclExperiencesModule, PublicationsModule, EndowmentsModule, OrdinationsModule, RelatedMinistriesModule, ChildrenModule]
+  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule, PastEclExperiencesModule, PublicationsModule, EndowmentsModule, OrdinationsModule, RelatedMinistriesModule, ChildrenModule, StudentPhotosModule]
 })
 export class InfoModule {}
