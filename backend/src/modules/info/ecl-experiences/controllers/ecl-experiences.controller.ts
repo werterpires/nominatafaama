@@ -92,7 +92,7 @@ export class EclExperiencesController {
 
   @Put()
   @UseGuards(JwtAuthGuard)
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   async updateEclExperienceById(
     @Body() dto: UpdateExperiencesDto,
     @CurrentUser() user: UserFromJwt,
