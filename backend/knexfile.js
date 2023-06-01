@@ -16,7 +16,7 @@ const mysqlConfig = {
     ssl: process.env.DEV
       ? undefined
       : {
-          ca: fs.readFileSync(path.join(__dirname, 'mysql_ca_cert.pem')),
+          ca: fs.readFileSync(path.join(__dirname, 'src/mysql_ca_cert.pem')),
         },
   },
   pool: {
