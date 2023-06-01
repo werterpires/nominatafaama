@@ -26,6 +26,7 @@ jobs:
           cd backend
           npm install
           npm run build --if-present
+          npm prune --production
           cd ..
 
       - name: 'Deploy to Azure Web App'
