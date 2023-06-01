@@ -40,10 +40,10 @@
     [permissions]="permissions"
   ></app-endowment-types>
 
-  <!-- Hugo -->
-  <app-publication-types [permissions]="permissions"></app-publication-types>
-
-  <!-- fim -->
+  <app-publication-types
+    *ngIf="permissions.secretaria || permissions.administrador"
+    [permissions]="permissions"
+  ></app-publication-types>
 
   <app-students
     *ngIf="permissions.estudante || permissions.administrador"
