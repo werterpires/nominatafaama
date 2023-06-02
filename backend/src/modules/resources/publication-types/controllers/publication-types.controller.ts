@@ -49,7 +49,7 @@ export class PublicationTypesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
   @Get()
   async findAllPublicationTypes() {
     try {
