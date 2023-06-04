@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common'
 import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
 import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
@@ -15,45 +17,68 @@ import { UserFromJwt } from 'src/shared/auth/types/types'
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
 import { CreateStudentPhotoDto } from '../dto/create-student-photo.dto'
 import { UpdateStudentPhotoDto } from '../dto/update-student-photo.dto'
-import { IStudentPhoto } from '../types/types'
+import { IOnePhotoAddress, IStudentPhoto } from '../types/types'
 import { StudentPhotosService } from '../services/student-photos.service'
+import { ExpressAdapter, FileInterceptor } from '@nestjs/platform-express'
+import { extname } from 'path'
+import { diskStorage } from 'multer'
 
 @Controller('student-photos')
 export class StudentPhotosController {
   constructor(private studentPhotosService: StudentPhotosService) {}
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  @Post()
-  async createStudentPhoto(
-    @Body() input: CreateStudentPhotoDto,
+  @Post(':photoType')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './src/modules/info/student-photos/files',
+        filename: (req, file, cb) => {
+          const uniqueName = `fotomuitolegal_${Date.now()}${extname(
+            file.originalname,
+          )}`
+          cb(null, uniqueName)
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+          cb(null, true)
+        } else {
+          cb(new Error('Apenas arquivos PNG e JPEG são permitidos.'), false)
+        }
+      },
+    }),
+  )
+  async uploadFotos(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createStudentPhotoDto: Express.Multer.File,
+    @Param('photoType') photoType: string,
     @CurrentUser() user: UserFromJwt,
-  ): Promise<IStudentPhoto> {
+  ): Promise<IStudentPhoto | null> {
     try {
-      const { user_id } = user
-      const studentPhoto = await this.studentPhotosService.createStudentPhoto(
-        input,
+      const user_id = user.user_id
+      console.log(photoType)
+      const studentPhoto = this.studentPhotosService.createStudentPhoto(
         user_id,
+        photoType,
+        file.filename,
       )
+
       return studentPhoto
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new Error(error.message)
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('student')
   async findStudentPhotoByStudentId(
-    @Param('id') id: number,
     @CurrentUser() user: UserFromJwt,
-  ): Promise<IStudentPhoto> {
+  ): Promise<IStudentPhoto | null> {
     try {
       const { user_id } = user
       const studentPhoto =
         await this.studentPhotosService.findStudentPhotoByStudentId(user_id)
-
-      if (!studentPhoto) {
-        throw new NotFoundException(`No student photo found with id ${id}.`)
-      }
 
       return studentPhoto
     } catch (error) {

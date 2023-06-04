@@ -192,5 +192,14 @@
     [permissions]="permissions"
   ></app-previous-marriage>
 
+  <app-student-photos
+    *ngIf="
+      (dataService.maritalStatusName == 'Divorciado' ||
+        dataService.maritalStatusName == 'Viúvo') &&
+      (permissions.estudante || permissions.administrador)
+    "
+    [permissions]="permissions"
+  ></app-student-photos>
+
   <div></div>
 </div>

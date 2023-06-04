@@ -3,6 +3,7 @@ import {
   IStudentPhoto,
   ICreateStudentPhoto,
   IUpdateStudentPhoto,
+  IOnePhotoAddress,
 } from '../types/types'
 import { StudentPhotosModel } from '../model/student-photos.model'
 import { StudentsModel } from 'src/modules/students/model/students.model'
@@ -16,19 +17,56 @@ export class StudentPhotosService {
   ) {}
 
   async createStudentPhoto(
-    dto: CreateStudentPhotoDto,
-    userId: number,
-  ): Promise<IStudentPhoto> {
-    const { student_id } = await this.studentModel.findStudentByUserId(userId)
-    const createStudentPhotoData: ICreateStudentPhoto = {
-      ...dto,
-      student_id,
-    }
+    user_id: number,
+    photoType: string,
+    filename: string,
+  ): Promise<IStudentPhoto | null> {
     try {
-      const newStudentPhoto = await this.studentPhotosModel.createStudentPhoto(
-        createStudentPhotoData,
+      const { student_id } = await this.studentModel.findStudentByUserId(
+        user_id,
       )
-      return newStudentPhoto
+      console.log(photoType)
+      const photoTypes: string[] = [
+        'alone-photo',
+        'family-photo',
+        'other-family-photo',
+        'spouse-photo',
+        'invite-photo',
+        'small-alone-photo',
+      ]
+
+      let photoValues: (string | null)[] = [null, null, null, null, null, null]
+
+      const photoTypeIndex = photoTypes.indexOf(photoType)
+      photoValues[photoTypeIndex] = filename
+
+      let createStudentPhotoData: ICreateStudentPhoto = {
+        student_id,
+        alone_photo: photoValues[0],
+        family_photo: photoValues[1],
+        other_family_photo: photoValues[2],
+        spouse_photo: photoValues[3],
+        invite_photo: photoValues[4],
+        small_alone_photo: photoValues[5],
+      }
+
+      const existing =
+        await this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
+      if (!existing) {
+        this.studentPhotosModel.createStudentPhoto(
+          createStudentPhotoData,
+          'create',
+        )
+      } else {
+        this.studentPhotosModel.createStudentPhoto(
+          createStudentPhotoData,
+          'update',
+        )
+      }
+
+      const createdStudentPhoto =
+        this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
+      return createdStudentPhoto
     } catch (error) {
       throw error
     }
