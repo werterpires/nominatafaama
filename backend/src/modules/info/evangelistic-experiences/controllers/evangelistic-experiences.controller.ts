@@ -10,15 +10,15 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common'
-import {JwtAuthGuard} from 'src/shared/auth/guards/jwt-auth.guard'
-import {ERoles} from 'src/shared/auth/types/roles.enum'
-import {UserFromJwt} from 'src/shared/auth/types/types'
-import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
-import {CreateEvangelisticExperienceDto} from '../dto/create-evangelistic-experience.dto'
-import {UpdateEvangelisticExperienceDto} from '../dto/update-evangelistic-experience.dto'
-import {EvangelisticExperiencesService} from '../services/evangelistic-experiences.service'
-import {IEvangelisticExperience} from '../types/types'
-import {CurrentUser} from 'src/shared/auth/decorators/current-user.decorator'
+import { JwtAuthGuard } from 'src/shared/auth/guards/jwt-auth.guard'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { CreateEvangelisticExperienceDto } from '../dto/create-evangelistic-experience.dto'
+import { UpdateEvangelisticExperienceDto } from '../dto/update-evangelistic-experience.dto'
+import { EvangelisticExperiencesService } from '../services/evangelistic-experiences.service'
+import { IEvangelisticExperience } from '../types/types'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
 
 @Controller('evangelistic-experiences')
 export class EvangelisticExperiencesController {
@@ -50,7 +50,6 @@ export class EvangelisticExperiencesController {
   ): Promise<IEvangelisticExperience[] | null> {
     try {
       const id = user.user_id
-      console.log(id)
       const evangelisticExperiences =
         await this.evangelisticExperiencesService.findEvangelisticExperiencesByPersonId(
           id,

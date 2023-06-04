@@ -122,8 +122,6 @@ export class EclExperiencesModel {
             'ecl_experiences.ecl_exp_type_id',
             'ecl_exp_types.ecl_exp_type_id',
           )
-
-        console.log(results)
         eclExperiencesList = results.map((row: any) => ({
           ecl_exp_id: row.ecl_exp_id,
           person_id: row.person_id,
@@ -216,7 +214,6 @@ export class EclExperiencesModel {
             ecl_exp_type_id: exp,
           })
         })
-        console.log(updateEclExperience, experiences)
         await trx('ecl_experiences').where('person_id', person_id).delete()
 
         if (experiences.length > 0) {
@@ -263,7 +260,6 @@ export class EclExperiencesModel {
           created_at: new Date(),
           updated_at: new Date(),
         }))
-        console.log(newEclExperiences)
         if (newEclExperiences.length > 0) {
           await trx('ecl_experiences').insert(newEclExperiences)
         }

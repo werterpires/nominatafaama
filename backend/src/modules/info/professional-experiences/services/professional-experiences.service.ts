@@ -110,8 +110,6 @@ export class ProfessionalExperiencesService {
         experience_approved: null,
       }
 
-      console.log(dto)
-
       const updatedExperience =
         await this.experiencesModel.updateProfessionalExperienceById(
           updateExperienceData,

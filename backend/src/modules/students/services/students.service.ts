@@ -96,7 +96,6 @@ export class StudentsService {
     }
 
     try {
-      console.log('Datas', updateData)
       updatedStudent = await this.studentsModel.updateStudentById(updateData)
     } catch (error) {
       sentError = new Error(error.message)

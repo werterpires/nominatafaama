@@ -8,15 +8,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import {LanguagesService} from '../services/languages.service'
-import {NotFoundException, InternalServerErrorException} from '@nestjs/common'
-import {CurrentUser} from 'src/shared/auth/decorators/current-user.decorator'
-import {ERoles} from 'src/shared/auth/types/roles.enum'
-import {UserFromJwt} from 'src/shared/auth/types/types'
-import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
-import {CreateLanguageDto} from '../dto/create-language.dto'
-import {UpdateLanguageDto} from '../dto/update-language.dto'
-import {ILanguage} from '../types/types'
+import { LanguagesService } from '../services/languages.service'
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { CreateLanguageDto } from '../dto/create-language.dto'
+import { UpdateLanguageDto } from '../dto/update-language.dto'
+import { ILanguage } from '../types/types'
 
 @Controller('languages')
 export class LanguagesController {
@@ -76,7 +76,6 @@ export class LanguagesController {
   @Get(':id')
   async findLanguageById(@Param('id') id: number): Promise<ILanguage> {
     try {
-      console.log('rota correta')
       const language = await this.languagesService.findLanguageById(id)
       if (!language) {
         throw new NotFoundException(`No language found with id ${id}.`)
@@ -118,7 +117,7 @@ export class LanguagesController {
   async deleteLanguageById(@Param('id') id: number) {
     try {
       const message = await this.languagesService.deleteLanguageById(id)
-      return {message}
+      return { message }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }

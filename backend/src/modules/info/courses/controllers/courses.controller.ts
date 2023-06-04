@@ -8,15 +8,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import {CoursesService} from '../services/courses.service'
-import {NotFoundException, InternalServerErrorException} from '@nestjs/common'
-import {CurrentUser} from 'src/shared/auth/decorators/current-user.decorator'
-import {ERoles} from 'src/shared/auth/types/roles.enum'
-import {UserFromJwt} from 'src/shared/auth/types/types'
-import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
-import {CreateCourseDto} from '../dto/create-course.dto'
-import {UpdateCourseDto} from '../dto/update-course.dto'
-import {ICourse} from '../types/types'
+import { CoursesService } from '../services/courses.service'
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { CreateCourseDto } from '../dto/create-course.dto'
+import { UpdateCourseDto } from '../dto/update-course.dto'
+import { ICourse } from '../types/types'
 
 @Controller('courses')
 export class CoursesController {
@@ -76,7 +76,6 @@ export class CoursesController {
   @Get(':id')
   async findCourseById(@Param('id') id: number): Promise<ICourse> {
     try {
-      console.log('rota correta')
       const course = await this.coursesService.findCourseById(id)
       if (!course) {
         throw new NotFoundException(`No course found with id ${id}.`)
@@ -114,7 +113,7 @@ export class CoursesController {
   async deleteCourseById(@Param('id') id: number) {
     try {
       const message = await this.coursesService.deleteCourseById(id)
-      return {message}
+      return { message }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }

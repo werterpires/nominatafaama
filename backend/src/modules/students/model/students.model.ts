@@ -82,8 +82,6 @@ export class StudentsModel {
       throw new Error('Estudante não encontrado')
     }
 
-    console.log('Estudante By Id:', result)
-
     return result
   }
 
@@ -122,8 +120,6 @@ export class StudentsModel {
     if (!result) {
       throw new Error('Estudante não encontrado')
     }
-
-    console.log('Estudante By User Id:', result)
 
     return result
   }

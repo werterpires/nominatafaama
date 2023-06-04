@@ -60,7 +60,6 @@ export class EclExperiencesService {
   ): Promise<IEclExperience[] | null> {
     try {
       const { person_id } = await this.usersService.findUserById(id)
-      console.log(person_id)
 
       const eclExperience =
         await this.eclExperiencesModel.findEclExperiencesByPersonId(person_id)

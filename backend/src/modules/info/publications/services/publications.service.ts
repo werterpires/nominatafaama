@@ -28,7 +28,6 @@ export class PublicationsService {
         user_id,
         personType,
       )
-      console.log(personType)
 
       const createPublicationData: ICreatePublication = {
         ...dto,

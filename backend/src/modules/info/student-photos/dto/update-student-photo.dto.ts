@@ -30,4 +30,8 @@ export class UpdateStudentPhotoDto {
   @IsInt()
   @Min(1)
   student_id: number
+
+  @IsNotEmpty()
+  @IsString()
+  small_alone_photo: string
 }

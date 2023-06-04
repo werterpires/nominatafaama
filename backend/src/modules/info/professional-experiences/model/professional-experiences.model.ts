@@ -161,7 +161,6 @@ export class ProfessionalExperiencesModel {
   ): Promise<IProfessionalExperience> {
     let updatedExperience: IProfessionalExperience | null = null
     let sentError: Error | null = null
-    console.log(updateExperience)
     await this.knex.transaction(async (trx) => {
       try {
         const {
@@ -191,8 +190,6 @@ export class ProfessionalExperiencesModel {
           experience_id,
         )
       } catch (error) {
-        console.error(error)
-        console.log(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }

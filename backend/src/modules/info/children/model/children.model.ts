@@ -105,7 +105,7 @@ export class ChildrenModel {
         await trx.commit()
       } catch (error) {
         console.error(error)
-        console.log(error)
+
         sentError = new Error(error.message)
         await trx.rollback()
       }

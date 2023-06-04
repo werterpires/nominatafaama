@@ -42,7 +42,6 @@ export class StudentsController {
   @Get('edit')
   async getStudentByIdToEdit(@CurrentUser() user: UserFromJwt) {
     const id = user.user_id
-    console.log(user)
 
     try {
       const student = await this.studentsService.findStudentByIdToEdit(id)

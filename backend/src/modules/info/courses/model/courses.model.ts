@@ -209,7 +209,6 @@ export class CoursesModel {
       } catch (error) {
         console.error(error)
         await trx.rollback()
-        console.log(error)
         sentError = new Error(error.message)
       }
     })

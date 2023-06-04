@@ -51,10 +51,8 @@ export class PeopleServices {
       if (personType === 'student') {
         personId = (await this.usersModel.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
-        console.log(personType)
         personId = (await this.spouseModel.findSpouseByUserId(user_id))
           .person_id
-        console.log(personId)
       }
     } catch (error) {
       throw error

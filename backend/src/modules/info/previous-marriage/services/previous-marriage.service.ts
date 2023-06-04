@@ -1,13 +1,13 @@
-import {Injectable} from '@nestjs/common'
-import {CreatePreviousMarriageDto} from '../dto/create-previous-marriage.dto'
-import {UpdatePreviousMarriageDto} from '../dto/update-previous-marriage.dto'
+import { Injectable } from '@nestjs/common'
+import { CreatePreviousMarriageDto } from '../dto/create-previous-marriage.dto'
+import { UpdatePreviousMarriageDto } from '../dto/update-previous-marriage.dto'
 import {
   ICreatePreviousMarriage,
   IPreviousMarriage,
   IUpdatePreviousMarriage,
 } from '../types/types'
-import {PreviousMarriagesModel} from '../model/previous-marriage.model'
-import {StudentsModel} from 'src/modules/students/model/students.model'
+import { PreviousMarriagesModel } from '../model/previous-marriage.model'
+import { StudentsModel } from 'src/modules/students/model/students.model'
 
 @Injectable()
 export class PreviousMarriagesService {
@@ -21,8 +21,9 @@ export class PreviousMarriagesService {
     user_id: number,
   ): Promise<IPreviousMarriage> {
     try {
-      const {student_id} = await this.studentModel.findStudentByUserId(user_id)
-      console.log(student_id)
+      const { student_id } = await this.studentModel.findStudentByUserId(
+        user_id,
+      )
       const createPreviousMarriageData: ICreatePreviousMarriage = {
         marriage_end_date: new Date(dto.marriage_end_date),
         previous_marriage_approved: null,
@@ -56,7 +57,9 @@ export class PreviousMarriagesService {
     user_id: number,
   ): Promise<IPreviousMarriage[] | null> {
     try {
-      const {student_id} = await this.studentModel.findStudentByUserId(user_id)
+      const { student_id } = await this.studentModel.findStudentByUserId(
+        user_id,
+      )
       const previousMarriages =
         await this.previousMarriagesModel.findPreviousMarriagesByStudentId(
           student_id,

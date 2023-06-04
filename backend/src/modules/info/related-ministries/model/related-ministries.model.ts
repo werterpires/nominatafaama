@@ -92,7 +92,6 @@ export class RelatedMinistriesModel {
         await trx.commit()
       } catch (error) {
         console.error(error)
-        console.log(error)
         sentError = new Error(error.message)
         await trx.rollback()
       }
@@ -228,8 +227,6 @@ export class RelatedMinistriesModel {
 
         await trx.commit()
       } catch (error) {
-        console.error(error)
-        console.log(error)
         await trx.rollback()
         sentError = new Error(error.message)
       }

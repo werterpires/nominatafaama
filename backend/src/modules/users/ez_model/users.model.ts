@@ -30,7 +30,6 @@ export class UsersModel {
         const [person_id] = await trx('people')
           .insert({ name, cpf })
           .returning('person_id')
-        console.log('person:', person_id)
         const [user_id] = await trx('users')
           .insert({
             password_hash,
