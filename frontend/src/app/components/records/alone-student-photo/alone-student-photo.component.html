@@ -1,0 +1,81 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+  </div>
+  <section class="formCreationWrapper">
+    <app-creation-form (save)="createRegistry()">
+      <div class="subSection">
+        <label>
+          Foto ampla do estudante
+          <input
+            type="file"
+            name="smallAlonePhoto"
+            id="smallAlonePhoto"
+            (change)="onFileSelected($event)"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <div class="alonePhoto">
+          <div
+            class="imageContainer"
+            [ngStyle]="{ 'background-image': 'url(' + imageUrl + ')' }"
+            *ngIf="imageUrl"
+          ></div>
+          <div
+            class="imageContainer imageModel"
+            [ngStyle]="{
+              'background-image': 'url(assets/img/smallAlone.png)'
+            }"
+            *ngIf="!imageUrl"
+          ></div>
+        </div>
+      </div>
+    </app-creation-form>
+  </section>
+
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeError()"
+    />
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{ doneMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeDone()"
+    />
+  </div>
+
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+</section>

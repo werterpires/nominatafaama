@@ -52,7 +52,10 @@ import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-p
 import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-endowments.component'
 import { SpRelatedMinistriesComponent } from './components/records/sp-related-ministries/sp-related-ministries.component'
 import { PreviousMarriageComponent } from './components/records/previous-marriage/previous-marriage.component'
-import { SmallAloneStudentPhotosComponent } from './components/records/small-alone-student-photos/small-alone-student-photos.component'
+import { SmallAloneStudentPhotosComponent } from './components/records/small-alone-student-photos/small-alone-student-photos.component';
+import { AloneStudentPhotoComponent } from './components/records/alone-student-photo/alone-student-photo.component';
+import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component';
+import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'
 
 @NgModule({
   declarations: [
@@ -104,6 +107,9 @@ import { SmallAloneStudentPhotosComponent } from './components/records/small-alo
     SpRelatedMinistriesComponent,
     PreviousMarriageComponent,
     SmallAloneStudentPhotosComponent,
+    AloneStudentPhotoComponent,
+    FamilyStudentPhotoComponent,
+    SpouseStudentPhotoComponent,
   ],
   imports: [
     BrowserModule,
