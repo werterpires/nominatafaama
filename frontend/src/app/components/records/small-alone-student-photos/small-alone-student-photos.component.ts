@@ -5,18 +5,18 @@ import {
   UpdateStudentPhotoDto,
   receiveStudentPhoto,
 } from './types'
-import { StudentPhotosService } from './student-photos.service'
+import { StudentPhotosService } from './small-alone-student-photos.service'
 import { IPermissions } from '../../shared/container/types'
 
 @Component({
-  selector: 'app-student-photos',
-  templateUrl: './student-photos.component.html',
-  styleUrls: ['./student-photos.component.css'],
+  selector: 'app-small-alone-student-photos',
+  templateUrl: './small-alone-student-photos.component.html',
+  styleUrls: ['./small-alone-student-photos.component.css'],
 })
-export class StudentPhotosComponent {
+export class SmallAloneStudentPhotosComponent {
   @Input() permissions!: IPermissions
   allRegistries: IStudentPhoto[] = []
-  title = 'Cursos e Capacitações'
+  title = 'Pequena foto do estudante'
   createRegistryData!: File
   showBox = false
   showForm = false
@@ -93,7 +93,7 @@ export class StudentPhotosComponent {
 
   createRegistry() {
     this.isLoading = true
-    console.log(this.createRegistryData)
+
     if (this.createRegistryData) {
     }
     const formData = new FormData()
