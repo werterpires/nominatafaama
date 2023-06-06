@@ -8,6 +8,7 @@ import {
 import { StudentPhotosModel } from '../model/student-photos.model'
 import { StudentsModel } from 'src/modules/students/model/students.model'
 import { CreateStudentPhotoDto } from '../dto/create-student-photo.dto'
+import * as fs from 'fs'
 
 @Injectable()
 export class StudentPhotosService {
@@ -58,6 +59,12 @@ export class StudentPhotosService {
           'create',
         )
       } else {
+        let correctPhotoType = photoType.replace(/-/g, '_')
+        if (existing[correctPhotoType] != null) {
+          const filePath = `./src/modules/info/student-photos/files/${existing[correctPhotoType]}`
+          fs.unlinkSync(filePath)
+        }
+
         this.studentPhotosModel.createStudentPhoto(
           createStudentPhotoData,
           'update',
@@ -87,12 +94,40 @@ export class StudentPhotosService {
 
   async findStudentPhotoByStudentId(
     userId: number,
-  ): Promise<IStudentPhoto | null> {
+    photoType: string,
+  ): Promise<{
+    fileStream: fs.ReadStream | null
+    headers: Record<string, string>
+  }> {
     try {
       const { student_id } = await this.studentModel.findStudentByUserId(userId)
-      const studentPhoto =
+      if (!student_id) {
+        throw new Error('Usuário não possui um estudante válido')
+      }
+
+      const photoNames =
         await this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
-      return studentPhoto
+
+      if (!photoNames) {
+        return { fileStream: null, headers: {} }
+      }
+
+      const photosProperty = photoType.replace(/-/g, '_')
+
+      const filename = photoNames[photosProperty]
+
+      const filePath = `./src/modules/info/student-photos/files/${filename}`
+
+      if (fs.existsSync(filePath)) {
+        const fileStream = fs.createReadStream(filePath)
+        const headers = {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename=${filename}`,
+        }
+        return { fileStream, headers }
+      } else {
+        return { fileStream: null, headers: {} }
+      }
     } catch (error) {
       throw new Error(
         `Não foi possível encontrar a foto do estudante com o ID ${userId}: ${error.message}`,

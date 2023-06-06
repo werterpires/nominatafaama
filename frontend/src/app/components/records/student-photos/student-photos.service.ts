@@ -4,10 +4,12 @@ import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { environment } from 'src/environments/environment'
 import {
+  AddressNull,
   CreateStudentPhotoDto,
   IStudentPhoto,
   UpdateStudentPhotoDto,
 } from './types'
+import { of } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -15,19 +17,18 @@ import {
 export class StudentPhotosService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IStudentPhoto[]> {
+  findAllRegistries(): Observable<Blob | AddressNull> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IStudentPhoto[]>(environment.API + '/student-photos/student', {
+      .get(environment.API + '/student-photos/student/small-alone-photo', {
         headers: head_obj,
+        responseType: 'blob', // Define o tipo de resposta como Blob
       })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
-          )
+          throw error
         }),
       )
   }

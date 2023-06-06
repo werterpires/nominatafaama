@@ -30,20 +30,6 @@ export class StudentPhotosComponent {
     this.getAllRegistries()
   }
 
-  getAllRegistries() {
-    this.isLoading = true
-    this.service.findAllRegistries().subscribe({
-      next: (res) => {
-        this.allRegistries = res
-        this.isLoading = false
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
-  }
   resetCreationRegistry() {
     Object.keys(this.createRegistryData).forEach((key) => {
       switch (typeof key) {
@@ -59,7 +45,38 @@ export class StudentPhotosComponent {
       }
     })
   }
-  imageUrl: string = ''
+  imageUrl: string | null = null
+
+  getAllRegistries() {
+    this.isLoading = true
+    this.service.findAllRegistries().subscribe({
+      next: (res) => {
+        console.log(res)
+        if (res instanceof Blob) {
+          const reader = new FileReader()
+          reader.onload = (e: any) => {
+            this.imageUrl = e.target.result
+            this.isLoading = false
+          }
+          reader.readAsDataURL(res)
+        } else {
+          this.imageUrl = null
+          this.showForm = true
+          this.isLoading = false
+        }
+      },
+      error: (err) => {
+        if (err.status == 404) {
+          this.imageUrl = null
+          this.isLoading = false
+        } else {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        }
+      },
+    })
+  }
 
   onFileSelected(event: any) {
     console.log(event)
@@ -92,8 +109,6 @@ export class StudentPhotosComponent {
         this.done = true
         this.isLoading = false
         this.getAllRegistries()
-        this.showForm = false
-        this.resetCreationRegistry()
       },
       error: (err) => {
         this.errorMessage = err.message

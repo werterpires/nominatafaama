@@ -14,21 +14,12 @@
       />
       <p class="sectionTitle1">{{ title }}</p>
     </span>
-
-    <img
-      #addIcon
-      class="addIcon"
-      [ngClass]="{ hidden: !showBox }"
-      src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
-      (click)="showForm = true"
-    />
   </div>
-  <section class="formCreationWrapper" *ngIf="showForm">
+  <section class="formCreationWrapper">
     <app-creation-form (save)="createRegistry()">
       <div class="subSection">
         <label>
-          Foto sozinha
+          Pequena foto do estudante sozinho
           <input
             type="file"
             name="smallAlonePhoto"

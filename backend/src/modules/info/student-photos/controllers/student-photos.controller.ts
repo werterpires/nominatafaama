@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -34,7 +35,7 @@ export class StudentPhotosController {
       storage: diskStorage({
         destination: './src/modules/info/student-photos/files',
         filename: (req, file, cb) => {
-          const uniqueName = `fotomuitolegal_${Date.now()}${extname(
+          const uniqueName = `studentphoto_${Date.now()}${extname(
             file.originalname,
           )}`
           cb(null, uniqueName)
@@ -71,18 +72,35 @@ export class StudentPhotosController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  @Get('student')
-  async findStudentPhotoByStudentId(
+  @Get('student/:photoType')
+  async getPhoto(
     @CurrentUser() user: UserFromJwt,
-  ): Promise<IStudentPhoto | null> {
+    @Res() res: any,
+    @Param('photoType') phototype: string,
+  ) {
     try {
-      const { user_id } = user
-      const studentPhoto =
-        await this.studentPhotosService.findStudentPhotoByStudentId(user_id)
+      const userId = user.user_id
+      const result =
+        await this.studentPhotosService.findStudentPhotoByStudentId(
+          userId,
+          phototype,
+        )
+      if (result == null) {
+        return null
+      }
+      const { fileStream, headers } = result
 
-      return studentPhoto
+      if (fileStream) {
+        Object.entries(headers).forEach(([key, value]) => {
+          res.set(key, value)
+        })
+
+        fileStream.pipe(res)
+      } else {
+        res.status(404).json({ error: 'Foto não encontrada.' })
+      }
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      res.status(500).json({ error: 'Erro ao recuperar a foto.' })
     }
   }
 

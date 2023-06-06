@@ -27,3 +27,7 @@ export interface UpdateStudentPhotoDto {
   invite_photo: string
   student_id: number
 }
+
+export interface AddressNull {
+  address: null
+}
