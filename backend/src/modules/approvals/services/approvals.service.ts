@@ -9,6 +9,7 @@ import { LanguagesModel } from 'src/modules/info/languages/model/languages.model
 import { CoursesModel } from 'src/modules/info/courses/model/courses.model'
 import { PreviousMarriagesModel } from 'src/modules/info/previous-marriage/model/previous-marriage.model'
 import { ProfessionalExperiencesModel } from 'src/modules/info/professional-experiences/model/professional-experiences.model'
+import { PastEclExpsModel } from 'src/modules/info/past-ecl-experiences/model/past-ecl-experiences.model'
 
 @Injectable()
 export class ApprovalsService {
@@ -21,6 +22,7 @@ export class ApprovalsService {
     private coursesModel: CoursesModel,
     private previousMarriagesModel: PreviousMarriagesModel,
     private professionalExperiencesModel: ProfessionalExperiencesModel,
+    private pastEclExpsModel: PastEclExpsModel,
   ) {}
 
   async findNotApproved(): Promise<IUser[] | null> {
@@ -64,6 +66,10 @@ export class ApprovalsService {
         personIds,
         notApprovedProfessionalExpPersonIds,
       )
+
+      const notApprovedPasEclExpsPersonIds =
+        await this.pastEclExpsModel.findAllNotApprovedPersonIds()
+      personIds = this.addPersonIds(personIds, notApprovedPasEclExpsPersonIds)
 
       const result = await this.usersModel.findUsersByIds(personIds)
       if (result !== null) {
