@@ -56,7 +56,9 @@ import { SmallAloneStudentPhotosComponent } from './components/records/small-alo
 import { AloneStudentPhotoComponent } from './components/records/alone-student-photo/alone-student-photo.component';
 import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component';
 import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component';
-import { ChildrenComponent } from './components/records/children/children.component'
+import { ChildrenComponent } from './components/records/children/children.component';
+import { StudentToApproveComponent } from './components/approvals/student-to-approve/student-to-approve.component';
+import { ApprovalsMenuComponent } from './components/shared/approvals-menu/approvals-menu.component'
 
 @NgModule({
   declarations: [
@@ -112,6 +114,8 @@ import { ChildrenComponent } from './components/records/children/children.compon
     FamilyStudentPhotoComponent,
     SpouseStudentPhotoComponent,
     ChildrenComponent,
+    StudentToApproveComponent,
+    ApprovalsMenuComponent,
   ],
   imports: [
     BrowserModule,

@@ -26,7 +26,6 @@ export class StudentPhotosService {
       const { student_id } = await this.studentModel.findStudentByUserId(
         user_id,
       )
-      console.log(photoType)
       const photoTypes: string[] = [
         'alone-photo',
         'family-photo',

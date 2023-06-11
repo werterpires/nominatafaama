@@ -58,7 +58,6 @@ export class StudentPhotosController {
   ): Promise<IStudentPhoto | null> {
     try {
       const user_id = user.user_id
-      console.log(photoType)
       const studentPhoto = this.studentPhotosService.createStudentPhoto(
         user_id,
         photoType,
@@ -94,7 +93,6 @@ export class StudentPhotosController {
         Object.entries(headers).forEach(([key, value]) => {
           res.set(key, value)
         })
-
         fileStream.pipe(res)
       } else {
         res.status(404).json({ error: 'Foto não encontrada.' })

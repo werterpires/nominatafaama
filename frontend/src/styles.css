@@ -565,6 +565,14 @@ button:active {
   margin-bottom: 12px;
   transition: height 5s ease;
 }
+.sectionBoxAll {
+  width: 80vw;
+  max-width: 833.71px;
+  background: transparent;
+  padding: 28px;
+  margin-bottom: 12px;
+  transition: height 5s ease;
+}
 
 .boxHead {
   margin-bottom: 1rem;
@@ -742,4 +750,43 @@ button:active {
 
 .hidden {
   display: none;
+}
+
+.smallAlonePhoto {
+  width: 260.85px;
+  height: 266.96px;
+  overflow: hidden;
+}
+
+.studentDatacontainer {
+  width: 260.85px;
+  height: 183.88px;
+  background: #23435f;
+  box-shadow: 0px 4.01028px 4.01028px rgba(0, 0, 0, 0.25);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.imageContainer {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.imageModel {
+  opacity: 50%;
+}
+
+.studentName {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  display: flex;
+  align-items: center;
+
+  color: #ffffff;
 }

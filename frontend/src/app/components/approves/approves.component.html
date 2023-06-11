@@ -1,5 +1,10 @@
+<div *ngIf="approvalType == 'users'" class="sectionBoxes">
+  <app-users-approves [permissions]="permissions"></app-users-approves>
+</div>
 
-  
-<div class="sectionBoxes" >
-    <app-users-approves [permissions]="permissions"></app-users-approves>
-</div>  
+<div *ngIf="approvalType == 'students'" class="sectionBoxes">
+  <app-student-to-approve
+    *ngIf="permissions.docente || permissions.administrador"
+    [permissions]="permissions"
+  ></app-student-to-approve>
+</div>

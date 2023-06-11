@@ -35,5 +35,6 @@ export interface IPermissions {
   direcao: boolean
   representacao: boolean
   administrador: boolean
+  docente: boolean
   isApproved: boolean
 }

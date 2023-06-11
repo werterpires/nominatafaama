@@ -51,7 +51,6 @@ export class SmallAloneStudentPhotosComponent {
     this.isLoading = true
     this.service.findAllRegistries().subscribe({
       next: (res) => {
-        console.log(res)
         if (res instanceof Blob) {
           const reader = new FileReader()
           reader.onload = (e: any) => {

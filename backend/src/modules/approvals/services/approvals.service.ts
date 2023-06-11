@@ -187,7 +187,8 @@ export class ApprovalsService {
           })
 
           const file = await filePromise
-
+          console.log('filestream:', fileStream)
+          console.log('file:', file)
           users[i].photo = {
             file,
             headers,
