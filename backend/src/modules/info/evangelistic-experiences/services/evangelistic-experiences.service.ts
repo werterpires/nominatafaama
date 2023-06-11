@@ -1,13 +1,13 @@
-import {Injectable} from '@nestjs/common'
-import {CreateEvangelisticExperienceDto} from '../dto/create-evangelistic-experience.dto'
-import {UpdateEvangelisticExperienceDto} from '../dto/update-evangelistic-experience.dto'
-import {UsersService} from 'src/modules/users/dz_services/users.service'
+import { Injectable } from '@nestjs/common'
+import { CreateEvangelisticExperienceDto } from '../dto/create-evangelistic-experience.dto'
+import { UpdateEvangelisticExperienceDto } from '../dto/update-evangelistic-experience.dto'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
 import {
   ICreateEvangelisticExperience,
   IEvangelisticExperience,
   IUpdateEvangelisticExperience,
 } from '../types/types'
-import {EvangelisticExperiencesModel} from '../model/evang-experiences.model'
+import { EvangelisticExperiencesModel } from '../model/evang-experiences.model'
 
 @Injectable()
 export class EvangelisticExperiencesService {
@@ -107,6 +107,7 @@ export class EvangelisticExperiencesService {
         exp_end_date: end_date,
         evang_exp_type_id: dto.evang_exp_type_id,
         person_id: person_id,
+        evang_exp_approved: null,
       }
 
       const updatedExperience =
