@@ -11,6 +11,8 @@ import { PreviousMarriagesModel } from 'src/modules/info/previous-marriage/model
 import { ProfessionalExperiencesModel } from 'src/modules/info/professional-experiences/model/professional-experiences.model'
 import { PastEclExpsModel } from 'src/modules/info/past-ecl-experiences/model/past-ecl-experiences.model'
 import { EvangelisticExperiencesModel } from 'src/modules/info/evangelistic-experiences/model/evang-experiences.model'
+import { EclExperiencesModel } from 'src/modules/info/ecl-experiences/model/ecl-experiences.model'
+import { PublicationsModel } from 'src/modules/info/publications/model/publications.model'
 
 @Injectable()
 export class ApprovalsService {
@@ -25,6 +27,8 @@ export class ApprovalsService {
     private professionalExperiencesModel: ProfessionalExperiencesModel,
     private pastEclExpsModel: PastEclExpsModel,
     private evangelisticExperiencesModel: EvangelisticExperiencesModel,
+    private eclExperiencesModel: EclExperiencesModel,
+    private publicationsModel: PublicationsModel,
   ) {}
 
   async findNotApproved(): Promise<IUser[] | null> {
@@ -76,6 +80,14 @@ export class ApprovalsService {
       const notApprovedEvangExpsPersonIds =
         await this.evangelisticExperiencesModel.findAllNotApprovedPersonIds()
       personIds = this.addPersonIds(personIds, notApprovedEvangExpsPersonIds)
+
+      const notApprovedEclExpsPersonIds =
+        await this.eclExperiencesModel.findAllNotApprovedPersonIds()
+      personIds = this.addPersonIds(personIds, notApprovedEclExpsPersonIds)
+
+      const notApprovedPublicationsPersonIds =
+        await this.publicationsModel.findAllNotApprovedPersonIds()
+      personIds = this.addPersonIds(personIds, notApprovedPublicationsPersonIds)
 
       const result = await this.usersModel.findUsersByIds(personIds)
       if (result !== null) {

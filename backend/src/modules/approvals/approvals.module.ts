@@ -11,6 +11,8 @@ import { PreviousMarriagesModel } from '../info/previous-marriage/model/previous
 import { ProfessionalExperiencesModel } from '../info/professional-experiences/model/professional-experiences.model'
 import { PastEclExpsModel } from '../info/past-ecl-experiences/model/past-ecl-experiences.model'
 import { EvangelisticExperiencesModel } from '../info/evangelistic-experiences/model/evang-experiences.model'
+import { EclExperiencesModel } from '../info/ecl-experiences/model/ecl-experiences.model'
+import { PublicationsModel } from '../info/publications/model/publications.model'
 
 const services = [
   ApprovalsService,
@@ -24,6 +26,8 @@ const services = [
   ProfessionalExperiencesModel,
   PastEclExpsModel,
   EvangelisticExperiencesModel,
+  EclExperiencesModel,
+  PublicationsModel,
 ]
 
 @Module({
