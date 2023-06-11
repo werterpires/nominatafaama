@@ -8,6 +8,7 @@ import { AcademicFormationsModel } from '../info/academic-formations/model/acade
 import { LanguagesModel } from '../info/languages/model/languages.model'
 import { CoursesModel } from '../info/courses/model/courses.model'
 import { PreviousMarriagesModel } from '../info/previous-marriage/model/previous-marriage.model'
+import { ProfessionalExperiencesModel } from '../info/professional-experiences/model/professional-experiences.model'
 
 const services = [
   ApprovalsService,
@@ -18,6 +19,7 @@ const services = [
   LanguagesModel,
   CoursesModel,
   PreviousMarriagesModel,
+  ProfessionalExperiencesModel,
 ]
 
 @Module({
