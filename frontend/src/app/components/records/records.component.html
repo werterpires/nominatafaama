@@ -105,6 +105,11 @@
     [permissions]="permissions"
   ></app-related-ministries>
 
+  <app-children
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-children>
+
   <app-spouses
     *ngIf="
       (dataService.maritalStatusName == 'Casado' ||
@@ -192,7 +197,7 @@
     [permissions]="permissions"
   ></app-previous-marriage>
 
-  <app-small-alone-student-photos
+  <!-- <app-small-alone-student-photos
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-small-alone-student-photos>
@@ -210,7 +215,7 @@
   <app-spouse-student-photo
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
-  ></app-spouse-student-photo>
+  ></app-spouse-student-photo> -->
 
   <div></div>
 </div>

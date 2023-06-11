@@ -55,7 +55,8 @@ import { PreviousMarriageComponent } from './components/records/previous-marriag
 import { SmallAloneStudentPhotosComponent } from './components/records/small-alone-student-photos/small-alone-student-photos.component';
 import { AloneStudentPhotoComponent } from './components/records/alone-student-photo/alone-student-photo.component';
 import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component';
-import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'
+import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component';
+import { ChildrenComponent } from './components/records/children/children.component'
 
 @NgModule({
   declarations: [
@@ -110,6 +111,7 @@ import { SpouseStudentPhotoComponent } from './components/records/spouse-student
     AloneStudentPhotoComponent,
     FamilyStudentPhotoComponent,
     SpouseStudentPhotoComponent,
+    ChildrenComponent,
   ],
   imports: [
     BrowserModule,
