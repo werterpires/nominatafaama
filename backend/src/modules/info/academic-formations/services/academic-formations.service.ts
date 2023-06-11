@@ -1,9 +1,9 @@
-import {Injectable} from '@nestjs/common'
-import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
-import {UsersService} from 'src/modules/users/dz_services/users.service'
-import {CreateAcademicFormationDto} from '../dto/create-academic-formation.dto'
-import {UpdateAcademicFormationDto} from '../dto/update-academic-formation.dto'
-import {AcademicFormationsModel} from '../model/academic-formations.model'
+import { Injectable } from '@nestjs/common'
+import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
+import { CreateAcademicFormationDto } from '../dto/create-academic-formation.dto'
+import { UpdateAcademicFormationDto } from '../dto/update-academic-formation.dto'
+import { AcademicFormationsModel } from '../model/academic-formations.model'
 import {
   IAcademicFormation,
   ICreateAcademicFormation,
@@ -35,6 +35,7 @@ export class AcademicFormationsService {
           : null,
         person_id: person_id,
         degree_id: dto.degree_id,
+        academic_formation_approved: null,
       }
 
       const newAcademicFormation =
@@ -57,7 +58,7 @@ export class AcademicFormationsService {
       throw Error(`Spouse not found for id ${id}`)
     }
 
-    const {person_id} = spouse
+    const { person_id } = spouse
 
     const createAcademicFormation: ICreateAcademicFormation = {
       course_area: dto.course_area,
@@ -68,6 +69,7 @@ export class AcademicFormationsService {
         : null,
       person_id: person_id,
       degree_id: dto.degree_id,
+      academic_formation_approved: null,
     }
 
     const newAcademicFormation =
@@ -95,7 +97,7 @@ export class AcademicFormationsService {
     id: number,
   ): Promise<IAcademicFormation[] | null> {
     try {
-      const {person_id} = await this.usersService.findUserById(id)
+      const { person_id } = await this.usersService.findUserById(id)
 
       const academicFormation =
         await this.academicFormationsModel.findAcademicFormationsByPersonId(
@@ -115,7 +117,7 @@ export class AcademicFormationsService {
     try {
       const spouse = await this.spouseModel.findSpouseByUserId(id)
       if (spouse) {
-        const {person_id} = spouse
+        const { person_id } = spouse
 
         const academicFormation =
           await this.academicFormationsModel.findAcademicFormationsByPersonId(
@@ -155,6 +157,7 @@ export class AcademicFormationsService {
           ? new Date(dto.conclusion_date)
           : null,
         degree_id: dto.degree_id,
+        academic_formation_approved: null,
       }
 
       const updatedFormation =

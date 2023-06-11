@@ -4,8 +4,15 @@ import { ApprovalsController } from './controllers/approvals.controller'
 import { UsersModel } from '../users/ez_model/users.model'
 import { StudentsModel } from '../students/model/students.model'
 import { SpousesModel } from '../spouses/model/spouses.model'
+import { AcademicFormationsModel } from '../info/academic-formations/model/academic-formations.model'
 
-const services = [ApprovalsService, UsersModel, StudentsModel, SpousesModel]
+const services = [
+  ApprovalsService,
+  UsersModel,
+  StudentsModel,
+  SpousesModel,
+  AcademicFormationsModel,
+]
 
 @Module({
   controllers: [ApprovalsController],

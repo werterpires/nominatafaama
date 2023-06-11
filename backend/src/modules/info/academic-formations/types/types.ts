@@ -5,7 +5,7 @@ export interface IAcademicFormation {
   begin_date: Date
   conclusion_date: Date | null
   person_id: number
-  academic_formation_approved: boolean
+  academic_formation_approved: boolean | null
   degree_id: number
   degree_name: string
   created_at: Date
@@ -19,6 +19,7 @@ export interface ICreateAcademicFormation {
   conclusion_date: Date | null
   person_id: number
   degree_id: number
+  academic_formation_approved: boolean | null
 }
 
 export interface IUpdateAcademicFormation {
@@ -28,4 +29,5 @@ export interface IUpdateAcademicFormation {
   conclusion_date: Date | null
   formation_id: number
   degree_id: number
+  academic_formation_approved: boolean | null
 }
