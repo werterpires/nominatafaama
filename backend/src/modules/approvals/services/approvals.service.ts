@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ICompleteStudent } from '../types/types'
+import { ICompleteStudent, ICompleteUser } from '../types/types'
 import { IUser } from 'src/modules/users/bz_types/types'
 import { StudentsModel } from 'src/modules/students/model/students.model'
 import { UsersModel } from 'src/modules/users/ez_model/users.model'
@@ -17,6 +17,8 @@ import { EndowmentsModel } from 'src/modules/info/endowments/model/endowments.mo
 import { OrdinationsModel } from 'src/modules/info/ordinations/model/ordinations.model'
 import { RelatedMinistriesModel } from 'src/modules/info/related-ministries/model/related-ministries.model'
 import { ChildrenModel } from 'src/modules/info/children/model/children.model'
+import * as fs from 'fs'
+import { StudentPhotosService } from 'src/modules/info/student-photos/services/student-photos.service'
 
 @Injectable()
 export class ApprovalsService {
@@ -37,10 +39,11 @@ export class ApprovalsService {
     private ordinationsModel: OrdinationsModel,
     private relatedMinistriesModel: RelatedMinistriesModel,
     private childrenService: ChildrenModel,
+    private studentPhotoService: StudentPhotosService,
   ) {}
 
-  async findNotApproved(): Promise<IUser[] | null> {
-    let users: IUser[] | null = null
+  async findNotApproved(): Promise<ICompleteUser[] | null> {
+    let users: ICompleteUser[] | null = null
     try {
       let personIds: number[] = []
 
@@ -117,13 +120,29 @@ export class ApprovalsService {
       personIds = this.addPersonIds(personIds, notApprovedChildrenPersonIds)
 
       const result = await this.usersModel.findUsersByIds(personIds)
+      let photosInfo: {
+        fileStream: fs.ReadStream | null
+        headers: Record<string, string>
+      }[] = []
       if (result !== null) {
         users = result
+
+        for (const user of users) {
+          const photoData =
+            await this.studentPhotoService.findStudentPhotoByStudentId(
+              user.user_id,
+              'small-alone-photo',
+            )
+
+          photosInfo.push(photoData)
+        }
+        await this.addPhotos(users, photosInfo)
       }
     } catch (error) {
       console.error('Erro capturado no service: ', error)
       throw error
     }
+
     return users
   }
 
@@ -139,5 +158,44 @@ export class ApprovalsService {
       })
     }
     return personIds
+  }
+
+  async addPhotos(
+    users: ICompleteUser[],
+    photosInfo: {
+      fileStream: fs.ReadStream | null
+      headers: Record<string, string>
+    }[],
+  ) {
+    for (let i = 0; i < users.length; i++) {
+      if (photosInfo[i].fileStream != null) {
+        const { fileStream, headers } = photosInfo[i]
+
+        if (fileStream) {
+          const filePromise = new Promise<Buffer>((resolve, reject) => {
+            const chunks: Buffer[] = []
+            fileStream.on('data', (chunk: Buffer) => {
+              chunks.push(chunk)
+            })
+            fileStream.on('end', () => {
+              const file = Buffer.concat(chunks)
+              resolve(file)
+            })
+            fileStream.on('error', (error: Error) => {
+              reject(error)
+            })
+          })
+
+          const file = await filePromise
+
+          users[i].photo = {
+            file,
+            headers,
+          }
+        }
+      } else {
+        users[i].photo = null
+      }
+    }
   }
 }

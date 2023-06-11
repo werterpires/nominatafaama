@@ -13,6 +13,7 @@ import { UpdateApprovalDto } from '../dto/update-approval.dto'
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
 import { ERoles } from 'src/shared/auth/types/roles.enum'
 import { IUser } from 'src/modules/users/bz_types/types'
+import { ICompleteUser } from '../types/types'
 
 @Controller('approvals')
 export class ApprovalsController {
@@ -20,7 +21,7 @@ export class ApprovalsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get()
-  async findNotApprovd(): Promise<IUser[] | null> {
+  async findNotApprovd(): Promise<ICompleteUser[] | null> {
     try {
       const users = await this.approvalsService.findNotApproved()
       return users
