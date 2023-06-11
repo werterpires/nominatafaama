@@ -173,6 +173,28 @@ export class ChildrenModel {
     return childrenList
   }
 
+  async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const studentResult = await this.knex
+        .table('children')
+        .join('students', 'students.student_id', 'children.student_id')
+        .select('students.person_id')
+        .whereNull('child_approved')
+
+      personIds = [...studentResult].map((row) => ({
+        person_id: row.person_id,
+      }))
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
+  }
+
   async findChildrenByStudentId(student_id: number): Promise<IChild[]> {
     let childrenList: IChild[] = []
     let sentError: Error | null = null

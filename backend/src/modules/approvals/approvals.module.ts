@@ -16,6 +16,7 @@ import { PublicationsModel } from '../info/publications/model/publications.model
 import { EndowmentsModel } from '../info/endowments/model/endowments.model'
 import { OrdinationsModel } from '../info/ordinations/model/ordinations.model'
 import { RelatedMinistriesModel } from '../info/related-ministries/model/related-ministries.model'
+import { ChildrenModel } from '../info/children/model/children.model'
 
 const services = [
   ApprovalsService,
@@ -34,6 +35,7 @@ const services = [
   EndowmentsModel,
   OrdinationsModel,
   RelatedMinistriesModel,
+  ChildrenModel,
 ]
 
 @Module({

@@ -16,6 +16,7 @@ import { PublicationsModel } from 'src/modules/info/publications/model/publicati
 import { EndowmentsModel } from 'src/modules/info/endowments/model/endowments.model'
 import { OrdinationsModel } from 'src/modules/info/ordinations/model/ordinations.model'
 import { RelatedMinistriesModel } from 'src/modules/info/related-ministries/model/related-ministries.model'
+import { ChildrenModel } from 'src/modules/info/children/model/children.model'
 
 @Injectable()
 export class ApprovalsService {
@@ -35,6 +36,7 @@ export class ApprovalsService {
     private endowmentsModel: EndowmentsModel,
     private ordinationsModel: OrdinationsModel,
     private relatedMinistriesModel: RelatedMinistriesModel,
+    private childrenService: ChildrenModel,
   ) {}
 
   async findNotApproved(): Promise<IUser[] | null> {
@@ -109,6 +111,10 @@ export class ApprovalsService {
         personIds,
         notApprovedRelatedMinistriesPersonIds,
       )
+
+      const notApprovedChildrenPersonIds =
+        await this.childrenService.findAllNotApprovedPersonIds()
+      personIds = this.addPersonIds(personIds, notApprovedChildrenPersonIds)
 
       const result = await this.usersModel.findUsersByIds(personIds)
       if (result !== null) {
