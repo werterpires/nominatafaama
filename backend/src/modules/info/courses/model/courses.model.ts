@@ -146,6 +146,35 @@ export class CoursesModel {
     return courseList
   }
 
+  async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const studentResult = await this.knex
+        .table('courses')
+        .join('users', 'users.person_id', 'courses.person_id')
+        .select('users.person_id')
+        .whereNull('course_approved')
+
+      const spouseResult = await this.knex
+        .table('courses')
+        .join('spouses', 'spouses.person_id', 'courses.person_id')
+        .join('students', 'students.student_id', 'spouses.student_id')
+        .select('students.person_id')
+        .whereNull('courses.course_approved')
+
+      personIds = [...studentResult, ...spouseResult].map((row) => ({
+        person_id: row.person_id,
+      }))
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
+  }
+
   async updateCourseById(updateCourse: IUpdateCourse): Promise<ICourse> {
     let updatedCourse: ICourse | null = null
     let sentError: Error | null = null

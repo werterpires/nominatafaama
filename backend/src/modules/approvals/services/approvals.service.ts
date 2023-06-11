@@ -6,6 +6,7 @@ import { UsersModel } from 'src/modules/users/ez_model/users.model'
 import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
 import { AcademicFormationsModel } from 'src/modules/info/academic-formations/model/academic-formations.model'
 import { LanguagesModel } from 'src/modules/info/languages/model/languages.model'
+import { CoursesModel } from 'src/modules/info/courses/model/courses.model'
 
 @Injectable()
 export class ApprovalsService {
@@ -15,6 +16,7 @@ export class ApprovalsService {
     private spousesModel: SpousesModel,
     private academicFormationsModel: AcademicFormationsModel,
     private languagesModel: LanguagesModel,
+    private coursesModel: CoursesModel,
   ) {}
 
   async findNotApproved(): Promise<IUser[] | null> {
@@ -37,9 +39,13 @@ export class ApprovalsService {
         notApprovedAcademicFormationsPersonIds,
       )
 
-      const notApprovedLanguagePersonIds =
+      const notApprovedLanguagesPersonIds =
         await this.languagesModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedLanguagePersonIds)
+      personIds = this.addPersonIds(personIds, notApprovedLanguagesPersonIds)
+
+      const notApprovedCoursesPersonIds =
+        await this.coursesModel.findAllNotApprovedPersonIds()
+      personIds = this.addPersonIds(personIds, notApprovedCoursesPersonIds)
 
       const result = await this.usersModel.findUsersByIds(personIds)
       if (result !== null) {
