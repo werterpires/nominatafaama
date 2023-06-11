@@ -7,6 +7,7 @@ import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
 import { AcademicFormationsModel } from 'src/modules/info/academic-formations/model/academic-formations.model'
 import { LanguagesModel } from 'src/modules/info/languages/model/languages.model'
 import { CoursesModel } from 'src/modules/info/courses/model/courses.model'
+import { PreviousMarriagesModel } from 'src/modules/info/previous-marriage/model/previous-marriage.model'
 
 @Injectable()
 export class ApprovalsService {
@@ -17,6 +18,7 @@ export class ApprovalsService {
     private academicFormationsModel: AcademicFormationsModel,
     private languagesModel: LanguagesModel,
     private coursesModel: CoursesModel,
+    private previousMarriagesModel: PreviousMarriagesModel,
   ) {}
 
   async findNotApproved(): Promise<IUser[] | null> {
@@ -47,6 +49,12 @@ export class ApprovalsService {
         await this.coursesModel.findAllNotApprovedPersonIds()
       personIds = this.addPersonIds(personIds, notApprovedCoursesPersonIds)
 
+      const notApprovedPreviousMarriagesPersonIds =
+        await this.previousMarriagesModel.findAllNotApprovedPersonIds()
+      personIds = this.addPersonIds(
+        personIds,
+        notApprovedPreviousMarriagesPersonIds,
+      )
       const result = await this.usersModel.findUsersByIds(personIds)
       if (result !== null) {
         users = result
