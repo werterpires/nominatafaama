@@ -30,4 +30,5 @@ export interface IUpdateEvangelisticExperience {
   exp_end_date: Date
   person_id: number
   evang_exp_type_id: number
+  evang_exp_approved: boolean | null
 }
