@@ -5,6 +5,7 @@ import { UsersModel } from '../users/ez_model/users.model'
 import { StudentsModel } from '../students/model/students.model'
 import { SpousesModel } from '../spouses/model/spouses.model'
 import { AcademicFormationsModel } from '../info/academic-formations/model/academic-formations.model'
+import { LanguagesModel } from '../info/languages/model/languages.model'
 
 const services = [
   ApprovalsService,
@@ -12,6 +13,7 @@ const services = [
   StudentsModel,
   SpousesModel,
   AcademicFormationsModel,
+  LanguagesModel,
 ]
 
 @Module({

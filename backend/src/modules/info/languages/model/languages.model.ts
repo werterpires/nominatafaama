@@ -24,6 +24,7 @@ export class LanguagesModel {
           fluent,
           unknown,
           person_id,
+          language_approved,
         } = createLanguageData
 
         const [language_id] = await trx('languages')
@@ -36,7 +37,7 @@ export class LanguagesModel {
             fluent,
             unknown,
             person_id,
-            language_approved: false,
+            language_approved,
           })
           .returning('language_id')
 
@@ -111,6 +112,35 @@ export class LanguagesModel {
     }
 
     return language
+  }
+
+  async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const studentResult = await this.knex
+        .table('languages')
+        .join('users', 'users.person_id', 'languages.person_id')
+        .select('users.person_id')
+        .whereNull('language_approved')
+
+      const spouseResult = await this.knex
+        .table('languages')
+        .join('spouses', 'spouses.person_id', 'languages.person_id')
+        .join('students', 'students.student_id', 'spouses.student_id')
+        .select('students.person_id')
+        .whereNull('languages.language_approved')
+
+      personIds = [...studentResult, ...spouseResult].map((row) => ({
+        person_id: row.person_id,
+      }))
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
   }
 
   async findAllLanguages(): Promise<ILanguage[]> {
@@ -224,6 +254,7 @@ export class LanguagesModel {
           fluent,
           unknown,
           person_id,
+          language_approved,
         } = updateLanguage
 
         await trx('languages').where('language_id', language_id).update({
@@ -235,6 +266,7 @@ export class LanguagesModel {
           fluent,
           unknown,
           person_id,
+          language_approved,
         })
 
         await trx.commit()
