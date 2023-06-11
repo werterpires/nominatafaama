@@ -123,6 +123,28 @@ export class SpousesModel {
     return spouse
   }
 
+  async findNotApprovedStudentIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const result = await this.knex
+        .table('spouses')
+        .select('students.person_id')
+        .innerJoin('students', 'spouses.student_id', 'students.student_id')
+        .whereNull('spouses.spouse_approved')
+
+      if (result) {
+        personIds = result.map((row) => ({ person_id: row.person_id }))
+      }
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
+  }
+
   async findSpouseByUserId(userId: number): Promise<ISpouse> {
     let spouse: ISpouse | null = null
     let sentError: Error | null = null

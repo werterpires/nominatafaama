@@ -19,7 +19,6 @@ export class StudentsModel {
         const [student_id] = await trx('students')
           .insert({
             ...createStudent,
-            student_approved: null,
             student_active: true,
           })
           .returning('student_id')
@@ -83,6 +82,26 @@ export class StudentsModel {
     }
 
     return result
+  }
+
+  async findNotApprovedIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+    try {
+      const result = await this.knex
+        .table('students')
+        .select('students.person_id')
+        .whereNull('students.student_approved')
+
+      if (result) {
+        personIds = result
+      }
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
   }
 
   async findStudentByUserId(userId: number): Promise<IStudent> {
@@ -228,6 +247,7 @@ export class StudentsModel {
           marital_status_id,
           hiring_status_id,
           primary_school_state,
+          student_approved,
         } = updateStudent
 
         await trx('students').where('student_id', student_id).update({
@@ -247,6 +267,7 @@ export class StudentsModel {
           marital_status_id,
           hiring_status_id,
           primary_school_state,
+          student_approved,
         })
 
         await trx.commit()
