@@ -13,6 +13,8 @@ import { PastEclExpsModel } from '../info/past-ecl-experiences/model/past-ecl-ex
 import { EvangelisticExperiencesModel } from '../info/evangelistic-experiences/model/evang-experiences.model'
 import { EclExperiencesModel } from '../info/ecl-experiences/model/ecl-experiences.model'
 import { PublicationsModel } from '../info/publications/model/publications.model'
+import { EndowmentsModel } from '../info/endowments/model/endowments.model'
+import { OrdinationsModel } from '../info/ordinations/model/ordinations.model'
 
 const services = [
   ApprovalsService,
@@ -28,6 +30,8 @@ const services = [
   EvangelisticExperiencesModel,
   EclExperiencesModel,
   PublicationsModel,
+  EndowmentsModel,
+  OrdinationsModel,
 ]
 
 @Module({

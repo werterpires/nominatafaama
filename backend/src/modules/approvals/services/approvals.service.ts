@@ -13,6 +13,8 @@ import { PastEclExpsModel } from 'src/modules/info/past-ecl-experiences/model/pa
 import { EvangelisticExperiencesModel } from 'src/modules/info/evangelistic-experiences/model/evang-experiences.model'
 import { EclExperiencesModel } from 'src/modules/info/ecl-experiences/model/ecl-experiences.model'
 import { PublicationsModel } from 'src/modules/info/publications/model/publications.model'
+import { EndowmentsModel } from 'src/modules/info/endowments/model/endowments.model'
+import { OrdinationsModel } from 'src/modules/info/ordinations/model/ordinations.model'
 
 @Injectable()
 export class ApprovalsService {
@@ -29,6 +31,8 @@ export class ApprovalsService {
     private evangelisticExperiencesModel: EvangelisticExperiencesModel,
     private eclExperiencesModel: EclExperiencesModel,
     private publicationsModel: PublicationsModel,
+    private endowmentsModel: EndowmentsModel,
+    private ordinationsModel: OrdinationsModel,
   ) {}
 
   async findNotApproved(): Promise<IUser[] | null> {
@@ -88,6 +92,14 @@ export class ApprovalsService {
       const notApprovedPublicationsPersonIds =
         await this.publicationsModel.findAllNotApprovedPersonIds()
       personIds = this.addPersonIds(personIds, notApprovedPublicationsPersonIds)
+
+      const notApprovedEndowmentsPersonIds =
+        await this.endowmentsModel.findAllNotApprovedPersonIds()
+      personIds = this.addPersonIds(personIds, notApprovedEndowmentsPersonIds)
+
+      const notApprovedOrdinationsPersonIds =
+        await this.ordinationsModel.findAllNotApprovedPersonIds()
+      personIds = this.addPersonIds(personIds, notApprovedOrdinationsPersonIds)
 
       const result = await this.usersModel.findUsersByIds(personIds)
       if (result !== null) {
