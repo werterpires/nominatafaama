@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { CreateChildDto, IChild, UpdateChildDto } from './types'
 import { IMaritalStatus } from '../marital-status/types'
-import { ChildrenService } from './achildren.service'
+import { ChildrenService } from './children.service'
 import { MaritalStatusService } from '../marital-status/marital-status.service'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { IPermissions } from '../../shared/container/types'
