@@ -13,7 +13,7 @@ export class PastEclExpsComponent {
   @Input() permissions!: IPermissions
 
   allRegistries: IPastEclExp[] = []
-  title = 'Experiências profissionais e evangelísticas passadas'
+  title = 'Experiências eclesiásticas e evangelísticas passadas'
   createRegistryData: CreatePastEclExpDto = {
     function: '',
     past_exp_begin_date: '',
