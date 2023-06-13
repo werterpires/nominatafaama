@@ -162,14 +162,20 @@ export class ApprovalsService {
       spLanguages: null,
       courses: null,
       spCourses: null,
+      previousMarriage: null,
     }
 
     try {
       const { personId, userId } = data
+      let studentId: number = 0
 
       const student: IStudent | null =
         await this.studentsModel.findStudentByUserId(userId)
       completeStudent.student = student
+
+      if (student && student.student_id) {
+        studentId = student.student_id
+      }
 
       const academicFormations =
         await this.academicFormationsModel.findAcademicFormationsByPersonId(
@@ -189,6 +195,22 @@ export class ApprovalsService {
       const courses = await this.coursesModel.findCoursesByPersonId(personId)
       if (courses.length > 0) {
         completeStudent.courses = courses
+      }
+
+      if (studentId > 0) {
+        if (
+          student?.marital_status_type_name == 'Divorciado' ||
+          student?.marital_status_type_name == 'Viúvo'
+        ) {
+          const previousMarriage =
+            await this.previousMarriagesModel.findPreviousMarriagesByStudentId(
+              studentId,
+            )
+          console.log(previousMarriage)
+          if (previousMarriage.length > 0) {
+            completeStudent.previousMarriage = previousMarriage
+          }
+        }
       }
 
       if (
