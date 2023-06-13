@@ -39,7 +39,6 @@ export class ApprovalsController {
   async findOneNotApproved(
     @Body() data: { personId: number; userId: number },
   ): Promise<ICompleteStudent | null> {
-    console.log(data)
     try {
       const completeStudent = await this.approvalsService.findOneNotApproved(
         data,

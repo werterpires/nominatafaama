@@ -216,7 +216,6 @@ export class ApprovalsService {
             await this.previousMarriagesModel.findPreviousMarriagesByStudentId(
               studentId,
             )
-          console.log(previousMarriage)
           if (previousMarriage.length > 0) {
             completeStudent.previousMarriage = previousMarriage
           }
@@ -317,8 +316,6 @@ export class ApprovalsService {
           })
 
           const file = await filePromise
-          console.log('filestream:', fileStream)
-          console.log('file:', file)
           users[i].photo = {
             file,
             headers,
