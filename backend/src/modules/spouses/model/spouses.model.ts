@@ -169,12 +169,17 @@ export class SpousesModel {
         )
         .leftJoin('unions', 'associations.union_id', 'unions.union_id')
         .where('users.user_id', '=', userId)
+      console.log('result da spouse', result)
 
-      if (result == null) {
+      if (result == undefined) {
         spouse = null
       } else {
         spouse = result
       }
+
+      let joaquim = result
+
+      console.log('imprssao 1', spouse)
     } catch (error) {
       console.error(
         'Erro capturado no SpousesModel findSpouseByUserId: ',
@@ -185,6 +190,7 @@ export class SpousesModel {
     if (sentError) {
       throw sentError
     }
+    console.log('imprssao 2', spouse)
     return spouse
   }
 
