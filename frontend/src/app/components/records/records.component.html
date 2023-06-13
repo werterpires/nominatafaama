@@ -172,6 +172,11 @@
     [permissions]="permissions"
   ></app-sp-past-ecl-exp>
 
+  <app-sp-evg-experiences
+    *ngIf="permissions.estudante || permissions.administrador"
+    [permissions]="permissions"
+  ></app-sp-evg-experiences>
+
   <app-sp-endowments
     *ngIf="
       (dataService.maritalStatusName == 'Casado' ||

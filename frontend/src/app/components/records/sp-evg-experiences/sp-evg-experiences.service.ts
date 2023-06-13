@@ -4,15 +4,15 @@ import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { environment } from 'src/environments/environment'
 import {
-  CreateEvangelisticExperienceDto,
   IEvangelisticExperience,
+  CreateEvangelisticExperienceDto,
   UpdateEvangelisticExperienceDto,
-} from './types'
+} from '../evg-experiences/types'
 
 @Injectable({
   providedIn: 'root',
 })
-export class EvgExperiencesService {
+export class SpEvgExperiencesService {
   constructor(private http: HttpClient) {}
 
   findAllRegistries(): Observable<IEvangelisticExperience[]> {
@@ -20,7 +20,7 @@ export class EvgExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IEvangelisticExperience[]>(
-        environment.API + '/evangelistic-experiences/person/student',
+        environment.API + '/evangelistic-experiences/person/spouse',
         {
           headers: head_obj,
         },
@@ -42,7 +42,7 @@ export class EvgExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IEvangelisticExperience>(
-        environment.API + '/evangelistic-experiences/student',
+        environment.API + '/evangelistic-experiences/spouse',
         newRegistry,
         {
           headers: head_obj,
