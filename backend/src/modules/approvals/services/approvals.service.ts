@@ -163,6 +163,8 @@ export class ApprovalsService {
       courses: null,
       spCourses: null,
       previousMarriage: null,
+      professionalExperiences: null,
+      spProfessionalExperiences: null,
     }
 
     try {
@@ -195,6 +197,14 @@ export class ApprovalsService {
       const courses = await this.coursesModel.findCoursesByPersonId(personId)
       if (courses.length > 0) {
         completeStudent.courses = courses
+      }
+
+      const professionalExperiences =
+        await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
+          personId,
+        )
+      if (professionalExperiences.length > 0) {
+        completeStudent.professionalExperiences = professionalExperiences
       }
 
       if (studentId > 0) {
@@ -245,6 +255,15 @@ export class ApprovalsService {
           )
           if (spCourses.length > 0) {
             completeStudent.spCourses = spCourses
+          }
+
+          const spProfessionalExperiences =
+            await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
+              spousePersonId,
+            )
+          if (spProfessionalExperiences.length > 0) {
+            completeStudent.spProfessionalExperiences =
+              spProfessionalExperiences
           }
         }
       }

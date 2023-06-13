@@ -2,6 +2,7 @@ import { IAcademicFormation } from 'src/modules/info/academic-formations/types/t
 import { ICourse } from 'src/modules/info/courses/types/types'
 import { ILanguage } from 'src/modules/info/languages/types/types'
 import { IPreviousMarriage } from 'src/modules/info/previous-marriage/types/types'
+import { IProfessionalExperience } from 'src/modules/info/professional-experiences/types/types'
 import { ISpouse } from 'src/modules/spouses/types/types'
 import { IStudent } from 'src/modules/students/types/types'
 import { IUser } from 'src/modules/users/bz_types/types'
@@ -16,6 +17,8 @@ export interface ICompleteStudent {
   spLanguages: ILanguage[] | null
   courses: ICourse[] | null
   spCourses: ICourse[] | null
+  professionalExperiences: IProfessionalExperience[] | null
+  spProfessionalExperiences: IProfessionalExperience[] | null
 }
 
 export interface ICompleteUser extends IUser {
