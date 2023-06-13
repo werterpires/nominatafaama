@@ -1,5 +1,6 @@
 import { IAcademicFormation } from 'src/modules/info/academic-formations/types/types'
 import { ICourse } from 'src/modules/info/courses/types/types'
+import { IEclExperience } from 'src/modules/info/ecl-experiences/types/types'
 import { IEvangelisticExperience } from 'src/modules/info/evangelistic-experiences/types/types'
 import { ILanguage } from 'src/modules/info/languages/types/types'
 import { IPastEclExp } from 'src/modules/info/past-ecl-experiences/types/types'
@@ -13,6 +14,7 @@ export interface ICompleteStudent {
   student: IStudent | null
   spouse: ISpouse | null
   previousMarriage: IPreviousMarriage[] | null
+  eclExperiences: IEclExperience[] | null
   academicFormations: IAcademicFormation[] | null
   spAcademicFormations: IAcademicFormation[] | null
   languages: ILanguage[] | null

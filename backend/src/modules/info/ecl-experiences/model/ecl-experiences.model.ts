@@ -201,7 +201,7 @@ export class EclExperiencesModel {
           ecl_exp_approved: row.ecl_exp_approved,
           created_at: row.created_at,
           updated_at: row.updated_at,
-          ecl_exp_type_name: row.ecl_exp_type,
+          ecl_exp_type_name: row.ecl_exp_type_name,
         }))
 
         await trx.commit()

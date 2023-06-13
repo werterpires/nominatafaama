@@ -169,6 +169,7 @@ export class ApprovalsService {
       spPastEclExps: null,
       evangelisticExperiences: null,
       spEvangelisticExperiences: null,
+      eclExperiences: null,
     }
 
     try {
@@ -224,6 +225,12 @@ export class ApprovalsService {
         )
       if (evangelisticExperiences.length > 0) {
         completeStudent.evangelisticExperiences = evangelisticExperiences
+      }
+
+      const eclExperiences =
+        await this.eclExperiencesModel.findEclExperiencesByPersonId(personId)
+      if (eclExperiences.length > 0) {
+        completeStudent.eclExperiences = eclExperiences
       }
 
       if (studentId > 0) {
