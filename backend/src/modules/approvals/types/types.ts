@@ -1,4 +1,5 @@
 import { IAcademicFormation } from 'src/modules/info/academic-formations/types/types'
+import { ICourse } from 'src/modules/info/courses/types/types'
 import { ILanguage } from 'src/modules/info/languages/types/types'
 import { ISpouse } from 'src/modules/spouses/types/types'
 import { IStudent } from 'src/modules/students/types/types'
@@ -11,6 +12,8 @@ export interface ICompleteStudent {
   spAcademicFormations: IAcademicFormation[] | null
   languages: ILanguage[] | null
   spLanguages: ILanguage[] | null
+  courses: ICourse[] | null
+  spCourses: ICourse[] | null
 }
 
 export interface ICompleteUser extends IUser {
