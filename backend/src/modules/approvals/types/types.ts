@@ -1,6 +1,7 @@
 import { IAcademicFormation } from 'src/modules/info/academic-formations/types/types'
 import { ICourse } from 'src/modules/info/courses/types/types'
 import { ILanguage } from 'src/modules/info/languages/types/types'
+import { IPastEclExp } from 'src/modules/info/past-ecl-experiences/types/types'
 import { IPreviousMarriage } from 'src/modules/info/previous-marriage/types/types'
 import { IProfessionalExperience } from 'src/modules/info/professional-experiences/types/types'
 import { ISpouse } from 'src/modules/spouses/types/types'
@@ -19,6 +20,8 @@ export interface ICompleteStudent {
   spCourses: ICourse[] | null
   professionalExperiences: IProfessionalExperience[] | null
   spProfessionalExperiences: IProfessionalExperience[] | null
+  pastEclExps: IPastEclExp[] | null
+  spPastEclExps: IPastEclExp[] | null
 }
 
 export interface ICompleteUser extends IUser {
