@@ -5,6 +5,7 @@ import { UpdatePersonDto } from '../az_dto/updatePeopleDto'
 import { IPerson } from '../bz_types/types'
 import { UsersModel } from 'src/modules/users/ez_model/users.model'
 import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
+import { ISpouse } from 'src/modules/spouses/types/types'
 
 @Injectable()
 export class PeopleServices {
@@ -51,8 +52,15 @@ export class PeopleServices {
       if (personType === 'student') {
         personId = (await this.usersModel.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          throw new Error(
+            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
+          )
+        }
+        personId = spouse.person_id
       }
     } catch (error) {
       throw error

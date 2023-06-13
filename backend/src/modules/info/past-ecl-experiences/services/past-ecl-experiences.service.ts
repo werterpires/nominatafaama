@@ -1,10 +1,15 @@
-import {Injectable} from '@nestjs/common'
-import {IPastEclExp, ICreatePastEclExp, IUpdatePastEclExp} from '../types/types'
-import {UsersService} from 'src/modules/users/dz_services/users.service'
-import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
-import {PastEclExpsModel} from '../model/past-ecl-experiences.model'
-import {CreatePastEclExpDto} from '../dto/create-past-ecl-experience.dto'
-import {UpdatePastEclExpDto} from '../dto/update-past-ecl-experience.dto'
+import { Injectable } from '@nestjs/common'
+import {
+  IPastEclExp,
+  ICreatePastEclExp,
+  IUpdatePastEclExp,
+} from '../types/types'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
+import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
+import { PastEclExpsModel } from '../model/past-ecl-experiences.model'
+import { CreatePastEclExpDto } from '../dto/create-past-ecl-experience.dto'
+import { UpdatePastEclExpDto } from '../dto/update-past-ecl-experience.dto'
+import { ISpouse } from 'src/modules/spouses/types/types'
 
 @Injectable()
 export class PastEclExpsService {
@@ -24,8 +29,15 @@ export class PastEclExpsService {
       if (personType === 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          throw new Error(
+            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
+          )
+        }
+        personId = spouse.person_id
       }
 
       const createPastEclExpData: ICreatePastEclExp = {
@@ -67,8 +79,15 @@ export class PastEclExpsService {
       if (personType === 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          throw new Error(
+            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
+          )
+        }
+        personId = spouse.person_id
       }
 
       const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
