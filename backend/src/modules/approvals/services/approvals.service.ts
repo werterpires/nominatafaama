@@ -167,6 +167,8 @@ export class ApprovalsService {
       spProfessionalExperiences: null,
       pastEclExps: null,
       spPastEclExps: null,
+      evangelisticExperiences: null,
+      spEvangelisticExperiences: null,
     }
 
     try {
@@ -212,9 +214,16 @@ export class ApprovalsService {
       const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
         personId,
       )
-
       if (pastEclExps.length > 0) {
         completeStudent.pastEclExps = pastEclExps
+      }
+
+      const evangelisticExperiences =
+        await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+          personId,
+        )
+      if (evangelisticExperiences.length > 0) {
+        completeStudent.evangelisticExperiences = evangelisticExperiences
       }
 
       if (studentId > 0) {
@@ -281,6 +290,15 @@ export class ApprovalsService {
             )
           if (spPastEclExps.length > 0) {
             completeStudent.spPastEclExps = spPastEclExps
+          }
+
+          const spEvangelisticExperiences =
+            await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+              spousePersonId,
+            )
+          if (spEvangelisticExperiences.length > 0) {
+            completeStudent.spEvangelisticExperiences =
+              spEvangelisticExperiences
           }
         }
       }
