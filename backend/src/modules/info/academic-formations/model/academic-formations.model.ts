@@ -217,7 +217,6 @@ export class AcademicFormationsModel {
             'academic_degrees.degree_id',
           )
           .where('academic_formations.person_id', '=', personId)
-
         academicFormationsList = results.map((row: any) => ({
           formation_id: row.formation_id,
           course_area: row.course_area,

@@ -21,6 +21,7 @@ import * as fs from 'fs'
 import { StudentPhotosService } from 'src/modules/info/student-photos/services/student-photos.service'
 import { IStudent } from 'src/modules/students/types/types'
 import { ISpouse } from 'src/modules/spouses/types/types'
+import { IAcademicFormation } from 'src/modules/info/academic-formations/types/types'
 
 @Injectable()
 export class ApprovalsService {
@@ -155,6 +156,8 @@ export class ApprovalsService {
     const completeStudent: ICompleteStudent = {
       student: null,
       spouse: null,
+      academicFormations: null,
+      spAcademicFormations: null,
     }
 
     try {
@@ -164,15 +167,34 @@ export class ApprovalsService {
         await this.studentsModel.findStudentByUserId(userId)
       completeStudent.student = student
 
+      const academicFormations =
+        await this.academicFormationsModel.findAcademicFormationsByPersonId(
+          personId,
+        )
+      if (academicFormations.length > 0) {
+        completeStudent.academicFormations = academicFormations
+      }
+
       if (
         student != null &&
         (student.marital_status_type_name == 'Casado' ||
-          student.marital_status_type_name == 'Casado')
+          student.marital_status_type_name == 'Noivo')
       ) {
         const spouse: ISpouse | null =
           await this.spousesModel.findSpouseByUserId(userId)
-        console.log(spouse)
         completeStudent.spouse = spouse
+        let spousePersonId
+        if (spouse != null && spouse.spouse_id) {
+          spousePersonId = spouse.person_id
+
+          const spAcademicFormations =
+            await this.academicFormationsModel.findAcademicFormationsByPersonId(
+              spousePersonId,
+            )
+          if (spAcademicFormations.length > 0) {
+            completeStudent.spAcademicFormations = spAcademicFormations
+          }
+        }
       }
     } catch (error) {
       console.error(
