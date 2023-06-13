@@ -20,6 +20,7 @@ import { ChildrenModel } from 'src/modules/info/children/model/children.model'
 import * as fs from 'fs'
 import { StudentPhotosService } from 'src/modules/info/student-photos/services/student-photos.service'
 import { IStudent } from 'src/modules/students/types/types'
+import { ISpouse } from 'src/modules/spouses/types/types'
 
 @Injectable()
 export class ApprovalsService {
@@ -153,14 +154,26 @@ export class ApprovalsService {
   }): Promise<ICompleteStudent> {
     const completeStudent: ICompleteStudent = {
       student: null,
+      spouse: null,
     }
 
     try {
       const { personId, userId } = data
+
       const student: IStudent | null =
         await this.studentsModel.findStudentByUserId(userId)
-
       completeStudent.student = student
+
+      if (
+        student != null &&
+        (student.marital_status_type_name == 'Casado' ||
+          student.marital_status_type_name == 'Casado')
+      ) {
+        const spouse: ISpouse | null =
+          await this.spousesModel.findSpouseByUserId(userId)
+        console.log(spouse)
+        completeStudent.spouse = spouse
+      }
     } catch (error) {
       console.error(
         'Erro capturado no ApprovalsService findOneNotApproved:',

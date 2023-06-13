@@ -145,7 +145,7 @@ export class SpousesModel {
     return personIds
   }
 
-  async findSpouseByUserId(userId: number): Promise<ISpouse> {
+  async findSpouseByUserId(userId: number): Promise<ISpouse | null> {
     let spouse: ISpouse | null = null
     let sentError: Error | null = null
 
@@ -170,14 +170,22 @@ export class SpousesModel {
         .leftJoin('unions', 'associations.union_id', 'unions.union_id')
         .where('users.user_id', '=', userId)
 
-      spouse = result
+      if (result == null) {
+        spouse = null
+      } else {
+        spouse = result
+      }
     } catch (error) {
+      console.error(
+        'Erro capturado no SpousesModel findSpouseByUserId: ',
+        error,
+      )
       sentError = new Error(error.message)
     }
     if (sentError) {
       throw sentError
     }
-    return spouse!
+    return spouse
   }
 
   async findAllSpouses(): Promise<ISpouse[]> {
