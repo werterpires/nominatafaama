@@ -1,4 +1,5 @@
 import { IAcademicFormation } from 'src/modules/info/academic-formations/types/types'
+import { ILanguage } from 'src/modules/info/languages/types/types'
 import { ISpouse } from 'src/modules/spouses/types/types'
 import { IStudent } from 'src/modules/students/types/types'
 import { IUser } from 'src/modules/users/bz_types/types'
@@ -8,6 +9,8 @@ export interface ICompleteStudent {
   spouse: ISpouse | null
   academicFormations: IAcademicFormation[] | null
   spAcademicFormations: IAcademicFormation[] | null
+  languages: ILanguage[] | null
+  spLanguages: ILanguage[] | null
 }
 
 export interface ICompleteUser extends IUser {

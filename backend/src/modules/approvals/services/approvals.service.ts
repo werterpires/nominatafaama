@@ -158,6 +158,8 @@ export class ApprovalsService {
       spouse: null,
       academicFormations: null,
       spAcademicFormations: null,
+      languages: null,
+      spLanguages: null,
     }
 
     try {
@@ -173,6 +175,13 @@ export class ApprovalsService {
         )
       if (academicFormations.length > 0) {
         completeStudent.academicFormations = academicFormations
+      }
+
+      const languages = await this.languagesModel.findLanguagesByPersonId(
+        personId,
+      )
+      if (languages.length > 0) {
+        completeStudent.languages = languages
       }
 
       if (
@@ -193,6 +202,13 @@ export class ApprovalsService {
             )
           if (spAcademicFormations.length > 0) {
             completeStudent.spAcademicFormations = spAcademicFormations
+          }
+
+          const spLanguages = await this.languagesModel.findLanguagesByPersonId(
+            spousePersonId,
+          )
+          if (spLanguages.length > 0) {
+            completeStudent.spLanguages = spLanguages
           }
         }
       }
