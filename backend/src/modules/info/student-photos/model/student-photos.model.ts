@@ -53,7 +53,6 @@ export class StudentPhotosModel {
             },
             {},
           )
-          console.log()
           await trx('student_photos')
             .where('student_id', student_id)
             .update(updateFields)
