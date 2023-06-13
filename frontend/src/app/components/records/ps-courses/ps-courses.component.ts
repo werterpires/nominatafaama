@@ -13,7 +13,7 @@ export class PsCoursesComponent {
   @Input() permissions!: IPermissions
 
   allRegistries: ICourse[] = []
-  title = 'Cursos e Capacitações'
+  title = 'Cursos e Capacitações do Cônjuge'
   createRegistryData: ICreateCourse = {
     begin_date: '',
     course_area: '',

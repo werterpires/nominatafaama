@@ -19,7 +19,7 @@ export class SpPublicationsComponent {
 
   allRegistries: IPublication[] = []
   publicationTypeList: Array<IPublicationType> = []
-  title = 'Publicações'
+  title = 'Publicações do Cônjuge'
   createRegistryData: CreatePublicationDto = {
     link: '',
     publication_type_id: 0,

@@ -19,7 +19,7 @@ export class SpEndowmentsComponent {
 
   allRegistries: IEndowment[] = []
   endowmentTypeList: Array<IEndowmentType> = []
-  title = 'Investiduras'
+  title = 'Investiduras do Cônjuge'
   createRegistryData: CreateEndowmentDto = {
     endowment_type_id: 0,
   }

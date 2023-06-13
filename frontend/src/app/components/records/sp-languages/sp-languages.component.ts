@@ -20,7 +20,7 @@ export class SpLanguagesComponent {
 
   allRegistries: ILanguage[] = []
   languageTypeList: Array<ILanguageType> = []
-  title = 'Linguagens'
+  title = 'Linguagens do Cônjuge'
   createRegistryData: ICreateLanguageDto = {
     chosen_language: 0,
     read: false,

@@ -17,7 +17,7 @@ export class SpProfessionalExperiencesComponent {
   @Input() permissions!: IPermissions
 
   allRegistries: IProfessionalExperience[] = []
-  title = 'Experiências profissionais'
+  title = 'Experiências profissionais do Cônjuge'
   createRegistryData: CreateProfessionalExperienceDto = {
     job: '',
     job_begin_date: '',
