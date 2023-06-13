@@ -2,7 +2,7 @@ import { IStudent } from 'src/modules/students/types/types'
 import { IUser } from 'src/modules/users/bz_types/types'
 
 export interface ICompleteStudent {
-  student: IStudent
+  student: IStudent | null
 }
 
 export interface ICompleteUser extends IUser {

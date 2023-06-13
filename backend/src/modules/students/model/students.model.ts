@@ -104,43 +104,54 @@ export class StudentsModel {
     return personIds
   }
 
-  async findStudentByUserId(userId: number): Promise<IStudent> {
-    const result = await this.knex
-      .table('students')
-      .first(
-        'students.*',
-        'hiring_status.*',
-        'marital_status_types.*',
-        'associations.*',
-        'unions.*',
-        'people.name as person_name',
-        'people.person_id as person_id',
-      )
-      .leftJoin('users', 'students.person_id', 'users.person_id')
-      .leftJoin('people', 'students.person_id', 'people.person_id')
-      .leftJoin(
-        'marital_status_types',
-        'students.marital_status_id',
-        'marital_status_types.marital_status_type_id',
-      )
-      .leftJoin(
-        'hiring_status',
-        'students.hiring_status_id',
-        'hiring_status.hiring_status_id',
-      )
-      .leftJoin(
-        'associations',
-        'students.origin_field_id',
-        'associations.association_id',
-      )
-      .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-      .where('users.user_id', userId)
+  async findStudentByUserId(userId: number): Promise<IStudent | null> {
+    let student: IStudent | null = null
+    let sentError: Error | null = null
+    try {
+      const result = await this.knex
+        .table('students')
+        .first(
+          'students.*',
+          'hiring_status.*',
+          'marital_status_types.*',
+          'associations.*',
+          'unions.*',
+          'people.name as person_name',
+          'people.person_id as person_id',
+        )
+        .leftJoin('users', 'students.person_id', 'users.person_id')
+        .leftJoin('people', 'students.person_id', 'people.person_id')
+        .leftJoin(
+          'marital_status_types',
+          'students.marital_status_id',
+          'marital_status_types.marital_status_type_id',
+        )
+        .leftJoin(
+          'hiring_status',
+          'students.hiring_status_id',
+          'hiring_status.hiring_status_id',
+        )
+        .leftJoin(
+          'associations',
+          'students.origin_field_id',
+          'associations.association_id',
+        )
+        .leftJoin('unions', 'associations.union_id', 'unions.union_id')
+        .where('users.user_id', userId)
 
-    if (!result) {
-      throw new Error('Estudante não encontrado')
+      if (result != null) {
+        student = result
+      }
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
-    return result
+    if (sentError) {
+      throw sentError
+    }
+
+    return student
   }
 
   async findAllStudents(): Promise<IStudent[]> {

@@ -19,6 +19,7 @@ import { RelatedMinistriesModel } from 'src/modules/info/related-ministries/mode
 import { ChildrenModel } from 'src/modules/info/children/model/children.model'
 import * as fs from 'fs'
 import { StudentPhotosService } from 'src/modules/info/student-photos/services/student-photos.service'
+import { IStudent } from 'src/modules/students/types/types'
 
 @Injectable()
 export class ApprovalsService {
@@ -144,6 +145,29 @@ export class ApprovalsService {
     }
 
     return users
+  }
+
+  async findOneNotApproved(data: {
+    personId: number
+    userId: number
+  }): Promise<ICompleteStudent> {
+    const completeStudent: ICompleteStudent = {
+      student: null,
+    }
+
+    try {
+      const { personId, userId } = data
+      const student: IStudent | null =
+        await this.studentsModel.findStudentByUserId(userId)
+
+      completeStudent.student = student
+    } catch (error) {
+      console.error(
+        'Erro capturado no ApprovalsService findOneNotApproved:',
+        error,
+      )
+    }
+    return completeStudent
   }
 
   addPersonIds(
