@@ -2,7 +2,7 @@
   <app-users-approves [permissions]="permissions"></app-users-approves>
 </div>
 
-<div *ngIf="approvalType == 'students'" class="sectionBoxes">
+<div *ngIf="approvalType == 'students'" class="sectionDataList">
   <app-student-to-approve
     *ngIf="permissions.docente || permissions.administrador"
     [permissions]="permissions"
