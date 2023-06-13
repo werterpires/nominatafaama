@@ -40,6 +40,16 @@ export interface ICompleteStudent {
   spEndowments: IEndowment[] | null
   relatedMinistries: IRelatedMinistry[] | null
   spRelatedMinistries: IRelatedMinistry[] | null
+  photos: IPhotoFile
+}
+
+export interface IPhotoFile {
+  alone_photo: { file: Buffer; headers: Record<string, string> } | null
+  family_photo: { file: Buffer; headers: Record<string, string> } | null
+  other_family_photo: { file: Buffer; headers: Record<string, string> } | null
+  spouse_photo: { file: Buffer; headers: Record<string, string> } | null
+  invite_photo: { file: Buffer; headers: Record<string, string> } | null
+  small_alone_photo: { file: Buffer; headers: Record<string, string> } | null
 }
 
 export interface ICompleteUser extends IUser {

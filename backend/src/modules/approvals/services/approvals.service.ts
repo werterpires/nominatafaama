@@ -178,6 +178,14 @@ export class ApprovalsService {
       relatedMinistries: null,
       spRelatedMinistries: null,
       children: null,
+      photos: {
+        alone_photo: null,
+        family_photo: null,
+        invite_photo: null,
+        other_family_photo: null,
+        small_alone_photo: null,
+        spouse_photo: null,
+      },
     }
 
     try {
@@ -192,60 +200,60 @@ export class ApprovalsService {
         studentId = student.student_id
       }
 
-      // const academicFormations =
-      //   await this.academicFormationsModel.findAcademicFormationsByPersonId(
-      //     personId,
-      //   )
-      // if (academicFormations.length > 0) {
-      //   completeStudent.academicFormations = academicFormations
-      // }
+      const academicFormations =
+        await this.academicFormationsModel.findAcademicFormationsByPersonId(
+          personId,
+        )
+      if (academicFormations.length > 0) {
+        completeStudent.academicFormations = academicFormations
+      }
 
-      // const languages = await this.languagesModel.findLanguagesByPersonId(
-      //   personId,
-      // )
-      // if (languages.length > 0) {
-      //   completeStudent.languages = languages
-      // }
+      const languages = await this.languagesModel.findLanguagesByPersonId(
+        personId,
+      )
+      if (languages.length > 0) {
+        completeStudent.languages = languages
+      }
 
-      // const courses = await this.coursesModel.findCoursesByPersonId(personId)
-      // if (courses.length > 0) {
-      //   completeStudent.courses = courses
-      // }
+      const courses = await this.coursesModel.findCoursesByPersonId(personId)
+      if (courses.length > 0) {
+        completeStudent.courses = courses
+      }
 
-      // const professionalExperiences =
-      //   await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
-      //     personId,
-      //   )
-      // if (professionalExperiences.length > 0) {
-      //   completeStudent.professionalExperiences = professionalExperiences
-      // }
+      const professionalExperiences =
+        await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
+          personId,
+        )
+      if (professionalExperiences.length > 0) {
+        completeStudent.professionalExperiences = professionalExperiences
+      }
 
-      // const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
-      //   personId,
-      // )
-      // if (pastEclExps.length > 0) {
-      //   completeStudent.pastEclExps = pastEclExps
-      // }
+      const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
+        personId,
+      )
+      if (pastEclExps.length > 0) {
+        completeStudent.pastEclExps = pastEclExps
+      }
 
-      // const evangelisticExperiences =
-      //   await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
-      //     personId,
-      //   )
-      // if (evangelisticExperiences.length > 0) {
-      //   completeStudent.evangelisticExperiences = evangelisticExperiences
-      // }
+      const evangelisticExperiences =
+        await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+          personId,
+        )
+      if (evangelisticExperiences.length > 0) {
+        completeStudent.evangelisticExperiences = evangelisticExperiences
+      }
 
-      // const eclExperiences =
-      //   await this.eclExperiencesModel.findEclExperiencesByPersonId(personId)
-      // if (eclExperiences.length > 0) {
-      //   completeStudent.eclExperiences = eclExperiences
-      // }
+      const eclExperiences =
+        await this.eclExperiencesModel.findEclExperiencesByPersonId(personId)
+      if (eclExperiences.length > 0) {
+        completeStudent.eclExperiences = eclExperiences
+      }
 
-      // const publications =
-      //   await this.publicationsModel.findPublicationsByPersonId(personId)
-      // if (publications.length > 0) {
-      //   completeStudent.publications = publications
-      // }
+      const publications =
+        await this.publicationsModel.findPublicationsByPersonId(personId)
+      if (publications.length > 0) {
+        completeStudent.publications = publications
+      }
 
       const endowments = await this.endowmentsModel.findEndowmentsByPersonId(
         personId,
@@ -303,61 +311,61 @@ export class ApprovalsService {
         if (spouse != null && spouse.spouse_id) {
           spousePersonId = spouse.person_id
 
-          // const spAcademicFormations =
-          //   await this.academicFormationsModel.findAcademicFormationsByPersonId(
-          //     spousePersonId,
-          //   )
-          // if (spAcademicFormations.length > 0) {
-          //   completeStudent.spAcademicFormations = spAcademicFormations
-          // }
+          const spAcademicFormations =
+            await this.academicFormationsModel.findAcademicFormationsByPersonId(
+              spousePersonId,
+            )
+          if (spAcademicFormations.length > 0) {
+            completeStudent.spAcademicFormations = spAcademicFormations
+          }
 
-          // const spLanguages = await this.languagesModel.findLanguagesByPersonId(
-          //   spousePersonId,
-          // )
-          // if (spLanguages.length > 0) {
-          //   completeStudent.spLanguages = spLanguages
-          // }
+          const spLanguages = await this.languagesModel.findLanguagesByPersonId(
+            spousePersonId,
+          )
+          if (spLanguages.length > 0) {
+            completeStudent.spLanguages = spLanguages
+          }
 
-          // const spCourses = await this.coursesModel.findCoursesByPersonId(
-          //   spousePersonId,
-          // )
-          // if (spCourses.length > 0) {
-          //   completeStudent.spCourses = spCourses
-          // }
+          const spCourses = await this.coursesModel.findCoursesByPersonId(
+            spousePersonId,
+          )
+          if (spCourses.length > 0) {
+            completeStudent.spCourses = spCourses
+          }
 
-          // const spProfessionalExperiences =
-          //   await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
-          //     spousePersonId,
-          //   )
-          // if (spProfessionalExperiences.length > 0) {
-          //   completeStudent.spProfessionalExperiences =
-          //     spProfessionalExperiences
-          // }
+          const spProfessionalExperiences =
+            await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
+              spousePersonId,
+            )
+          if (spProfessionalExperiences.length > 0) {
+            completeStudent.spProfessionalExperiences =
+              spProfessionalExperiences
+          }
 
-          // const spPastEclExps =
-          //   await this.pastEclExpsModel.findPastEclExpsByPersonId(
-          //     spousePersonId,
-          //   )
-          // if (spPastEclExps.length > 0) {
-          //   completeStudent.spPastEclExps = spPastEclExps
-          // }
+          const spPastEclExps =
+            await this.pastEclExpsModel.findPastEclExpsByPersonId(
+              spousePersonId,
+            )
+          if (spPastEclExps.length > 0) {
+            completeStudent.spPastEclExps = spPastEclExps
+          }
 
-          // const spEvangelisticExperiences =
-          //   await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
-          //     spousePersonId,
-          //   )
-          // if (spEvangelisticExperiences.length > 0) {
-          //   completeStudent.spEvangelisticExperiences =
-          //     spEvangelisticExperiences
-          // }
+          const spEvangelisticExperiences =
+            await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+              spousePersonId,
+            )
+          if (spEvangelisticExperiences.length > 0) {
+            completeStudent.spEvangelisticExperiences =
+              spEvangelisticExperiences
+          }
 
-          // const spPublications =
-          //   await this.publicationsModel.findPublicationsByPersonId(
-          //     spousePersonId,
-          //   )
-          // if (spPublications.length > 0) {
-          //   completeStudent.spPublications = spPublications
-          // }
+          const spPublications =
+            await this.publicationsModel.findPublicationsByPersonId(
+              spousePersonId,
+            )
+          if (spPublications.length > 0) {
+            completeStudent.spPublications = spPublications
+          }
 
           const spEndowments =
             await this.endowmentsModel.findEndowmentsByPersonId(spousePersonId)
@@ -374,12 +382,20 @@ export class ApprovalsService {
           }
         }
       }
+
+      await this.createPhotoFile(userId, completeStudent, 'small-alone-photo')
+      await this.createPhotoFile(userId, completeStudent, 'alone-photo')
+      await this.createPhotoFile(userId, completeStudent, 'family-photo')
+      await this.createPhotoFile(userId, completeStudent, 'other-family-photo')
+      await this.createPhotoFile(userId, completeStudent, 'spouse-photo')
+      await this.createPhotoFile(userId, completeStudent, 'invite-photo')
     } catch (error) {
       console.error(
         'Erro capturado no ApprovalsService findOneNotApproved:',
         error,
       )
     }
+
     return completeStudent
   }
 
@@ -433,5 +449,64 @@ export class ApprovalsService {
         users[i].photo = null
       }
     }
+  }
+
+  async addPhotoToStudent(photoData: {
+    fileStream: fs.ReadStream | null
+    headers: Record<string, string>
+  }): Promise<{
+    file: Buffer
+    headers: Record<string, string>
+  } | null> {
+    let photo: {
+      file: Buffer
+      headers: Record<string, string>
+    } | null = null
+    if (photoData.fileStream != null) {
+      const { fileStream, headers } = photoData
+
+      if (fileStream) {
+        const filePromise = new Promise<Buffer>((resolve, reject) => {
+          const chunks: Buffer[] = []
+          fileStream.on('data', (chunk: Buffer) => {
+            chunks.push(chunk)
+          })
+          fileStream.on('end', () => {
+            const file = Buffer.concat(chunks)
+            resolve(file)
+          })
+          fileStream.on('error', (error: Error) => {
+            reject(error)
+          })
+        })
+
+        const file = await filePromise
+
+        photo = {
+          file,
+          headers,
+        }
+      }
+    }
+    return photo
+  }
+
+  async createPhotoFile(
+    userId: number,
+    completeStudent: ICompleteStudent,
+    photoType: string,
+  ) {
+    let correctPhotoType = photoType.replace(/-/g, '_')
+    let photoData: {
+      fileStream: fs.ReadStream | null
+      headers: Record<string, string>
+    }
+    photoData = await this.studentPhotoService.findStudentPhotoByStudentId(
+      userId,
+      photoType,
+    )
+    completeStudent.photos[correctPhotoType] = await this.addPhotoToStudent(
+      photoData,
+    )
   }
 }
