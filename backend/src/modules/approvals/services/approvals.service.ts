@@ -170,6 +170,14 @@ export class ApprovalsService {
       evangelisticExperiences: null,
       spEvangelisticExperiences: null,
       eclExperiences: null,
+      publications: null,
+      spPublications: null,
+      endowments: null,
+      spEndowments: null,
+      ordinations: null,
+      relatedMinistries: null,
+      spRelatedMinistries: null,
+      children: null,
     }
 
     try {
@@ -184,53 +192,81 @@ export class ApprovalsService {
         studentId = student.student_id
       }
 
-      const academicFormations =
-        await this.academicFormationsModel.findAcademicFormationsByPersonId(
-          personId,
-        )
-      if (academicFormations.length > 0) {
-        completeStudent.academicFormations = academicFormations
-      }
+      // const academicFormations =
+      //   await this.academicFormationsModel.findAcademicFormationsByPersonId(
+      //     personId,
+      //   )
+      // if (academicFormations.length > 0) {
+      //   completeStudent.academicFormations = academicFormations
+      // }
 
-      const languages = await this.languagesModel.findLanguagesByPersonId(
+      // const languages = await this.languagesModel.findLanguagesByPersonId(
+      //   personId,
+      // )
+      // if (languages.length > 0) {
+      //   completeStudent.languages = languages
+      // }
+
+      // const courses = await this.coursesModel.findCoursesByPersonId(personId)
+      // if (courses.length > 0) {
+      //   completeStudent.courses = courses
+      // }
+
+      // const professionalExperiences =
+      //   await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
+      //     personId,
+      //   )
+      // if (professionalExperiences.length > 0) {
+      //   completeStudent.professionalExperiences = professionalExperiences
+      // }
+
+      // const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
+      //   personId,
+      // )
+      // if (pastEclExps.length > 0) {
+      //   completeStudent.pastEclExps = pastEclExps
+      // }
+
+      // const evangelisticExperiences =
+      //   await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+      //     personId,
+      //   )
+      // if (evangelisticExperiences.length > 0) {
+      //   completeStudent.evangelisticExperiences = evangelisticExperiences
+      // }
+
+      // const eclExperiences =
+      //   await this.eclExperiencesModel.findEclExperiencesByPersonId(personId)
+      // if (eclExperiences.length > 0) {
+      //   completeStudent.eclExperiences = eclExperiences
+      // }
+
+      // const publications =
+      //   await this.publicationsModel.findPublicationsByPersonId(personId)
+      // if (publications.length > 0) {
+      //   completeStudent.publications = publications
+      // }
+
+      const endowments = await this.endowmentsModel.findEndowmentsByPersonId(
         personId,
       )
-      if (languages.length > 0) {
-        completeStudent.languages = languages
+      if (endowments.length > 0) {
+        completeStudent.endowments = endowments
       }
 
-      const courses = await this.coursesModel.findCoursesByPersonId(personId)
-      if (courses.length > 0) {
-        completeStudent.courses = courses
-      }
-
-      const professionalExperiences =
-        await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
-          personId,
-        )
-      if (professionalExperiences.length > 0) {
-        completeStudent.professionalExperiences = professionalExperiences
-      }
-
-      const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
+      const ordinations = await this.ordinationsModel.findOrdinationsByPersonId(
         personId,
       )
-      if (pastEclExps.length > 0) {
-        completeStudent.pastEclExps = pastEclExps
+      if (ordinations.length > 0) {
+        completeStudent.ordinations = ordinations
       }
 
-      const evangelisticExperiences =
-        await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+      const relatedMinistries =
+        await this.relatedMinistriesModel.findRelatedMinistriesByPersonId(
           personId,
         )
-      if (evangelisticExperiences.length > 0) {
-        completeStudent.evangelisticExperiences = evangelisticExperiences
-      }
-
-      const eclExperiences =
-        await this.eclExperiencesModel.findEclExperiencesByPersonId(personId)
-      if (eclExperiences.length > 0) {
-        completeStudent.eclExperiences = eclExperiences
+      if (relatedMinistries.length > 0) {
+        completeStudent.relatedMinistries = relatedMinistries
       }
 
       if (studentId > 0) {
@@ -246,6 +282,13 @@ export class ApprovalsService {
             completeStudent.previousMarriage = previousMarriage
           }
         }
+
+        const children = await this.childrenService.findChildrenByStudentId(
+          studentId,
+        )
+        if (children.length > 0) {
+          completeStudent.children = children
+        }
       }
 
       if (
@@ -260,52 +303,74 @@ export class ApprovalsService {
         if (spouse != null && spouse.spouse_id) {
           spousePersonId = spouse.person_id
 
-          const spAcademicFormations =
-            await this.academicFormationsModel.findAcademicFormationsByPersonId(
+          // const spAcademicFormations =
+          //   await this.academicFormationsModel.findAcademicFormationsByPersonId(
+          //     spousePersonId,
+          //   )
+          // if (spAcademicFormations.length > 0) {
+          //   completeStudent.spAcademicFormations = spAcademicFormations
+          // }
+
+          // const spLanguages = await this.languagesModel.findLanguagesByPersonId(
+          //   spousePersonId,
+          // )
+          // if (spLanguages.length > 0) {
+          //   completeStudent.spLanguages = spLanguages
+          // }
+
+          // const spCourses = await this.coursesModel.findCoursesByPersonId(
+          //   spousePersonId,
+          // )
+          // if (spCourses.length > 0) {
+          //   completeStudent.spCourses = spCourses
+          // }
+
+          // const spProfessionalExperiences =
+          //   await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
+          //     spousePersonId,
+          //   )
+          // if (spProfessionalExperiences.length > 0) {
+          //   completeStudent.spProfessionalExperiences =
+          //     spProfessionalExperiences
+          // }
+
+          // const spPastEclExps =
+          //   await this.pastEclExpsModel.findPastEclExpsByPersonId(
+          //     spousePersonId,
+          //   )
+          // if (spPastEclExps.length > 0) {
+          //   completeStudent.spPastEclExps = spPastEclExps
+          // }
+
+          // const spEvangelisticExperiences =
+          //   await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+          //     spousePersonId,
+          //   )
+          // if (spEvangelisticExperiences.length > 0) {
+          //   completeStudent.spEvangelisticExperiences =
+          //     spEvangelisticExperiences
+          // }
+
+          // const spPublications =
+          //   await this.publicationsModel.findPublicationsByPersonId(
+          //     spousePersonId,
+          //   )
+          // if (spPublications.length > 0) {
+          //   completeStudent.spPublications = spPublications
+          // }
+
+          const spEndowments =
+            await this.endowmentsModel.findEndowmentsByPersonId(spousePersonId)
+          if (spEndowments.length > 0) {
+            completeStudent.spEndowments = spEndowments
+          }
+
+          const spRelatedMinistries =
+            await this.relatedMinistriesModel.findRelatedMinistriesByPersonId(
               spousePersonId,
             )
-          if (spAcademicFormations.length > 0) {
-            completeStudent.spAcademicFormations = spAcademicFormations
-          }
-
-          const spLanguages = await this.languagesModel.findLanguagesByPersonId(
-            spousePersonId,
-          )
-          if (spLanguages.length > 0) {
-            completeStudent.spLanguages = spLanguages
-          }
-
-          const spCourses = await this.coursesModel.findCoursesByPersonId(
-            spousePersonId,
-          )
-          if (spCourses.length > 0) {
-            completeStudent.spCourses = spCourses
-          }
-
-          const spProfessionalExperiences =
-            await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
-              spousePersonId,
-            )
-          if (spProfessionalExperiences.length > 0) {
-            completeStudent.spProfessionalExperiences =
-              spProfessionalExperiences
-          }
-
-          const spPastEclExps =
-            await this.pastEclExpsModel.findPastEclExpsByPersonId(
-              spousePersonId,
-            )
-          if (spPastEclExps.length > 0) {
-            completeStudent.spPastEclExps = spPastEclExps
-          }
-
-          const spEvangelisticExperiences =
-            await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
-              spousePersonId,
-            )
-          if (spEvangelisticExperiences.length > 0) {
-            completeStudent.spEvangelisticExperiences =
-              spEvangelisticExperiences
+          if (spRelatedMinistries.length > 0) {
+            completeStudent.spRelatedMinistries = spRelatedMinistries
           }
         }
       }
