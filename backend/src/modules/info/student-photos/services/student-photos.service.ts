@@ -23,9 +23,13 @@ export class StudentPhotosService {
     filename: string,
   ): Promise<IStudentPhoto | null> {
     try {
-      const { student_id } = await this.studentModel.findStudentByUserId(
-        user_id,
-      )
+      const student = await this.studentModel.findStudentByUserId(user_id)
+      if (student == null) {
+        throw new Error(
+          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
+        )
+      }
+      const student_id = student.student_id
       const photoTypes: string[] = [
         'alone-photo',
         'family-photo',
@@ -74,6 +78,10 @@ export class StudentPhotosService {
         this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
       return createdStudentPhoto
     } catch (error) {
+      console.error(
+        'Erro capturado no StudentPhotosService createStudentPhoto: ',
+        error,
+      )
       throw error
     }
   }
@@ -92,14 +100,20 @@ export class StudentPhotosService {
   }
 
   async findStudentPhotoByStudentId(
-    userId: number,
+    user_id: number,
     photoType: string,
   ): Promise<{
     fileStream: fs.ReadStream | null
     headers: Record<string, string>
   }> {
     try {
-      const { student_id } = await this.studentModel.findStudentByUserId(userId)
+      const student = await this.studentModel.findStudentByUserId(user_id)
+      if (student == null) {
+        throw new Error(
+          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
+        )
+      }
+      const student_id = student.student_id
       if (!student_id) {
         throw new Error('Usuário não possui um estudante válido')
       }
@@ -128,9 +142,11 @@ export class StudentPhotosService {
         return { fileStream: null, headers: {} }
       }
     } catch (error) {
-      throw new Error(
-        `Não foi possível encontrar a foto do estudante com o ID ${userId}: ${error.message}`,
+      console.error(
+        'Erro capturado no StudentPhotosService findStudentPhotoByStudentId: ',
+        error,
       )
+      throw error
     }
   }
 

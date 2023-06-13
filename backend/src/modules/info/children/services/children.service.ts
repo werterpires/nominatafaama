@@ -1,9 +1,9 @@
-import {Injectable} from '@nestjs/common'
-import {IChild, ICreateChild, IUpdateChild} from '../types/types'
-import {ChildrenModel} from '../model/children.model'
-import {CreateChildDto} from '../dto/create-child.dto'
-import {UpdateChildDto} from '../dto/update-child.dto'
-import {StudentsModel} from 'src/modules/students/model/students.model'
+import { Injectable } from '@nestjs/common'
+import { IChild, ICreateChild, IUpdateChild } from '../types/types'
+import { ChildrenModel } from '../model/children.model'
+import { CreateChildDto } from '../dto/create-child.dto'
+import { UpdateChildDto } from '../dto/update-child.dto'
+import { StudentsModel } from 'src/modules/students/model/students.model'
 
 @Injectable()
 export class ChildrenService {
@@ -14,18 +14,26 @@ export class ChildrenService {
 
   async createChild(dto: CreateChildDto, user_id: number): Promise<IChild> {
     try {
+      const student = await this.studentModel.findStudentByUserId(user_id)
+      if (student == null) {
+        throw new Error(
+          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
+        )
+      }
+      const student_id = student.student_id
+
       const createChildData: ICreateChild = {
         ...dto,
         child_birth_date: new Date(dto.child_birth_date),
         child_approved: null,
-        student_id: (await this.studentModel.findStudentByUserId(user_id))
-          .student_id,
+        student_id,
       }
 
       const childId = await this.childrenModel.createChild(createChildData)
       const newChild = await this.childrenModel.findChildById(childId)
       return newChild
     } catch (error) {
+      console.error('Erro capturado no childrenService createChild: ', error)
       throw error
     }
   }
@@ -52,12 +60,21 @@ export class ChildrenService {
 
   async findAllChildrenByStudentId(user_id: number): Promise<IChild[]> {
     try {
-      const student_id = (await this.studentModel.findStudentByUserId(user_id))
-        .student_id
+      const student = await this.studentModel.findStudentByUserId(user_id)
+      if (student == null) {
+        throw new Error(
+          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
+        )
+      }
+      const student_id = student.student_id
       const allStudentChildren =
         await this.childrenModel.findChildrenByStudentId(student_id)
       return allStudentChildren
     } catch (error) {
+      console.error(
+        'Erro capturado no childrenService findAllChildrenByStudentId: ',
+        error,
+      )
       throw error
     }
   }
