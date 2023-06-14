@@ -109,9 +109,10 @@ export class StudentPhotosService {
     try {
       const student = await this.studentModel.findStudentByUserId(user_id)
       if (student == null) {
-        throw new Error(
-          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
-        )
+        return {fileStream: null, headers: {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename`,
+        } }
       }
       const student_id = student.student_id
       if (!student_id) {

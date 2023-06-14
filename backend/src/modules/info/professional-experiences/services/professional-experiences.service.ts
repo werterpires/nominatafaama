@@ -77,7 +77,7 @@ export class ProfessionalExperiencesService {
     personType: string,
   ): Promise<IProfessionalExperience[] | null> {
     try {
-      let personId!: number
+      let personId!: number | null
       if (personType === 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
@@ -85,17 +85,22 @@ export class ProfessionalExperiencesService {
           user_id,
         )
         if (spouse == null) {
-          throw new Error(
-            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
-          )
+         personId = null
+        } else{
+          personId = spouse.person_id
         }
-        personId = spouse.person_id
+        
       }
-
-      const experiences =
+      let experiences: IProfessionalExperience[]
+      if(personId==null){
+        experiences = []
+      }else{
+        experiences =
         await this.experiencesModel.findProfessionalExperiencesByPersonId(
           personId,
         )
+      }
+      
       return experiences
     } catch (error) {
       throw new Error(

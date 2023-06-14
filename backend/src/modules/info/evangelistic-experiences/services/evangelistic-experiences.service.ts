@@ -81,8 +81,9 @@ export class EvangelisticExperiencesService {
     user_id: number,
     personType: string,
   ): Promise<IEvangelisticExperience[] | null> {
+    let evangelisticExperiences: IEvangelisticExperience[] | null = null
     try {
-      let personId!: number
+      let personId!: number | null
       if (personType === 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
@@ -90,23 +91,30 @@ export class EvangelisticExperiencesService {
           user_id,
         )
         if (spouse == null) {
-          throw new Error(
-            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
-          )
+          personId = null
+        } else{
+          personId = spouse.person_id
         }
-        personId = spouse.person_id
+       
       }
 
-      const evangelisticExperiences =
+      if(personId == null){
+        evangelisticExperiences = []
+      }else{
+        evangelisticExperiences =
         await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
           personId,
         )
-      return evangelisticExperiences
+      }
+
+      
+      
     } catch (error) {
       throw new Error(
         `Não foi possível encontrar experiências evangelísticas para o usuário com ID ${user_id}: ${error.message}`,
       )
     }
+    return evangelisticExperiences
   }
 
   async findAllEvangelisticExperiences(): Promise<IEvangelisticExperience[]> {

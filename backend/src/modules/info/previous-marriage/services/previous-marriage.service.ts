@@ -69,9 +69,7 @@ export class PreviousMarriagesService {
     try {
       const student = await this.studentModel.findStudentByUserId(user_id)
       if (student == null) {
-        throw new Error(
-          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
-        )
+        return null
       }
 
       const { student_id } = student

@@ -94,6 +94,9 @@ export class StudentsComponent {
           this.registry = res
           this.dataService.maritalStatusName =
             this.registry.marital_status_type_name
+        } else {
+          this.showBox = true
+          this.showForm = true
         }
         this.getAllOtherData()
       },

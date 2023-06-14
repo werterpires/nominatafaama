@@ -75,14 +75,9 @@ export class PastEclExpsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get(':id')
-  async findPastEclExpById(@Param('id') id: number): Promise<IPastEclExp> {
+  async findPastEclExpById(@Param('id') id: number): Promise<IPastEclExp|null> {
     try {
       const pastEclExp = await this.pastEclExpsService.findPastEclExpById(id)
-      if (!pastEclExp) {
-        throw new NotFoundException(
-          `No past ecclesiastical experience found with id ${id}.`,
-        )
-      }
       return pastEclExp
     } catch (error) {
       throw new InternalServerErrorException(error.message)

@@ -69,22 +69,29 @@ export class CoursesService {
     personType: string,
   ): Promise<ICourse[] | null> {
     try {
-      let personId!: number
-      if (personType === 'student') {
+      let personId!: number | null
+      if (personType == 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
-      } else if (personType === 'spouse') {
+      } else if (personType == 'spouse') {
         let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
           user_id,
         )
         if (spouse == null) {
-          throw new Error(
-            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
-          )
-        }
-        personId = spouse.person_id
+          personId = null
+         } else{
+           personId = spouse.person_id
+         }
+       
       }
-
-      const courses = await this.coursesModel.findCoursesByPersonId(personId)
+      let courses: ICourse[]
+      if(personId==null){
+        courses = []
+      }else{
+        courses =
+        await this.coursesModel.findCoursesByPersonId(
+          personId,
+        )
+      }
       return courses
     } catch (error) {
       throw new Error(

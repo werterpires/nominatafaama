@@ -46,8 +46,8 @@ export class PeopleServices {
   async findPersonByUserId(
     user_id: number,
     personType: string,
-  ): Promise<number> {
-    let personId!: number
+  ): Promise<number | null> {
+    let personId!: number | null
     try {
       if (personType === 'student') {
         personId = (await this.usersModel.findUserById(user_id)).person_id
@@ -56,13 +56,14 @@ export class PeopleServices {
           user_id,
         )
         if (spouse == null) {
-          throw new Error(
-            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
-          )
+          personId = null
+        }else{
+          personId = spouse.person_id
         }
-        personId = spouse.person_id
+        
       }
     } catch (error) {
+      console.error(error)
       throw error
     }
 

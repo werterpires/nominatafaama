@@ -65,7 +65,7 @@ export class LanguagesService {
     personType: string,
   ): Promise<ILanguage[] | null> {
     try {
-      let personId!: number
+      let personId!: number | null
       if (personType == 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType == 'spouse') {
@@ -73,15 +73,21 @@ export class LanguagesService {
           user_id,
         )
         if (spouse == null) {
-          throw new Error(
-            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
-          )
-        }
-        personId = spouse.person_id
+          personId = null
+         } else{
+           personId = spouse.person_id
+         }
+       
       }
-      const languages = await this.languagesModel.findLanguagesByPersonId(
-        personId,
-      )
+      let languages: ILanguage[]
+      if(personId==null){
+        languages = []
+      }else{
+        languages =
+        await this.languagesModel.findLanguagesByPersonId(
+          personId,
+        )
+      }
       return languages
     } catch (error) {
       throw new Error(

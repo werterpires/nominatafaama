@@ -23,6 +23,11 @@ export class OrdinationsService {
         personType,
       )
 
+      
+      if(personId == null){
+        throw new Error(`Não foi encontrado uma pessoa vinculada ao usuário ${user_id}`)
+      }
+
       const createOrdinationData: ICreateOrdination = {
         ...dto,
         person_id: personId,
@@ -62,6 +67,10 @@ export class OrdinationsService {
         user_id,
         personType,
       )
+
+      if(personId == null){
+        return []
+      }
 
       const ordinations = await this.ordinationsModel.findOrdinationsByPersonId(
         personId,

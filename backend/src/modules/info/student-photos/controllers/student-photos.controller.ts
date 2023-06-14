@@ -85,7 +85,7 @@ export class StudentPhotosController {
           phototype,
         )
       if (result == null) {
-        return null
+        res.status(404).json({ error: 'Foto não encontrada.' })
       }
       const { fileStream, headers } = result
 

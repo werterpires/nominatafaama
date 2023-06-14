@@ -73,9 +73,9 @@ export class PastEclExpsService {
   async findPastEclExpsByPersonId(
     user_id: number,
     personType: string,
-  ): Promise<IPastEclExp[] | null> {
+  ): Promise<IPastEclExp[]> {
     try {
-      let personId!: number
+      let personId!: number | null
       if (personType === 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
@@ -83,16 +83,21 @@ export class PastEclExpsService {
           user_id,
         )
         if (spouse == null) {
-          throw new Error(
-            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
-          )
+ personId = null
+        }else{
+          personId = spouse.person_id
         }
-        personId = spouse.person_id
-      }
 
-      const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
-        personId,
-      )
+      }
+      let pastEclExps!: IPastEclExp[] | null
+      if(personId == null){
+        pastEclExps = []
+      }else{
+        pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
+          personId,
+        )
+      }
+     
       return pastEclExps
     } catch (error) {
       throw new Error(
