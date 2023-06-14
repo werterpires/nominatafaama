@@ -20,7 +20,7 @@ export class EvgExperiencesComponent {
 
   allRegistries: IEvangelisticExperience[] = []
   allTypes: IEvangExpType[] = []
-  title = 'Experiências Evangelísitcas'
+  title = 'Experiências evangelísticas durante a formação ministerial no SALT'
   createRegistryData: CreateEvangelisticExperienceDto = {
     evang_exp_type_id: 0,
     exp_begin_date: '',

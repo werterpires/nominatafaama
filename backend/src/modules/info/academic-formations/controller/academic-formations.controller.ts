@@ -132,7 +132,7 @@ export class AcademicFormationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deleteAcademicFormationById(@Param('id') id: number) {
     try {

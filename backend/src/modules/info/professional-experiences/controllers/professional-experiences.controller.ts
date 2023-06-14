@@ -119,7 +119,7 @@ export class ProfessionalExperiencesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deleteProfessionalExperienceById(@Param('id') id: number) {
     try {

@@ -112,7 +112,7 @@ export class OrdinationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deleteOrdinationById(@Param('id') id: number) {
     try {

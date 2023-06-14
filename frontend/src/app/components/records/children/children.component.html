@@ -15,14 +15,9 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img
-      #addIcon
-      class="addIcon"
-      [ngClass]="{ hidden: !showBox }"
-      src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
-      (click)="showForm = true"
-    />
+    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+      Adicionar filho
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
@@ -47,6 +42,10 @@
         </label>
         <label>
           Grau escolar:
+          <div class="formInstruction">
+            Por ocasião da formatura do aluno, o(a) filho(a) deverá ter
+            concluído a série atual e ser promovido para qual série de estudos?
+          </div>
           <input type="text" [(ngModel)]="createRegistryData.study_grade" />
         </label>
       </div>

@@ -108,7 +108,7 @@ export class CoursesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deleteCourseById(@Param('id') id: number) {
     try {

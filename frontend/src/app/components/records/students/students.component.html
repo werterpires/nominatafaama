@@ -19,13 +19,20 @@
     <app-creation-form *ngIf="!registry?.student_id" (save)="createRegistry()">
       <div class="subSection gap-2">
         <label class="inputLabel">
-          Número de telefone<input
+          Número de telefonse
+          <p class="formInstruction">
+            Adicione somente números e inclua o DDD.
+          </p>
+          <input
+            #phoneNumberInput
             class="smallInput"
             type="text"
             name="studentPhoneNumberInput"
             [(ngModel)]="registry.phone_number"
+            placeholder="(98) 98765-4321"
           />
         </label>
+
         <label class="inputLabel text-center">
           É WhatsApp?
           <input
@@ -47,6 +54,13 @@
       <div class="subSection">
         <label class="inputLabel">
           União de origem
+          <div class="formInstruction">
+            Aunião de origem é aquela em que você "nasceu e/ou recebeu o Ensino
+            Fundamental, independentemente de ter sido criado posteriormente em
+            outro país/região", podendo optar por um dos dois apenas se o lugar
+            onde nasceu for diferente do lugar onde estudou o Ensino
+            Fundamental. (REA E 15 10 S)
+          </div>
           <select
             class="smallInput"
             name="unionSelect"
@@ -85,7 +99,8 @@
         </label>
       </div>
       <label class="inputLabel w-full">
-        Justifique por que você acredita ser esse o seu campo de origem
+        Por que você considera este campo como seu campo de origem?
+
         <input
           class="largeInput"
           name="justificationInput"
@@ -184,6 +199,9 @@
       <div class="subSection">
         <label class="inputLabel">
           Data de batismo
+          <div class="formInstruction">
+            Se rebatizado, considere a data do rebatismo mais recente.
+          </div>
           <input
             class="dateInput"
             type="date"
@@ -193,11 +211,15 @@
         </label>
         <label class="inputLabel">
           IASD onde foi batizado
+          <div class="formInstruction">
+            Se rebatizado, considere o local do rebatismo mais recente.
+          </div>
           <input
             class="smallMediumInput"
             type="text"
             name="baptimPlaceInput"
             [(ngModel)]="registry.baptism_place"
+            placeholder="IASD Central de Castanhal, PA"
           />
         </label>
       </div>
@@ -224,6 +246,7 @@
           type="text"
           name="studentMessageInput"
           [(ngModel)]="registry.student_mensage"
+          placeholder="No princípio Criou Deus os céus e a terra. Gênesis 1:1"
         />
       </label>
     </app-creation-form>

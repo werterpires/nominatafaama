@@ -15,14 +15,9 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img
-      #addIcon
-      class="addIcon"
-      [ngClass]="{ hidden: !showBox }"
-      src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
-      (click)="showForm = true"
-    />
+    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+      Adicionar nova Experiência evangelística
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
@@ -43,11 +38,19 @@
       <div class="subSection">
         <label>
           Projeto:
-          <input type="text" [(ngModel)]="createRegistryData.project" />
+          <input
+            type="text"
+            [(ngModel)]="createRegistryData.project"
+            placeholder="Evangelismo público, visitação e colportagem com revistas"
+          />
         </label>
         <label>
           Local:
-          <input type="text" [(ngModel)]="createRegistryData.place" />
+          <input
+            type="text"
+            [(ngModel)]="createRegistryData.place"
+            placeholder="Marituba/PA"
+          />
         </label>
       </div>
       <div class="subSection">

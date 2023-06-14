@@ -1,74 +1,108 @@
-<section #sectionBox [ngClass]="{smallSectionBox: !showBox, sectionBox: showBox}">
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
   <div class="boxHead">
     <span class="headField" (click)="showBox = !showBox">
-      <img #expandIcon class="seeMoreIcon" [ngClass]="{rotatedClock: showBox}" id="seeMoreIconFormations"
-        src="assets/icons/seeMoreIcon.png" alt="Expandir">
-      <p class="sectionTitle1">{{title}}</p>
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img #addIcon class="addIcon" [ngClass]="{hidden: !showBox}" src="assets/icons/addIcon.png" alt="Criar {{title}}"
-      (click)="showForm=true">
+    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+      Adicionar nova Experiência evangelística
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
       <label>
         Tipo de Experiência:
-        <select name="typeSelect" [(ngModel)]="createRegistryData.evang_exp_type_id">
-          <option [value]="type.evang_exp_type_id" *ngFor="let type of allTypes">{{type.evang_exp_type_name}}</option>
+        <select
+          name="typeSelect"
+          [(ngModel)]="createRegistryData.evang_exp_type_id"
+        >
+          <option
+            [value]="type.evang_exp_type_id"
+            *ngFor="let type of allTypes"
+          >
+            {{ type.evang_exp_type_name }}
+          </option>
         </select>
       </label>
       <div class="subSection">
         <label>
           Projeto:
-          <input type="text" [(ngModel)]="createRegistryData.project">
+          <input
+            type="text"
+            [(ngModel)]="createRegistryData.project"
+            placeholder="Evangelismo público, visitação e colportagem com revistas"
+          />
         </label>
         <label>
           Local:
-          <input type="text" [(ngModel)]="createRegistryData.place">
+          <input
+            type="text"
+            [(ngModel)]="createRegistryData.place"
+            placeholder="Marituba/PA"
+          />
         </label>
       </div>
       <div class="subSection">
         <label>
           Data Inicial:
-          <input type="date" [(ngModel)]="createRegistryData.exp_begin_date">
+          <input type="date" [(ngModel)]="createRegistryData.exp_begin_date" />
         </label>
         <label>
           Data Final:
-          <input type="date" [(ngModel)]="createRegistryData.exp_end_date">
+          <input type="date" [(ngModel)]="createRegistryData.exp_end_date" />
         </label>
       </div>
     </app-creation-form>
   </section>
   <section class="registriesWrapper">
-    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.evang_exp_id)" *ngFor="let registry of allRegistries; index as i;">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.evang_exp_id)"
+      *ngFor="let registry of allRegistries; index as i"
+    >
       <label>
         Tipo de Experiência:
         <select name="typeSelect" [(ngModel)]="registry.evang_exp_type_id">
-          <option [value]="type.evang_exp_type_id" *ngFor="let type of allTypes">{{type.evang_exp_type_name}}</option>
+          <option
+            [value]="type.evang_exp_type_id"
+            *ngFor="let type of allTypes"
+          >
+            {{ type.evang_exp_type_name }}
+          </option>
         </select>
       </label>
       <div class="subSection">
         <label>
           Projeto:
-          <input type="text" [(ngModel)]="registry.project">
+          <input type="text" [(ngModel)]="registry.project" />
         </label>
         <label>
           Local:
-          <input type="text" [(ngModel)]="registry.place">
+          <input type="text" [(ngModel)]="registry.place" />
         </label>
       </div>
       <div class="subSection">
         <label>
           Data Inicial:
-          <input type="date" [(ngModel)]="registry.exp_begin_date">
+          <input type="date" [(ngModel)]="registry.exp_begin_date" />
         </label>
         <label>
           Data Final:
-          <input type="date" [(ngModel)]="registry.exp_end_date">
+          <input type="date" [(ngModel)]="registry.exp_end_date" />
         </label>
       </div>
-
     </app-update-form>
   </section>
 </section>
@@ -78,18 +112,28 @@
     <p>Atenção</p>
   </div>
   <div class="errorMessage">
-    <p>{{errorMessage}}</p>
+    <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()">
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>
   </div>
   <div class="doneMessage">
-    <p>{{doneMessage}}</p>
+    <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()">
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

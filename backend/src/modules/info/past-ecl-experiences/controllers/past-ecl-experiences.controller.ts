@@ -109,7 +109,7 @@ export class PastEclExpsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deletePastEclExpById(@Param('id') id: number) {
     try {

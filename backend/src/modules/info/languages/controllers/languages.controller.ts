@@ -112,7 +112,7 @@ export class LanguagesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deleteLanguageById(@Param('id') id: number) {
     try {

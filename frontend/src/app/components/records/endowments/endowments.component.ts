@@ -15,7 +15,7 @@ export class EndowmentsComponent {
 
   allRegistries: IEndowment[] = []
   endowmentTypeList: Array<IEndowmentType> = []
-  title = 'Investiduras'
+  title = 'Investiduras obtidas pelo formando'
   createRegistryData: CreateEndowmentDto = {
     endowment_type_id: 0,
   }

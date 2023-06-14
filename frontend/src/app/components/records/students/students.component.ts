@@ -11,6 +11,7 @@ import { MaritalStatusService } from '../marital-status/marital-status.service'
 import { IMaritalStatus } from '../marital-status/types'
 import { StudentService } from './students.service'
 import { ICreateStudent, IStudent, IUpdateStudent } from './types'
+import { OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core'
 
 @Component({
   selector: 'app-students',
@@ -26,6 +27,7 @@ export class StudentsComponent {
     private othersService: OthersServices,
     private dataService: DataService,
   ) {}
+  @ViewChild('phoneNumberInput') phoneNumberInput!: ElementRef
 
   @Input() permissions!: IPermissions
   registry: IStudent = {
@@ -75,7 +77,7 @@ export class StudentsComponent {
   chosenUnionToEdit!: string
 
   showBox = false
-  showForm = false
+  showForm = true
   isLoading = false
   done = false
   doneMessage = ''
@@ -84,6 +86,9 @@ export class StudentsComponent {
 
   ngOnInit() {
     this.getRegistry()
+    if (this.registry.person_id == null) {
+      this.showForm = false
+    }
   }
 
   getRegistry() {

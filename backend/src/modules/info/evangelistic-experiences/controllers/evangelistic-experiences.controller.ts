@@ -110,7 +110,7 @@ export class EvangelisticExperiencesController {
 
   @Put()
   @UseGuards(JwtAuthGuard)
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   async updateEvangelisticExperienceById(
     @Body() dto: UpdateEvangelisticExperienceDto,
     @CurrentUser() user: UserFromJwt,
@@ -130,7 +130,7 @@ export class EvangelisticExperiencesController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   async deleteEvangelisticExperienceById(
     @Param('id') id: number,
   ): Promise<string> {

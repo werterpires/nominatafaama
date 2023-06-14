@@ -82,6 +82,7 @@ export class SpousesComponent {
           console.log(this.registry.baptism_date)
         }
         this.getOtherData()
+        this.showForm = false
         this.isLoading = false
       },
       error: (err) => {
@@ -182,6 +183,7 @@ export class SpousesComponent {
         error: (err) => {
           this.errorMessage = err.message
           this.error = true
+          this.showForm = false
           this.isLoading = false
         },
       })

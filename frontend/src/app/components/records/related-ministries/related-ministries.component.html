@@ -14,25 +14,16 @@
       />
       <p class="sectionTitle1">{{ title }}</p>
     </span>
-
-    <!-- <img
-      #addIcon
-      class="addIcon"
-      [ngClass]="{ hidden: !showBox }"
-      src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
-      (click)="showForm = true"
-    /> -->
   </div>
-  <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form (save)="createRegistry()">
+  <section class="formCreationWrapper" *ngIf="allRegistries.length < 1">
+    <app-creation-form (save)="createRegistry(0)">
       <div class="subSection">
         <label class="w-full">
-          Ministérios da Iasd com os quais se identifica
+          Ministério da Iasd com o qual se identifica (maior prioridade)
           <select
             class="smallInput"
             name="degreeSelect"
-            [(ngModel)]="createRegistryData.ministry_type_id"
+            [(ngModel)]="createRegistryData[0].ministry_type_id"
           >
             <option
               *ngFor="let ministrytype of ministryTypeList"
@@ -42,16 +33,46 @@
             </option>
           </select>
         </label>
+      </div>
+    </app-creation-form>
+  </section>
+  <section class="formCreationWrapper" *ngIf="allRegistries.length == 1">
+    <app-creation-form (save)="createRegistry(1)">
+      <div class="subSection">
         <label class="w-full">
-          Ordem de prioridade
+          Ministério da Iasd com o qual se identifica (segunda prioridade)
           <select
             class="smallInput"
             name="degreeSelect"
-            [(ngModel)]="createRegistryData.priority"
+            [(ngModel)]="createRegistryData[1].ministry_type_id"
           >
-            <option value="1">Primeiro lugar</option>
-            <option value="2">Segundo lugar</option>
-            <option value="3">Terceiro lugar</option>
+            <option
+              *ngFor="let ministrytype of ministryTypeList"
+              [value]="ministrytype.ministry_type_id"
+            >
+              {{ ministrytype.ministry_type_name }}
+            </option>
+          </select>
+        </label>
+      </div>
+    </app-creation-form>
+  </section>
+  <section class="formCreationWrapper" *ngIf="allRegistries.length == 2">
+    <app-creation-form (save)="createRegistry(2)">
+      <div class="subSection">
+        <label class="w-full">
+          Ministério da Iasd com o qual se identifica (segunda prioridade)
+          <select
+            class="smallInput"
+            name="degreeSelect"
+            [(ngModel)]="createRegistryData[2].ministry_type_id"
+          >
+            <option
+              *ngFor="let ministrytype of ministryTypeList"
+              [value]="ministrytype.ministry_type_id"
+            >
+              {{ ministrytype.ministry_type_name }}
+            </option>
           </select>
         </label>
       </div>
@@ -61,12 +82,14 @@
     <app-update-form
       [registryId]="i"
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.related_ministry_id)"
       *ngFor="let registry of allRegistries; index as i"
     >
       <div class="subSection">
         <label class="w-full">
           Ministérios da Iasd com os quais se identifica
+          <span *ngIf="i == 0">Prioridade alta</span>
+          <span *ngIf="i == 1">Segunda prioridade</span>
+          <span *ngIf="i == 2">Terceira prioridade</span>
           <select
             class="smallInput"
             name="degreeSelect"
@@ -78,19 +101,6 @@
             >
               {{ ministrytype.ministry_type_name }}
             </option>
-          </select>
-        </label>
-
-        <label class="w-full">
-          Ordem de prioridade
-          <select
-            class="smallInput"
-            name="degreeSelect"
-            [(ngModel)]="registry.priority"
-          >
-            <option value="1">Primeiro lugar</option>
-            <option value="2">Segundo lugar</option>
-            <option value="3">Terceiro lugar</option>
           </select>
         </label>
       </div>

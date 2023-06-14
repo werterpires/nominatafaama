@@ -27,6 +27,8 @@ export class PublicationsComponent {
     reference: '',
   }
 
+  reference: string = ''
+
   showBox = false
   showForm = false
   isLoading = false
@@ -161,6 +163,17 @@ export class PublicationsComponent {
         this.isLoading = false
       },
     })
+  }
+  getSelectedPublicationTypeInstructions() {
+    const selectedPublicationType = this.publicationTypeList.find(
+      (publicationType) =>
+        publicationType.publication_type_id ==
+        this.createRegistryData.publication_type_id,
+    )
+    if (selectedPublicationType?.instructions) {
+      this.reference = selectedPublicationType?.instructions
+    }
+    console.log(this.reference)
   }
 
   closeError() {

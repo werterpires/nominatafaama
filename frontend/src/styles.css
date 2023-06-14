@@ -210,6 +210,9 @@ form.registryWrapper input[type='checkbox']:focus {
 .subSection label,
 .subSection span {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 @media (max-width: 640px) {
@@ -860,4 +863,13 @@ button:active {
   width: 796.94px;
   height: 465.93px;
   overflow: hidden;
+}
+
+.formInstruction {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: rgba(40, 35, 35, 0.54);
 }

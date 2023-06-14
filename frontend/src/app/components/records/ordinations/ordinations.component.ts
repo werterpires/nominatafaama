@@ -12,11 +12,11 @@ export class OrdinationsComponent {
   @Input() permissions!: IPermissions
 
   allRegistries: IOrdination[] = []
-  title = 'Ordenações'
+  title = 'Ordenações Recebidas pelo formando'
   createRegistryData: CreateOrdinationDto = {
     ordination_name: '',
     place: '',
-    year: 0,
+    year: null,
   }
 
   showBox = false
@@ -65,6 +65,9 @@ export class OrdinationsComponent {
   }
 
   createRegistry() {
+    if (this.createRegistryData.year == null) {
+      throw new Error('Insira um ano válido para o registro.')
+    }
     this.isLoading = true
     this.service
       .createRegistry({

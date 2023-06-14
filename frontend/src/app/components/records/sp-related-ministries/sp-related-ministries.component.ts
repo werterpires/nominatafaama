@@ -8,6 +8,7 @@ import {
   UpdateRelatedMinistryDto,
 } from '../related-ministries/types'
 import { SpRelatedMinistriesService } from './sp-related-ministries.service'
+import { RelatedMinistriesService } from '../related-ministries/related-ministries.service'
 
 @Component({
   selector: 'app-sp-related-ministries',
@@ -19,11 +20,21 @@ export class SpRelatedMinistriesComponent {
 
   allRegistries: IRelatedMinistry[] = []
   ministryTypeList: Array<IMinistryType> = []
-  title = 'Ministérios de interesse do Cônjuge'
-  createRegistryData: CreateRelatedMinistryDto = {
-    ministry_type_id: 0,
-    priority: 0,
-  }
+  title = 'Ministérios de interesse'
+  createRegistryData: CreateRelatedMinistryDto[] = [
+    {
+      ministry_type_id: 0,
+      priority: 0,
+    },
+    {
+      ministry_type_id: 0,
+      priority: 0,
+    },
+    {
+      ministry_type_id: 0,
+      priority: 0,
+    },
+  ]
 
   showBox = false
   showForm = false
@@ -40,7 +51,11 @@ export class SpRelatedMinistriesComponent {
 
   ngOnInit() {
     this.getAllRegistries()
-    this.getAllLanguageTypes()
+    this.getAllTypes()
+    this.ministryTypeList = this.filterMinistriesByType(
+      this.ministryTypeList,
+      this.allRegistries,
+    )
   }
 
   getAllRegistries() {
@@ -48,6 +63,7 @@ export class SpRelatedMinistriesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        console.log(this.allRegistries)
         this.isLoading = false
       },
       error: (err) => {
@@ -58,7 +74,7 @@ export class SpRelatedMinistriesComponent {
     })
   }
 
-  getAllLanguageTypes() {
+  getAllTypes() {
     this.isLoading = true
     this.ministryTypesService.findAllRegistries().subscribe({
       next: (res) => {
@@ -73,39 +89,39 @@ export class SpRelatedMinistriesComponent {
     })
   }
 
-  resetCreationRegistry() {
-    Object.keys(this.createRegistryData).forEach((key) => {
-      switch (typeof key) {
-        case 'boolean':
-          Object.defineProperty(this.createRegistryData, key, { value: false })
-          break
-        case 'number':
-          Object.defineProperty(this.createRegistryData, key, { value: 0 })
-          break
-        case 'string':
-          Object.defineProperty(this.createRegistryData, key, { value: '' })
-          break
+  filterMinistriesByType(
+    firstArray: IMinistryType[],
+    secondArray: IRelatedMinistry[],
+  ): IMinistryType[] {
+    const ministryTypeIds = secondArray.map((item) => item.ministry_type_id)
+    const filtered = firstArray.filter((item) => {
+      if (!ministryTypeIds.includes(item.ministry_type_id)) {
+        return true
       }
+      return false
     })
+    return filtered
   }
 
-  createRegistry() {
+  createRegistry(priority: number) {
     this.isLoading = true
+    const idx = priority + 1
     this.service
       .createRegistry({
         ministry_type_id: parseInt(
-          this.createRegistryData.ministry_type_id.toString(),
+          this.createRegistryData[priority].ministry_type_id.toString(),
         ),
-        priority: parseInt(this.createRegistryData.priority.toString()),
+        priority: priority + 1,
       })
       .subscribe({
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.getAllRegistries()
+          this.ngOnInit()
           this.showForm = false
-          this.resetCreationRegistry()
+          this.createRegistryData[priority].ministry_type_id = 0
+          this.createRegistryData[priority].priority = 0
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -147,22 +163,22 @@ export class SpRelatedMinistriesComponent {
       })
   }
 
-  deleteRegistry(id: number) {
-    this.isLoading = true
-    this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Registro removido com sucesso.'
-        this.done = true
-        this.isLoading = false
-        this.ngOnInit()
-      },
-      error: (err) => {
-        this.errorMessage = 'Não foi possível remover o registro.'
-        this.error = true
-        this.isLoading = false
-      },
-    })
-  }
+  // deleteRegistry(id: number) {
+  //   this.isLoading = true
+  //   this.service.deleteRegistry(id).subscribe({
+  //     next: (res) => {
+  //       this.doneMessage = 'Registro removido com sucesso.'
+  //       this.done = true
+  //       this.isLoading = false
+  //       this.ngOnInit()
+  //     },
+  //     error: (err) => {
+  //       this.errorMessage = 'Não foi possível remover o registro.'
+  //       this.error = true
+  //       this.isLoading = false
+  //     },
+  //   })
+  // }
 
   closeError() {
     this.error = false
