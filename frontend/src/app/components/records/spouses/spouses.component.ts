@@ -85,6 +85,8 @@ export class SpousesComponent {
         this.isLoading = false
       },
       error: (err) => {
+        this.showBox = true
+        this.showForm = true
         this.errorMessage = err.message
         this.error = true
         this.isLoading = false

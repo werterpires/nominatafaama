@@ -98,6 +98,8 @@ export class StudentsComponent {
         this.getAllOtherData()
       },
       error: (err) => {
+        this.showBox = true
+        this.showForm = true
         this.errorMessage = err.message
         this.error = true
         this.isLoading = false
