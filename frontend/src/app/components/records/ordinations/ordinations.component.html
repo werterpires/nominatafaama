@@ -29,11 +29,14 @@
       <div class="subSection">
         <label>
           Nome da ordenação:
-          <input
-            type="text"
+          <select
+            class="smallInput"
             name="job"
             [(ngModel)]="createRegistryData.ordination_name"
-          />
+          >
+            <option value="Ancionato">Ancionato</option>
+            <option value="Diaconato">Diaconato</option>
+          </select>
         </label>
         <label>
           Local da ordenação
