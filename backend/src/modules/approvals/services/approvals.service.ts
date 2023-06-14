@@ -149,10 +149,9 @@ export class ApprovalsService {
     return users
   }
 
-  async findOneNotApproved(data: {
-    personId: number
+  async findOneNotApproved(
     userId: number
-  }): Promise<ICompleteStudent> {
+  ): Promise<ICompleteStudent> {
     const completeStudent: ICompleteStudent = {
       student: null,
       spouse: null,
@@ -189,93 +188,103 @@ export class ApprovalsService {
     }
 
     try {
-      const { personId, userId } = data
       let studentId: number = 0
-
+      
       const student: IStudent | null =
         await this.studentsModel.findStudentByUserId(userId)
       completeStudent.student = student
+
+      let personId:number = 0
+
+      if(student != null){
+        personId = student.person_id
+      }
+      
 
       if (student && student.student_id) {
         studentId = student.student_id
       }
 
-      const academicFormations =
+      if (personId > 0){
+        const academicFormations =
         await this.academicFormationsModel.findAcademicFormationsByPersonId(
           personId,
         )
-      if (academicFormations.length > 0) {
-        completeStudent.academicFormations = academicFormations
-      }
+        if (academicFormations.length > 0) {
+          completeStudent.academicFormations = academicFormations
+        }
 
-      const languages = await this.languagesModel.findLanguagesByPersonId(
-        personId,
-      )
-      if (languages.length > 0) {
-        completeStudent.languages = languages
-      }
-
-      const courses = await this.coursesModel.findCoursesByPersonId(personId)
-      if (courses.length > 0) {
-        completeStudent.courses = courses
-      }
-
-      const professionalExperiences =
-        await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
+        const languages = await this.languagesModel.findLanguagesByPersonId(
           personId,
         )
-      if (professionalExperiences.length > 0) {
-        completeStudent.professionalExperiences = professionalExperiences
-      }
+        if (languages.length > 0) {
+          completeStudent.languages = languages
+        }
 
-      const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
-        personId,
-      )
-      if (pastEclExps.length > 0) {
-        completeStudent.pastEclExps = pastEclExps
-      }
+        const courses = await this.coursesModel.findCoursesByPersonId(personId)
+        if (courses.length > 0) {
+          completeStudent.courses = courses
+        }
 
-      const evangelisticExperiences =
-        await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+        const professionalExperiences =
+          await this.professionalExperiencesModel.findProfessionalExperiencesByPersonId(
+            personId,
+          )
+        if (professionalExperiences.length > 0) {
+          completeStudent.professionalExperiences = professionalExperiences
+        }
+
+        const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
           personId,
         )
-      if (evangelisticExperiences.length > 0) {
-        completeStudent.evangelisticExperiences = evangelisticExperiences
-      }
+        if (pastEclExps.length > 0) {
+          completeStudent.pastEclExps = pastEclExps
+        }
 
-      const eclExperiences =
-        await this.eclExperiencesModel.findEclExperiencesByPersonId(personId)
-      if (eclExperiences.length > 0) {
-        completeStudent.eclExperiences = eclExperiences
-      }
+        const evangelisticExperiences =
+          await this.evangelisticExperiencesModel.findEvangelisticExperiencesByPersonId(
+            personId,
+          )
+        if (evangelisticExperiences.length > 0) {
+          completeStudent.evangelisticExperiences = evangelisticExperiences
+        }
 
-      const publications =
-        await this.publicationsModel.findPublicationsByPersonId(personId)
-      if (publications.length > 0) {
-        completeStudent.publications = publications
-      }
+        const eclExperiences =
+          await this.eclExperiencesModel.findEclExperiencesByPersonId(personId)
+        if (eclExperiences.length > 0) {
+          completeStudent.eclExperiences = eclExperiences
+        }
 
-      const endowments = await this.endowmentsModel.findEndowmentsByPersonId(
-        personId,
-      )
-      if (endowments.length > 0) {
-        completeStudent.endowments = endowments
-      }
+        const publications =
+          await this.publicationsModel.findPublicationsByPersonId(personId)
+        if (publications.length > 0) {
+          completeStudent.publications = publications
+        }
 
-      const ordinations = await this.ordinationsModel.findOrdinationsByPersonId(
-        personId,
-      )
-      if (ordinations.length > 0) {
-        completeStudent.ordinations = ordinations
-      }
-
-      const relatedMinistries =
-        await this.relatedMinistriesModel.findRelatedMinistriesByPersonId(
+        const endowments = await this.endowmentsModel.findEndowmentsByPersonId(
           personId,
         )
-      if (relatedMinistries.length > 0) {
-        completeStudent.relatedMinistries = relatedMinistries
+        if (endowments.length > 0) {
+          completeStudent.endowments = endowments
+        }
+
+        const ordinations = await this.ordinationsModel.findOrdinationsByPersonId(
+          personId,
+        )
+        if (ordinations.length > 0) {
+          completeStudent.ordinations = ordinations
+        }
+
+        const relatedMinistries =
+          await this.relatedMinistriesModel.findRelatedMinistriesByPersonId(
+            personId,
+          )
+        if (relatedMinistries.length > 0) {
+          completeStudent.relatedMinistries = relatedMinistries
+        }
       }
+
+      
 
       if (studentId > 0) {
         if (

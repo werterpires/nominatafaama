@@ -208,7 +208,7 @@ export class StudentsModel {
           primary_school_state: row.primary_school_state,
           created_at: row.created_at,
           updated_at: row.updated_at,
-          name: row.name,
+          person_name: row.name,
           association_name: row.association_name,
           association_acronym: row.association_acronym,
           union_name: row.union_name,

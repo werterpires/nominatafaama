@@ -11,4 +11,13 @@ export class ApprovesComponent {
   @Input() permissions!: IPermissions
   @Input() approvalType!: string
   router: any
+  selectedOne = false
+
+  onStudentSelected() {
+    this.selectedOne = true
+  }
+
+  onSeeAllSelected() {
+    this.selectedOne = false
+  }
 }

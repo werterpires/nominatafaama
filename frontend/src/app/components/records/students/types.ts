@@ -1,5 +1,5 @@
 export interface IStudent {
-  name: string
+  person_name: string
   student_id: number
   phone_number: string
   is_whatsapp: boolean | number

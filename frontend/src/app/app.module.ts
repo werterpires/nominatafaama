@@ -59,7 +59,8 @@ import { FamilyStudentPhotoComponent } from './components/records/family-student
 import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'
 import { ChildrenComponent } from './components/records/children/children.component'
 import { StudentToApproveComponent } from './components/approvals/student-to-approve/student-to-approve.component'
-import { ApprovalsMenuComponent } from './components/shared/approvals-menu/approvals-menu.component'
+import { ApprovalsMenuComponent } from './components/shared/approvals-menu/approvals-menu.component';
+import { OneStudentToApproveComponent } from './components/approvals/one-student-to-approve/one-student-to-approve.component'
 
 @NgModule({
   declarations: [
@@ -118,6 +119,7 @@ import { ApprovalsMenuComponent } from './components/shared/approvals-menu/appro
     ChildrenComponent,
     StudentToApproveComponent,
     ApprovalsMenuComponent,
+    OneStudentToApproveComponent,
   ],
   imports: [
     BrowserModule,

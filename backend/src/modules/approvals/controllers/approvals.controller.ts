@@ -35,13 +35,14 @@ export class ApprovalsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  @Get('student')
+  @Get(':userId')
   async findOneNotApproved(
-    @Body() data: { personId: number; userId: number },
+    @Param('userId') userId,
   ): Promise<ICompleteStudent | null> {
     try {
+      userId= parseInt(userId.toString())
       const completeStudent = await this.approvalsService.findOneNotApproved(
-        data,
+        userId
       )
       return completeStudent
     } catch (error) {

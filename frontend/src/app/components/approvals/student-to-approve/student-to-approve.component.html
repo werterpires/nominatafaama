@@ -4,7 +4,7 @@
   </div>
   <section class="perfilList">
     <div *ngFor="let registry of allRegistries; index as i">
-      <div>
+      <div (click)="getOneStudent(registry.user_id)">
         <div class="smallAlonePhoto">
           <div
             *ngIf="registry.imageUrl"
@@ -19,28 +19,6 @@
       </div>
     </div>
   </section>
-  <!-- <section class="registriesWrapper">
-    <app-update-form
-      [registryId]="i"
-      (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.user_id)"
-      *ngFor="let registry of allRegistries; index as i"
-    >
-      <div>
-        <div class="smallAlonePhoto">
-          <div
-            *ngIf="registry.imageUrl"
-            class="imageContainer"
-            [ngStyle]="{ 'background-image': 'url(' + registry.imageUrl + ')' }"
-          ></div>
-        </div>
-        <div class="studentDatacontainer">
-          <p>{{ registry.name }}</p>
-          <p>Olá,</p>
-        </div>
-      </div>
-    </app-update-form>
-  </section> -->
 </section>
 
 <div *ngIf="error" class="error">

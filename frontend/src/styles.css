@@ -606,6 +606,7 @@ button:active {
 }
 
 .fieldTitle {
+  margin-bottom: 13.5px;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -835,4 +836,28 @@ button:active {
   font-size: 12px;
   line-height: 18px;
   color: #ffffff;
+}
+
+.fieldContent {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #23435f;
+}
+
+.field {
+  margin-bottom: 13.5px;
+}
+
+.flexBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+.alonePhoto {
+  width: 796.94px;
+  height: 465.93px;
+  overflow: hidden;
 }

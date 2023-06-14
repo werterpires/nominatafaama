@@ -19,7 +19,7 @@ export interface IStudent {
   student_active: boolean
   created_at: Date
   updated_at: Date
-  name: string
+  person_name: string
   primary_school_state: string
   association_name: string
   association_acronym: string

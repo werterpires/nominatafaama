@@ -29,7 +29,7 @@ export class StudentsComponent {
 
   @Input() permissions!: IPermissions
   registry: IStudent = {
-    name: '',
+    person_name: '',
     phone_number: '',
     is_whatsapp: false,
     alternative_email: '',

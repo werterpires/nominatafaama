@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { ICompleteUser } from './types'
 import { StudentsToApproveService } from './student-to-approve.service'
@@ -16,6 +16,8 @@ import {
 })
 export class StudentToApproveComponent {
   @Input() permissions!: IPermissions
+  @Output() selectOne: EventEmitter<void> = new EventEmitter<void>()
+  @Output() seeAll: EventEmitter<void> = new EventEmitter<void>()
 
   allRegistries: ICompleteUser[] = []
   title = 'Aprovações'
@@ -34,6 +36,7 @@ export class StudentToApproveComponent {
 
   ngOnInit() {
     this.getAllRegistries()
+    this.seeAll.emit()
   }
 
   getAllRegistries() {
@@ -47,7 +50,6 @@ export class StudentToApproveComponent {
             type: 'image/jpeg',
           })
           if (blob instanceof Blob) {
-            console.log('é um blob')
             const reader = new FileReader()
             reader.onload = (e: any) => {
               registry.imageUrl = e.target.result
@@ -55,7 +57,6 @@ export class StudentToApproveComponent {
             }
             reader.readAsDataURL(blob)
           } else {
-            console.log('não é um blob')
             this.showForm = true
             this.isLoading = false
           }
@@ -87,56 +88,21 @@ export class StudentToApproveComponent {
     })
   }
 
-  editRegistry(index: number, buttonId: string) {
+  getOneStudent(userId: number) {
     this.isLoading = true
-    this.isLoading = false
-
-    // const updateRegistry: Partial<ICompleteUser> = {
-    //   ...this.allRegistries[index],
-    //   child_birth_date: this.dataService.dateFormatter(
-    //     this.allRegistries[index].child_birth_date,
-    //   ),
-    //   marital_status_id: parseInt(
-    //     this.allRegistries[index].marital_status_id.toString(),
-    //   ),
-    //   person_id: parseInt(this.allRegistries[index].person_id.toString()),
-    // }
-
-    // delete updateRegistry.child_approved
-    // delete updateRegistry.created_at
-    // delete updateRegistry.updated_at
-    // delete updateRegistry.marital_status_type_name
-
-    // this.service.updateRegistry(updateRegistry as UpdateChildDto).subscribe({
-    //   next: (res) => {
-    //     this.doneMessage = 'Registro editado com sucesso.'
-    //     this.done = true
-    //     document.getElementById(buttonId)?.classList.add('hidden')
-    //     this.isLoading = false
-    //   },
-    //   error: (err) => {
-    //     this.errorMessage = err.message
-    //     this.error = true
-    //     this.isLoading = false
-    //   },
-    // })
-  }
-
-  deleteRegistry(id: number) {
-    //   this.isLoading = true
-    //   this.service.deleteRegistry(id).subscribe({
-    //     next: (res) => {
-    //       this.doneMessage = 'Registro removido com sucesso.'
-    //       this.done = true
-    //       this.isLoading = false
-    //       this.ngOnInit()
-    //     },
-    //     error: (err) => {
-    //       this.errorMessage = 'Não foi possível remover o registro.'
-    //       this.error = true
-    //       this.isLoading = false
-    //     },
-    //   })
+    this.service.findOneRegistry(userId).subscribe({
+      next: async (res) => {
+        console.log(res)
+        this.dataService.selectedStudent = res
+        this.selectOne.emit()
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
   }
 
   closeError() {
