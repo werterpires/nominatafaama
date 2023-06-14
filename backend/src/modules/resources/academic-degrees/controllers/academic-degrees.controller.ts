@@ -8,7 +8,7 @@ import { UpdateAcademicDegreeDto } from '../dto/update-academic-degree.dto';
 @Controller('academic-degrees')
 export class AcademicDegreesController {
   constructor(private readonly academicDegreesService: AcademicDegreesService) {}
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post()
   async createAcademicDegree(@Body() input: CreateAcademicDegreeDto) {
     try {
@@ -19,6 +19,7 @@ export class AcademicDegreesController {
     }
   }
 
+  
   @Get(':id')
   async getAcademicDegreeById(@Param('id') id: number) {
     try {
@@ -36,7 +37,7 @@ export class AcademicDegreesController {
   async findAllAcademicDegreees() {
     return await this.academicDegreesService.findAllAcademicDegreees();
   }
-
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Put()
   async updateAcademicDegreeById(id: number, @Body() input: UpdateAcademicDegreeDto) {
     try {
@@ -46,7 +47,7 @@ export class AcademicDegreesController {
       throw new InternalServerErrorException(error.message);
     }
   }
-
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Delete(':id')
   async deleteAcademicDegreeById(@Param('id') id: number) {
     try {

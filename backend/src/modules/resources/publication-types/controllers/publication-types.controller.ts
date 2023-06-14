@@ -22,7 +22,7 @@ export class PublicationTypesController {
     private readonly publicationTypesService: PublicationTypesService,
   ) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post()
   async createPublicationType(@Body() input: CreatePublicationTypeDto) {
     try {
@@ -34,7 +34,7 @@ export class PublicationTypesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DOCENTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Get(':id')
   async getPublicationTypeById(@Param('id') id: number) {
     try {
@@ -49,7 +49,7 @@ export class PublicationTypesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE, ERoles.DIRECAO)
   @Get()
   async findAllPublicationTypes() {
     try {
@@ -61,7 +61,7 @@ export class PublicationTypesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Put()
   async updatePublicationType(@Body() input: UpdatePublicationType) {
     try {
@@ -73,7 +73,7 @@ export class PublicationTypesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Delete(':id')
   async deletePublicationTypeById(@Param('id') id: number) {
     try {

@@ -8,7 +8,7 @@ import { ERoles } from 'src/shared/auth/types/roles.enum';
 @Controller('marital-status')
 export class MaritalStatusController {
   constructor(private readonly maritalStatusService: MaritalStatusService) {}
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post()
   async createMaritalStatus(@Body() input: CreateMaritalStatusDto) {
     try {

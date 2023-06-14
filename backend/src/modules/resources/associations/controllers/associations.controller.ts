@@ -10,7 +10,7 @@ import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
 export class AssociationsController {
   constructor(private readonly associationsService: AssociationsService) {}
 
-@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
 @Post()
 async createAssociation(@Body() input: CreateAssociationDto) {
   
@@ -22,7 +22,7 @@ async createAssociation(@Body() input: CreateAssociationDto) {
   }
 }
 
-@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
 @Get('associations/:id')
 async getAssociationById(@Param('id') id: number) {
   try {
@@ -42,7 +42,7 @@ async findAllAssociations() {
   return await this.associationsService.findAllAssociations();
 }
 
-@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
 @Put()
 async updateAssociation(@Body() input: UpdateAssociationDto) {
   try {
@@ -53,7 +53,7 @@ async updateAssociation(@Body() input: UpdateAssociationDto) {
   }
 }
 
-@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+@Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
 @Delete(':id')
 async deleteAssociationById(@Param('id') id: number) {
   try {

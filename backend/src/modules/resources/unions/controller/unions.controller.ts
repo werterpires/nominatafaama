@@ -10,7 +10,7 @@ import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator';
 export class UnionsController {
   constructor(private readonly unionsService: UnionsService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post()
   async createUnion(@Body() input: CreateUnionDto) {
     try {
@@ -21,7 +21,7 @@ export class UnionsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Get(':id')
   async getUnionById(@Param('id') id: number) {
     try {
@@ -41,7 +41,7 @@ export class UnionsController {
     return await this.unionsService.findAllUnions();
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Put()
   async updateUnion(@Body() input: UpdateUnionDto) {
     try {
@@ -52,7 +52,7 @@ export class UnionsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Delete(':id')
   async deleteUnionById(@Param('id') id: number) {
     try {

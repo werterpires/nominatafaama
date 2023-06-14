@@ -20,7 +20,7 @@ import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
 export class EclExpTypesController {
   constructor(private readonly eclExpTypesService: EclExpTypesService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post()
   async createEclExpType(@Body() input: CreateEclExpTypeDto) {
     try {
