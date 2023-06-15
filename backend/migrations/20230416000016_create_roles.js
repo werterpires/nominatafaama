@@ -41,8 +41,7 @@ exports.up = async function (knex) {
     },
   ]
 
-  const rolesInseridas = await knex('roles').insert(roles)
-  console.log('Roles inseridas:', rolesInseridas)
+  await knex('roles').insert(roles)
 }
 
 /**

@@ -1,0 +1,145 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+
+    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+      Adicionar filho
+    </button>
+  </div>
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
+      <div class="subSection">
+        <label>
+          Nome:
+          <input type="text" [(ngModel)]="createRegistryData.name" />
+        </label>
+        <label>
+          CPF:
+          <input type="text" [(ngModel)]="createRegistryData.cpf" />
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label>
+          Data de nascimento:
+          <input
+            type="date"
+            [(ngModel)]="createRegistryData.child_birth_date"
+          />
+        </label>
+        <label>
+          Grau escolar:
+          <div class="formInstruction">
+            Por ocasião da formatura do aluno, o(a) filho(a) deverá ter
+            concluído a série atual e ser promovido para qual série de estudos?
+          </div>
+          <input type="text" [(ngModel)]="createRegistryData.study_grade" />
+        </label>
+      </div>
+      <div class="subSection">
+        <label>
+          Estado civil:
+          <select
+            name="typeSelect"
+            [(ngModel)]="createRegistryData.marital_status_id"
+          >
+            <option
+              [value]="type.marital_status_type_id"
+              *ngFor="let type of allTypes"
+            >
+              {{ type.marital_status_type_name }}
+            </option>
+          </select>
+        </label>
+      </div>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.child_id)"
+      *ngFor="let registry of allRegistries; index as i"
+    >
+      <div class="subSection">
+        <label>
+          Nome:
+          <input type="text" [(ngModel)]="registry.name" />
+        </label>
+        <label>
+          CPF:
+          <input type="text" [(ngModel)]="registry.cpf" />
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label>
+          Data de nascimento:
+          <input type="date" [(ngModel)]="registry.child_birth_date" />
+        </label>
+        <label>
+          Grau escolar:
+          <input type="text" [(ngModel)]="registry.study_grade" />
+        </label>
+      </div>
+      <div class="subSection">
+        <label>
+          Estado civil:
+          <select name="typeSelect" [(ngModel)]="registry.marital_status_id">
+            <option
+              [value]="type.marital_status_type_id"
+              *ngFor="let type of allTypes"
+            >
+              {{ type.marital_status_type_name }}
+            </option>
+          </select>
+        </label>
+      </div>
+    </app-update-form>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

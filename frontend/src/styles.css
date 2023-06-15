@@ -210,6 +210,9 @@ form.registryWrapper input[type='checkbox']:focus {
 .subSection label,
 .subSection span {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 @media (max-width: 640px) {
@@ -542,6 +545,11 @@ button:active {
   min-height: 85vh;
 }
 
+.sectionDataList {
+  min-height: 85vh;
+  margin: 0px 165px 0px 165px;
+}
+
 .smallSectionBox {
   width: 80vw;
   height: calc(36px + 56px);
@@ -562,6 +570,14 @@ button:active {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   padding: 28px;
+  margin-bottom: 12px;
+  transition: height 5s ease;
+}
+
+.sectionBoxAll {
+  width: 80vw;
+  max-width: 833.71px;
+  background: transparent;
   margin-bottom: 12px;
   transition: height 5s ease;
 }
@@ -593,6 +609,7 @@ button:active {
 }
 
 .fieldTitle {
+  margin-bottom: 13.5px;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -742,4 +759,117 @@ button:active {
 
 .hidden {
   display: none;
+}
+
+.smallAlonePhoto {
+  width: 260.85px;
+  height: 266.96px;
+  overflow: hidden;
+}
+
+.studentDatacontainer {
+  width: 260.85px;
+  height: 183.88px;
+  background: #23435f;
+  padding: 16.5px;
+  box-shadow: 0px 4.01028px 4.01028px rgba(0, 0, 0, 0.25);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.imageContainer {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.imageModel {
+  opacity: 50%;
+}
+
+.studentName {
+  margin-top: 20px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.25px;
+  color: #ffffff;
+}
+
+.perfilList {
+  display: flex;
+  gap: 1.8vw;
+  flex-wrap: wrap;
+}
+
+.hiringStatus {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.hiringColor {
+  width: 12px;
+  height: 12px;
+  left: 0px;
+  top: 0px;
+  background: #f60e0e;
+  border-radius: 100%;
+}
+
+.hiringDescription {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 15px;
+  letter-spacing: 0.25px;
+  color: #ffffff;
+}
+
+.studentCompData {
+  font-family: 'Poppins';
+  font-style: normal;
+  margin-top: 7px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #ffffff;
+}
+
+.fieldContent {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #23435f;
+}
+
+.field {
+  margin-bottom: 13.5px;
+}
+
+.flexBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+.alonePhoto {
+  width: 796.94px;
+  height: 465.93px;
+  overflow: hidden;
+}
+
+.formInstruction {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: rgba(40, 35, 35, 0.54);
 }

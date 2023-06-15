@@ -1,13 +1,13 @@
-import {Injectable} from '@nestjs/common'
-import {CreatePreviousMarriageDto} from '../dto/create-previous-marriage.dto'
-import {UpdatePreviousMarriageDto} from '../dto/update-previous-marriage.dto'
+import { Injectable } from '@nestjs/common'
+import { CreatePreviousMarriageDto } from '../dto/create-previous-marriage.dto'
+import { UpdatePreviousMarriageDto } from '../dto/update-previous-marriage.dto'
 import {
   ICreatePreviousMarriage,
   IPreviousMarriage,
   IUpdatePreviousMarriage,
 } from '../types/types'
-import {PreviousMarriagesModel} from '../model/previous-marriage.model'
-import {StudentsModel} from 'src/modules/students/model/students.model'
+import { PreviousMarriagesModel } from '../model/previous-marriage.model'
+import { StudentsModel } from 'src/modules/students/model/students.model'
 
 @Injectable()
 export class PreviousMarriagesService {
@@ -21,8 +21,15 @@ export class PreviousMarriagesService {
     user_id: number,
   ): Promise<IPreviousMarriage> {
     try {
-      const {student_id} = await this.studentModel.findStudentByUserId(user_id)
-      console.log(student_id)
+      const student = await this.studentModel.findStudentByUserId(user_id)
+      if (student == null) {
+        throw new Error(
+          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
+        )
+      }
+
+      const { student_id } = student
+
       const createPreviousMarriageData: ICreatePreviousMarriage = {
         marriage_end_date: new Date(dto.marriage_end_date),
         previous_marriage_approved: null,
@@ -34,6 +41,10 @@ export class PreviousMarriagesService {
         )
       return newPreviousMarriage
     } catch (error) {
+      console.error(
+        'Erro capturado no previousMarriageService createPreviousMarriage: ',
+        error,
+      )
       throw error
     }
   }
@@ -56,16 +67,23 @@ export class PreviousMarriagesService {
     user_id: number,
   ): Promise<IPreviousMarriage[] | null> {
     try {
-      const {student_id} = await this.studentModel.findStudentByUserId(user_id)
+      const student = await this.studentModel.findStudentByUserId(user_id)
+      if (student == null) {
+        return null
+      }
+
+      const { student_id } = student
       const previousMarriages =
         await this.previousMarriagesModel.findPreviousMarriagesByStudentId(
           student_id,
         )
       return previousMarriages
     } catch (error) {
-      throw new Error(
-        `Não foi possível encontrar casamentos prévios para o estudante com o ID fornecido: ${error.message}`,
+      console.error(
+        'Erro capturado no previousMarriageService findPreviousMarriagesByStudentId: ',
+        error,
       )
+      throw error
     }
   }
 

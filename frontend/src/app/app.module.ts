@@ -17,6 +17,7 @@ import { EclExpTypesComponent } from './components/records/ecl-exp-types/ecl-exp
 import { EndowmentTypesComponent } from './components/records/endowment-types/endowment-types.component'
 import { EvangExpTypesComponent } from './components/records/evang-exp-types/evang-exp-types.component'
 import { EvgExperiencesComponent } from './components/records/evg-experiences/evg-experiences.component'
+import { SpEvgExperiencesComponent } from './components/records/sp-evg-experiences/sp-evg-experiences.component'
 import { HiringStatusComponent } from './components/records/hiring-status/hiring-status.component'
 import { LanguageTypesComponent } from './components/records/language-types/language-types.component'
 import { LanguagesComponent } from './components/records/languages/languages.component'
@@ -52,6 +53,14 @@ import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-p
 import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-endowments.component'
 import { SpRelatedMinistriesComponent } from './components/records/sp-related-ministries/sp-related-ministries.component'
 import { PreviousMarriageComponent } from './components/records/previous-marriage/previous-marriage.component'
+import { SmallAloneStudentPhotosComponent } from './components/records/small-alone-student-photos/small-alone-student-photos.component'
+import { AloneStudentPhotoComponent } from './components/records/alone-student-photo/alone-student-photo.component'
+import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component'
+import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'
+import { ChildrenComponent } from './components/records/children/children.component'
+import { StudentToApproveComponent } from './components/approvals/student-to-approve/student-to-approve.component'
+import { ApprovalsMenuComponent } from './components/shared/approvals-menu/approvals-menu.component'
+import { OneStudentToApproveComponent } from './components/approvals/one-student-to-approve/one-student-to-approve.component'
 
 @NgModule({
   declarations: [
@@ -76,6 +85,7 @@ import { PreviousMarriageComponent } from './components/records/previous-marriag
     LanguageTypesComponent,
     EvangExpTypesComponent,
     EclExpTypesComponent,
+    SpEvgExperiencesComponent,
     EndowmentTypesComponent,
     MinistryTypesComponent,
     PublicationTypesComponent,
@@ -102,6 +112,14 @@ import { PreviousMarriageComponent } from './components/records/previous-marriag
     SpEndowmentsComponent,
     SpRelatedMinistriesComponent,
     PreviousMarriageComponent,
+    SmallAloneStudentPhotosComponent,
+    AloneStudentPhotoComponent,
+    FamilyStudentPhotoComponent,
+    SpouseStudentPhotoComponent,
+    ChildrenComponent,
+    StudentToApproveComponent,
+    ApprovalsMenuComponent,
+    OneStudentToApproveComponent,
   ],
   imports: [
     BrowserModule,

@@ -15,14 +15,9 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img
-      #addIcon
-      class="addIcon"
-      [ngClass]="{ hidden: !showBox }"
-      src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
-      (click)="showForm = true"
-    />
+    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+      Adicionar nova experiência eclesiástica
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
@@ -33,6 +28,7 @@
             type="text"
             name="job"
             [(ngModel)]="createRegistryData.function"
+            placeholder="Ancião"
           />
         </label>
         <label>
@@ -41,6 +37,7 @@
             type="text"
             name="place"
             [(ngModel)]="createRegistryData.place"
+            placeholder="IASD Central do Marco"
           />
         </label>
       </div>

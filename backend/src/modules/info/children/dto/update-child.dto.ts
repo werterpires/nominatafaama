@@ -16,7 +16,7 @@ export class UpdateChildDto {
   child_id: number
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   child_birth_date: string
 
   @IsNotEmpty()

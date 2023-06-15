@@ -15,20 +15,23 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img
+    <button
       #addIcon
-      class="addIcon"
       [ngClass]="{ hidden: !showBox }"
       src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
       (click)="showForm = true"
-    />
+    >
+      Adicionar novo curso/formação
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
       <div class="subSection">
         <label>
           Área do curso
+          <div class="formInstruction">
+            Insira os cursos que julgar relevantes para o ministério.
+          </div>
           <input
             type="text"
             name="courseArea"

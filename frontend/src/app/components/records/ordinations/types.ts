@@ -12,7 +12,7 @@ export interface IOrdination {
 export interface CreateOrdinationDto {
   ordination_name: string
   place: string
-  year: number
+  year: number | null
 }
 
 export interface UpdateOrdinationDto {

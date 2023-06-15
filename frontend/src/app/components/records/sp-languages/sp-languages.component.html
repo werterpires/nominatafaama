@@ -15,19 +15,19 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img
+    <button
       #addIcon
-      class="addIcon"
       [ngClass]="{ hidden: !showBox }"
       src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
       (click)="showForm = true"
-    />
+    >
+      Adicionar novo Idioma
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
       <label class="w-full">
-        Linguagem
+        Idioma
         <select
           class="smallInput"
           name="degreeSelect"
@@ -79,14 +79,6 @@
           type="checkbox"
           name="create-fluent"
           [(ngModel)]="createRegistryData.fluent"
-        />
-      </label>
-      <label class="checkboxLabel">
-        Desconhece
-        <input
-          type="checkbox"
-          name="create-unknown"
-          [(ngModel)]="createRegistryData.unknown"
         />
       </label>
     </app-creation-form>
@@ -147,14 +139,6 @@
           type="checkbox"
           name="create-fluent"
           [(ngModel)]="registry.fluent"
-        />
-      </label>
-      <label class="checkboxLabel">
-        Desconhece
-        <input
-          type="checkbox"
-          name="create-unknown"
-          [(ngModel)]="registry.unknown"
         />
       </label>
     </app-update-form>

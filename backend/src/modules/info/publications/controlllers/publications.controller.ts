@@ -112,7 +112,7 @@ export class PublicationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deletePublicationById(@Param('id') id: number) {
     try {

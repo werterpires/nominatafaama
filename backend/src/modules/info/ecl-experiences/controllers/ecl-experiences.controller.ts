@@ -49,7 +49,6 @@ export class EclExperiencesController {
   ): Promise<IEclExperience[] | null> {
     try {
       const id = user.user_id
-      console.log(id)
       const eclExperiences =
         await this.eclExperiencesService.findEclesiasticExperienceByPersonId(id)
       if (!eclExperiences) {

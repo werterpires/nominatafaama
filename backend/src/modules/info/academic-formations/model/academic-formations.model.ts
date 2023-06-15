@@ -26,6 +26,7 @@ export class AcademicFormationsModel {
           conclusion_date,
           person_id,
           degree_id,
+          academic_formation_approved,
         } = createAcademicFormationData
 
         const [formation_id] = await trx('academic_formations')
@@ -36,7 +37,7 @@ export class AcademicFormationsModel {
             conclusion_date,
             person_id,
             degree_id,
-            academic_formation_approved: false,
+            academic_formation_approved,
           })
           .returning('formation_id')
 
@@ -50,7 +51,7 @@ export class AcademicFormationsModel {
           degree_id: degree_id,
           created_at: new Date(),
           updated_at: new Date(),
-          academic_formation_approved: false,
+          academic_formation_approved: null,
           degree_name: `${degree_id}`,
         }
 
@@ -126,6 +127,35 @@ export class AcademicFormationsModel {
     return academicFormation
   }
 
+  async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const studentResult = await this.knex
+        .table('academic_formations')
+        .join('users', 'users.person_id', 'academic_formations.person_id')
+        .select('users.person_id')
+        .whereNull('academic_formation_approved')
+
+      const spouseResult = await this.knex
+        .table('academic_formations')
+        .join('spouses', 'spouses.person_id', 'academic_formations.person_id')
+        .join('students', 'students.student_id', 'spouses.student_id')
+        .select('students.person_id')
+        .whereNull('academic_formations.academic_formation_approved')
+
+      personIds = [...studentResult, ...spouseResult].map((row) => ({
+        person_id: row.person_id,
+      }))
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
+  }
+
   async findAllAcademicFormations(): Promise<IAcademicFormation[]> {
     let academicFormationsList: IAcademicFormation[] = []
     let sentError: Error | null = null
@@ -187,7 +217,6 @@ export class AcademicFormationsModel {
             'academic_degrees.degree_id',
           )
           .where('academic_formations.person_id', '=', personId)
-
         academicFormationsList = results.map((row: any) => ({
           formation_id: row.formation_id,
           course_area: row.course_area,
@@ -233,6 +262,7 @@ export class AcademicFormationsModel {
           institution,
           begin_date,
           conclusion_date,
+          academic_formation_approved,
         } = updateAcademicFormation
 
         await trx('academic_formations')
@@ -243,7 +273,7 @@ export class AcademicFormationsModel {
             institution,
             begin_date,
             conclusion_date,
-            academic_formation_approved: false,
+            academic_formation_approved,
           })
 
         updatedAcademicFormation = await this.findAcademicFormationById(

@@ -11,7 +11,7 @@ exports.up = function (knex) {
     table.date('begin_date').notNullable()
     table.date('conclusion_date')
     table.integer('person_id').unsigned().notNullable()
-    table.boolean('academic_formation_approved').notNullable()
+    table.boolean('academic_formation_approved')
 
     table.foreign('person_id').references('people.person_id')
     table.foreign('degree_id').references('academic_degrees.degree_id')

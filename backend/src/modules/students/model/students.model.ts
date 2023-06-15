@@ -19,7 +19,6 @@ export class StudentsModel {
         const [student_id] = await trx('students')
           .insert({
             ...createStudent,
-            student_approved: null,
             student_active: true,
           })
           .returning('student_id')
@@ -82,50 +81,77 @@ export class StudentsModel {
       throw new Error('Estudante não encontrado')
     }
 
-    console.log('Estudante By Id:', result)
-
     return result
   }
 
-  async findStudentByUserId(userId: number): Promise<IStudent> {
-    const result = await this.knex
-      .table('students')
-      .first(
-        'students.*',
-        'hiring_status.*',
-        'marital_status_types.*',
-        'associations.*',
-        'unions.*',
-        'people.name as person_name',
-        'people.person_id as person_id',
-      )
-      .leftJoin('users', 'students.person_id', 'users.person_id')
-      .leftJoin('people', 'students.person_id', 'people.person_id')
-      .leftJoin(
-        'marital_status_types',
-        'students.marital_status_id',
-        'marital_status_types.marital_status_type_id',
-      )
-      .leftJoin(
-        'hiring_status',
-        'students.hiring_status_id',
-        'hiring_status.hiring_status_id',
-      )
-      .leftJoin(
-        'associations',
-        'students.origin_field_id',
-        'associations.association_id',
-      )
-      .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-      .where('users.user_id', userId)
+  async findNotApprovedIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+    try {
+      const result = await this.knex
+        .table('students')
+        .select('students.person_id')
+        .whereNull('students.student_approved')
 
-    if (!result) {
-      throw new Error('Estudante não encontrado')
+      if (result) {
+        personIds = result
+      }
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
-    console.log('Estudante By User Id:', result)
+    return personIds
+  }
 
-    return result
+  async findStudentByUserId(userId: number): Promise<IStudent | null> {
+    let student: IStudent | null = null
+    let sentError: Error | null = null
+    try {
+      const result = await this.knex
+        .table('students')
+        .first(
+          'students.*',
+          'hiring_status.*',
+          'marital_status_types.*',
+          'associations.*',
+          'unions.*',
+          'people.name as person_name',
+          'people.person_id as person_id',
+        )
+        .leftJoin('users', 'students.person_id', 'users.person_id')
+        .leftJoin('people', 'students.person_id', 'people.person_id')
+        .leftJoin(
+          'marital_status_types',
+          'students.marital_status_id',
+          'marital_status_types.marital_status_type_id',
+        )
+        .leftJoin(
+          'hiring_status',
+          'students.hiring_status_id',
+          'hiring_status.hiring_status_id',
+        )
+        .leftJoin(
+          'associations',
+          'students.origin_field_id',
+          'associations.association_id',
+        )
+        .leftJoin('unions', 'associations.union_id', 'unions.union_id')
+        .where('users.user_id', userId)
+
+      if (result != null) {
+        student = result
+      }
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return student
   }
 
   async findAllStudents(): Promise<IStudent[]> {
@@ -182,7 +208,7 @@ export class StudentsModel {
           primary_school_state: row.primary_school_state,
           created_at: row.created_at,
           updated_at: row.updated_at,
-          name: row.name,
+          person_name: row.name,
           association_name: row.association_name,
           association_acronym: row.association_acronym,
           union_name: row.union_name,
@@ -232,6 +258,7 @@ export class StudentsModel {
           marital_status_id,
           hiring_status_id,
           primary_school_state,
+          student_approved,
         } = updateStudent
 
         await trx('students').where('student_id', student_id).update({
@@ -251,6 +278,7 @@ export class StudentsModel {
           marital_status_id,
           hiring_status_id,
           primary_school_state,
+          student_approved,
         })
 
         await trx.commit()

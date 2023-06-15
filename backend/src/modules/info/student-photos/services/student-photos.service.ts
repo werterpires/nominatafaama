@@ -3,10 +3,12 @@ import {
   IStudentPhoto,
   ICreateStudentPhoto,
   IUpdateStudentPhoto,
+  IOnePhotoAddress,
 } from '../types/types'
 import { StudentPhotosModel } from '../model/student-photos.model'
 import { StudentsModel } from 'src/modules/students/model/students.model'
 import { CreateStudentPhotoDto } from '../dto/create-student-photo.dto'
+import * as fs from 'fs'
 
 @Injectable()
 export class StudentPhotosService {
@@ -16,20 +18,70 @@ export class StudentPhotosService {
   ) {}
 
   async createStudentPhoto(
-    dto: CreateStudentPhotoDto,
-    userId: number,
-  ): Promise<IStudentPhoto> {
-    const { student_id } = await this.studentModel.findStudentByUserId(userId)
-    const createStudentPhotoData: ICreateStudentPhoto = {
-      ...dto,
-      student_id,
-    }
+    user_id: number,
+    photoType: string,
+    filename: string,
+  ): Promise<IStudentPhoto | null> {
     try {
-      const newStudentPhoto = await this.studentPhotosModel.createStudentPhoto(
-        createStudentPhotoData,
-      )
-      return newStudentPhoto
+      const student = await this.studentModel.findStudentByUserId(user_id)
+      if (student == null) {
+        throw new Error(
+          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
+        )
+      }
+      const student_id = student.student_id
+      const photoTypes: string[] = [
+        'alone-photo',
+        'family-photo',
+        'other-family-photo',
+        'spouse-photo',
+        'invite-photo',
+        'small-alone-photo',
+      ]
+
+      let photoValues: (string | null)[] = [null, null, null, null, null, null]
+
+      const photoTypeIndex = photoTypes.indexOf(photoType)
+      photoValues[photoTypeIndex] = filename
+
+      let createStudentPhotoData: ICreateStudentPhoto = {
+        student_id,
+        alone_photo: photoValues[0],
+        family_photo: photoValues[1],
+        other_family_photo: photoValues[2],
+        spouse_photo: photoValues[3],
+        invite_photo: photoValues[4],
+        small_alone_photo: photoValues[5],
+      }
+
+      const existing =
+        await this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
+      if (!existing) {
+        this.studentPhotosModel.createStudentPhoto(
+          createStudentPhotoData,
+          'create',
+        )
+      } else {
+        let correctPhotoType = photoType.replace(/-/g, '_')
+        if (existing[correctPhotoType] != null) {
+          const filePath = `./src/modules/info/student-photos/files/${existing[correctPhotoType]}`
+          fs.unlinkSync(filePath)
+        }
+
+        this.studentPhotosModel.createStudentPhoto(
+          createStudentPhotoData,
+          'update',
+        )
+      }
+
+      const createdStudentPhoto =
+        this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
+      return createdStudentPhoto
     } catch (error) {
+      console.error(
+        'Erro capturado no StudentPhotosService createStudentPhoto: ',
+        error,
+      )
       throw error
     }
   }
@@ -48,17 +100,54 @@ export class StudentPhotosService {
   }
 
   async findStudentPhotoByStudentId(
-    userId: number,
-  ): Promise<IStudentPhoto | null> {
+    user_id: number,
+    photoType: string,
+  ): Promise<{
+    fileStream: fs.ReadStream | null
+    headers: Record<string, string>
+  }> {
     try {
-      const { student_id } = await this.studentModel.findStudentByUserId(userId)
-      const studentPhoto =
+      const student = await this.studentModel.findStudentByUserId(user_id)
+      if (student == null) {
+        return {fileStream: null, headers: {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename`,
+        } }
+      }
+      const student_id = student.student_id
+      if (!student_id) {
+        throw new Error('Usuário não possui um estudante válido')
+      }
+
+      const photoNames =
         await this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
-      return studentPhoto
+
+      if (!photoNames) {
+        return { fileStream: null, headers: {} }
+      }
+
+      const photosProperty = photoType.replace(/-/g, '_')
+
+      const filename = photoNames[photosProperty]
+
+      const filePath = `./src/modules/info/student-photos/files/${filename}`
+
+      if (fs.existsSync(filePath)) {
+        const fileStream = fs.createReadStream(filePath)
+        const headers = {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename=${filename}`,
+        }
+        return { fileStream, headers }
+      } else {
+        return { fileStream: null, headers: {} }
+      }
     } catch (error) {
-      throw new Error(
-        `Não foi possível encontrar a foto do estudante com o ID ${userId}: ${error.message}`,
+      console.error(
+        'Erro capturado no StudentPhotosService findStudentPhotoByStudentId: ',
+        error,
       )
+      throw error
     }
   }
 

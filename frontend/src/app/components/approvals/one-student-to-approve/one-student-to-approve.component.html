@@ -1,0 +1,252 @@
+<section *ngIf="permissions.administrador" class="sectionBox">
+  <div class="boxHead">
+    <p class="sectionTitle1">Perfil do fomando</p>
+  </div>
+  <section *ngIf="student.student != null && student.student.student_id">
+    <div>
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">Campo de origem</p>
+          <p class="fieldContent">
+            {{ student.student.union_acronym }}/{{
+              student.student.association_acronym
+            }}
+          </p>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Estado civil</p>
+          <p class="fieldContent">
+            {{ student.student.marital_status_type_name }}
+          </p>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Data de nascimento</p>
+          <p class="fieldContent">
+            {{ student.student.birth_date }}
+          </p>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Naturalidade</p>
+          <p class="fieldContent">
+            {{ student.student.birth_city }}-{{ student.student.birth_state }}
+          </p>
+        </span>
+      </div>
+      <hr class="sectionDivisiion" />
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">Batismo</p>
+          <p class="fieldContent">{{ student.student.baptism_date }}</p>
+          <p class="fieldContent">{{ student.student.baptism_place }}</p>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Tempo de batismo</p>
+          <p class="fieldContent">{{ student.student.baptism_date }}</p>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Telefone</p>
+          <p class="fieldContent">{{ student.student.phone_number }}</p>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">E-mail</p>
+          <p class="fieldContent">{{ student.student.alternative_email }}</p>
+        </span>
+      </div>
+      <hr class="sectionDivisiion" />
+      <div
+        *ngIf="
+          student.relatedMinistries != undefined &&
+          student.relatedMinistries.length > 0
+        "
+        class="subSection"
+      >
+        <span class="field">
+          <p class="fieldTitle">Ministério com os quais se identifica</p>
+          <div class="flexBetween">
+            <span
+              *ngFor="let ministry of student.relatedMinistries"
+              class="fieldContent"
+              >{{ ministry.ministry_type_name }}</span
+            >
+          </div>
+        </span>
+      </div>
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">Mensagem do Formando</p>
+          <p class="fieldContent">{{ student.student.student_mensage }}</p>
+        </span>
+      </div>
+      <div class="subSection">
+        <div class="alonePhoto">
+          <div
+            class="imageContainer"
+            [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
+          ></div>
+        </div>
+      </div>
+
+      <form class="formSection">
+        <label class="labelRadio">
+          <input
+            class="approvedRadio"
+            [id]="'approveStudent'"
+            type="radio"
+            name="status"
+            checked
+          />
+          Aprovado
+        </label>
+        <label class="labelRadio">
+          <input
+            class="rejectedRadio"
+            [id]="'rejectStudent'"
+            type="radio"
+            name="status"
+          />
+          Desaprovado
+        </label>
+
+        <button
+          class="saveButton"
+          type="button"
+          (click)="
+            approveStudent(
+              'approveStudent',
+              'rejectStudent',
+              student.student.student_id
+            )
+          "
+        >
+          SALVAR
+        </button>
+      </form>
+    </div>
+  </section>
+</section>
+<section *ngIf="permissions.administrador" class="sectionBox">
+  <div class="boxHead">
+    <p class="sectionTitle1">Conheça {{ student.student?.person_name }}</p>
+  </div>
+  <section
+    *ngIf="
+      student.academicFormations != null &&
+      student.academicFormations.length > 0
+    "
+  >
+    <div>
+      <p class="fieldTitle">Formações acadêmicas</p>
+      <div class="subSection">
+        <span
+          *ngFor="let formation of student.academicFormations"
+          class="field"
+        >
+          <p class="fieldContent">
+            {{ formation.begin_date }}
+            <span *ngIf="formation.conclusion_date">
+              a {{ formation.conclusion_date }}
+            </span>
+            <span *ngIf="!formation.conclusion_date"
+              >(ainda não concluído)</span
+            >
+          </p>
+          <p class="fieldContent">
+            {{ formation.degree_name }} em {{ formation.course_area }},
+            {{ formation.institution }}
+          </p>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveStudent'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectStudent'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approveStudent(
+                  'approveStudent',
+                  'rejectStudent',
+                  formation.formation_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+        </span>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div>
+      <p class="fieldTitle">Cursos e capacitações</p>
+      <div
+        class="subSection"
+        *ngFor="let course of student.courses"
+        class="field"
+      >
+        <div>
+          <p class="fieldContent">
+            {{ course.institution }} ({{ course.conclusion_date }})
+          </p>
+          <p class="fieldContent">
+            {{ course.course_area }}
+          </p>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveStudent'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectStudent'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approveStudent(
+                  'approveStudent',
+                  'rejectStudent',
+                  course.course_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+  </section>
+</section>

@@ -12,16 +12,12 @@ import {
 
 export class CreateChildDto {
   @IsNotEmpty()
-  @IsDateString()
+  @IsString()
   child_birth_date: string
 
   @IsNotEmpty()
   @IsInt()
   marital_status_id: number
-
-  @IsNotEmpty()
-  @IsInt()
-  person_id: number
 
   @IsNotEmpty()
   @IsString()

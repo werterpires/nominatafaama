@@ -1,57 +1,106 @@
-<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
   <div class="boxHead">
     <span class="headField" (click)="showBox = !showBox">
-      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
-        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}" (click)="showForm = true" />
+    <button
+      #addIcon
+      [ngClass]="{ hidden: !showBox }"
+      src="assets/icons/addIcon.png"
+      (click)="showForm = true"
+    >
+      Adicionar novo Idioma
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
       <label class="w-full">
-        Linguagem
-        <select class="smallInput" name="degreeSelect" [(ngModel)]="createRegistryData.chosen_language">
-          <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
+        Idioma
+        <select
+          class="smallInput"
+          name="degreeSelect"
+          [(ngModel)]="createRegistryData.chosen_language"
+        >
+          <option
+            *ngFor="let languageType of languageTypeList"
+            [value]="languageType.language_id"
+          >
             {{ languageType.language }}
           </option>
         </select>
       </label>
       <label class="checkboxLabel">
         Lê
-        <input type="checkbox" name="create-read" [(ngModel)]="createRegistryData.read" />
+        <input
+          type="checkbox"
+          name="create-read"
+          [(ngModel)]="createRegistryData.read"
+        />
       </label>
       <label class="checkboxLabel">
         Entende
-        <input type="checkbox" name="create-understand" [(ngModel)]="createRegistryData.understand" />
+        <input
+          type="checkbox"
+          name="create-understand"
+          [(ngModel)]="createRegistryData.understand"
+        />
       </label>
       <label class="checkboxLabel">
         Fala
-        <input type="checkbox" name="create-speak" [(ngModel)]="createRegistryData.speak" />
+        <input
+          type="checkbox"
+          name="create-speak"
+          [(ngModel)]="createRegistryData.speak"
+        />
       </label>
       <label class="checkboxLabel">
         Escreve
-        <input type="checkbox" name="create-write" [(ngModel)]="createRegistryData.write" />
+        <input
+          type="checkbox"
+          name="create-write"
+          [(ngModel)]="createRegistryData.write"
+        />
       </label>
       <label class="checkboxLabel">
         É fluente
-        <input type="checkbox" name="create-fluent" [(ngModel)]="createRegistryData.fluent" />
-      </label>
-      <label class="checkboxLabel">
-        Desconhece
-        <input type="checkbox" name="create-unknown" [(ngModel)]="createRegistryData.unknown" />
+        <input
+          type="checkbox"
+          name="create-fluent"
+          [(ngModel)]="createRegistryData.fluent"
+        />
       </label>
     </app-creation-form>
   </section>
   <section class="registriesWrapper">
-    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.language_id)" *ngFor="let registry of allRegistries; index as i">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.language_id)"
+      *ngFor="let registry of allRegistries; index as i"
+    >
       <label class="w-full">
         Linguagem
-        <select class="smallInput" name="degreeSelect" [(ngModel)]="registry.chosen_language">
-          <option *ngFor="let languageType of languageTypeList" [value]="languageType.language_id">
+        <select
+          class="smallInput"
+          name="degreeSelect"
+          [(ngModel)]="registry.chosen_language"
+        >
+          <option
+            *ngFor="let languageType of languageTypeList"
+            [value]="languageType.language_id"
+          >
             {{ languageType.language }}
           </option>
         </select>
@@ -62,23 +111,35 @@
       </label>
       <label class="checkboxLabel">
         Entende
-        <input type="checkbox" name="create-understand" [(ngModel)]="registry.understand" />
+        <input
+          type="checkbox"
+          name="create-understand"
+          [(ngModel)]="registry.understand"
+        />
       </label>
       <label class="checkboxLabel">
         Fala
-        <input type="checkbox" name="create-speak" [(ngModel)]="registry.speak" />
+        <input
+          type="checkbox"
+          name="create-speak"
+          [(ngModel)]="registry.speak"
+        />
       </label>
       <label class="checkboxLabel">
         Escreve
-        <input type="checkbox" name="create-write" [(ngModel)]="registry.write" />
+        <input
+          type="checkbox"
+          name="create-write"
+          [(ngModel)]="registry.write"
+        />
       </label>
       <label class="checkboxLabel">
         É fluente
-        <input type="checkbox" name="create-fluent" [(ngModel)]="registry.fluent" />
-      </label>
-      <label class="checkboxLabel">
-        Desconhece
-        <input type="checkbox" name="create-unknown" [(ngModel)]="registry.unknown" />
+        <input
+          type="checkbox"
+          name="create-fluent"
+          [(ngModel)]="registry.fluent"
+        />
       </label>
     </app-update-form>
   </section>
@@ -91,7 +152,12 @@
   <div class="errorMessage">
     <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">
@@ -100,7 +166,12 @@
   <div class="doneMessage">
     <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

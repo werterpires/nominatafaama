@@ -122,8 +122,6 @@ export class EclExperiencesModel {
             'ecl_experiences.ecl_exp_type_id',
             'ecl_exp_types.ecl_exp_type_id',
           )
-
-        console.log(results)
         eclExperiencesList = results.map((row: any) => ({
           ecl_exp_id: row.ecl_exp_id,
           person_id: row.person_id,
@@ -147,6 +145,35 @@ export class EclExperiencesModel {
     }
 
     return eclExperiencesList
+  }
+
+  async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const studentResult = await this.knex
+        .table('ecl_experiences')
+        .join('users', 'users.person_id', 'ecl_experiences.person_id')
+        .select('users.person_id')
+        .whereNull('ecl_exp_approved')
+
+      const spouseResult = await this.knex
+        .table('ecl_experiences')
+        .join('spouses', 'spouses.person_id', 'ecl_experiences.person_id')
+        .join('students', 'students.student_id', 'spouses.student_id')
+        .select('students.person_id')
+        .whereNull('ecl_experiences.ecl_exp_approved')
+
+      personIds = [...studentResult, ...spouseResult].map((row) => ({
+        person_id: row.person_id,
+      }))
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
   }
 
   async findEclExperiencesByPersonId(
@@ -174,7 +201,7 @@ export class EclExperiencesModel {
           ecl_exp_approved: row.ecl_exp_approved,
           created_at: row.created_at,
           updated_at: row.updated_at,
-          ecl_exp_type_name: row.ecl_exp_type,
+          ecl_exp_type_name: row.ecl_exp_type_name,
         }))
 
         await trx.commit()
@@ -216,7 +243,6 @@ export class EclExperiencesModel {
             ecl_exp_type_id: exp,
           })
         })
-        console.log(updateEclExperience, experiences)
         await trx('ecl_experiences').where('person_id', person_id).delete()
 
         if (experiences.length > 0) {
@@ -263,7 +289,6 @@ export class EclExperiencesModel {
           created_at: new Date(),
           updated_at: new Date(),
         }))
-        console.log(newEclExperiences)
         if (newEclExperiences.length > 0) {
           await trx('ecl_experiences').insert(newEclExperiences)
         }

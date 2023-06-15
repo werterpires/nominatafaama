@@ -117,7 +117,7 @@ export class RelatedMinistriesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deleteRelatedMinistryById(@Param('id') id: number) {
     try {

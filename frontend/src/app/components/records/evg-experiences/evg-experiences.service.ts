@@ -20,7 +20,7 @@ export class EvgExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IEvangelisticExperience[]>(
-        environment.API + '/evangelistic-experiences/person',
+        environment.API + '/evangelistic-experiences/person/student',
         {
           headers: head_obj,
         },
@@ -42,7 +42,7 @@ export class EvgExperiencesService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IEvangelisticExperience>(
-        environment.API + '/evangelistic-experiences',
+        environment.API + '/evangelistic-experiences/student',
         newRegistry,
         {
           headers: head_obj,

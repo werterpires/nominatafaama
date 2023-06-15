@@ -1,0 +1,54 @@
+<section #sectionBox ngClass="sectionBoxAll">
+  <div class="boxHead">
+    <p class="sectionTitle1">{{ title }}</p>
+  </div>
+  <section class="perfilList">
+    <div *ngFor="let registry of allRegistries; index as i">
+      <div (click)="getOneStudent(registry.user_id)">
+        <div class="smallAlonePhoto">
+          <div
+            *ngIf="registry.imageUrl"
+            class="imageContainer"
+            [ngStyle]="{ 'background-image': 'url(' + registry.imageUrl + ')' }"
+          ></div>
+        </div>
+        <div class="studentDatacontainer">
+          <p class="studentName">{{ registry.name }}</p>
+          <p class="studentCompData">{{ registry.principal_email }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

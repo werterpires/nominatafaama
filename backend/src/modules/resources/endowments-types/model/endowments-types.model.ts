@@ -184,7 +184,6 @@ export class EndowmentTypesModel {
         await trx('endowment_types')
           .where('endowment_type_id', endowment_type_id)
           .update({ endowment_type_name, application })
-        console.log('vou chamar a função pedindo o id', endowment_type_id)
         updatedEndowmentType = await this.findEndowmentTypeById(
           endowment_type_id,
         )

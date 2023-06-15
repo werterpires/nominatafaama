@@ -26,6 +26,9 @@ export class RelatedMinistriesService {
         user_id,
         personType,
       )
+      if(personId == null){
+        throw new Error(`Não foi encontrado uma pessoa vinculada ao usuário ${user_id}`)
+      }
 
       const createRelatedMinistryData: ICreateRelatedMinistry = {
         ...dto,
@@ -70,12 +73,17 @@ export class RelatedMinistriesService {
         personType,
       )
 
+      if(personId == null){
+        return []
+      }
+
       const relatedMinistries =
         await this.relatedMinistriesModel.findRelatedMinistriesByPersonId(
           personId,
         )
       return relatedMinistries
     } catch (error) {
+      console.log(error)
       throw new Error(
         `Não foi possível encontrar ministérios relacionados para a pessoa com o ID fornecido: ${error.message}`,
       )

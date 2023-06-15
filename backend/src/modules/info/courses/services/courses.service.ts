@@ -1,10 +1,11 @@
-import {Injectable} from '@nestjs/common'
-import {CoursesModel} from '../model/courses.model'
-import {CreateCourseDto} from '../dto/create-course.dto'
-import {UpdateCourseDto} from '../dto/update-course.dto'
-import {ICourse, ICreateCourse, IUpdateCourse} from '../types/types'
-import {UsersService} from 'src/modules/users/dz_services/users.service'
-import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
+import { Injectable } from '@nestjs/common'
+import { CoursesModel } from '../model/courses.model'
+import { CreateCourseDto } from '../dto/create-course.dto'
+import { UpdateCourseDto } from '../dto/update-course.dto'
+import { ICourse, ICreateCourse, IUpdateCourse } from '../types/types'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
+import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
+import { ISpouse } from 'src/modules/spouses/types/types'
 
 @Injectable()
 export class CoursesService {
@@ -24,8 +25,15 @@ export class CoursesService {
       if (personType === 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          throw new Error(
+            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
+          )
+        }
+        personId = spouse.person_id
       }
 
       const createCourseData: ICreateCourse = {
@@ -61,15 +69,29 @@ export class CoursesService {
     personType: string,
   ): Promise<ICourse[] | null> {
     try {
-      let personId!: number
-      if (personType === 'student') {
+      let personId!: number | null
+      if (personType == 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
-      } else if (personType === 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+      } else if (personType == 'spouse') {
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          personId = null
+         } else{
+           personId = spouse.person_id
+         }
+       
       }
-
-      const courses = await this.coursesModel.findCoursesByPersonId(personId)
+      let courses: ICourse[]
+      if(personId==null){
+        courses = []
+      }else{
+        courses =
+        await this.coursesModel.findCoursesByPersonId(
+          personId,
+        )
+      }
       return courses
     } catch (error) {
       throw new Error(

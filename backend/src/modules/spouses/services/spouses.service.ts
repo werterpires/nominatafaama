@@ -51,7 +51,6 @@ export class SpousesService {
         student_id: student_id,
         civil_marriage_state: dto.civil_marriage_state,
       }
-      console.log(spouse)
 
       await this.spousesModel.createSpouse(spouse)
     } catch (error) {

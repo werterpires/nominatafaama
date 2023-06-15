@@ -10,7 +10,7 @@ import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
 export class HiringStatusController {
   constructor(private readonly hiringStatusService: HiringStatusService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post()
   async createHiringStatus(@Body() input: CreateHiringStatusDto) {
     try {
@@ -21,7 +21,7 @@ export class HiringStatusController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Get(':id')
   async getHiringStatusById(@Param('id') id: number) {
     try {
@@ -41,7 +41,7 @@ export class HiringStatusController {
     return await this.hiringStatusService.findAllHiringStatus();
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Put()
   async updateHiringStatus(@Body() input: UpdateHiringStatusDto) {
     try {
@@ -52,7 +52,7 @@ export class HiringStatusController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Delete(':id')
   async deleteHiringStatusById(@Param('id') id: number) {
     try {

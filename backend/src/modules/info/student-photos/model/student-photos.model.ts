@@ -13,35 +13,52 @@ export class StudentPhotosModel {
 
   async createStudentPhoto(
     createStudentPhotoData: ICreateStudentPhoto,
-  ): Promise<IStudentPhoto> {
+    toDo: string,
+  ): Promise<void> {
     let studentPhoto: IStudentPhoto | null = null
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
+        let photo_pack_id: number = 0
         const {
           alone_photo,
           family_photo,
           other_family_photo,
           spouse_photo,
           invite_photo,
+          small_alone_photo,
           student_id,
         } = createStudentPhotoData
 
-        const [photo_pack_id] = await trx('student_photos')
-          .insert({
-            alone_photo,
-            family_photo,
-            other_family_photo,
-            spouse_photo,
-            invite_photo,
-            student_id,
-          })
-          .returning('photo_pack_id')
+        if (toDo === 'create') {
+          ;[photo_pack_id] = await trx('student_photos')
+            .insert({
+              alone_photo,
+              family_photo,
+              other_family_photo,
+              spouse_photo,
+              invite_photo,
+              small_alone_photo,
+              student_id,
+            })
+            .returning('photo_pack_id')
+        } else if (toDo === 'update') {
+          const updateFields = Object.entries(createStudentPhotoData).reduce(
+            (fields, [key, value]) => {
+              if (value !== null) {
+                fields[key] = value
+              }
+              return fields
+            },
+            {},
+          )
+          await trx('student_photos')
+            .where('student_id', student_id)
+            .update(updateFields)
+        }
 
         await trx.commit()
-
-        studentPhoto = await this.findStudentPhotoById(photo_pack_id)
       } catch (error) {
         console.error(error)
         await trx.rollback()
@@ -56,8 +73,6 @@ export class StudentPhotosModel {
     if (sentError) {
       throw sentError
     }
-
-    return studentPhoto!
   }
 
   async findStudentPhotoById(id: number): Promise<IStudentPhoto> {
@@ -82,6 +97,7 @@ export class StudentPhotosModel {
           other_family_photo: result.other_family_photo,
           spouse_photo: result.spouse_photo,
           invite_photo: result.invite_photo,
+          small_alone_photo: result.small_alone_photo,
           student_id: result.student_id,
           created_at: result.created_at,
           updated_at: result.updated_at,
@@ -119,7 +135,7 @@ export class StudentPhotosModel {
           .first()
 
         if (!result) {
-          throw new Error('StudentPhoto not found')
+          return
         }
 
         studentPhoto = {
@@ -129,6 +145,7 @@ export class StudentPhotosModel {
           other_family_photo: result.other_family_photo,
           spouse_photo: result.spouse_photo,
           invite_photo: result.invite_photo,
+          small_alone_photo: result.small_alone_photo,
           student_id: result.student_id,
           created_at: result.created_at,
           updated_at: result.updated_at,

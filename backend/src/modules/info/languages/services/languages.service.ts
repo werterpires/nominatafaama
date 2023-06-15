@@ -1,10 +1,11 @@
-import {Injectable} from '@nestjs/common'
-import {LanguagesModel} from '../model/languages.model'
-import {CreateLanguageDto} from '../dto/create-language.dto'
-import {UpdateLanguageDto} from '../dto/update-language.dto'
-import {ICreateLanguage, ILanguage, IUpdateLanguage} from '../types/types'
-import {UsersService} from 'src/modules/users/dz_services/users.service'
-import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
+import { Injectable } from '@nestjs/common'
+import { LanguagesModel } from '../model/languages.model'
+import { CreateLanguageDto } from '../dto/create-language.dto'
+import { UpdateLanguageDto } from '../dto/update-language.dto'
+import { ICreateLanguage, ILanguage, IUpdateLanguage } from '../types/types'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
+import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
+import { ISpouse } from 'src/modules/spouses/types/types'
 
 @Injectable()
 export class LanguagesService {
@@ -24,8 +25,15 @@ export class LanguagesService {
       if (personType == 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType == 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          throw new Error(
+            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
+          )
+        }
+        personId = spouse.person_id
       }
       const createLanguageData: ICreateLanguage = {
         ...dto,
@@ -57,16 +65,29 @@ export class LanguagesService {
     personType: string,
   ): Promise<ILanguage[] | null> {
     try {
-      let personId!: number
+      let personId!: number | null
       if (personType == 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType == 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          personId = null
+         } else{
+           personId = spouse.person_id
+         }
+       
       }
-      const languages = await this.languagesModel.findLanguagesByPersonId(
-        personId,
-      )
+      let languages: ILanguage[]
+      if(personId==null){
+        languages = []
+      }else{
+        languages =
+        await this.languagesModel.findLanguagesByPersonId(
+          personId,
+        )
+      }
       return languages
     } catch (error) {
       throw new Error(

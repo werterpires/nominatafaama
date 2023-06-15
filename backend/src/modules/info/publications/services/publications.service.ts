@@ -28,7 +28,10 @@ export class PublicationsService {
         user_id,
         personType,
       )
-      console.log(personType)
+
+      if(personId == null){
+        throw new Error(`Não foi encontrado uma pessoa vinculada ao usuário ${user_id}`)
+      }
 
       const createPublicationData: ICreatePublication = {
         ...dto,
@@ -66,6 +69,9 @@ export class PublicationsService {
         personType,
       )
 
+      if(personId == null){
+        return []
+      }
       const publications =
         await this.publicationsModel.findPublicationsByPersonId(personId)
       return publications

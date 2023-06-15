@@ -15,7 +15,7 @@ export class LanguagesComponent {
 
   allRegistries: ILanguage[] = []
   languageTypeList: Array<ILanguageType> = []
-  title = 'Linguagens'
+  title = 'Idiomas'
   createRegistryData: ICreateLanguageDto = {
     chosen_language: 0,
     read: false,
@@ -76,15 +76,19 @@ export class LanguagesComponent {
 
   resetCreationRegistry() {
     Object.keys(this.createRegistryData).forEach((key) => {
-      switch (typeof key) {
+      console.log()
+      switch (typeof this.createRegistryData[key as keyof ICreateLanguageDto]) {
         case 'boolean':
           Object.defineProperty(this.createRegistryData, key, { value: false })
+
           break
         case 'number':
           Object.defineProperty(this.createRegistryData, key, { value: 0 })
+
           break
         case 'string':
           Object.defineProperty(this.createRegistryData, key, { value: '' })
+
           break
       }
     })
@@ -104,9 +108,9 @@ export class LanguagesComponent {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.getAllRegistries()
-          this.showForm = false
           this.resetCreationRegistry()
+          this.ngOnInit()
+          this.showForm = false
         },
         error: (err) => {
           this.errorMessage = err.message

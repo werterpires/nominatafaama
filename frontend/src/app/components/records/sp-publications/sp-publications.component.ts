@@ -19,12 +19,13 @@ export class SpPublicationsComponent {
 
   allRegistries: IPublication[] = []
   publicationTypeList: Array<IPublicationType> = []
-  title = 'Publicações'
+  title = 'Publicações do Cônjuge'
   createRegistryData: CreatePublicationDto = {
     link: '',
     publication_type_id: 0,
     reference: '',
   }
+  reference: string = ''
 
   showBox = false
   showForm = false
@@ -160,6 +161,18 @@ export class SpPublicationsComponent {
         this.isLoading = false
       },
     })
+  }
+
+  getSelectedPublicationTypeInstructions() {
+    const selectedPublicationType = this.publicationTypeList.find(
+      (publicationType) =>
+        publicationType.publication_type_id ==
+        this.createRegistryData.publication_type_id,
+    )
+    if (selectedPublicationType?.instructions) {
+      this.reference = selectedPublicationType?.instructions
+    }
+    console.log(this.reference)
   }
 
   closeError() {

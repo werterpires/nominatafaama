@@ -23,6 +23,10 @@ export class EndowmentsService {
         personType,
       )
 
+      if(personId == null){
+        throw new Error(`Não foi encontrado uma pessoa vinculada ao usuário ${user_id}`)
+      }
+
       const createEndowmentData: ICreateEndowment = {
         ...dto,
         person_id: personId,
@@ -62,6 +66,10 @@ export class EndowmentsService {
         user_id,
         personType,
       )
+
+      if(personId == null){
+        return []
+      }
 
       const endowments = await this.endowmentsModel.findEndowmentsByPersonId(
         personId,

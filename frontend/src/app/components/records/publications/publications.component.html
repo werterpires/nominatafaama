@@ -15,14 +15,9 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img
-      #addIcon
-      class="addIcon"
-      [ngClass]="{ hidden: !showBox }"
-      src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
-      (click)="showForm = true"
-    />
+    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+      Adicionar nova Publicação
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
@@ -32,6 +27,7 @@
           <select
             name="degreeSelect"
             [(ngModel)]="createRegistryData.publication_type_id"
+            (change)="getSelectedPublicationTypeInstructions()"
           >
             <option
               *ngFor="let publicationType of publicationTypeList"
@@ -45,6 +41,10 @@
       <div class="subSection">
         <label>
           Referência
+          <div class="formInstruction">
+            <div class="formInstruction"></div>
+            Modelo Referência: {{ reference }}
+          </div>
           <input
             type="text"
             name="courseArea"

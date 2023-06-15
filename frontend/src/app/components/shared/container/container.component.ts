@@ -1,6 +1,6 @@
-import {Component} from '@angular/core'
-import {LoginService} from '../shared.service.ts/login.service'
-import {IOptions, IPermissions, IUserApproved} from './types'
+import { Component, Input } from '@angular/core'
+import { LoginService } from '../shared.service.ts/login.service'
+import { IOptions, IPermissions, IUserApproved } from './types'
 
 @Component({
   selector: 'app-container',
@@ -9,6 +9,7 @@ import {IOptions, IPermissions, IUserApproved} from './types'
 })
 export class ContainerComponent {
   loginMenu = false
+  approvalMenu = false
 
   constructor(private loginService: LoginService) {}
   permissions: IPermissions = {
@@ -17,6 +18,7 @@ export class ContainerComponent {
     direcao: false,
     representacao: false,
     administrador: false,
+    docente: false,
     isApproved: false,
   }
   user: IUserApproved | null = null
@@ -29,11 +31,14 @@ export class ContainerComponent {
     chamados: false,
   }
 
+  @Input() approvalType: string = 'students'
+
   choseOption(chosenOption: string): void {
     Object.keys(this.options).forEach((option: string) => {
       this.options[option as keyof IOptions] = false
     })
     this.options[chosenOption as keyof IOptions] = true
+    this.loginMenu = false
   }
 
   ngOnInit(): void {
@@ -52,6 +57,13 @@ export class ContainerComponent {
       this.permissions.direcao = roles.includes('direção')
       this.permissions.representacao = roles.includes('representacao')
       this.permissions.administrador = roles.includes('administrador')
+      this.permissions.docente = roles.includes('docente')
     })
+  }
+
+  changeApprovalType(approvaltype: string) {
+    this.approvalType = approvaltype
+    this.choseOption('aprovacoes')
+    this.approvalMenu = false
   }
 }

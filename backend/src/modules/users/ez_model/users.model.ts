@@ -30,7 +30,6 @@ export class UsersModel {
         const [person_id] = await trx('people')
           .insert({ name, cpf })
           .returning('person_id')
-        console.log('person:', person_id)
         const [user_id] = await trx('users')
           .insert({
             password_hash,
@@ -142,6 +141,74 @@ export class UsersModel {
       throw new Error('user not found')
     }
     return user
+  }
+
+  async findUsersByIds(ids: number[]): Promise<IUser[] | null> {
+    let users: IUser[] | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('users')
+          .select(
+            'users.user_id',
+            'users.principal_email',
+            'users.person_id',
+            'people.name',
+            'people.cpf',
+            'roles.role_id',
+            'roles.role_name',
+            'roles.role_description',
+          )
+          .leftJoin('people', 'users.person_id', 'people.person_id')
+          .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
+          .leftJoin('roles', 'users_roles.role_id', 'roles.role_id')
+          .whereIn('users.person_id', ids)
+
+        const userMap = new Map<number, IUser>()
+
+        results.forEach((row: any) => {
+          const userId = row.user_id
+
+          if (!userMap.has(userId)) {
+            const user: IUser = {
+              user_id: row.user_id,
+              principal_email: row.principal_email,
+              person_id: row.person_id,
+              name: row.name,
+              cpf: row.cpf,
+              roles: [],
+              created_at: row.created_at,
+              updated_at: row.updated_at,
+            }
+            userMap.set(userId, user)
+          }
+
+          const role: IRole = {
+            role_id: row.role_id,
+            role_name: row.role_name,
+            role_description: row.role_description,
+          }
+          userMap.get(userId)!.roles.push(role)
+        })
+
+        users = Array.from(userMap.values())
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return users
   }
 
   async findUserByEmail(email: string): Promise<IValidateUser | null> {

@@ -170,6 +170,39 @@ export class EvangelisticExperiencesModel {
     return evangelisticExperiencesList
   }
 
+  async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const studentResult = await this.knex
+        .table('evangelistic_experiences')
+        .join('users', 'users.person_id', 'evangelistic_experiences.person_id')
+        .select('users.person_id')
+        .whereNull('evang_exp_approved')
+
+      const spouseResult = await this.knex
+        .table('evangelistic_experiences')
+        .join(
+          'spouses',
+          'spouses.person_id',
+          'evangelistic_experiences.person_id',
+        )
+        .join('students', 'students.student_id', 'spouses.student_id')
+        .select('students.person_id')
+        .whereNull('evangelistic_experiences.evang_exp_approved')
+
+      personIds = [...studentResult, ...spouseResult].map((row) => ({
+        person_id: row.person_id,
+      }))
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
+  }
+
   async findEvangelisticExperiencesByPersonId(
     personId: number,
   ): Promise<IEvangelisticExperience[]> {
@@ -233,6 +266,7 @@ export class EvangelisticExperiencesModel {
           exp_end_date,
           person_id,
           evang_exp_type_id,
+          evang_exp_approved,
         } = updateEvangelisticExperience
 
         await trx('evangelistic_experiences')
@@ -244,6 +278,7 @@ export class EvangelisticExperiencesModel {
             exp_end_date,
             person_id,
             evang_exp_type_id,
+            evang_exp_approved,
           })
 
         updatedEvangelisticExperience =

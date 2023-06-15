@@ -8,15 +8,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import {CreateAcademicFormationDto} from '../dto/create-academic-formation.dto'
-import {UpdateAcademicFormationDto} from '../dto/update-academic-formation.dto'
-import {AcademicFormationsService} from '../services/academic-formations.service'
-import {IAcademicFormation} from '../types/types'
-import {NotFoundException, InternalServerErrorException} from '@nestjs/common'
-import {CurrentUser} from 'src/shared/auth/decorators/current-user.decorator'
-import {ERoles} from 'src/shared/auth/types/roles.enum'
-import {UserFromJwt} from 'src/shared/auth/types/types'
-import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
+import { CreateAcademicFormationDto } from '../dto/create-academic-formation.dto'
+import { UpdateAcademicFormationDto } from '../dto/update-academic-formation.dto'
+import { AcademicFormationsService } from '../services/academic-formations.service'
+import { IAcademicFormation } from '../types/types'
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
 
 @Controller('academic-formations')
 export class AcademicFormationsController {
@@ -66,7 +66,6 @@ export class AcademicFormationsController {
     @CurrentUser() user: UserFromJwt,
   ): Promise<IAcademicFormation[]> {
     try {
-      console.log('no controller')
       const user_id = user.user_id
 
       const academicFormations =
@@ -133,13 +132,13 @@ export class AcademicFormationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deleteAcademicFormationById(@Param('id') id: number) {
     try {
       const message =
         await this.academicFormationsService.deleteAcademicFormationById(id)
-      return {message}
+      return { message }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }

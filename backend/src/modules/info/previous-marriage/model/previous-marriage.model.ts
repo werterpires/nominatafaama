@@ -146,6 +146,32 @@ export class PreviousMarriagesModel {
     return previousMarriageList
   }
 
+  async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const studentResult = await this.knex
+        .table('previous_marriages')
+        .join(
+          'students',
+          'students.student_id',
+          'previous_marriages.student_id',
+        )
+        .select('students.person_id')
+        .whereNull('previous_marriages.previous_marriage_approved')
+
+      personIds = [...studentResult].map((row) => ({
+        person_id: row.person_id,
+      }))
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
+  }
+
   async updatePreviousMarriageById(
     updatePreviousMarriage: IUpdatePreviousMarriage,
   ): Promise<IPreviousMarriage> {
@@ -209,7 +235,6 @@ export class PreviousMarriagesModel {
       } catch (error) {
         console.error(error)
         await trx.rollback()
-        console.log(error)
         sentError = new Error(error.message)
       }
     })

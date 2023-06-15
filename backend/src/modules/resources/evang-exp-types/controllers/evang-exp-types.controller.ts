@@ -20,7 +20,7 @@ import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
 export class EvangExpTypesController {
   constructor(private readonly evangExpTypesService: EvangExpTypesService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post()
   async createEvangExpType(@Body() input: CreateEvangExpTypeDto) {
     try {

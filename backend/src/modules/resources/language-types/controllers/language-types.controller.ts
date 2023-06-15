@@ -20,7 +20,7 @@ import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
 export class LanguageTypesController {
   constructor(private readonly languageTypesService: LanguageTypesService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post()
   async createLanguageType(@Body() input: CreateLanguageTypeDto) {
     try {

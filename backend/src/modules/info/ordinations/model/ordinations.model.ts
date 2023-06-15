@@ -28,7 +28,7 @@ export class OrdinationsModel {
             place,
             year,
             person_id,
-            ordination_approved: ordination_approved,
+            ordination_approved,
           })
           .returning('ordination_id')
 
@@ -132,6 +132,35 @@ export class OrdinationsModel {
     return ordinationsList
   }
 
+  async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
+
+    try {
+      const studentResult = await this.knex
+        .table('ordinations')
+        .join('users', 'users.person_id', 'ordinations.person_id')
+        .select('users.person_id')
+        .whereNull('ordination_approved')
+
+      const spouseResult = await this.knex
+        .table('ordinations')
+        .join('spouses', 'spouses.person_id', 'ordinations.person_id')
+        .join('students', 'students.student_id', 'spouses.student_id')
+        .select('students.person_id')
+        .whereNull('ordinations.ordination_approved')
+
+      personIds = [...studentResult, ...spouseResult].map((row) => ({
+        person_id: row.person_id,
+      }))
+    } catch (error) {
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
+
+    return personIds
+  }
+
   async findOrdinationsByPersonId(person_id: number): Promise<IOrdination[]> {
     let ordinationsList: IOrdination[] = []
     let sentError: Error | null = null
@@ -189,11 +218,11 @@ export class OrdinationsModel {
         updatedOrdination = await trx('ordinations')
           .where('ordination_id', ordination_id)
           .update({
-            ordination_name: ordination_name,
+            ordination_name,
             place,
             year,
-            person_id: person_id,
-            ordination_approved: ordination_approved,
+            person_id,
+            ordination_approved,
           })
 
         await trx.commit()

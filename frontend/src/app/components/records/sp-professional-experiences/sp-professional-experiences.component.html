@@ -15,21 +15,21 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img
-      #addIcon
-      class="addIcon"
-      [ngClass]="{ hidden: !showBox }"
-      src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}"
-      (click)="showForm = true"
-    />
+    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+      Adicionar nova experiência profissional
+    </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
       <div class="subSection">
         <label>
           Tipo de trabalho
-          <input type="text" name="job" [(ngModel)]="createRegistryData.job" />
+          <input
+            type="text"
+            name="job"
+            [(ngModel)]="createRegistryData.job"
+            placeholder="Auxiliar Administratvo"
+          />
         </label>
         <label>
           Instituição
@@ -37,6 +37,7 @@
             type="text"
             name="institution"
             [(ngModel)]="createRegistryData.job_institution"
+            placeholder="RHM Consultoria"
           />
         </label>
       </div>

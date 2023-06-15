@@ -9,6 +9,7 @@ import {
 } from '../types/types'
 import { UsersService } from 'src/modules/users/dz_services/users.service'
 import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
+import { ISpouse } from 'src/modules/spouses/types/types'
 
 @Injectable()
 export class ProfessionalExperiencesService {
@@ -28,8 +29,15 @@ export class ProfessionalExperiencesService {
       if (personType === 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          throw new Error(
+            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
+          )
+        }
+        personId = spouse.person_id
       }
 
       const createExperienceData: ICreateProfessionalExperience = {
@@ -69,18 +77,30 @@ export class ProfessionalExperiencesService {
     personType: string,
   ): Promise<IProfessionalExperience[] | null> {
     try {
-      let personId!: number
+      let personId!: number | null
       if (personType === 'student') {
         personId = (await this.usersService.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+         personId = null
+        } else{
+          personId = spouse.person_id
+        }
+        
       }
-
-      const experiences =
+      let experiences: IProfessionalExperience[]
+      if(personId==null){
+        experiences = []
+      }else{
+        experiences =
         await this.experiencesModel.findProfessionalExperiencesByPersonId(
           personId,
         )
+      }
+      
       return experiences
     } catch (error) {
       throw new Error(
@@ -109,8 +129,6 @@ export class ProfessionalExperiencesService {
         job_end_date: dto.job_end_date ? new Date(dto.job_end_date) : null,
         experience_approved: null,
       }
-
-      console.log(dto)
 
       const updatedExperience =
         await this.experiencesModel.updateProfessionalExperienceById(

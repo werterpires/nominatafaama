@@ -44,6 +44,7 @@ export class StudentsService {
         marital_status_id: dto.marital_status_id,
         hiring_status_id: dto.hiring_status_id,
         primary_school_state: dto.primary_school_state,
+        student_approved: null,
       }
 
       const newStudent = await this.studentsModel.createStudent(student, name)
@@ -93,10 +94,10 @@ export class StudentsService {
       ...input,
       birth_date: birthDate,
       baptism_date: baptismDate,
+      student_approved: null,
     }
 
     try {
-      console.log('Datas', updateData)
       updatedStudent = await this.studentsModel.updateStudentById(updateData)
     } catch (error) {
       sentError = new Error(error.message)

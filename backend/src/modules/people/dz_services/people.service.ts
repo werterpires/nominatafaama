@@ -5,6 +5,7 @@ import { UpdatePersonDto } from '../az_dto/updatePeopleDto'
 import { IPerson } from '../bz_types/types'
 import { UsersModel } from 'src/modules/users/ez_model/users.model'
 import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
+import { ISpouse } from 'src/modules/spouses/types/types'
 
 @Injectable()
 export class PeopleServices {
@@ -45,18 +46,24 @@ export class PeopleServices {
   async findPersonByUserId(
     user_id: number,
     personType: string,
-  ): Promise<number> {
-    let personId!: number
+  ): Promise<number | null> {
+    let personId!: number | null
     try {
       if (personType === 'student') {
         personId = (await this.usersModel.findUserById(user_id)).person_id
       } else if (personType === 'spouse') {
-        console.log(personType)
-        personId = (await this.spouseModel.findSpouseByUserId(user_id))
-          .person_id
-        console.log(personId)
+        let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
+          user_id,
+        )
+        if (spouse == null) {
+          personId = null
+        }else{
+          personId = spouse.person_id
+        }
+        
       }
     } catch (error) {
+      console.error(error)
       throw error
     }
 
