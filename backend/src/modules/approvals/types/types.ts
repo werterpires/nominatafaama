@@ -41,6 +41,7 @@ export interface ICompleteStudent {
   relatedMinistries: IRelatedMinistry[] | null
   spRelatedMinistries: IRelatedMinistry[] | null
   photos: IPhotoFile
+  user:IUser | null
 }
 
 export interface IPhotoFile {
@@ -55,3 +56,15 @@ export interface IPhotoFile {
 export interface ICompleteUser extends IUser {
   photo?: { file: Buffer; headers: Record<string, string> } | null
 }
+
+export interface IApproveData {
+  table:string,
+  id: number,
+  approve: boolean
+}
+
+// export interface IApproveInfo {
+//   table:string,
+//   id: number,
+//   approve: boolean
+// }

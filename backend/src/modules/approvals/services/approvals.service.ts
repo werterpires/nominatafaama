@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ICompleteStudent, ICompleteUser } from '../types/types'
+import { IApproveData, ICompleteStudent, ICompleteUser } from '../types/types'
 import { IUser } from 'src/modules/users/bz_types/types'
 import { StudentsModel } from 'src/modules/students/model/students.model'
 import { UsersModel } from 'src/modules/users/ez_model/users.model'
@@ -22,6 +22,7 @@ import { StudentPhotosService } from 'src/modules/info/student-photos/services/s
 import { IStudent } from 'src/modules/students/types/types'
 import { ISpouse } from 'src/modules/spouses/types/types'
 import { IAcademicFormation } from 'src/modules/info/academic-formations/types/types'
+import { ApprovalsModel } from '../model/approvals.model'
 
 @Injectable()
 export class ApprovalsService {
@@ -43,6 +44,7 @@ export class ApprovalsService {
     private relatedMinistriesModel: RelatedMinistriesModel,
     private childrenService: ChildrenModel,
     private studentPhotoService: StudentPhotosService,
+    private approvalsModel: ApprovalsModel
   ) {}
 
   async findNotApproved(): Promise<ICompleteUser[] | null> {
@@ -177,6 +179,7 @@ export class ApprovalsService {
       relatedMinistries: null,
       spRelatedMinistries: null,
       children: null,
+      user: null,
       photos: {
         alone_photo: null,
         family_photo: null,
@@ -199,6 +202,9 @@ export class ApprovalsService {
       if(student != null){
         personId = student.person_id
       }
+
+      let user: IUser | null = await this.usersModel.findUserById(userId)
+      completeStudent.user = user
       
 
       if (student && student.student_id) {
@@ -468,7 +474,7 @@ export class ApprovalsService {
     headers: Record<string, string>
   } | null> {
     let photo: {
-      file: Buffer
+      file: Buffer 
       headers: Record<string, string>
     } | null = null
     if (photoData.fileStream != null) {
@@ -517,5 +523,22 @@ export class ApprovalsService {
     completeStudent.photos[correctPhotoType] = await this.addPhotoToStudent(
       photoData,
     )
+  }
+
+  async approveAny( data:IApproveData ):Promise<boolean>{
+    let approved: boolean | null = null
+    try {
+      data.id = parseInt(data.id.toString())
+      const approved = await this.approvalsModel.approveAny(data)
+      return approved
+    } catch (error) {
+      console.error(`Erro capturado no ApprovalsService approve any: ${error}`)
+      
+    }
+    if(approved === null){
+      throw new Error('Não foi possível executar a aprovação')
+    }
+    return approved
+
   }
 }
