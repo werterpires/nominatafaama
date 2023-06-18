@@ -24,6 +24,10 @@ p {
 .flex {
   display: flex;
 }
+.flexSpaceBetween {
+  display: flex;
+  justify-content: space-between;
+}
 
 .gap-4 {
   gap: 1rem;
@@ -156,6 +160,23 @@ input:focus {
   color: #23435f;
 }
 
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1.5px solid #dcdada;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #23435f;
+}
+
 .formCreation input[type='checkbox'] {
   padding: unset;
   background: unset;
@@ -166,6 +187,13 @@ input:focus {
 form.registryWrapper label,
 form.registryWrapper span,
 form.registryWrapper p {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: #23435f;
+}
+
+.inputLabel {
   font-weight: 600;
   font-size: 14px;
   line-height: 21px;
@@ -205,6 +233,10 @@ form.registryWrapper input[type='checkbox']:focus {
   display: flex;
   gap: 2rem;
   width: 100%;
+}
+.subSectionSpousePhoto {
+  display: flex;
+  gap: 2rem;
 }
 
 .subSection label,
@@ -620,11 +652,30 @@ button:active {
   color: #23435f;
 }
 
+.weightFieldTitle {
+  margin-bottom: 13.5px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 21px;
+  display: flex;
+  align-items: center;
+  color: #23435f;
+}
+
 .formSection {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 35px;
+}
+
+.formSearch {
+  display: flex;
+  align-items: end;
+  margin-top: 35px;
+  gap: 10px;
 }
 
 .registryStartButtons {
@@ -700,7 +751,7 @@ button:active {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 10px;
   line-height: 18px;
 
   /* Preto 01 */
@@ -868,6 +919,18 @@ button:active {
   overflow: hidden;
 }
 
+.spousePhoto {
+  width: 314px;
+  height: 422.05px;
+  overflow: hidden;
+}
+
+.familyPhoto {
+  width: 796.94px;
+  height: 465.93px;
+  overflow: hidden;
+}
+
 .formInstruction {
   font-family: 'Poppins';
   font-style: italic;
@@ -893,4 +956,8 @@ button:active {
   background-color: #d5d2ad;
   padding: 5px;
   border-radius: 10px;
+}
+
+.sidePhotoField {
+  width: 55%;
 }

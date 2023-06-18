@@ -54,75 +54,90 @@ export class ApprovalsService {
 
       const notApprovedStudentPersonIds =
         await this.studentsModel.findNotApprovedIds()
-      personIds = this.addPersonIds(personIds, notApprovedStudentPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedStudentPersonIds)
 
       const notApprovedSpousesPersonIds =
         await this.academicFormationsModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedSpousesPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedSpousesPersonIds)
 
       const notApprovedAcademicFormationsPersonIds =
         await this.spousesModel.findNotApprovedStudentIds()
-      personIds = this.addPersonIds(
+      console.log(personIds)
+        personIds = this.addPersonIds(
         personIds,
         notApprovedAcademicFormationsPersonIds,
       )
 
       const notApprovedLanguagesPersonIds =
         await this.languagesModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedLanguagesPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedLanguagesPersonIds)
 
       const notApprovedCoursesPersonIds =
         await this.coursesModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedCoursesPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedCoursesPersonIds)
 
       const notApprovedPreviousMarriagesPersonIds =
         await this.previousMarriagesModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(
+      console.log(personIds)
+        personIds = this.addPersonIds(
         personIds,
         notApprovedPreviousMarriagesPersonIds,
       )
 
       const notApprovedProfessionalExpPersonIds =
         await this.professionalExperiencesModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(
+      console.log(personIds)
+        personIds = this.addPersonIds(
         personIds,
         notApprovedProfessionalExpPersonIds,
       )
 
       const notApprovedPasEclExpsPersonIds =
         await this.pastEclExpsModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedPasEclExpsPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedPasEclExpsPersonIds)
 
       const notApprovedEvangExpsPersonIds =
         await this.evangelisticExperiencesModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedEvangExpsPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedEvangExpsPersonIds)
 
       const notApprovedEclExpsPersonIds =
         await this.eclExperiencesModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedEclExpsPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedEclExpsPersonIds)
 
       const notApprovedPublicationsPersonIds =
         await this.publicationsModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedPublicationsPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedPublicationsPersonIds)
 
       const notApprovedEndowmentsPersonIds =
         await this.endowmentsModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedEndowmentsPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedEndowmentsPersonIds)
 
       const notApprovedOrdinationsPersonIds =
         await this.ordinationsModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedOrdinationsPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedOrdinationsPersonIds)
 
       const notApprovedRelatedMinistriesPersonIds =
         await this.relatedMinistriesModel.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(
+      console.log(personIds)
+        personIds = this.addPersonIds(
         personIds,
         notApprovedRelatedMinistriesPersonIds,
       )
 
       const notApprovedChildrenPersonIds =
         await this.childrenService.findAllNotApprovedPersonIds()
-      personIds = this.addPersonIds(personIds, notApprovedChildrenPersonIds)
+      console.log(personIds)
+        personIds = this.addPersonIds(personIds, notApprovedChildrenPersonIds)
 
       const result = await this.usersModel.findUsersByIds(personIds)
       let photosInfo: {

@@ -29,7 +29,7 @@ export class ApprovalsController {
     } catch (error) {
       console.error(
         'Erro capturado no ApprovalsController findNotApproved: ',
-        error,
+        error
       )
       throw error
     }
