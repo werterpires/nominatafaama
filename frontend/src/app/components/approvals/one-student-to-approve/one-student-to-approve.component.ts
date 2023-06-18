@@ -3,6 +3,10 @@ import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { ICompleteStudent } from '../student-to-approve/types'
 import { SafeResourceUrl } from '@angular/platform-browser'
+import { OneStudentToApproveService } from './one-student-to-approve.service'
+import { ApproveUserDto } from '../../approves/users-approves/types'
+import { ApproveDto } from './types'
+import { StudentsToApproveService } from '../student-to-approve/student-to-approve.service'
 
 @Component({
   selector: 'app-one-student-to-approve',
@@ -37,11 +41,22 @@ export class OneStudentToApproveComponent {
     spPublications: null,
     spRelatedMinistries: null,
     student: null,
+    user: null,
   }
+
+  isLoading = false
+  done = false
+  doneMessage = ''
+  error = false
+  errorMessage = ''
 
   alonePhoto: SafeResourceUrl | null = null
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private service: OneStudentToApproveService,
+    private studentToApproveService: StudentsToApproveService,
+  ) {}
 
   async ngOnInit() {
     this.student = this.dataService.selectedStudent
@@ -66,11 +81,64 @@ export class OneStudentToApproveComponent {
     }
   }
 
-  approveStudent(
-    approveStudent: string,
-    rejectStudent: string,
-    student_id: number,
+  approve(
+    table: string,
+    elementTrue: HTMLInputElement,
+    elementFalse: HTMLInputElement,
+    id: number,
   ) {
-    console.log(approveStudent, rejectStudent, student_id)
+    this.isLoading = true
+    let approve: boolean | null = null
+
+    if (elementTrue.checked) {
+      approve = true
+    } else if (elementFalse.checked) {
+      approve = false
+    } else {
+      throw new Error('Você precisa escolher entre aprovado ou desaprovado.')
+    }
+
+    const data: ApproveDto = {
+      approve: approve,
+      id: id,
+    }
+    this.service.approveAny(data, table).subscribe({
+      next: (res) => {
+        if (this.student.user) {
+          this.atualizeStudent(this.student.user.user_id)
+        }
+        this.doneMessage = 'Aprovação feita com sucesso.'
+        this.done = true
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+    console.log(table, approve, id)
+  }
+
+  atualizeStudent(id: number) {
+    this.studentToApproveService.findOneRegistry(id).subscribe({
+      next: (res) => {
+        this.student = res
+        console.log(this.student)
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
+
+  closeError() {
+    this.error = false
+  }
+
+  closeDone() {
+    this.done = false
   }
 }

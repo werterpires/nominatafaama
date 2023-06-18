@@ -47,6 +47,7 @@ export interface ICompleteStudent {
   relatedMinistries: IRelatedMinistry[] | null
   spRelatedMinistries: IRelatedMinistry[] | null
   photos: IPhotoFile | null
+  user: IUser | null
 }
 
 export interface IPhotoFile {

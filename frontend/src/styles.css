@@ -699,13 +699,13 @@ button:active {
   align-items: center;
   font-family: 'Poppins';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 12px;
   line-height: 18px;
 
   /* Preto 01 */
 
-  color: rgba(0, 0, 0, 0.54);
+  color: #0d3362;
 }
 
 .sectionDivisiion {
@@ -849,6 +849,9 @@ button:active {
   line-height: 18px;
   color: #23435f;
 }
+.wWeight {
+  font-weight: 600;
+}
 
 .field {
   margin-bottom: 13.5px;
@@ -872,4 +875,22 @@ button:active {
   font-size: 10px;
   line-height: 12px;
   color: rgba(40, 35, 35, 0.54);
+}
+
+.approved {
+  background-color: #a9d1a6;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.unapproved {
+  background-color: #d5adad;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.notRated {
+  background-color: #d5d2ad;
+  padding: 5px;
+  border-radius: 10px;
 }

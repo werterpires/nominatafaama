@@ -1,4 +1,11 @@
-<section *ngIf="permissions.administrador" class="sectionBox">
+<section
+  class="sectionBox"
+  [ngClass]="{
+    approved: student.student?.student_approved === true,
+    unapproved: student.student?.student_approved === false,
+    notRated: student.student?.student_approved === null
+  }"
+>
   <div class="boxHead">
     <p class="sectionTitle1">Perfil do fomando</p>
   </div>
@@ -60,7 +67,7 @@
         "
         class="subSection"
       >
-        <span class="field">
+        <!-- <span class="field">
           <p class="fieldTitle">Ministério com os quais se identifica</p>
           <div class="flexBetween">
             <span
@@ -69,7 +76,7 @@
               >{{ ministry.ministry_type_name }}</span
             >
           </div>
-        </span>
+        </span> -->
       </div>
       <div class="subSection">
         <span class="field">
@@ -90,16 +97,18 @@
         <label class="labelRadio">
           <input
             class="approvedRadio"
-            [id]="'approveStudent'"
+            [checked]="student.student.student_approved"
+            #approveStudent1
             type="radio"
             name="status"
-            checked
           />
           Aprovado
         </label>
         <label class="labelRadio">
           <input
             class="rejectedRadio"
+            [checked]="!student.student.student_approved"
+            #rejectStudent1
             [id]="'rejectStudent'"
             type="radio"
             name="status"
@@ -111,9 +120,10 @@
           class="saveButton"
           type="button"
           (click)="
-            approveStudent(
-              'approveStudent',
-              'rejectStudent',
+            approve(
+              'students',
+              approveStudent1,
+              rejectStudent1,
               student.student.student_id
             )
           "
@@ -124,7 +134,7 @@
     </div>
   </section>
 </section>
-<section *ngIf="permissions.administrador" class="sectionBox">
+<section class="sectionBox">
   <div class="boxHead">
     <p class="sectionTitle1">Conheça {{ student.student?.person_name }}</p>
   </div>
@@ -134,21 +144,21 @@
       student.academicFormations.length > 0
     "
   >
-    <div>
+    <div *ngIf="student.academicFormations != null">
       <p class="fieldTitle">Formações acadêmicas</p>
-      <div class="subSection">
-        <span
-          *ngFor="let formation of student.academicFormations"
-          class="field"
-        >
+      <div
+        class="subSection"
+        *ngFor="let formation of student.academicFormations; let i = index"
+        class="field"
+        [ngClass]="{
+          approved: formation.academic_formation_approved === true,
+          unapproved: formation.academic_formation_approved === false,
+          notRated: formation.academic_formation_approved === null
+        }"
+      >
+        <div>
           <p class="fieldContent">
-            {{ formation.begin_date }}
-            <span *ngIf="formation.conclusion_date">
-              a {{ formation.conclusion_date }}
-            </span>
-            <span *ngIf="!formation.conclusion_date"
-              >(ainda não concluído)</span
-            >
+            {{ formation.begin_date }} a {{ formation.conclusion_date }}
           </p>
           <p class="fieldContent">
             {{ formation.degree_name }} em {{ formation.course_area }},
@@ -158,7 +168,9 @@
             <label class="labelRadio">
               <input
                 class="approvedRadio"
-                [id]="'approveStudent'"
+                #approveItem
+                [checked]="formation.academic_formation_approved"
+                [id]="'approveFormation' + i"
                 type="radio"
                 name="status"
                 checked
@@ -167,8 +179,11 @@
             </label>
             <label class="labelRadio">
               <input
+                #rejectItem
                 class="rejectedRadio"
-                [id]="'rejectStudent'"
+                #rejectFormation{{i}}
+                [checked]="!formation.academic_formation_approved"
+                [id]="'rejectFormation' + i"
                 type="radio"
                 name="status"
               />
@@ -179,9 +194,10 @@
               class="saveButton"
               type="button"
               (click)="
-                approveStudent(
-                  'approveStudent',
-                  'rejectStudent',
+                approve(
+                  'academic_formations',
+                  approveItem,
+                  rejectItem,
                   formation.formation_id
                 )
               "
@@ -189,17 +205,22 @@
               SALVAR
             </button>
           </form>
-        </span>
+        </div>
       </div>
 
       <hr class="sectionDivisiion" />
     </div>
-    <div>
+    <div *ngIf="student.courses != null">
       <p class="fieldTitle">Cursos e capacitações</p>
       <div
         class="subSection"
         *ngFor="let course of student.courses"
         class="field"
+        [ngClass]="{
+          approved: course.course_approved === true,
+          unapproved: course.course_approved === false,
+          notRated: course.course_approved === null
+        }"
       >
         <div>
           <p class="fieldContent">
@@ -212,7 +233,9 @@
             <label class="labelRadio">
               <input
                 class="approvedRadio"
-                [id]="'approveStudent'"
+                #approveItem
+                [checked]="course.course_approved"
+                [id]="'approveFormation'"
                 type="radio"
                 name="status"
                 checked
@@ -221,8 +244,11 @@
             </label>
             <label class="labelRadio">
               <input
+                #rejectItem
                 class="rejectedRadio"
-                [id]="'rejectStudent'"
+                #rejectFormation{{i}}
+                [checked]="!course.course_approved"
+                [id]="'rejectFormation'"
                 type="radio"
                 name="status"
               />
@@ -233,10 +259,85 @@
               class="saveButton"
               type="button"
               (click)="
-                approveStudent(
-                  'approveStudent',
-                  'rejectStudent',
-                  course.course_id
+                approve('courses', approveItem, rejectItem, course.course_id)
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.languages != null">
+      <p class="fieldTitle">Idiomas</p>
+      <div
+        class="subSection"
+        *ngFor="let language of student.languages"
+        class="field"
+        [ngClass]="{
+          approved: language.language_approved === true,
+          unapproved: language.language_approved === false,
+          notRated: language.language_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ language.language }}
+          </p>
+          <p *ngIf="language.fluent" class="fieldContent">Fluente</p>
+          <p *ngIf="!language.fluent && language.read" class="fieldContent">
+            Lê bem
+          </p>
+          <p *ngIf="!language.fluent && language.write" class="fieldContent">
+            Escreve bem
+          </p>
+          <p *ngIf="!language.fluent && language.speak" class="fieldContent">
+            Fala bem
+          </p>
+          <p
+            *ngIf="!language.fluent && language.understand"
+            class="fieldContent"
+          >
+            Entende
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="language.language_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="!language.language_approved"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'languages',
+                  approveItem,
+                  rejectItem,
+                  language.language_id
                 )
               "
             >
@@ -250,3 +351,34 @@
     </div>
   </section>
 </section>
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
