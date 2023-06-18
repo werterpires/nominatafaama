@@ -852,6 +852,7 @@ button:active {
 }
 
 .perfilList {
+  margin-top: 17px;
   display: flex;
   gap: 1.8vw;
   flex-wrap: wrap;
@@ -960,4 +961,10 @@ button:active {
 
 .sidePhotoField {
   width: 55%;
+}
+
+.seeAllButton {
+  position: fixed;
+  top: 110px;
+  left: 28px;
 }

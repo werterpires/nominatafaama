@@ -34,6 +34,20 @@ export class ApprovalsController {
       throw error
     }
   }
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Get('search/:searchString')
+  async searchStudentByName(@Param('searchString') searchString:string): Promise<ICompleteUser[] | null> {
+    try {
+      const users = await this.approvalsService.searchStudentsByName(searchString)
+      return users
+    } catch (error) {
+      console.error(
+        'Erro capturado no ApprovalsController searchStudentByName: ',
+        error
+      )
+      throw error
+    }
+  }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Get(':userId')

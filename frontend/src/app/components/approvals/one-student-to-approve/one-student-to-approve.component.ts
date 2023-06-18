@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { ICompleteStudent } from '../student-to-approve/types'
@@ -16,6 +16,7 @@ import { ViewChildren, QueryList, ElementRef } from '@angular/core'
 })
 export class OneStudentToApproveComponent {
   @Input() permissions!: IPermissions
+  @Output() seeAll: EventEmitter<void> = new EventEmitter<void>()
   student: ICompleteStudent = {
     academicFormations: null,
     children: null,
@@ -226,6 +227,10 @@ export class OneStudentToApproveComponent {
       this.error = true
       this.isLoading = false
     }
+  }
+
+  goBack() {
+    this.seeAll.emit()
   }
 
   closeError() {

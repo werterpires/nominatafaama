@@ -28,6 +28,26 @@ export class StudentsToApproveService {
       )
   }
 
+  findRegistriesByName(searchString: string): Observable<ICompleteUser[]> {
+    const token = localStorage.getItem('access_token')
+    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .get<ICompleteUser[]>(
+        environment.API + `/approvals/search/${searchString}`,
+        {
+          headers: head_obj,
+        },
+      )
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          return throwError(
+            () => new Error('Não foi possível encontrar estudantes.'),
+          )
+        }),
+      )
+  }
+
   findOneRegistry(userId: number): Observable<ICompleteStudent> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)

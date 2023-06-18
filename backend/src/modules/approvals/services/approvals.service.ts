@@ -556,4 +556,32 @@ export class ApprovalsService {
     return approved
 
   }
+
+  async searchStudentsByName(searchString:string):Promise<IUser[] | null>{
+    let users: IUser[] | null = []
+    try {
+      users = await this.usersModel.searchUsersByName(searchString)
+      let photosInfo: {
+        fileStream: fs.ReadStream | null
+        headers: Record<string, string>
+      }[] = []
+      if (users !== null) {
+
+        for (const user of users) {
+          const photoData =
+            await this.studentPhotoService.findStudentPhotoByStudentId(
+              user.user_id,
+              'small-alone-photo',
+            )
+
+          photosInfo.push(photoData)
+        }
+        await this.addPhotos(users, photosInfo)
+      }
+      
+    } catch (error) {
+      
+    }
+    return users
+  }
 }
