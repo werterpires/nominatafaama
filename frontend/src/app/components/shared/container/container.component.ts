@@ -29,6 +29,7 @@ export class ContainerComponent {
     aprovacoes: false,
     vagas: false,
     chamados: false,
+    parametrizacao: false,
   }
 
   @Input() approvalType: string = 'students'

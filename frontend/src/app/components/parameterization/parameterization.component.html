@@ -1,0 +1,69 @@
+<div class="sectionBoxes">
+  <app-marital-status
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-marital-status>
+  <app-unions
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-unions>
+  <app-associations
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-associations>
+  <app-hiring-status
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-hiring-status>
+  <app-academic-degrees
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-academic-degrees>
+  <app-language-types
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-language-types>
+  <app-evang-exp-types
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-evang-exp-types>
+  <app-ecl-exp-types
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-ecl-exp-types>
+  <app-ministry-types
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-ministry-types>
+  <app-endowment-types
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-endowment-types>
+
+  <app-publication-types
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-publication-types>
+</div>

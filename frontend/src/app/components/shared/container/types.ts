@@ -15,6 +15,7 @@ export interface IOptions {
   aprovacoes: boolean
   vagas: boolean
   chamados: boolean
+  parametrizacao: boolean
 }
 
 export interface IPermissions {
