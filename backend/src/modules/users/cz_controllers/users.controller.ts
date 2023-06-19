@@ -6,7 +6,7 @@ import { ERoles } from 'src/shared/auth/types/roles.enum';
 import { CreateUserDto } from '../az_dto/createUserDto';
 import { UsersService } from '../dz_services/users.service';
 import { IAproveUser, IUpdateUser, IUser } from '../bz_types/types';
-import { AuthRequest } from 'src/shared/auth/types/types';
+import { AuthRequest, UserFromJwt } from 'src/shared/auth/types/types';
 import { RestrictRoles } from 'src/shared/roles/fz_decorators/restrictRoles.decorator';
 import { UsersGuard } from '../gz_guards/users.guard';
 import { AproveUserDto } from '../az_dto/aproveUserDto';
@@ -39,9 +39,21 @@ import { UpdateUserDto } from '../az_dto/updateUserDto';
   async getUserById(@Param('id') id: number) {
     try {
       const user = await this.usersService.findUserById(id);
-      if (!user) {
-        throw new NotFoundException(`User with id ${id} not found.`);
-      }
+      
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.DOCENTE, ERoles.ESTUDANTE, ERoles.REPRESENTACAO, ERoles.SECRETARIA)
+  @RestrictRoles(ERoles.ESTUDANTE)
+  @Get('edit')
+  async getOwnUserById(@CurrentUser() currentUser: UserFromJwt) {
+    try {
+      const {user_id} = currentUser
+      const user = await this.usersService.findUserById(user_id);
+      
       return user;
     } catch (error) {
       throw new InternalServerErrorException(error.message);

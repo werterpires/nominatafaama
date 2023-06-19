@@ -1,0 +1,174 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+  </div>
+  <section class="registriesWrapper">
+    <app-update-form (editRegistry)="editRegistry()" *ngIf="registry.user_id">
+      <div class="subSection gap-2">
+        <label class="inputLabel">
+          Nome<input
+            class="smallInput"
+            type="text"
+            name="studentPhoneNumberInput"
+            [(ngModel)]="registry.name"
+          />
+        </label>
+
+        <label class="inputLabel">
+          CPF<input
+            class="smallInput"
+            type="text"
+            name="studentAlternativeEmailInput"
+            [(ngModel)]="registry.cpf"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Email
+          <input
+            class="smallInput"
+            type="text"
+            name="emailInput"
+            [(ngModel)]="registry.principal_email"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Alterar senha?
+          <input
+            class="showInput"
+            type="password"
+            name="passwordInput"
+            [(ngModel)]="newPassword"
+          />
+        </label>
+        <label class="inputLabel">
+          Confirme a nova senha
+          <input
+            class="showInput"
+            type="password"
+            name="passwordInput"
+            [(ngModel)]="passwordConfirmation"
+          />
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label class="inputLabel">
+          Para atualizar algum desses dados, digite sua senha atual
+          <input
+            class="smallInput"
+            type="password"
+            name="atualPasswordInput"
+            [(ngModel)]="currentPassword"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="label checkOption">
+          Estudante
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[0]"
+          />
+        </label>
+        <label class="label checkOption">
+          Professor
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[1]"
+          />
+        </label>
+        <label class="label checkOption">
+          Secretaria
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[2]"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="label checkOption">
+          Direção/Coordenação
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[3]"
+          />
+        </label>
+        <label class="label checkOption">
+          Representante de campo
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[4]"
+          />
+        </label>
+        <label class="label checkOption">
+          Administrador do sistema
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[5]"
+          />
+        </label>
+      </div>
+    </app-update-form>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { UsersServices } from '../shared/shared.service.ts/users.services'
-import { IPermissions, IUser } from '../shared/container/types'
+import { IPermissions } from '../shared/container/types'
 
 @Component({
   selector: 'app-approves',

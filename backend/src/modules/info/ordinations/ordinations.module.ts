@@ -7,6 +7,7 @@ import {StudentsModel} from 'src/modules/students/model/students.model'
 import {SpousesModel} from 'src/modules/spouses/model/spouses.model'
 import {PeopleModel} from 'src/modules/people/ez_model/people.model'
 import {UsersModel} from 'src/modules/users/ez_model/users.model'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
 
 const services = [
   OrdinationsService,
@@ -16,6 +17,7 @@ const services = [
   PeopleModel,
   StudentsModel,
   SpousesModel,
+  UsersService
 ]
 
 @Module({

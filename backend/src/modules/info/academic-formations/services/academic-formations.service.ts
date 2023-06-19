@@ -24,7 +24,13 @@ export class AcademicFormationsService {
   ): Promise<IAcademicFormation> {
     try {
       const person = await this.usersService.findUserById(id)
-      const person_id = person.person_id
+      let person_id: number
+      if(person != null){
+        person_id = person.person_id
+      }else{
+        throw new Error(`Não foi possível encontrar um usuário válido.`)
+      }
+      
 
       const createAcademicFormation: ICreateAcademicFormation = {
         course_area: dto.course_area,
@@ -97,7 +103,13 @@ export class AcademicFormationsService {
     id: number,
   ): Promise<IAcademicFormation[] | null> {
     try {
-      const { person_id } = await this.usersService.findUserById(id)
+      const person = await this.usersService.findUserById(id)
+      let person_id: number
+      if(person != null){
+        person_id = person.person_id
+      }else{
+        throw new Error(`Não foi possível encontrar um usuário válido.`)
+      }
 
       const academicFormation =
         await this.academicFormationsModel.findAcademicFormationsByPersonId(

@@ -19,6 +19,7 @@ import { RelatedMinistriesModel } from '../info/related-ministries/model/related
 import { ChildrenModel } from '../info/children/model/children.model'
 import { StudentPhotosService } from '../info/student-photos/services/student-photos.service'
 import { StudentPhotosModel } from '../info/student-photos/model/student-photos.model'
+import { ApprovalsModel } from './model/approvals.model'
 
 const services = [
   ApprovalsService,
@@ -33,13 +34,14 @@ const services = [
   PastEclExpsModel,
   EvangelisticExperiencesModel,
   EclExperiencesModel,
-  PublicationsModel,
+  PublicationsModel, 
   EndowmentsModel,
   OrdinationsModel,
   RelatedMinistriesModel,
   ChildrenModel,
   StudentPhotosService,
-  StudentPhotosModel,
+  StudentPhotosModel, 
+  ApprovalsModel 
 ]
 
 @Module({

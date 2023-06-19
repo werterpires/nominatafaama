@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common'
 import { ApprovalsService } from '../services/approvals.service'
 import { CreateApprovalDto } from '../dto/create-approval.dto'
@@ -19,7 +20,7 @@ import { ICompleteStudent, ICompleteUser } from '../types/types'
 export class ApprovalsController {
   constructor(private readonly approvalsService: ApprovalsService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Get()
   async findNotApproved(): Promise<ICompleteUser[] | null> {
     try {
@@ -28,13 +29,27 @@ export class ApprovalsController {
     } catch (error) {
       console.error(
         'Erro capturado no ApprovalsController findNotApproved: ',
-        error,
+        error
+      )
+      throw error
+    }
+  }
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Get('search/:searchString')
+  async searchStudentByName(@Param('searchString') searchString:string): Promise<ICompleteUser[] | null> {
+    try {
+      const users = await this.approvalsService.searchStudentsByName(searchString)
+      return users
+    } catch (error) {
+      console.error(
+        'Erro capturado no ApprovalsController searchStudentByName: ',
+        error
       )
       throw error
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Get(':userId')
   async findOneNotApproved(
     @Param('userId') userId,
@@ -53,4 +68,19 @@ export class ApprovalsController {
       throw error
     }
   }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Put(':table')
+  async approveAny(@Param('table') table:string, @Body() data: {id: number, approve:boolean}){
+    try {
+      
+      const approved = await this.approvalsService.approveAny({id:data.id, approve:data.approve, table:table})
+    } catch (error) {
+      console.error(`Erro capturado no ApprovalsController approveAny: ${error}`) 
+      throw error
+    }
+    
+  }
+
+
 }

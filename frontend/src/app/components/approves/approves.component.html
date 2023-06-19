@@ -14,5 +14,7 @@
   <app-one-student-to-approve
     *ngIf="permissions.docente || permissions.administrador"
     [permissions]="permissions"
+    (selectOne)="onStudentSelected()"
+    (seeAll)="onSeeAllSelected()"
   ></app-one-student-to-approve>
 </div>

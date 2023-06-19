@@ -1,4 +1,11 @@
-<section *ngIf="permissions.administrador" class="sectionBox">
+<section
+  class="sectionBox"
+  [ngClass]="{
+    approved: student.student?.student_approved === true,
+    unapproved: student.student?.student_approved === false,
+    notRated: student.student?.student_approved === null
+  }"
+>
   <div class="boxHead">
     <p class="sectionTitle1">Perfil do fomando</p>
   </div>
@@ -60,7 +67,7 @@
         "
         class="subSection"
       >
-        <span class="field">
+        <!-- <span class="field">
           <p class="fieldTitle">Ministério com os quais se identifica</p>
           <div class="flexBetween">
             <span
@@ -69,7 +76,7 @@
               >{{ ministry.ministry_type_name }}</span
             >
           </div>
-        </span>
+        </span> -->
       </div>
       <div class="subSection">
         <span class="field">
@@ -90,16 +97,18 @@
         <label class="labelRadio">
           <input
             class="approvedRadio"
-            [id]="'approveStudent'"
+            [checked]="student.student.student_approved"
+            #approveItem
             type="radio"
             name="status"
-            checked
           />
           Aprovado
         </label>
         <label class="labelRadio">
           <input
             class="rejectedRadio"
+            [checked]="student.student.student_approved == false"
+            #rejectItem
             [id]="'rejectStudent'"
             type="radio"
             name="status"
@@ -111,54 +120,64 @@
           class="saveButton"
           type="button"
           (click)="
-            approveStudent(
-              'approveStudent',
-              'rejectStudent',
+            approve(
+              'students',
+              approveItem,
+              rejectItem,
               student.student.student_id
             )
           "
         >
           SALVAR
         </button>
+        <button
+          #saveButton
+          class="hidden"
+          type="button"
+          (click)="
+            approveAll(
+              'students',
+              approveItem,
+              rejectItem,
+              student.student.student_id
+            )
+          "
+        >
+          HIDDEN
+        </button>
       </form>
     </div>
   </section>
 </section>
-<section *ngIf="permissions.administrador" class="sectionBox">
+<section class="sectionBox">
   <div class="boxHead">
     <p class="sectionTitle1">Conheça {{ student.student?.person_name }}</p>
   </div>
-  <section
-    *ngIf="
-      student.academicFormations != null &&
-      student.academicFormations.length > 0
-    "
-  >
-    <div>
-      <p class="fieldTitle">Formações acadêmicas</p>
-      <div class="subSection">
-        <span
-          *ngFor="let formation of student.academicFormations"
-          class="field"
-        >
-          <p class="fieldContent">
-            {{ formation.begin_date }}
-            <span *ngIf="formation.conclusion_date">
-              a {{ formation.conclusion_date }}
-            </span>
-            <span *ngIf="!formation.conclusion_date"
-              >(ainda não concluído)</span
-            >
-          </p>
-          <p class="fieldContent">
-            {{ formation.degree_name }} em {{ formation.course_area }},
-            {{ formation.institution }}
-          </p>
+  <section>
+    <div *ngIf="student.relatedMinistries != null">
+      <p class="fieldTitle">Ministérios de interesse</p>
+      <div
+        class="subSection"
+        *ngFor="let ministry of student.relatedMinistries; let i = index"
+        class="field"
+        [ngClass]="{
+          approved: ministry.related_ministry_approved === true,
+          unapproved: ministry.related_ministry_approved === false,
+          notRated: ministry.related_ministry_approved === null
+        }"
+      >
+        <div>
+          <span class="fieldContent">
+            {{ ministry.ministry_type_name }}
+          </span>
+
           <form class="formSection">
             <label class="labelRadio">
               <input
                 class="approvedRadio"
-                [id]="'approveStudent'"
+                #approveItem
+                [checked]="ministry.related_ministry_approved"
+                [id]="'approveFormation' + i"
                 type="radio"
                 name="status"
                 checked
@@ -167,8 +186,11 @@
             </label>
             <label class="labelRadio">
               <input
+                #rejectItem
                 class="rejectedRadio"
-                [id]="'rejectStudent'"
+                #rejectFormation{{i}}
+                [checked]="ministry.related_ministry_approved == false"
+                [id]="'rejectFormation' + i"
                 type="radio"
                 name="status"
               />
@@ -179,27 +201,129 @@
               class="saveButton"
               type="button"
               (click)="
-                approveStudent(
-                  'approveStudent',
-                  'rejectStudent',
+                approve(
+                  'related_ministries',
+                  approveItem,
+                  rejectItem,
+                  ministry.related_ministry_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'related_ministries',
+                  approveItem,
+                  rejectItem,
+                  ministry.related_ministry_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.academicFormations != null">
+      <p class="fieldTitle">Formações acadêmicas</p>
+      <div
+        class="subSection"
+        *ngFor="let formation of student.academicFormations; let i = index"
+        class="field"
+        [ngClass]="{
+          approved: formation.academic_formation_approved === true,
+          unapproved: formation.academic_formation_approved === false,
+          notRated: formation.academic_formation_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent">
+            {{ formation.begin_date }} a {{ formation.conclusion_date }}
+          </p>
+          <p class="fieldContent">
+            {{ formation.degree_name }} em {{ formation.course_area }},
+            {{ formation.institution }}
+          </p>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="formation.academic_formation_approved"
+                [id]="'approveFormation' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="formation.academic_formation_approved == false"
+                [id]="'rejectFormation' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'academic_formations',
+                  approveItem,
+                  rejectItem,
                   formation.formation_id
                 )
               "
             >
               SALVAR
             </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'academic_formations',
+                  approveItem,
+                  rejectItem,
+                  formation.formation_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
           </form>
-        </span>
+        </div>
       </div>
 
       <hr class="sectionDivisiion" />
     </div>
-    <div>
+    <div *ngIf="student.courses != null">
       <p class="fieldTitle">Cursos e capacitações</p>
       <div
         class="subSection"
         *ngFor="let course of student.courses"
         class="field"
+        [ngClass]="{
+          approved: course.course_approved === true,
+          unapproved: course.course_approved === false,
+          notRated: course.course_approved === null
+        }"
       >
         <div>
           <p class="fieldContent">
@@ -212,7 +336,9 @@
             <label class="labelRadio">
               <input
                 class="approvedRadio"
-                [id]="'approveStudent'"
+                #approveItem
+                [checked]="course.course_approved"
+                [id]="'approveFormation'"
                 type="radio"
                 name="status"
                 checked
@@ -221,8 +347,11 @@
             </label>
             <label class="labelRadio">
               <input
+                #rejectItem
                 class="rejectedRadio"
-                [id]="'rejectStudent'"
+                #rejectFormation{{i}}
+                [checked]="course.course_approved == false"
+                [id]="'rejectFormation'"
                 type="radio"
                 name="status"
               />
@@ -233,14 +362,1789 @@
               class="saveButton"
               type="button"
               (click)="
-                approveStudent(
-                  'approveStudent',
-                  'rejectStudent',
-                  course.course_id
+                approve('courses', approveItem, rejectItem, course.course_id)
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll('courses', approveItem, rejectItem, course.course_id)
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.languages != null">
+      <p class="fieldTitle">Idiomas</p>
+      <div
+        class="subSection"
+        *ngFor="let language of student.languages"
+        class="field"
+        [ngClass]="{
+          approved: language.language_approved === true,
+          unapproved: language.language_approved === false,
+          notRated: language.language_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ language.language }}
+          </p>
+          <p *ngIf="language.fluent" class="fieldContent">Fluente</p>
+          <p *ngIf="!language.fluent && language.read" class="fieldContent">
+            Lê bem
+          </p>
+          <p *ngIf="!language.fluent && language.write" class="fieldContent">
+            Escreve bem
+          </p>
+          <p *ngIf="!language.fluent && language.speak" class="fieldContent">
+            Fala bem
+          </p>
+          <p
+            *ngIf="!language.fluent && language.understand"
+            class="fieldContent"
+          >
+            Entende
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="language.language_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="language.language_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'languages',
+                  approveItem,
+                  rejectItem,
+                  language.language_id
                 )
               "
             >
               SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'languages',
+                  approveItem,
+                  rejectItem,
+                  language.language_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.professionalExperiences != null">
+      <p class="fieldTitle">Experiências profissionais</p>
+      <div
+        class="subSection"
+        *ngFor="let experience of student.professionalExperiences"
+        class="field"
+        [ngClass]="{
+          approved: experience.experience_approved === true,
+          unapproved: experience.experience_approved === false,
+          notRated: experience.experience_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ experience.job_begin_date
+            }}<span *ngIf="experience.job_end_date">
+              - {{ experience.job_end_date }}</span
+            >
+          </p>
+          <p class="fieldContent">
+            {{ experience.job }} - {{ experience.job_institution }}
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="experience.experience_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="experience.experience_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'professional_experiences',
+                  approveItem,
+                  rejectItem,
+                  experience.experience_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'professional_experiences',
+                  approveItem,
+                  rejectItem,
+                  experience.experience_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.pastEclExps != null">
+      <p class="fieldTitle">
+        Experiências eclesiásticas e evangelísticas anteriores ao SALT
+      </p>
+      <div
+        class="subSection"
+        *ngFor="let experience of student.pastEclExps"
+        class="field"
+        [ngClass]="{
+          approved: experience.past_ecl_approved === true,
+          unapproved: experience.past_ecl_approved === false,
+          notRated: experience.past_ecl_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ experience.past_exp_begin_date }} -
+            {{ experience.past_exp_end_date }}
+          </p>
+          <p class="fieldContent">
+            {{ experience.function }}
+          </p>
+          <p class="fieldContent">
+            {{ experience.place }}
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="experience.past_ecl_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="experience.past_ecl_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'past_ecl_exps',
+                  approveItem,
+                  rejectItem,
+                  experience.past_ecl_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'past_ecl_exps',
+                  approveItem,
+                  rejectItem,
+                  experience.past_ecl_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.eclExperiences != null">
+      <p class="fieldTitle">
+        Experiências eclesiásticas Desenvolvidas Durante a Formação Ministerial
+        no SALT
+      </p>
+      <div
+        class="subSection"
+        *ngFor="let experience of student.eclExperiences"
+        class="field"
+        [ngClass]="{
+          approved: experience.ecl_exp_approved === true,
+          unapproved: experience.ecl_exp_approved === false,
+          notRated: experience.ecl_exp_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent">
+            {{ experience.ecl_exp_type_name }}
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="experience.ecl_exp_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="experience.ecl_exp_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'ecl_experiences',
+                  approveItem,
+                  rejectItem,
+                  experience.ecl_exp_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'ecl_experiences',
+                  approveItem,
+                  rejectItem,
+                  experience.ecl_exp_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.endowments != null">
+      <p class="fieldTitle">Investiduras</p>
+      <div
+        class="subSection"
+        *ngFor="let endowment of student.endowments"
+        class="field"
+        [ngClass]="{
+          approved: endowment.endowment_approved === true,
+          unapproved: endowment.endowment_approved === false,
+          notRated: endowment.endowment_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent">
+            {{ endowment.endowment_type_name }}
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="endowment.endowment_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="endowment.endowment_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'endowments',
+                  approveItem,
+                  rejectItem,
+                  endowment.endowment_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'endowments',
+                  approveItem,
+                  rejectItem,
+                  endowment.endowment_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.ordinations != null">
+      <p class="fieldTitle">Ordenações</p>
+      <div
+        class="subSection"
+        *ngFor="let ordination of student.ordinations"
+        class="field"
+        [ngClass]="{
+          approved: ordination.ordination_approved === true,
+          unapproved: ordination.ordination_approved === false,
+          notRated: ordination.ordination_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ ordination.year }}
+          </p>
+          <p class="fieldContent">{{ ordination.ordination_name }}</p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="ordination.ordination_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="ordination.ordination_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'ordinations',
+                  approveItem,
+                  rejectItem,
+                  ordination.ordination_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'ordinations',
+                  approveItem,
+                  rejectItem,
+                  ordination.ordination_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.evangelisticExperiences != null">
+      <p class="weightFieldTitle">
+        Experiências Evangelísticas Durante a Formação Ministerial no SALT
+      </p>
+      <div *ngFor="let experienceType of evvangExpTypes">
+        <p class="fieldTitle">{{ experienceType }}</p>
+        <div *ngFor="let experience of student.evangelisticExperiences">
+          <div *ngIf="experience.evang_exp_type_name == experienceType">
+            <div
+              class="subSection"
+              class="field"
+              [ngClass]="{
+                approved: experience.evang_exp_approved === true,
+                unapproved: experience.evang_exp_approved === false,
+                notRated: experience.evang_exp_approved === null
+              }"
+            >
+              <div>
+                <p class="fieldContent wWeight">
+                  {{ experience.exp_begin_date }} -
+                  {{ experience.exp_end_date }}
+                </p>
+                <p class="fieldContent">
+                  {{ experience.project }}
+                </p>
+                <p class="fieldContent">
+                  {{ experience.place }}
+                </p>
+
+                <form class="formSection">
+                  <label class="labelRadio">
+                    <input
+                      class="approvedRadio"
+                      #approveItem
+                      [checked]="experience.evang_exp_approved"
+                      [id]="'approveFormation'"
+                      type="radio"
+                      name="status"
+                      checked
+                    />
+                    Aprovado
+                  </label>
+                  <label class="labelRadio">
+                    <input
+                      #rejectItem
+                      class="rejectedRadio"
+                      #rejectFormation{{i}}
+                      [checked]="experience.evang_exp_approved == false"
+                      [id]="'rejectFormation'"
+                      type="radio"
+                      name="status"
+                    />
+                    Desaprovado
+                  </label>
+
+                  <button
+                    class="saveButton"
+                    type="button"
+                    (click)="
+                      approve(
+                        'evangelistic_experiences',
+                        approveItem,
+                        rejectItem,
+                        experience.evang_exp_id
+                      )
+                    "
+                  >
+                    SALVAR
+                  </button>
+                  <button
+                    #saveButton
+                    class="hidden"
+                    type="button"
+                    (click)="
+                      approveAll(
+                        'evangelistic_experiences',
+                        approveItem,
+                        rejectItem,
+                        experience.evang_exp_id
+                      )
+                    "
+                  >
+                    HIDDEN
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="sectionDivisiion" />
+      </div>
+    </div>
+    <div *ngIf="student.publications != null">
+      <p class="weightFieldTitle">Publicações acima</p>
+      <div *ngFor="let publicationType of publicationTypes">
+        <p class="fieldTitle">{{ publicationType }} abaixo</p>
+        <div *ngFor="let publication of student.publications">
+          <div *ngIf="publication.publication_type == publicationType">
+            <div
+              class="subSection"
+              class="field"
+              [ngClass]="{
+                approved: publication.publication_approved === true,
+                unapproved: publication.publication_approved === false,
+                notRated: publication.publication_approved === null
+              }"
+            >
+              <div>
+                <p class="fieldContent wWeight">
+                  {{ publication.reference }} Disponível em:
+                  <a href="{{ publication.link }}">{{ publication.link }}</a>
+                </p>
+
+                <form class="formSection">
+                  <label class="labelRadio">
+                    <input
+                      class="approvedRadio"
+                      #approveItem
+                      [checked]="publication.publication_approved"
+                      [id]="'approveFormation'"
+                      type="radio"
+                      name="status"
+                      checked
+                    />
+                    Aprovado
+                  </label>
+                  <label class="labelRadio">
+                    <input
+                      #rejectItem
+                      class="rejectedRadio"
+                      #rejectFormation{{i}}
+                      [checked]="publication.publication_approved == false"
+                      [id]="'rejectFormation'"
+                      type="radio"
+                      name="status"
+                    />
+                    Desaprovado
+                  </label>
+
+                  <button
+                    class="saveButton"
+                    type="button"
+                    (click)="
+                      approve(
+                        'publications',
+                        approveItem,
+                        rejectItem,
+                        publication.publication_id
+                      )
+                    "
+                  >
+                    SALVAR
+                  </button>
+                  <button
+                    #saveButton
+                    class="hidden"
+                    type="button"
+                    (click)="
+                      approveAll(
+                        'publications',
+                        approveItem,
+                        rejectItem,
+                        publication.publication_id
+                      )
+                    "
+                  >
+                    HIDDEN
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="sectionDivisiion" />
+      </div>
+    </div>
+  </section>
+</section>
+<section
+  *ngIf="
+    student.student?.marital_status_type_name == 'Casado' ||
+    student.student?.marital_status_type_name == 'Noivo'
+  "
+  class="sectionBox"
+>
+  <div class="boxHead">
+    <p class="sectionTitle1">Informações do cônjuge</p>
+  </div>
+  <section>
+    <div
+      *ngIf="student.spouse != null"
+      [ngClass]="{
+        approved: student.spouse.spouse_approved === true,
+        unapproved: student.spouse.spouse_approved === false,
+        notRated: student.spouse.spouse_approved === null
+      }"
+    >
+      <div class="flexSpaceBetween">
+        <div class="sidePhotoField">
+          <p class="weightFieldTitle">{{ student.spouse.person_name }}</p>
+          <hr class="sectionDivisiion" />
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Campo de origem</p>
+              <p class="fieldContent">
+                {{ student.spouse.union_acronym }}/{{
+                  student.spouse.association_acronym
+                }}
+              </p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Idade</p>
+              <p class="fieldContent">
+                {{ student.spouse.birth_date }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Data de nascimento</p>
+              <p class="fieldContent">
+                {{ student.spouse.birth_date }}
+              </p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Naturalidade</p>
+              <p class="fieldContent">
+                {{ student.spouse.birth_city }}-{{ student.spouse.birth_state }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Batismo</p>
+              <p class="fieldContent">{{ student.spouse.baptism_date }}</p>
+              <p class="fieldContent">{{ student.spouse.baptism_place }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Tempo de batismo</p>
+              <p class="fieldContent">{{ student.spouse.baptism_date }}</p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Telefone</p>
+              <p class="fieldContent">{{ student.spouse.phone_number }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">E-mail</p>
+              <p class="fieldContent">{{ student.spouse.alternative_email }}</p>
+            </span>
+          </div>
+          <div
+            *ngIf="
+              student.relatedMinistries != undefined &&
+              student.relatedMinistries.length > 0
+            "
+            class="subSection"
+          >
+            <!-- <span class="field">
+            <p class="fieldTitle">Ministério com os quais se identifica</p>
+            <div class="flexBetween">
+              <span
+                *ngFor="let ministry of student.relatedMinistries"
+                class="fieldContent"
+                >{{ ministry.ministry_type_name }}</span
+              >
+            </div>
+          </span> -->
+          </div>
+        </div>
+        <div class="subSectionSpousePhoto">
+          <div class="spousePhoto">
+            <div
+              class="imageContainer"
+              [ngStyle]="{ 'background-image': 'url(' + spousePhoto + ')' }"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <form class="formSection">
+        <label class="labelRadio">
+          <input
+            class="approvedRadio"
+            [checked]="student.spouse.spouse_approved"
+            #approveItem
+            type="radio"
+            name="status"
+          />
+          Aprovado
+        </label>
+        <label class="labelRadio">
+          <input
+            class="rejectedRadio"
+            [checked]="student.spouse.spouse_approved == false"
+            #rejectItem
+            [id]="'rejectStudent'"
+            type="radio"
+            name="status"
+          />
+          Desaprovado
+        </label>
+
+        <button
+          class="saveButton"
+          type="button"
+          (click)="
+            approve(
+              'spouses',
+              approveItem,
+              rejectItem,
+              student.spouse.spouse_id
+            )
+          "
+        >
+          SALVAR
+        </button>
+        <button
+          #saveButton
+          class="hidden"
+          type="button"
+          (click)="
+            approveAll(
+              'spouses',
+              approveItem,
+              rejectItem,
+              student.spouse.spouse_id
+            )
+          "
+        >
+          HIDDEN
+        </button>
+      </form>
+    </div>
+    <div *ngIf="student.spRelatedMinistries != null">
+      <p class="fieldTitle">Ministérios de interesse</p>
+      <div
+        class="subSection"
+        *ngFor="let ministry of student.spRelatedMinistries; let i = index"
+        class="field"
+        [ngClass]="{
+          approved: ministry.related_ministry_approved === true,
+          unapproved: ministry.related_ministry_approved === false,
+          notRated: ministry.related_ministry_approved === null
+        }"
+      >
+        <div>
+          <span class="fieldContent">
+            {{ ministry.ministry_type_name }}
+          </span>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="ministry.related_ministry_approved"
+                [id]="'approveFormation' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="ministry.related_ministry_approved == false"
+                [id]="'rejectFormation' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'related_ministries',
+                  approveItem,
+                  rejectItem,
+                  ministry.related_ministry_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'related_ministries',
+                  approveItem,
+                  rejectItem,
+                  ministry.related_ministry_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.spAcademicFormations != null">
+      <p class="fieldTitle">Formações acadêmicas</p>
+      <div
+        class="subSection"
+        *ngFor="let formation of student.spAcademicFormations; let i = index"
+        class="field"
+        [ngClass]="{
+          approved: formation.academic_formation_approved === true,
+          unapproved: formation.academic_formation_approved === false,
+          notRated: formation.academic_formation_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent">
+            {{ formation.begin_date }} a {{ formation.conclusion_date }}
+          </p>
+          <p class="fieldContent">
+            {{ formation.degree_name }} em {{ formation.course_area }},
+            {{ formation.institution }}
+          </p>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="formation.academic_formation_approved"
+                [id]="'approveFormation' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="formation.academic_formation_approved == false"
+                [id]="'rejectFormation' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'academic_formations',
+                  approveItem,
+                  rejectItem,
+                  formation.formation_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'academic_formations',
+                  approveItem,
+                  rejectItem,
+                  formation.formation_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.spCourses != null">
+      <p class="fieldTitle">Cursos e capacitações</p>
+      <div
+        class="subSection"
+        *ngFor="let course of student.spCourses"
+        class="field"
+        [ngClass]="{
+          approved: course.course_approved === true,
+          unapproved: course.course_approved === false,
+          notRated: course.course_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent">
+            {{ course.institution }} ({{ course.conclusion_date }})
+          </p>
+          <p class="fieldContent">
+            {{ course.course_area }}
+          </p>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="course.course_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="course.course_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve('courses', approveItem, rejectItem, course.course_id)
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll('courses', approveItem, rejectItem, course.course_id)
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.spLanguages != null">
+      <p class="fieldTitle">Idiomas</p>
+      <div
+        class="subSection"
+        *ngFor="let language of student.spLanguages"
+        class="field"
+        [ngClass]="{
+          approved: language.language_approved === true,
+          unapproved: language.language_approved === false,
+          notRated: language.language_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ language.language }}
+          </p>
+          <p *ngIf="language.fluent" class="fieldContent">Fluente</p>
+          <p *ngIf="!language.fluent && language.read" class="fieldContent">
+            Lê bem
+          </p>
+          <p *ngIf="!language.fluent && language.write" class="fieldContent">
+            Escreve bem
+          </p>
+          <p *ngIf="!language.fluent && language.speak" class="fieldContent">
+            Fala bem
+          </p>
+          <p
+            *ngIf="!language.fluent && language.understand"
+            class="fieldContent"
+          >
+            Entende
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="language.language_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="language.language_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'languages',
+                  approveItem,
+                  rejectItem,
+                  language.language_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'languages',
+                  approveItem,
+                  rejectItem,
+                  language.language_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.spProfessionalExperiences != null">
+      <p class="fieldTitle">Experiências profissionais</p>
+      <div
+        class="subSection"
+        *ngFor="let experience of student.spProfessionalExperiences"
+        class="field"
+        [ngClass]="{
+          approved: experience.experience_approved === true,
+          unapproved: experience.experience_approved === false,
+          notRated: experience.experience_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ experience.job_begin_date
+            }}<span *ngIf="experience.job_end_date">
+              - {{ experience.job_end_date }}</span
+            >
+          </p>
+          <p class="fieldContent">
+            {{ experience.job }} - {{ experience.job_institution }}
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="experience.experience_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="experience.experience_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'professional_experiences',
+                  approveItem,
+                  rejectItem,
+                  experience.experience_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'professional_experiences',
+                  approveItem,
+                  rejectItem,
+                  experience.experience_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.spPastEclExps != null">
+      <p class="fieldTitle">
+        Experiências eclesiásticas e evangelísticas anteriores ao SALT
+      </p>
+      <div
+        class="subSection"
+        *ngFor="let experience of student.spPastEclExps"
+        class="field"
+        [ngClass]="{
+          approved: experience.past_ecl_approved === true,
+          unapproved: experience.past_ecl_approved === false,
+          notRated: experience.past_ecl_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ experience.past_exp_begin_date }} -
+            {{ experience.past_exp_end_date }}
+          </p>
+          <p class="fieldContent">
+            {{ experience.function }}
+          </p>
+          <p class="fieldContent">
+            {{ experience.place }}
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="experience.past_ecl_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="experience.past_ecl_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'past_ecl_exps',
+                  approveItem,
+                  rejectItem,
+                  experience.past_ecl_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'past_ecl_exps',
+                  approveItem,
+                  rejectItem,
+                  experience.past_ecl_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.spEndowments != null">
+      <p class="fieldTitle">Investiduras</p>
+      <div
+        class="subSection"
+        *ngFor="let endowment of student.spEndowments"
+        class="field"
+        [ngClass]="{
+          approved: endowment.endowment_approved === true,
+          unapproved: endowment.endowment_approved === false,
+          notRated: endowment.endowment_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent">
+            {{ endowment.endowment_type_name }}
+          </p>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="endowment.endowment_approved"
+                [id]="'approveFormation'"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="endowment.endowment_approved == false"
+                [id]="'rejectFormation'"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'endowments',
+                  approveItem,
+                  rejectItem,
+                  endowment.endowment_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'endowments',
+                  approveItem,
+                  rejectItem,
+                  endowment.endowment_id
+                )
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div *ngIf="student.spEvangelisticExperiences != null">
+      <p class="weightFieldTitle">
+        Experiências Evangelísticas Durante a Formação Ministerial no SALT
+      </p>
+      <div *ngFor="let experienceType of spEvvangExpTypes">
+        <p class="fieldTitle">{{ experienceType }}</p>
+        <div *ngFor="let experience of student.spEvangelisticExperiences">
+          <div *ngIf="experience.evang_exp_type_name == experienceType">
+            <div
+              class="subSection"
+              class="field"
+              [ngClass]="{
+                approved: experience.evang_exp_approved === true,
+                unapproved: experience.evang_exp_approved === false,
+                notRated: experience.evang_exp_approved === null
+              }"
+            >
+              <div>
+                <p class="fieldContent wWeight">
+                  {{ experience.exp_begin_date }} -
+                  {{ experience.exp_end_date }}
+                </p>
+                <p class="fieldContent">
+                  {{ experience.project }}
+                </p>
+                <p class="fieldContent">
+                  {{ experience.place }}
+                </p>
+
+                <form class="formSection">
+                  <label class="labelRadio">
+                    <input
+                      class="approvedRadio"
+                      #approveItem
+                      [checked]="experience.evang_exp_approved"
+                      [id]="'approveFormation'"
+                      type="radio"
+                      name="status"
+                      checked
+                    />
+                    Aprovado
+                  </label>
+                  <label class="labelRadio">
+                    <input
+                      #rejectItem
+                      class="rejectedRadio"
+                      #rejectFormation{{i}}
+                      [checked]="experience.evang_exp_approved == false"
+                      [id]="'rejectFormation'"
+                      type="radio"
+                      name="status"
+                    />
+                    Desaprovado
+                  </label>
+
+                  <button
+                    class="saveButton"
+                    type="button"
+                    (click)="
+                      approve(
+                        'evangelistic_experiences',
+                        approveItem,
+                        rejectItem,
+                        experience.evang_exp_id
+                      )
+                    "
+                  >
+                    SALVAR
+                  </button>
+                  <button
+                    #saveButton
+                    class="hidden"
+                    type="button"
+                    (click)="
+                      approveAll(
+                        'evangelistic_experiences',
+                        approveItem,
+                        rejectItem,
+                        experience.evang_exp_id
+                      )
+                    "
+                  >
+                    HIDDEN
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="sectionDivisiion" />
+      </div>
+    </div>
+    <div *ngIf="student.spPublications != null">
+      <p class="weightFieldTitle">Publicações acima</p>
+      <div *ngFor="let publicationType of spPublicationTypes">
+        <p class="fieldTitle">{{ publicationType }} abaixo</p>
+        <div *ngFor="let publication of student.spPublications">
+          <div *ngIf="publication.publication_type == publicationType">
+            <div
+              class="subSection"
+              class="field"
+              [ngClass]="{
+                approved: publication.publication_approved === true,
+                unapproved: publication.publication_approved === false,
+                notRated: publication.publication_approved === null
+              }"
+            >
+              <div>
+                <p class="fieldContent wWeight">
+                  {{ publication.reference }} Disponível em:
+                  <a href="{{ publication.link }}">{{ publication.link }}</a>
+                </p>
+
+                <form class="formSection">
+                  <label class="labelRadio">
+                    <input
+                      class="approvedRadio"
+                      #approveItem
+                      [checked]="publication.publication_approved"
+                      [id]="'approveFormation'"
+                      type="radio"
+                      name="status"
+                      checked
+                    />
+                    Aprovado
+                  </label>
+                  <label class="labelRadio">
+                    <input
+                      #rejectItem
+                      class="rejectedRadio"
+                      #rejectFormation{{i}}
+                      [checked]="publication.publication_approved == false"
+                      [id]="'rejectFormation'"
+                      type="radio"
+                      name="status"
+                    />
+                    Desaprovado
+                  </label>
+
+                  <button
+                    class="saveButton"
+                    type="button"
+                    (click)="
+                      approve(
+                        'publications',
+                        approveItem,
+                        rejectItem,
+                        publication.publication_id
+                      )
+                    "
+                  >
+                    SALVAR
+                  </button>
+                  <button
+                    #saveButton
+                    class="hidden"
+                    type="button"
+                    (click)="
+                      approveAll(
+                        'publications',
+                        approveItem,
+                        rejectItem,
+                        publication.publication_id
+                      )
+                    "
+                  >
+                    HIDDEN
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="sectionDivisiion" />
+      </div>
+    </div>
+  </section>
+</section>
+<section *ngIf="student.children != null" class="sectionBox">
+  <div class="boxHead">
+    <p class="sectionTitle1">Informação dos filhos</p>
+  </div>
+  <section>
+    <div>
+      <!-- <p class="fieldTitle">Formações acadêmicas</p> -->
+      <div
+        class="subSection"
+        *ngFor="let child of student.children; let i = index"
+        class="field"
+        [ngClass]="{
+          approved: child.child_approved === true,
+          unapproved: child.child_approved === false,
+          notRated: child.child_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            {{ child.name }}
+          </p>
+          <p class="fieldContent">
+            {{ child.child_birth_date }} anos,
+            {{ child.marital_status_type_name }},
+            {{ child.study_grade }}
+          </p>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="child.child_approved"
+                [id]="'approveFormation' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="child.child_approved == false"
+                [id]="'rejectFormation' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve('children', approveItem, rejectItem, child.child_id)
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll('children', approveItem, rejectItem, child.child_id)
+              "
+            >
+              HIDDEN
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <hr class="sectionDivisiion" />
+    </div>
+    <div class="subSection">
+      <div class="familyPhoto">
+        <div
+          class="imageContainer"
+          [ngStyle]="{ 'background-image': 'url(' + familyPhoto + ')' }"
+        ></div>
+      </div>
+    </div>
+  </section>
+</section>
+<section
+  *ngIf="
+    student.student &&
+    (student.student.marital_status_type_name == 'Divorciado' ||
+      student.student.marital_status_type_name == 'Viúvo') &&
+    student.previousMarriage != null
+  "
+  class="sectionBox"
+>
+  <div class="boxHead">
+    <p class="sectionTitle1">Informação do último casamento</p>
+  </div>
+  <section>
+    <div>
+      <!-- <p class="fieldTitle">Formações acadêmicas</p> -->
+      <div
+        class="subSection"
+        *ngFor="let marriage of student.previousMarriage; let i = index"
+        class="field"
+        [ngClass]="{
+          approved: marriage.previous_marriage_approved === true,
+          unapproved: marriage.previous_marriage_approved === false,
+          notRated: marriage.previous_marriage_approved === null
+        }"
+      >
+        <div>
+          <p class="fieldContent wWeight">
+            Foi casado até: {{ marriage.marriage_end_date }}
+          </p>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                #approveItem
+                [checked]="marriage.previous_marriage_approved"
+                [id]="'approveFormation' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                #rejectItem
+                class="rejectedRadio"
+                #rejectFormation{{i}}
+                [checked]="marriage.previous_marriage_approved == false"
+                [id]="'rejectFormation' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approve(
+                  'previous_marriages',
+                  approveItem,
+                  rejectItem,
+                  marriage.previous_marriage_id
+                )
+              "
+            >
+              SALVAR
+            </button>
+            <button
+              #saveButton
+              class="hidden"
+              type="button"
+              (click)="
+                approveAll(
+                  'previous_marriages',
+                  approveItem,
+                  rejectItem,
+                  marriage.previous_marriage_id
+                )
+              "
+            >
+              HIDDEN
             </button>
           </form>
         </div>
@@ -250,3 +2154,38 @@
     </div>
   </section>
 </section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
+
+<button (click)="saveAll()">SALVAR TUDO</button>
+<button class="seeAllButton" (click)="goBack()">VER TODOS</button>

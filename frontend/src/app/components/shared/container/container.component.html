@@ -62,6 +62,18 @@
             <a>Chamados</a>
           </li>
           <li
+            *ngIf="
+              (permissions.administrador ||
+                permissions.secretaria ||
+                permissions.direcao) &&
+              permissions.isApproved
+            "
+            class="menuOption"
+            (click)="choseOption('parametrizacao')"
+          >
+            <a>Parametrização</a>
+          </li>
+          <li
             class="menuOption relative"
             (click)="$event.stopPropagation(); loginMenu = !loginMenu"
           >
@@ -110,4 +122,14 @@
     "
     [permissions]="permissions"
   ></app-records>
+  <app-parameterization
+    *ngIf="
+      (permissions.administrador ||
+        permissions.direcao ||
+        permissions.secretaria) &&
+      permissions.isApproved &&
+      options.parametrizacao
+    "
+    [permissions]="permissions"
+  ></app-parameterization>
 </div>

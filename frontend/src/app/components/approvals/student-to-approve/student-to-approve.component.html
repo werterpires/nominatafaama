@@ -2,6 +2,22 @@
   <div class="boxHead">
     <p class="sectionTitle1">{{ title }}</p>
   </div>
+  <form class="formSearch" action="">
+    <label class="inputLabel" for="">
+      Busque um estudante espefífico pelo nome:
+      <input
+        type="search"
+        class="searchInput"
+        name="searchStudent"
+        id=""
+        placeholder="Simão Ped.."
+        [(ngModel)]="searchString"
+      />
+    </label>
+
+    <button type="button" (click)="searchByNam()">Buscar</button>
+    <button type="button" (click)="ngOnInit()">Cancelar</button>
+  </form>
   <section class="perfilList">
     <div *ngFor="let registry of allRegistries; index as i">
       <div (click)="getOneStudent(registry.user_id)">

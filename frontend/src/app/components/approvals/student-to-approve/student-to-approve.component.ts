@@ -21,6 +21,9 @@ export class StudentToApproveComponent {
 
   allRegistries: ICompleteUser[] = []
   title = 'Aprovações'
+
+  searchString: string = ''
+
   showForm = false
   isLoading = false
   done = false
@@ -72,6 +75,47 @@ export class StudentToApproveComponent {
     })
   }
 
+  searchByNam() {
+    this.isLoading = true
+    console.log(this.searchString.length)
+    if (this.searchString.length < 1) {
+      this.errorMessage = 'Escreva algo para ser pesquisado'
+      this.error = true
+      this.isLoading = false
+      return
+    }
+    const searchString = this.searchString.toLowerCase().replace(/\s+/g, '_')
+    this.service.findRegistriesByName(searchString).subscribe({
+      next: async (res) => {
+        this.allRegistries = res
+
+        this.allRegistries.forEach((registry) => {
+          const blob = new Blob([new Uint8Array(registry.photo?.file.data)], {
+            type: 'image/jpeg',
+          })
+          if (blob instanceof Blob) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+              registry.imageUrl = e.target.result
+              this.isLoading = false
+            }
+            reader.readAsDataURL(blob)
+          } else {
+            this.showForm = true
+            this.isLoading = false
+          }
+        })
+
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
+
   getPhotoUrl(fileData: Uint8Array): Promise<string> {
     return new Promise((resolve, reject) => {
       const blob = new Blob([fileData], { type: 'image/jpeg' })
@@ -92,7 +136,6 @@ export class StudentToApproveComponent {
     this.isLoading = true
     this.service.findOneRegistry(userId).subscribe({
       next: async (res) => {
-        console.log(res)
         this.dataService.selectedStudent = res
         this.selectOne.emit()
         this.isLoading = false
