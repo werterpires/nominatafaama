@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core'
-import { IPermissions, IRole, IUser } from '../../shared/container/types'
-import { UsersServices } from '../../shared/shared.service.ts/users.services'
+import { IPermissions, IRole } from '../../shared/container/types'
+import { UsersServices } from '../../records/users/users.services'
 import { UserApprovesService } from './users-approves.service'
+import { IUser } from '../../records/users/types'
 
 @Component({
   selector: 'app-users-approves',

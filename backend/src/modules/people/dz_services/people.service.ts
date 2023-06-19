@@ -6,12 +6,14 @@ import { IPerson } from '../bz_types/types'
 import { UsersModel } from 'src/modules/users/ez_model/users.model'
 import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
 import { ISpouse } from 'src/modules/spouses/types/types'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
 
 @Injectable()
 export class PeopleServices {
   constructor(
     private readonly peopleModel: PeopleModel,
     private usersModel: UsersModel,
+    private usersService: UsersService,
     private spouseModel: SpousesModel,
   ) {}
 
@@ -47,18 +49,23 @@ export class PeopleServices {
     user_id: number,
     personType: string,
   ): Promise<number | null> {
-    let personId!: number | null
+    let person_id!: number | null
     try {
       if (personType === 'student') {
-        personId = (await this.usersModel.findUserById(user_id)).person_id
+        const user = await this.usersService.findUserById(user_id)
+        if(user != null){
+          person_id = user.person_id
+        }else{
+          throw new Error(`Não foi possível encontrar um usuário válido.`)
+        }
       } else if (personType === 'spouse') {
         let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
           user_id,
         )
         if (spouse == null) {
-          personId = null
+          person_id = null
         }else{
-          personId = spouse.person_id
+          person_id = spouse.person_id
         }
         
       }
@@ -67,6 +74,6 @@ export class PeopleServices {
       throw error
     }
 
-    return personId
+    return person_id
   }
 }

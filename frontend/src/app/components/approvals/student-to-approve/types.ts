@@ -1,5 +1,4 @@
 import { SafeResourceUrl } from '@angular/platform-browser'
-import { IUser } from '../../shared/container/types'
 import { IChild } from '../../records/children/types'
 import { IEclExperience } from '../../records/ecl-experiences/types'
 import { IEndowment } from '../../records/endowments/types'
@@ -15,6 +14,7 @@ import { ISpouse } from '../../records/spouses/types'
 import { ICourse } from '../../records/st-courses/types'
 import { IStudent } from '../../records/students/types'
 import { IStAcademicFormation } from '../../records/student-academic-formations/types'
+import { IUser } from '../../records/users/types'
 
 export interface ICompleteUser extends IUser {
   photo: { file: any; headers: Record<string, string> } | null

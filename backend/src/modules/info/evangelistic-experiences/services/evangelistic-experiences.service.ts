@@ -27,7 +27,13 @@ export class EvangelisticExperiencesService {
     try {
       let personId!: number
       if (personType === 'student') {
-        personId = (await this.usersService.findUserById(user_id)).person_id
+        const user = await this.usersService.findUserById(user_id)
+        let person_id: number
+        if(user != null){
+          person_id = user.person_id
+        }else{
+          throw new Error(`Não foi possível encontrar um usuário válido.`)
+        }
       } else if (personType === 'spouse') {
         let spouse: ISpouse | null = await this.spousesModel.findSpouseByUserId(
           user_id,
@@ -85,7 +91,13 @@ export class EvangelisticExperiencesService {
     try {
       let personId!: number | null
       if (personType === 'student') {
-        personId = (await this.usersService.findUserById(user_id)).person_id
+        const user = await this.usersService.findUserById(user_id)
+        let person_id: number
+        if(user != null){
+          person_id = user.person_id
+        }else{
+          throw new Error(`Não foi possível encontrar um usuário válido.`)
+        }
       } else if (personType === 'spouse') {
         let spouse: ISpouse | null = await this.spousesModel.findSpouseByUserId(
           user_id,
@@ -134,8 +146,13 @@ export class EvangelisticExperiencesService {
     try {
       const begin_date = new Date(dto.exp_begin_date)
       const end_date = new Date(dto.exp_end_date)
-      const person = await this.usersService.findUserById(user_id)
-      const person_id = person.person_id
+      const user = await this.usersService.findUserById(user_id)
+      let person_id: number
+      if(user != null){
+        person_id = user.person_id
+      }else{
+        throw new Error(`Não foi possível encontrar um usuário válido.`)
+      }
 
       const updatedEvangelisticExperience: IUpdateEvangelisticExperience = {
         evang_exp_id: dto.evang_exp_id,

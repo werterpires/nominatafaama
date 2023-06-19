@@ -33,10 +33,10 @@ export class UsersService {
     return user;
   }
 
-  async findUserById(id: number): Promise<IUser> {
+  async findUserById(id: number): Promise<IUser | null> {
     try {
       const user = await this.usersModel.findUserById(id);
-      return user as IUser;
+      return user;
     } catch (error) {
       throw new Error(`Não foi possível encontrar o usuário com id ${id}: ${error.message}`);
     }

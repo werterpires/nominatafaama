@@ -20,7 +20,9 @@ export class StudentsService {
   ): Promise<IStudent> {
     try {
       const user = await this.usersService.findUserById(userId)
-
+      if(user == null){
+        throw new Error('Nenhum Usuário válido foi encontrado.')
+      }
       const name = user.name
       const person_id = user.person_id
 

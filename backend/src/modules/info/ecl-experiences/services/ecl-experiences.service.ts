@@ -25,9 +25,15 @@ export class EclExperiencesService {
     id: number,
   ): Promise<IEclExperience> {
     try {
-      const person = await this.usersService.findUserById(id)
+      
 
-      const person_id = person.person_id
+      const user = await this.usersService.findUserById(id)
+        let person_id: number
+        if(user != null){
+          person_id = user.person_id
+        }else{
+          throw new Error(`Não foi possível encontrar um usuário válido.`)
+        }
 
       const createEclExperience: ICreateEclExperience = {
         person_id: person_id,
@@ -59,7 +65,13 @@ export class EclExperiencesService {
     id: number,
   ): Promise<IEclExperience[] | null> {
     try {
-      const { person_id } = await this.usersService.findUserById(id)
+      const user = await this.usersService.findUserById(id)
+        let person_id: number
+        if(user != null){
+          person_id = user.person_id
+        }else{
+          throw new Error(`Não foi possível encontrar um usuário válido.`)
+        }
 
       const eclExperience =
         await this.eclExperiencesModel.findEclExperiencesByPersonId(person_id)
@@ -86,8 +98,13 @@ export class EclExperiencesService {
     id: number,
   ): Promise<IEclExperience[]> {
     try {
-      const person = await this.usersService.findUserById(id)
-      const person_id = person.person_id
+      const user = await this.usersService.findUserById(id)
+      let person_id: number
+      if(user != null){
+        person_id = user.person_id
+      }else{
+        throw new Error(`Não foi possível encontrar um usuário válido.`)
+      }
       const updatedEclExperience: IUpdateEclExperiences = {
         ecl_exp_approved: null,
         ecl_exp_type_ids: dto.ecl_exp_type_id,

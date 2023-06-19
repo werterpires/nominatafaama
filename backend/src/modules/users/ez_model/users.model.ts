@@ -65,7 +65,7 @@ export class UsersModel {
     return user
   }
 
-  async findUserById(id: number): Promise<IUser> {
+  async findUserById(id: number): Promise<IUser | null> {
     let user: IUser | null = null
     let sentError: Error | null = null
 
@@ -89,7 +89,7 @@ export class UsersModel {
           .where('users.user_id', '=', id)
 
         if (result.length < 1) {
-          throw new Error(`Usuário não encontrado`)
+          user = null
         }
 
         if (result) {
@@ -137,9 +137,6 @@ export class UsersModel {
       throw sentError
     }
 
-    if (user == null) {
-      throw new Error('user not found')
-    }
     return user
   }
 

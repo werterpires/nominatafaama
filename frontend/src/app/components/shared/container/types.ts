@@ -17,18 +17,6 @@ export interface IOptions {
   chamados: boolean
 }
 
-export interface IUser {
-  user_approved?: boolean | null
-  user_id: number
-  principal_email: string
-  person_id: number
-  name: string
-  cpf: string
-  roles: IRole[]
-  created_at: Date
-  updated_at: Date
-}
-
 export interface IPermissions {
   estudante: boolean
   secretaria: boolean
