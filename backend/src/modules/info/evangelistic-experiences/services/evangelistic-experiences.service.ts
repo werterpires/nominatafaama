@@ -27,10 +27,11 @@ export class EvangelisticExperiencesService {
     try {
       let personId!: number
       if (personType === 'student') {
+
         const user = await this.usersService.findUserById(user_id)
-        let person_id: number
+        
         if(user != null){
-          person_id = user.person_id
+          personId = user.person_id
         }else{
           throw new Error(`Não foi possível encontrar um usuário válido.`)
         }
@@ -38,7 +39,6 @@ export class EvangelisticExperiencesService {
         let spouse: ISpouse | null = await this.spousesModel.findSpouseByUserId(
           user_id,
         )
-        console.log(spouse)
         if (spouse == null) {
           throw new Error(
             `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
@@ -89,12 +89,13 @@ export class EvangelisticExperiencesService {
   ): Promise<IEvangelisticExperience[] | null> {
     let evangelisticExperiences: IEvangelisticExperience[] | null = null
     try {
-      let personId!: number | null
+      let personId!: number
       if (personType === 'student') {
+
         const user = await this.usersService.findUserById(user_id)
-        let person_id: number
+        
         if(user != null){
-          person_id = user.person_id
+          personId = user.person_id
         }else{
           throw new Error(`Não foi possível encontrar um usuário válido.`)
         }
@@ -103,11 +104,11 @@ export class EvangelisticExperiencesService {
           user_id,
         )
         if (spouse == null) {
-          personId = null
-        } else{
-          personId = spouse.person_id
+          throw new Error(
+            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
+          )
         }
-       
+        personId = spouse.person_id
       }
 
       if(personId == null){

@@ -28,9 +28,8 @@ export class ProfessionalExperiencesService {
       let personId!: number
       if (personType === 'student') {
         const user = await this.usersService.findUserById(user_id)
-        let person_id: number
         if(user != null){
-          person_id = user.person_id
+          personId = user.person_id
         }else{
           throw new Error(`Não foi possível encontrar um usuário válido.`)
         }
@@ -86,9 +85,9 @@ export class ProfessionalExperiencesService {
       let personId!: number | null
       if (personType === 'student') {
         const user = await this.usersService.findUserById(user_id)
-        let person_id: number
+     
         if(user != null){
-          person_id = user.person_id
+          personId = user.person_id
         }else{
           throw new Error(`Não foi possível encontrar um usuário válido.`)
         }

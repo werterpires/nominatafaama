@@ -25,9 +25,9 @@ export class CoursesService {
       if (personType === 'student') {
 
         const user = await this.usersService.findUserById(user_id)
-        let person_id: number
+        
         if(user != null){
-          person_id = user.person_id
+          personId = user.person_id
         }else{
           throw new Error(`Não foi possível encontrar um usuário válido.`)
         }
@@ -76,25 +76,26 @@ export class CoursesService {
     personType: string,
   ): Promise<ICourse[] | null> {
     try {
-      let personId!: number | null
-      if (personType == 'student') {
+      let personId!: number
+      if (personType === 'student') {
+
         const user = await this.usersService.findUserById(user_id)
-        let person_id: number
+        
         if(user != null){
-          person_id = user.person_id
+          personId = user.person_id
         }else{
           throw new Error(`Não foi possível encontrar um usuário válido.`)
         }
-      } else if (personType == 'spouse') {
+      } else if (personType === 'spouse') {
         let spouse: ISpouse | null = await this.spouseModel.findSpouseByUserId(
           user_id,
         )
         if (spouse == null) {
-          personId = null
-         } else{
-           personId = spouse.person_id
-         }
-       
+          throw new Error(
+            `Não foi possível encontrar uma esposa vinculada ao usuário com id ${user_id}`,
+          )
+        }
+        personId = spouse.person_id
       }
       let courses: ICourse[]
       if(personId==null){

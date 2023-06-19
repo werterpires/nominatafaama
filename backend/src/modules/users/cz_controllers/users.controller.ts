@@ -46,7 +46,7 @@ import { UpdateUserDto } from '../az_dto/updateUserDto';
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.DOCENTE, ERoles.ESTUDANTE, ERoles.REPRESENTACAO, ERoles.SECRETARIA)
   @RestrictRoles(ERoles.ESTUDANTE)
   @Get('edit')
   async getOwnUserById(@CurrentUser() currentUser: UserFromJwt) {

@@ -330,7 +330,7 @@ export class UsersModel {
               roles.push(roleMap.get(roleId)!)
             }
           })
-
+          console.log(result[0])
           user = {
             user_id: result[0].user_id,
             principal_email: result[0].principal_email,
