@@ -772,7 +772,7 @@ button:active {
   width: 120px;
   height: 120px;
   animation: spin 2s linear infinite;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   margin-top: -60px;
@@ -787,7 +787,7 @@ button:active {
   width: 120px;
   height: 120px;
   animation: spin 1s linear infinite;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   margin-top: -60px;

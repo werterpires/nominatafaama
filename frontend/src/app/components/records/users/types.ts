@@ -8,6 +8,15 @@ export interface IUser {
   name: string
   cpf: string
   roles: IRole[]
-  created_at: Date
-  updated_at: Date
+  created_at: string
+  updated_at: string
+}
+
+export interface UpdateUserDto {
+  password_hash?: string
+  principal_email?: string
+  roles_id?: number[]
+  name?: string
+  cpf?: string
+  current_password_hash: string
 }

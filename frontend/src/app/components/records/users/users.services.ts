@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { Observable, catchError, throwError } from 'rxjs'
 import { environment } from 'src/environments/environment'
-import { IUser } from './types'
+import { IUser, UpdateUserDto } from './types'
+import { IRole } from '../../shared/container/types'
 
 @Injectable({
   providedIn: 'root',
@@ -59,11 +60,11 @@ export class UsersServices {
       )
   }
 
-  updateStudent(updateStudentData: IUpdateUs): Observable<IStudent> {
+  updateUser(updateUserData: UpdateUserDto): Observable<IUser> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .put<IStudent>(environment.API + '/students', updateStudentData, {
+      .put<IUser>(environment.API + '/users/update', updateUserData, {
         headers,
       })
       .pipe(
@@ -72,6 +73,19 @@ export class UsersServices {
           return throwError(
             () => new Error('Não foi possível atualizar o estudante.'),
           )
+        }),
+      )
+  }
+
+  findallRoles(): Observable<IRole[]> {
+    const token = localStorage.getItem('access_token')
+    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .get<IRole[]>(environment.API + '/roles/', { headers: head_obj })
+      .pipe(
+        catchError((error) => {
+          console.log('erro de verdade: ', error)
+          return throwError(() => new Error('No User'))
         }),
       )
   }
