@@ -3,6 +3,7 @@ import { IPermissions, IRole } from '../../shared/container/types'
 import { IUser, UpdateUserDto } from './types'
 import { UsersServices } from './users.services'
 import { LogonService } from '../../logon/logon.service'
+import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 
 @Component({
   selector: 'app-users',
@@ -31,6 +32,7 @@ export class UsersComponent {
   constructor(
     private service: UsersServices,
     private logonService: LogonService,
+    private validateService: ValidateService,
   ) {}
 
   title = 'Dados de Usuário'
@@ -84,6 +86,7 @@ export class UsersComponent {
     this.service.findallRoles().subscribe({
       next: (res) => {
         this.allTypes = res
+        this.formatarCPF()
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -92,9 +95,73 @@ export class UsersComponent {
       },
     })
   }
+  formatarCPF() {
+    this.registry.cpf = this.registry.cpf.replace(
+      /(\d{3})(\d{3})(\d{3})(\d{2})/,
+      '$1.$2.$3-$4',
+    )
+  }
 
   editRegistry() {
     this.isLoading = true
+
+    if (this.validateService.validateNameData(this.registry.name) == false) {
+      this.errorMessage = 'Insira um nome válido para editar o usuário.'
+      this.error = true
+      this.isLoading = false
+      this.ngOnInit()
+      return
+    }
+    this.registry.cpf = this.registry.cpf.replace(/[^\d]/g, '')
+    if (this.validateService.validateCpfData(this.registry.cpf) == false) {
+      this.errorMessage = 'Insira um cpf válido para editar o usuário.'
+      this.error = true
+      this.isLoading = false
+      this.ngOnInit()
+      return
+    }
+
+    if (
+      this.validateService.validateEmailData(this.registry.principal_email) ==
+      false
+    ) {
+      this.errorMessage = 'Insira um email válido para editar o usuário.'
+      this.error = true
+      this.isLoading = false
+      this.ngOnInit()
+      return
+    }
+
+    if (
+      this.validateService.validatePasswordData(this.currentPassword) == false
+    ) {
+      this.errorMessage =
+        'É necessário inserir sua senha atual para alterar dados do usuário.'
+      this.error = true
+      this.isLoading = false
+      this.ngOnInit()
+      return
+    }
+
+    if (
+      this.validateService.validatePasswordData(this.newPassword) == false &&
+      this.newPassword.length > 0
+    ) {
+      this.errorMessage =
+        'A nova senha deve conter maiúsculas, minúsculas, números, símbolos e ter pelo menos 8 caracteres.'
+      this.error = true
+      this.isLoading = false
+      this.ngOnInit()
+      return
+    }
+
+    if (this.newPassword != this.passwordConfirmation) {
+      this.errorMessage = 'A nova senha não confere com a confirmação.'
+      this.error = true
+      this.isLoading = false
+      this.ngOnInit()
+      return
+    }
 
     const editRegistryData: UpdateUserDto = {
       current_password_hash: this.currentPassword,
@@ -119,6 +186,15 @@ export class UsersComponent {
       if (this.roles[i]) {
         editRegistryData.roles_id?.push(i + 1)
       }
+    }
+
+    if (editRegistryData.roles_id && editRegistryData.roles_id.length < 1) {
+      this.errorMessage =
+        'É necessário escolher ao menos um papel para o usuário.'
+      this.error = true
+      this.isLoading = false
+      this.ngOnInit()
+      return
     }
 
     this.service.updateUser(editRegistryData).subscribe({

@@ -18,7 +18,6 @@ export class PublicationsService {
   findAllRegistries(): Observable<IPublication[]> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-    console.log('criando livro pro Marido')
     return this.http
       .get<IPublication[]>(environment.API + '/publications/person/student', {
         headers: head_obj,

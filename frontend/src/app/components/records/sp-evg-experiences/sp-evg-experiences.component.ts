@@ -56,7 +56,7 @@ export class SpEvgExperiencesComponent {
       },
       error: (err) => {
         this.errorMessage = err.message
-        this.error = true
+        //this.error = true
         this.isLoading = false
         this.getEvgExpTypes()
       },

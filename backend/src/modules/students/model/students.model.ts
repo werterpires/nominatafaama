@@ -256,7 +256,6 @@ export class StudentsModel {
           baptism_date,
           baptism_place,
           marital_status_id,
-          hiring_status_id,
           primary_school_state,
           student_approved,
         } = updateStudent
@@ -276,7 +275,6 @@ export class StudentsModel {
           baptism_date,
           baptism_place,
           marital_status_id,
-          hiring_status_id,
           primary_school_state,
           student_approved,
         })

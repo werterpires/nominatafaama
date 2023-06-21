@@ -51,7 +51,7 @@ export class SpPastEclExpComponent {
       },
       error: (err) => {
         this.errorMessage = err.message
-        this.error = true
+        //this.error = true
         this.isLoading = false
       },
     })

@@ -116,7 +116,7 @@ export class PastEclExpsComponent {
     this.service.updateRegistry(newRegistry as UpdatePastEclExpDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
-        this.done = true
+        //this.done = true
         document.getElementById(buttonId)?.classList.add('hidden')
         this.isLoading = false
       },

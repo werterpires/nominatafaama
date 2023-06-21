@@ -20,10 +20,14 @@ export class SpCoursesService {
       })
       .pipe(
         catchError((error) => {
-          console.log('Veja o erro completo', error)
-          return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
-          )
+          if (error.message.includes('pessoa com ID')) {
+            return []
+          } else {
+            console.log('Veja o erro completo', error)
+            return throwError(
+              () => new Error('Não foi possível encontrar as linguagens.'),
+            )
+          }
         }),
       )
   }

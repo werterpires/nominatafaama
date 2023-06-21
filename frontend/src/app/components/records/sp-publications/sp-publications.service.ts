@@ -34,7 +34,6 @@ export class SpPublicationsService {
   createRegistry(newRegistry: CreatePublicationDto): Observable<IPublication> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-    console.log('criando livro pra esposa')
     return this.http
       .post<IPublication>(
         environment.API + '/publications/spouse',
