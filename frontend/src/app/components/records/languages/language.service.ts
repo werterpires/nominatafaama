@@ -29,7 +29,6 @@ export class LanguageService {
   }
 
   createRegistry(newRegistry: ICreateLanguageDto): Observable<ILanguage> {
-    console.log(newRegistry)
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http

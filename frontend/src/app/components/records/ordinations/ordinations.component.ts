@@ -101,8 +101,6 @@ export class OrdinationsComponent {
     delete newRegistry.updated_at
     delete newRegistry.ordination_approved
 
-    console.log(newRegistry)
-
     this.service.updateRegistry(newRegistry as UpdateOrdinationDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'

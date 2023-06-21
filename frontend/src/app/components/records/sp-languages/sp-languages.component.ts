@@ -81,7 +81,6 @@ export class SpLanguagesComponent {
 
   resetCreationRegistry() {
     Object.keys(this.createRegistryData).forEach((key) => {
-      console.log()
       switch (typeof this.createRegistryData[key as keyof ICreateLanguageDto]) {
         case 'boolean':
           Object.defineProperty(this.createRegistryData, key, { value: false })

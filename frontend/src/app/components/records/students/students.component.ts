@@ -134,10 +134,8 @@ export class StudentsComponent {
             this.allUnions.push(association.union_acronym)
           }
         })
-        console.log('Uniões', this.allUnions)
         if (this.registry.student_id) {
           this.filterAssociation()
-          console.log('Possíveis associações', this.possibleAssociantions)
         }
       },
       error: (err) => {
@@ -205,13 +203,6 @@ export class StudentsComponent {
   createRegistry() {
     this.isLoading = true
     this.isLoading = true
-
-    console.log(
-      'birthDate:',
-      new Date(this.registry.birth_date),
-      'baptism_date:',
-      new Date(this.registry.baptism_date),
-    )
 
     const newStudent: ICreateStudent = {
       alternative_email: this.registry.alternative_email,

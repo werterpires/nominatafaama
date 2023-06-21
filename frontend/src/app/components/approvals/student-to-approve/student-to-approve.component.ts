@@ -119,7 +119,6 @@ export class StudentToApproveComponent {
   getPhotoUrl(fileData: Uint8Array): Promise<string> {
     return new Promise((resolve, reject) => {
       const blob = new Blob([fileData], { type: 'image/jpeg' })
-      console.log(blob)
       const reader = new FileReader()
       reader.onload = (event) => {
         const imageUrl = event.target?.result as string

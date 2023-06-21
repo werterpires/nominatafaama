@@ -63,7 +63,6 @@ export class SpRelatedMinistriesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
-        console.log(this.allRegistries)
         this.isLoading = false
       },
       error: (err) => {
