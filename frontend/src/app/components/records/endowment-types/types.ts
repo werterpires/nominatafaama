@@ -4,6 +4,7 @@ export interface IEndowmentType {
   application: number
   created_at: string
   updated_at: string
+  used?: boolean
 }
 
 export interface ICreateEndowmentTypeDto {
