@@ -1,9 +1,13 @@
-import {Injectable} from '@nestjs/common'
-import {IOrdination, ICreateOrdination, IUpdateOrdination} from '../types/types'
-import {OrdinationsModel} from '../model/ordinations.model'
-import {CreateOrdinationDto} from '../dto/create-ordination.dto'
-import {UpdateOrdinationDto} from '../dto/update-ordination.dto'
-import {PeopleServices} from 'src/modules/people/dz_services/people.service'
+import { Injectable } from '@nestjs/common'
+import {
+  IOrdination,
+  ICreateOrdination,
+  IUpdateOrdination,
+} from '../types/types'
+import { OrdinationsModel } from '../model/ordinations.model'
+import { CreateOrdinationDto } from '../dto/create-ordination.dto'
+import { UpdateOrdinationDto } from '../dto/update-ordination.dto'
+import { PeopleServices } from 'src/modules/people/dz_services/people.service'
 
 @Injectable()
 export class OrdinationsService {
@@ -23,9 +27,10 @@ export class OrdinationsService {
         personType,
       )
 
-      
-      if(personId == null){
-        throw new Error(`Não foi encontrado uma pessoa vinculada ao usuário ${user_id}`)
+      if (personId == null) {
+        throw new Error(
+          `Não foi encontrado uma pessoa vinculada ao usuário ${user_id}`,
+        )
       }
 
       const createOrdinationData: ICreateOrdination = {
@@ -68,7 +73,7 @@ export class OrdinationsService {
         personType,
       )
 
-      if(personId == null){
+      if (personId == null) {
         return []
       }
 
@@ -102,8 +107,9 @@ export class OrdinationsService {
         updateOrdinationData,
       )
 
-      const updatedOrdination =
-        this.ordinationsModel.findOrdinationById(ordinationId)
+      const updatedOrdination = this.ordinationsModel.findOrdinationById(
+        updateOrdinationData.ordination_id,
+      )
 
       return updatedOrdination
     } catch (error) {
