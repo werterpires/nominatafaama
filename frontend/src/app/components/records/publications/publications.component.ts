@@ -22,7 +22,7 @@ export class PublicationsComponent {
   publicationTypeList: Array<IPublicationType> = []
   title = 'Publicações'
   createRegistryData: CreatePublicationDto = {
-    link: '',
+    link: null,
     publication_type_id: 0,
     reference: '',
   }
@@ -95,6 +95,12 @@ export class PublicationsComponent {
 
   createRegistry() {
     this.isLoading = true
+    if (
+      typeof this.createRegistryData.link == 'string' &&
+      this.createRegistryData.link.length < 2
+    ) {
+      this.createRegistryData.link = null
+    }
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -121,6 +127,14 @@ export class PublicationsComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].link !== null) {
+      let link = this.allRegistries[index].link
+      if (link != null && link.length < 2) {
+        this.allRegistries[index].link = null
+      }
+    }
+
     const newRegistry: Partial<IPublication> = {
       ...this.allRegistries[index],
       publication_type_id: parseInt(
