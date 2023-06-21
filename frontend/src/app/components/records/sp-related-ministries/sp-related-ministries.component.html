@@ -28,6 +28,8 @@
             <option
               *ngFor="let ministrytype of ministryTypeList"
               [value]="ministrytype.ministry_type_id"
+              [disabled]="ministrytype.used == true"
+              [disabled]="ministrytype.used == true"
             >
               {{ ministrytype.ministry_type_name }}
             </option>
@@ -48,6 +50,7 @@
           >
             <option
               *ngFor="let ministrytype of ministryTypeList"
+              [disabled]="ministrytype.used == true"
               [value]="ministrytype.ministry_type_id"
             >
               {{ ministrytype.ministry_type_name }}
@@ -69,6 +72,7 @@
           >
             <option
               *ngFor="let ministrytype of ministryTypeList"
+              [disabled]="ministrytype.used == true"
               [value]="ministrytype.ministry_type_id"
             >
               {{ ministrytype.ministry_type_name }}
@@ -98,6 +102,10 @@
             <option
               *ngFor="let ministrytype of ministryTypeList"
               [value]="ministrytype.ministry_type_id"
+              [disabled]="
+                ministrytype.used == true &&
+                registry.ministry_type_id != ministrytype.ministry_type_id
+              "
             >
               {{ ministrytype.ministry_type_name }}
             </option>
