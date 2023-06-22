@@ -113,12 +113,10 @@ export class PastEclExpsComponent {
     delete newRegistry.updated_at
     delete newRegistry.past_ecl_approved
 
-    console.log(newRegistry)
-
     this.service.updateRegistry(newRegistry as UpdatePastEclExpDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
-        this.done = true
+        //this.done = true
         document.getElementById(buttonId)?.classList.add('hidden')
         this.isLoading = false
       },

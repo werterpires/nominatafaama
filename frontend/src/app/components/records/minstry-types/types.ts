@@ -4,6 +4,7 @@ export interface IMinistryType {
   ministry_type_approved: boolean
   created_at: string
   updated_at: string
+  used?: boolean
 }
 
 export interface ICreateMinistryTypeDto {

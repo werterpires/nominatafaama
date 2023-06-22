@@ -20,6 +20,7 @@
       <div class="subSection gap-2">
         <label class="inputLabel">
           Nome<input
+            #nameInput
             class="smallInput"
             type="text"
             name="studentPhoneNumberInput"
@@ -33,6 +34,7 @@
             type="text"
             name="studentAlternativeEmailInput"
             [(ngModel)]="registry.cpf"
+            (input)="formatarCPF()"
           />
         </label>
       </div>

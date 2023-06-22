@@ -50,11 +50,6 @@ export class RelatedMinistriesComponent {
 
   ngOnInit() {
     this.getAllRegistries()
-    this.getAllTypes()
-    this.ministryTypeList = this.filterMinistriesByType(
-      this.ministryTypeList,
-      this.allRegistries,
-    )
   }
 
   getAllRegistries() {
@@ -62,7 +57,8 @@ export class RelatedMinistriesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
-        console.log(this.allRegistries)
+        this.getAllTypes()
+
         this.isLoading = false
       },
       error: (err) => {
@@ -78,6 +74,7 @@ export class RelatedMinistriesComponent {
     this.ministryTypesService.findAllRegistries().subscribe({
       next: (res) => {
         this.ministryTypeList = res
+        this.filterMinistriesByType()
         this.isLoading = false
       },
       error: (err) => {
@@ -88,18 +85,15 @@ export class RelatedMinistriesComponent {
     })
   }
 
-  filterMinistriesByType(
-    firstArray: IMinistryType[],
-    secondArray: IRelatedMinistry[],
-  ): IMinistryType[] {
-    const ministryTypeIds = secondArray.map((item) => item.ministry_type_id)
-    const filtered = firstArray.filter((item) => {
-      if (!ministryTypeIds.includes(item.ministry_type_id)) {
-        return true
+  filterMinistriesByType() {
+    const ministryTypeIds = this.allRegistries.map(
+      (item) => item.ministry_type_id,
+    )
+    this.ministryTypeList.forEach((item) => {
+      if (ministryTypeIds.includes(item.ministry_type_id)) {
+        item.used = true
       }
-      return false
     })
-    return filtered
   }
 
   createRegistry(priority: number) {
@@ -117,6 +111,21 @@ export class RelatedMinistriesComponent {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
+          this.ministryTypeList = []
+          this.createRegistryData = [
+            {
+              ministry_type_id: 0,
+              priority: 0,
+            },
+            {
+              ministry_type_id: 0,
+              priority: 0,
+            },
+            {
+              ministry_type_id: 0,
+              priority: 0,
+            },
+          ]
           this.ngOnInit()
           this.showForm = false
           this.createRegistryData[priority].ministry_type_id = 0
@@ -152,6 +161,28 @@ export class RelatedMinistriesComponent {
           this.doneMessage = 'Registro editado com sucesso.'
           this.done = true
           document.getElementById(buttonId)?.classList.add('hidden')
+          this.ministryTypeList = []
+          this.createRegistryData = [
+            {
+              ministry_type_id: 0,
+              priority: 0,
+            },
+            {
+              ministry_type_id: 0,
+              priority: 0,
+            },
+            {
+              ministry_type_id: 0,
+              priority: 0,
+            },
+          ]
+          this.ngOnInit()
+          console.log(
+            'Lista de Ministérios: ',
+            this.ministryTypeList,
+            'Registros: ',
+            this.allRegistries,
+          )
           this.isLoading = false
         },
         error: (err) => {
@@ -162,22 +193,22 @@ export class RelatedMinistriesComponent {
       })
   }
 
-  // deleteRegistry(id: number) {
-  //   this.isLoading = true
-  //   this.service.deleteRegistry(id).subscribe({
-  //     next: (res) => {
-  //       this.doneMessage = 'Registro removido com sucesso.'
-  //       this.done = true
-  //       this.isLoading = false
-  //       this.ngOnInit()
-  //     },
-  //     error: (err) => {
-  //       this.errorMessage = 'Não foi possível remover o registro.'
-  //       this.error = true
-  //       this.isLoading = false
-  //     },
-  //   })
-  // }
+  deleteRegistry(id: number) {
+    this.isLoading = true
+    this.service.deleteRegistry(id).subscribe({
+      next: (res) => {
+        this.doneMessage = 'Registro removido com sucesso.'
+        this.done = true
+        this.isLoading = false
+        this.ngOnInit()
+      },
+      error: (err) => {
+        this.errorMessage = 'Não foi possível remover o registro.'
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
 
   closeError() {
     this.error = false

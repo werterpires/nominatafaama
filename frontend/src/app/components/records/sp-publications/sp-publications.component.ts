@@ -172,7 +172,6 @@ export class SpPublicationsComponent {
     if (selectedPublicationType?.instructions) {
       this.reference = selectedPublicationType?.instructions
     }
-    console.log(this.reference)
   }
 
   closeError() {

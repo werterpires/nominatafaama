@@ -19,6 +19,8 @@ export class OrdinationsComponent {
     year: null,
   }
 
+  types = ['Ancionato', 'Diaconato']
+
   showBox = false
   showForm = false
   isLoading = false
@@ -30,6 +32,8 @@ export class OrdinationsComponent {
   constructor(private service: OrdinationsService) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.types = ['Ancionato', 'Diaconato']
     this.getAllRegistries()
   }
 
@@ -38,6 +42,7 @@ export class OrdinationsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.filterTypes()
         this.isLoading = false
       },
       error: (err) => {
@@ -46,6 +51,11 @@ export class OrdinationsComponent {
         this.isLoading = false
       },
     })
+  }
+
+  filterTypes() {
+    const TypeIds = this.allRegistries.map((item) => item.ordination_name)
+    this.types = this.types.filter((item) => !TypeIds.includes(item))
   }
 
   resetCreationRegistry() {
@@ -78,10 +88,10 @@ export class OrdinationsComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
-          this.getAllRegistries()
+          this.ngOnInit()
           this.showForm = false
           this.resetCreationRegistry()
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -101,13 +111,12 @@ export class OrdinationsComponent {
     delete newRegistry.updated_at
     delete newRegistry.ordination_approved
 
-    console.log(newRegistry)
-
     this.service.updateRegistry(newRegistry as UpdateOrdinationDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
         document.getElementById(buttonId)?.classList.add('hidden')
+        this.ngOnInit()
         this.isLoading = false
       },
       error: (err) => {
@@ -124,8 +133,8 @@ export class OrdinationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'

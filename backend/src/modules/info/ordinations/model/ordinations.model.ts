@@ -62,7 +62,7 @@ export class OrdinationsModel {
         const result = await trx('ordinations')
           .first('ordinations.*')
           .where('ordinations.ordination_id', '=', id)
-
+        console.log(id)
         if (!result) {
           throw new Error('Ordination not found')
         }
@@ -238,7 +238,7 @@ export class OrdinationsModel {
     }
 
     if (updatedOrdination == null) {
-      throw new Error('Ordination not found')
+      updatedOrdination = 0
     }
 
     return updatedOrdination

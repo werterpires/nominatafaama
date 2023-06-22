@@ -109,8 +109,6 @@ export class OneStudentToApproveComponent {
       type: 'image/jpeg',
     })
     if (blob1 instanceof Blob) {
-      console.log('sim')
-
       const reader = new FileReader()
       reader.onload = (e: any) => {
         if (photo == 'alone') {
@@ -123,7 +121,6 @@ export class OneStudentToApproveComponent {
       }
       reader.readAsDataURL(blob1)
     } else {
-      console.log('não')
     }
   }
 
@@ -163,7 +160,6 @@ export class OneStudentToApproveComponent {
         this.isLoading = false
       },
     })
-    console.log(table, approve, id)
   }
 
   atualizeStudent(id: number) {
@@ -207,7 +203,6 @@ export class OneStudentToApproveComponent {
         this.isLoading = false
       },
     })
-    console.log(table, approve, id)
   }
 
   saveAll() {

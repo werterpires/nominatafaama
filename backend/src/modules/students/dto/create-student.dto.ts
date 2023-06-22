@@ -70,8 +70,4 @@ export class CreateStudentDto {
   @IsNotEmpty()
   @IsNumber()
   marital_status_id: number
-
-  @IsNotEmpty()
-  @IsNumber()
-  hiring_status_id: number
 }

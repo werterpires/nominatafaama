@@ -51,7 +51,6 @@ export class SmallAloneStudentPhotosComponent {
     this.isLoading = true
     this.service.findAllRegistries().subscribe({
       next: (res) => {
-        console.log('chegou no compoenent de novo')
         if (res instanceof Blob) {
           const reader = new FileReader()
           reader.onload = (e: any) => {
@@ -67,8 +66,6 @@ export class SmallAloneStudentPhotosComponent {
       },
       error: (err) => {
         if (err.status == 404) {
-          console.log('o erro é 404')
-          console.log(err.message)
           this.imageUrl = null
           this.isLoading = false
         } else {
@@ -81,8 +78,6 @@ export class SmallAloneStudentPhotosComponent {
   }
 
   onFileSelected(event: any) {
-    console.log(event)
-
     const file: File = event.target.files[0]
     const reader = new FileReader()
 

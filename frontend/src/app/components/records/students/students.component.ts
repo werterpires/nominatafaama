@@ -84,6 +84,8 @@ export class StudentsComponent {
   error = false
   errorMessage = ''
 
+  phoneNumber: string = ''
+
   ngOnInit() {
     this.getRegistry()
     if (this.registry.person_id == null) {
@@ -134,10 +136,8 @@ export class StudentsComponent {
             this.allUnions.push(association.union_acronym)
           }
         })
-        console.log('Uniões', this.allUnions)
         if (this.registry.student_id) {
           this.filterAssociation()
-          console.log('Possíveis associações', this.possibleAssociantions)
         }
       },
       error: (err) => {
@@ -206,13 +206,6 @@ export class StudentsComponent {
     this.isLoading = true
     this.isLoading = true
 
-    console.log(
-      'birthDate:',
-      new Date(this.registry.birth_date),
-      'baptism_date:',
-      new Date(this.registry.baptism_date),
-    )
-
     const newStudent: ICreateStudent = {
       alternative_email: this.registry.alternative_email,
       baptism_date: this.dataService.dateFormatter(this.registry.baptism_date),
@@ -220,12 +213,11 @@ export class StudentsComponent {
       birth_city: this.registry.birth_city,
       birth_date: this.dataService.dateFormatter(this.registry.birth_date),
       birth_state: this.registry.birth_state,
-      hiring_status_id: parseInt(this.registry.hiring_status_id.toString()),
       is_whatsapp: !!this.registry.is_whatsapp,
       justification: this.registry.justification,
       marital_status_id: parseInt(this.registry.marital_status_id.toString()),
       origin_field_id: parseInt(this.registry.origin_field_id.toString()),
-      phone_number: this.registry.phone_number,
+      phone_number: this.phoneNumber,
       primary_school_city: this.registry.primary_school_city,
       primary_school_state: this.registry.primary_school_state,
       student_mensage: this.registry.student_mensage,
@@ -357,6 +349,14 @@ export class StudentsComponent {
     } else {
       console.error('State Id not found.')
     }
+  }
+
+  formatarTelefone() {
+    this.phoneNumber = this.phoneNumber.replace(
+      /(\d{2})(\d{5})(\d{4})/,
+      '($1) $2-$3',
+    )
+    console.log(this.phoneNumber)
   }
 
   closeError() {

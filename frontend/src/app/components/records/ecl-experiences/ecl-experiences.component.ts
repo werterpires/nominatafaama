@@ -60,7 +60,6 @@ export class EclExperiencesComponent {
           },
         })
 
-        console.log('Registros com checks: ', this.allRegistriesWithChecks)
         this.isLoading = false
       },
       error: (err) => {

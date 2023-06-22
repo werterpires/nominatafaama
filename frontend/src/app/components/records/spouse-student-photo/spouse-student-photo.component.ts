@@ -77,8 +77,6 @@ export class SpouseStudentPhotoComponent {
   }
 
   onFileSelected(event: any) {
-    console.log(event)
-
     const file: File = event.target.files[0]
     const reader = new FileReader()
 

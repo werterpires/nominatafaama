@@ -31,6 +31,7 @@
             <option
               *ngFor="let endowmentType of endowmentTypeList"
               [value]="endowmentType.endowment_type_id"
+              [disabled]="endowmentType.used == true"
             >
               {{ endowmentType.endowment_type_name }}
             </option>
@@ -53,6 +54,10 @@
             <option
               *ngFor="let endowmentType of endowmentTypeList"
               [value]="endowmentType.endowment_type_id"
+              [disabled]="
+                endowmentType.used == true &&
+                endowmentType.endowment_type_id != registry.endowment_type_id
+              "
             >
               {{ endowmentType.endowment_type_name }}
             </option>

@@ -15,7 +15,11 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+    <button
+      #addIcon
+      [ngClass]="{ hidden: !showBox || allRegistries.length > 1 }"
+      (click)="showForm = true"
+    >
       Adicionar nova ordenação
     </button>
   </div>
@@ -29,8 +33,9 @@
             name="job"
             [(ngModel)]="createRegistryData.ordination_name"
           >
-            <option value="Ancionato">Ancionato</option>
-            <option value="Diaconato">Diaconato</option>
+            <option *ngFor="let type of types" [value]="type">
+              {{ type }}
+            </option>
           </select>
         </label>
         <label>
@@ -68,6 +73,7 @@
             type="text"
             name="job"
             [(ngModel)]="registry.ordination_name"
+            readonly
           />
         </label>
         <label>

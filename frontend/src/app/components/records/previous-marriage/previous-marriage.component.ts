@@ -110,7 +110,6 @@ export class PreviousMarriageComponent {
     delete newRegistry.created_at
     delete newRegistry.updated_at
     delete newRegistry.previous_marriage_approved
-    console.log(newRegistry)
 
     this.service
       .updateRegistry(newRegistry as UpdatePreviousMarriageDto)

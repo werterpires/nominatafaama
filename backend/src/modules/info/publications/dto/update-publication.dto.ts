@@ -28,7 +28,7 @@ export class UpdatePublicationDto {
   @IsOptional()
   @IsUrl()
   @Length(1, 500)
-  link: string
+  link: string | null
 
   @IsNotEmpty()
   @IsInt()

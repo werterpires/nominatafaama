@@ -230,46 +230,48 @@ export class UsersModel {
           .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
           .leftJoin('roles', 'users_roles.role_id', 'roles.role_id')
           .leftJoin('students', 'people.person_id', 'students.person_id')
-          .whereRaw('LOWER(people.name) LIKE ?', [`%${searchString.toLowerCase()}%`])
-          .where('students.person_id', '=', trx.raw('people.person_id'));
+          .whereRaw('LOWER(people.name) LIKE ?', [
+            `%${searchString.toLowerCase()}%`,
+          ])
+          .where('students.person_id', '=', trx.raw('people.person_id'))
 
-          users = results.reduce((acc: IUser[], row: any) => {
-            const existingUser = acc.find((u) => u.user_id === row.user_id)
-  
-            if (existingUser) {
-              if (row.role_id) {
-                existingUser.roles.push({
-                  role_id: row.role_id,
-                  role_name: row.role_name,
-                  role_description: row.role_description,
-                })
-              }
-            } else {
-              const newUser: IUser = {
-                user_id: row.user_id,
-                principal_email: row.principal_email,
-                person_id: row.person_id,
-                name: row.name,
-                cpf: row.cpf,
-                roles: [],
-                created_at: row.created_at,
-                updated_at: row.updated_at,
-                user_approved: row.user_approved,
-              }
-  
-              if (row.role_id) {
-                newUser.roles.push({
-                  role_id: row.role_id,
-                  role_name: row.role_name,
-                  role_description: row.role_description,
-                })
-              }
-  
-              acc.push(newUser)
+        users = results.reduce((acc: IUser[], row: any) => {
+          const existingUser = acc.find((u) => u.user_id === row.user_id)
+
+          if (existingUser) {
+            if (row.role_id) {
+              existingUser.roles.push({
+                role_id: row.role_id,
+                role_name: row.role_name,
+                role_description: row.role_description,
+              })
             }
-  
-            return acc
-          }, [])
+          } else {
+            const newUser: IUser = {
+              user_id: row.user_id,
+              principal_email: row.principal_email,
+              person_id: row.person_id,
+              name: row.name,
+              cpf: row.cpf,
+              roles: [],
+              created_at: row.created_at,
+              updated_at: row.updated_at,
+              user_approved: row.user_approved,
+            }
+
+            if (row.role_id) {
+              newUser.roles.push({
+                role_id: row.role_id,
+                role_name: row.role_name,
+                role_description: row.role_description,
+              })
+            }
+
+            acc.push(newUser)
+          }
+
+          return acc
+        }, [])
 
         await trx.commit()
       } catch (error) {
@@ -501,12 +503,18 @@ export class UsersModel {
           await this.knex('users')
             .where('user_id', id)
             .update({ password_hash: updateUser.password_hash })
+          await this.knex('users')
+            .where('user_id', id)
+            .update({ user_approved: updateUser.user_approved })
         }
 
         if (updateUser.principal_email) {
           await this.knex('users')
             .where('user_id', id)
             .update({ principal_email: updateUser.principal_email })
+          await this.knex('users')
+            .where('user_id', id)
+            .update({ user_approved: updateUser.user_approved })
         }
 
         if (updateUser.name || updateUser.cpf) {
@@ -519,12 +527,22 @@ export class UsersModel {
             await this.knex('people')
               .where('person_id', userPeople.person_id)
               .update({ name: updateUser.name })
+
+            await this.knex('users')
+              .where('user_id', id)
+              .update({ user_approved: updateUser.user_approved })
+
+            console.log('passei por aqui')
           }
 
           if (updateUser.cpf) {
             await this.knex('people')
               .where('person_id', userPeople.person_id)
               .update({ cpf: updateUser.cpf })
+
+            await this.knex('users')
+              .where('user_id', id)
+              .update({ user_approved: updateUser.user_approved })
           }
         }
 
@@ -540,6 +558,9 @@ export class UsersModel {
                 role_id,
               }))
               await trx('users_roles').insert(roles)
+              await this.knex('users')
+                .where('user_id', id)
+                .update({ user_approved: updateUser.user_approved })
             }
           })
         }

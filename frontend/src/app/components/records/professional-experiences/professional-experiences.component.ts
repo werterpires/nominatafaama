@@ -117,8 +117,6 @@ export class ProfessionalExperiencesComponent {
     delete newRegistry.updated_at
     delete newRegistry.experience_approved
 
-    console.log(newRegistry)
-
     this.service
       .updateRegistry(newRegistry as UpdateProfessionalExperienceDto)
       .subscribe({

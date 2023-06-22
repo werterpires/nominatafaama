@@ -78,8 +78,6 @@ export class SpousesComponent {
       next: (res) => {
         if (res?.spouse_id > 0) {
           this.registry = res
-
-          console.log(this.registry.baptism_date)
         }
         this.getOtherData()
         this.showForm = false
@@ -114,7 +112,7 @@ export class SpousesComponent {
           }
         })
         this.filterAssociation()
-        console.log('Possible associations:', this.possibleAssociantions)
+
         this.isLoading = false
       },
       error: (err) => {

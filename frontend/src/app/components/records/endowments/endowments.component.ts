@@ -34,8 +34,9 @@ export class EndowmentsComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.endowmentTypeList = []
     this.getAllRegistries()
-    this.getAllEndowmentTypes()
   }
 
   getAllRegistries() {
@@ -43,6 +44,7 @@ export class EndowmentsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.getAllEndowmentTypes()
         this.isLoading = false
       },
       error: (err) => {
@@ -58,6 +60,7 @@ export class EndowmentsComponent {
     this.endowmentsServices.findAllRegistries().subscribe({
       next: (res) => {
         this.endowmentTypeList = res
+        this.filtertypes()
         this.isLoading = false
       },
       error: (err) => {
@@ -65,6 +68,15 @@ export class EndowmentsComponent {
         this.error = true
         this.isLoading = false
       },
+    })
+  }
+
+  filtertypes() {
+    const TypeIds = this.allRegistries.map((item) => item.endowment_type_id)
+    this.endowmentTypeList.forEach((item) => {
+      if (TypeIds.includes(item.endowment_type_id)) {
+        item.used = true
+      }
     })
   }
 
@@ -98,7 +110,7 @@ export class EndowmentsComponent {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.getAllRegistries()
+          this.ngOnInit()
           this.showForm = false
           this.resetCreationRegistry()
         },
@@ -126,6 +138,7 @@ export class EndowmentsComponent {
 
     this.service.updateRegistry(newRegistry as UpdateEndowmentDto).subscribe({
       next: (res) => {
+        this.ngOnInit()
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
         document.getElementById(buttonId)?.classList.add('hidden')
