@@ -54,7 +54,7 @@ export class SpousesComponent {
   }
 
   showBox = false
-  showForm = false
+  showForm = true
   isLoading = false
   done = false
   doneMessage = ''
@@ -70,6 +70,9 @@ export class SpousesComponent {
 
   ngOnInit() {
     this.getAllRegistries()
+    if (this.registry.person_id == null) {
+      this.showForm = false
+    }
   }
 
   getAllRegistries() {
@@ -78,9 +81,12 @@ export class SpousesComponent {
       next: (res) => {
         if (res?.spouse_id > 0) {
           this.registry = res
+        } else {
+          this.showBox = true
+          this.showForm = true
         }
         this.getOtherData()
-        this.showForm = false
+
         this.isLoading = false
       },
       error: (err) => {
@@ -88,6 +94,7 @@ export class SpousesComponent {
         this.showForm = true
         this.errorMessage = err.message
         this.error = true
+        this.getOtherData()
         this.isLoading = false
       },
     })

@@ -16,7 +16,7 @@
     </span>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form (save)="createRegistry()">
+    <app-creation-form *ngIf="!registry?.spouse_id" (save)="createRegistry()">
       <div class="subSection">
         <label class="inputLabel">
           Nome<input
