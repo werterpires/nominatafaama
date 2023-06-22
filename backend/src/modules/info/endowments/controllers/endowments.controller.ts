@@ -8,15 +8,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import {NotFoundException, InternalServerErrorException} from '@nestjs/common'
-import {CurrentUser} from 'src/shared/auth/decorators/current-user.decorator'
-import {ERoles} from 'src/shared/auth/types/roles.enum'
-import {UserFromJwt} from 'src/shared/auth/types/types'
-import {Roles} from 'src/shared/roles/fz_decorators/roles.decorator'
-import {IEndowment} from '../types/types'
-import {CreateEndowmentDto} from '../dto/create-endowment.dto'
-import {EndowmentsService} from '../services/endowments.service'
-import {UpdateEndowmentDto} from '../dto/update-endowment.dto'
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { IEndowment } from '../types/types'
+import { CreateEndowmentDto } from '../dto/create-endowment.dto'
+import { EndowmentsService } from '../services/endowments.service'
+import { UpdateEndowmentDto } from '../dto/update-endowment.dto'
 
 @Controller('endowments')
 export class EndowmentsController {
@@ -112,12 +112,12 @@ export class EndowmentsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
   async deleteEndowmentById(@Param('id') id: number) {
     try {
       const message = await this.endowmentsService.deleteEndowmentById(id)
-      return {message}
+      return { message }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
