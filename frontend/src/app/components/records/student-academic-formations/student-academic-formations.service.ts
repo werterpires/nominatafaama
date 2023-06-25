@@ -71,7 +71,7 @@ export class StudentAcademicFormationsService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível criar o estado civil.'),
+            () => new Error('Não foi possível atualizar a formação acadêmia.'),
           )
         }),
       )
@@ -88,7 +88,7 @@ export class StudentAcademicFormationsService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () => new Error('Não foi possível deletar a formação acadêmica.'),
           )
         }),
       )
