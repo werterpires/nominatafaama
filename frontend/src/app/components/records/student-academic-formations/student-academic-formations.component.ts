@@ -93,6 +93,31 @@ export class StudentAcademicFormationsComponent {
 
   createRegistry() {
     this.isLoading = true
+
+    if (this.createRegistryData.degree_id < 1) {
+      this.showError('Insira um grau acadêmico para prosseguir com o registro.')
+      return
+    }
+
+    if (this.createRegistryData.course_area.length < 2) {
+      this.showError(
+        'Insira uma área de formação para prosseguir com o registro.',
+      )
+      return
+    }
+
+    if (this.createRegistryData.institution.length < 2) {
+      this.showError('Insira uma instituição para prosseguir com o registro.')
+      return
+    }
+
+    if (this.createRegistryData.begin_date.length < 2) {
+      this.showError(
+        'Insira uma data de início para prosseguir com o registro.',
+      )
+      return
+    }
+
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -123,6 +148,30 @@ export class StudentAcademicFormationsComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].degree_id < 1) {
+      this.showError('Insira um grau acadêmico para prosseguir com o registro.')
+      return
+    }
+
+    if (this.allRegistries[index].course_area.length < 2) {
+      this.showError(
+        'Insira uma área de formação para prosseguir com o registro.',
+      )
+      return
+    }
+
+    if (this.allRegistries[index].institution.length < 2) {
+      this.showError('Insira uma instituição para prosseguir com o registro.')
+      return
+    }
+
+    if (this.allRegistries[index].begin_date.length < 2) {
+      this.showError(
+        'Insira uma data de início para prosseguir com o registro.',
+      )
+      return
+    }
 
     const newRegistry: IStUpdateAcademicFormation = {
       begin_date: this.dataService.dateFormatter(
@@ -167,6 +216,12 @@ export class StudentAcademicFormationsComponent {
         this.isLoading = false
       },
     })
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   closeError() {
