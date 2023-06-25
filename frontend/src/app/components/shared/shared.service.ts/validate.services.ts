@@ -14,6 +14,7 @@ export class ValidateService {
   nameRegex =
     /^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+(\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+){0,8}$/
   cpfRegex = /^\d{11}$/
+  phoneNumberRegex = /^(\d{2})?(\d{4,5})\d{4}$/
 
   colorInput(valid: boolean, input: HTMLInputElement) {
     // Verifica se o email é válido
@@ -90,5 +91,15 @@ export class ValidateService {
     }
 
     return true
+  }
+
+  validatePhoneNumber(phoneNumber: string) {
+    // Verifica se o número de telefone é válido
+    phoneNumber = phoneNumber.replace(/\D/g, '')
+    if (this.phoneNumberRegex.test(phoneNumber)) {
+      return true
+    } else {
+      return false
+    }
   }
 }
