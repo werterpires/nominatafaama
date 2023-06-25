@@ -84,6 +84,24 @@ p {
   padding-left: 0.5vw;
 }
 
+.showInput {
+  width: 100% !important;
+  padding: 0.5rem 1rem !important;
+  margin: 4px 0 !important;
+  background: #ffffff !important;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 5px !important;
+  border: 1.5px solid #dcdada !important;
+
+  font-family: 'Poppins' !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+
+  color: #23435f !important;
+}
+
 input:focus {
   outline: none;
 }
@@ -967,22 +985,4 @@ button:active {
   position: fixed;
   top: 110px;
   left: 28px;
-}
-
-.showInput {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  margin: 4px 0;
-  background: #ffffff;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 5px;
-  border: 1.5px solid #dcdada;
-
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 18px;
-
-  color: #23435f;
 }
