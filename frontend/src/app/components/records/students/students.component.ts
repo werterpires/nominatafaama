@@ -101,6 +101,8 @@ export class StudentsComponent {
       next: (res) => {
         if (res && res.student_id) {
           this.registry = res
+          this.phoneNumber = this.registry.phone_number
+          this.formatarTelefone()
           this.dataService.maritalStatusName =
             this.registry.marital_status_type_name
         } else {
@@ -207,10 +209,9 @@ export class StudentsComponent {
 
   createRegistry() {
     this.isLoading = true
-    this.isLoading = true
 
     if (this.validateService.validatePhoneNumber(this.phoneNumber) == false) {
-      this.showError('Digite um número detelefone válido.')
+      this.showError('Digite um número de telefone válido.')
       return
     }
 
@@ -323,6 +324,86 @@ export class StudentsComponent {
 
   editRegistry() {
     this.isLoading = true
+
+    if (this.validateService.validatePhoneNumber(this.phoneNumber) == false) {
+      this.showError('Digite um número detelefone válido.')
+      return
+    }
+
+    if (
+      this.validateService.validateEmailData(this.registry.alternative_email) ==
+      false
+    ) {
+      this.showError('Insira um email válido para adicionar os dados.')
+      return
+    }
+
+    if (parseInt(this.registry.origin_field_id.toString()) < 1) {
+      this.showError(
+        'Escolha um campo de origem para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.justification.length < 1) {
+      this.showError(
+        'Justifique por que você acha que esse é seu campo de origem.',
+      )
+      return
+    }
+
+    if (this.registry.marital_status_id < 1) {
+      this.showError('Escolha um estado civil para prosseguir com o cadastro.')
+      return
+    }
+
+    if (this.registry.birth_date.length < 1) {
+      this.showError(
+        'Informe a data de nascimento para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (
+      this.registry.birth_state.length < 1 ||
+      this.registry.birth_city.length < 1
+    ) {
+      this.showError(
+        'Informe um estado e uma cidade de nascimento para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (
+      this.registry.primary_school_state.length < 1 ||
+      this.registry.primary_school_city.length < 1
+    ) {
+      this.showError(
+        'Informe o estado e a cidade onde completou o ensino fundamental para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.baptism_date.length < 1) {
+      this.showError(
+        'Informe a data de batismo para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.baptism_place.length < 12) {
+      this.showError(
+        'Informe o local de batismo para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.student_mensage.length < 12) {
+      this.showError(
+        'Escolha uma mensagem bíblica que represente seu estilo de ministério para prosseguir com o cadastro.',
+      )
+      return
+    }
     this.registry.origin_field_id = Number(this.registry.origin_field_id)
     this.registry.marital_status_id = Number(this.registry.marital_status_id)
     this.registry.hiring_status_id = Number(this.registry.hiring_status_id)
@@ -345,7 +426,6 @@ export class StudentsComponent {
       baptism_date: this.dataService.dateFormatter(this.registry.baptism_date),
       baptism_place: this.registry.baptism_place,
       marital_status_id: Number(this.registry.marital_status_id),
-      hiring_status_id: this.registry.hiring_status_id,
     }
 
     this.studentServices.updateStudent(editStudentData).subscribe({

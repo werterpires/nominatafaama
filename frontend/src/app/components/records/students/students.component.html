@@ -248,7 +248,8 @@
             class="smallInput"
             type="text"
             name="studentPhoneNumberInput"
-            [(ngModel)]="registry.phone_number"
+            [(ngModel)]="phoneNumber"
+            (input)="formatarTelefone()"
           />
         </label>
         <label class="inputLabel text-center">

@@ -62,6 +62,5 @@ export interface IUpdateStudent {
   baptism_date: string
   baptism_place: string
   marital_status_id: number
-  hiring_status_id: number
   primary_school_state: string
 }
