@@ -99,6 +99,25 @@ export class SpLanguagesComponent {
   }
   createRegistry() {
     this.isLoading = true
+    console.log(this.createRegistryData.chosen_language)
+    if (this.createRegistryData.chosen_language < 1) {
+      this.showError('Escolha um idioma antes de prosseguir.')
+      return
+    }
+
+    if (
+      !this.createRegistryData.fluent &&
+      !this.createRegistryData.read &&
+      !this.createRegistryData.speak &&
+      !this.createRegistryData.understand &&
+      !this.createRegistryData.write
+    ) {
+      this.showError(
+        'Informe uma ou mais opções para evidenciar sua relação com o idioma escolhido.',
+      )
+      return
+    }
+
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -111,9 +130,9 @@ export class SpLanguagesComponent {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.getAllRegistries()
-          this.showForm = false
           this.resetCreationRegistry()
+          this.ngOnInit()
+          this.showForm = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -126,8 +145,30 @@ export class SpLanguagesComponent {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
+    if (this.allRegistries[index].chosen_language < 1) {
+      this.showError('Escolha um idioma antes de prosseguir.')
+      return
+    }
+
+    if (
+      !this.allRegistries[index].fluent &&
+      !this.allRegistries[index].read &&
+      !this.allRegistries[index].speak &&
+      !this.allRegistries[index].understand &&
+      !this.allRegistries[index].write
+    ) {
+      this.showError(
+        'Informe uma ou mais opções para evidenciar sua relação com o idioma escolhido.',
+      )
+      return
+    }
+    console.log(this.allRegistries[index].chosen_language)
+    console.log(this.allRegistries[index].chosen_language)
     const newRegistry: Partial<ILanguage> = {
       ...this.allRegistries[index],
+      chosen_language: parseInt(
+        this.allRegistries[index].chosen_language.toString(),
+      ),
     }
 
     delete newRegistry.created_at
@@ -165,6 +206,12 @@ export class SpLanguagesComponent {
         this.isLoading = false
       },
     })
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   closeError() {
