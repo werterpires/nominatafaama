@@ -81,9 +81,9 @@ export class SpProfessionalExperiencesComponent {
         job_begin_date: this.dataService.dateFormatter(
           this.createRegistryData.job_begin_date,
         ),
-        job_end_date: this.dataService.dateFormatter(
-          this.createRegistryData.job_begin_date,
-        ),
+        job_end_date: this.createRegistryData.job_end_date
+          ? this.dataService.dateFormatter(this.createRegistryData.job_end_date)
+          : null,
       })
       .subscribe({
         next: (res) => {
@@ -104,14 +104,17 @@ export class SpProfessionalExperiencesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
     const newRegistry: Partial<IProfessionalExperience> = {
       ...this.allRegistries[index],
       job_begin_date: this.dataService.dateFormatter(
         this.allRegistries[index].job_begin_date,
       ),
-      job_end_date: this.dataService.dateFormatter(
-        this.allRegistries[index].job_begin_date,
-      ),
+      job_end_date: this.allRegistries[index].job_end_date
+        ? this.dataService.dateFormatter(
+            this.allRegistries[index].job_end_date || '',
+          )
+        : null,
     }
     delete newRegistry.created_at
     delete newRegistry.updated_at

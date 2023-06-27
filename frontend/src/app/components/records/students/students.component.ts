@@ -442,24 +442,6 @@ export class StudentsComponent {
     })
   }
 
-  deleteRegistry(id: number) {
-    this.isLoading = true
-    const studentId = this.registry.student_id
-
-    this.studentServices.deleteStudent(studentId).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Associação deletada com sucesso.'
-        this.done = true
-        this.isLoading = false
-      },
-      error: (err) => {
-        this.errorMessage = 'Não foi possível deletar a associação.'
-        this.error = true
-        this.isLoading = false
-      },
-    })
-  }
-
   filterAssociation() {
     this.possibleAssociantions = this.allAssociations.filter((association) => {
       return association.union_acronym == this.registry.union_acronym

@@ -218,7 +218,6 @@ export class SpousesComponent {
       primary_school_state: this.registry.primary_school_state,
       registry: this.registry.registry,
       registry_number: this.registry.registry_number,
-      spouse_approved: !!this.registry.spouse_approved,
       spouse_id: this.registry.spouse_id,
     }
 
@@ -230,23 +229,6 @@ export class SpousesComponent {
       },
       error: (err) => {
         this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
-  }
-
-  deleteRegistry(id: number) {
-    this.isLoading = true
-    this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Registro removido com sucesso.'
-        this.done = true
-        this.isLoading = false
-        this.ngOnInit()
-      },
-      error: (err) => {
-        this.errorMessage = 'Não foi possível remover o registro.'
         this.error = true
         this.isLoading = false
       },

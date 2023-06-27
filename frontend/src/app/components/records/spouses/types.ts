@@ -73,7 +73,6 @@ export interface IUpdateSpouse {
   civil_marriage_state: string | null
   registry: string | null
   registry_number: string | null
-  spouse_approved: boolean
   name: string
   cpf: string
   origin_field_id: number

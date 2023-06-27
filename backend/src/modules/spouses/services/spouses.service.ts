@@ -89,6 +89,7 @@ export class SpousesService {
       baptism_date: baptismDate,
       civil_marriage_date: civilMarryDate,
       student_id: student_id,
+      spouse_approved: null,
     }
 
     try {
