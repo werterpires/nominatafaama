@@ -45,6 +45,16 @@ export class StudentAcademicFormationsComponent {
   ) {}
 
   ngOnInit() {
+    this.createRegistryData = {
+      begin_date: '',
+      conclusion_date: '',
+      course_area: '',
+      degree_id: 0,
+      institution: '',
+    }
+    this.allRegistries = []
+    this.allDegrees = []
+    this.resetCreationRegistry()
     this.getAllRegistries()
   }
 
@@ -53,19 +63,22 @@ export class StudentAcademicFormationsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.getAlltypes()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
         this.error = true
+        this.getAlltypes()
         this.isLoading = false
       },
     })
+  }
 
+  getAlltypes() {
     this.academicDegreeService.findAllRegistries().subscribe({
       next: (res) => {
         this.allDegrees = res
-        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -131,12 +144,11 @@ export class StudentAcademicFormationsComponent {
       })
       .subscribe({
         next: (res) => {
+          this.ngOnInit()
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
-          this.getAllRegistries()
           this.showForm = false
-          this.resetCreationRegistry()
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -207,8 +219,8 @@ export class StudentAcademicFormationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'

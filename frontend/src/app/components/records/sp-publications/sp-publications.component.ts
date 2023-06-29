@@ -8,6 +8,7 @@ import {
   UpdatePublicationDto,
 } from '../publications/types'
 import { SpPublicationsService } from './sp-publications.service'
+import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 
 @Component({
   selector: 'app-sp-publications',
@@ -38,6 +39,7 @@ export class SpPublicationsComponent {
   constructor(
     private service: SpPublicationsService,
     private publicationTypeService: PublicationTypeService,
+    private validateService: ValidateService,
   ) {}
 
   ngOnInit() {
@@ -93,6 +95,37 @@ export class SpPublicationsComponent {
 
   createRegistry() {
     this.isLoading = true
+
+    if (this.createRegistryData.publication_type_id < 1) {
+      this.showError(
+        'Escolha um tipo de publicação para prosseguir com o cadastro',
+      )
+      return
+    }
+    console.log('referencia:', this.createRegistryData.reference.length)
+
+    if (this.createRegistryData.reference.length < 5) {
+      this.showError('Siga o modelo e escreva a referência da obra.')
+      return
+    }
+
+    if (
+      this.createRegistryData.link &&
+      this.createRegistryData.link.length > 0 &&
+      !this.validateService.validateUrl(this.createRegistryData.link)
+    ) {
+      this.showError(
+        'Se você possui um link para a sua obra, digite-o para prosseguir. Se não, apague todo o link no campo de cadastro.',
+      )
+      return
+    }
+
+    if (
+      typeof this.createRegistryData.link == 'string' &&
+      this.createRegistryData.link.length < 2
+    ) {
+      this.createRegistryData.link = null
+    }
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -104,10 +137,10 @@ export class SpPublicationsComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
-          this.getAllRegistries()
-          this.showForm = false
           this.resetCreationRegistry()
+          this.showForm = false
+          this.ngOnInit()
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -119,6 +152,40 @@ export class SpPublicationsComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].publication_type_id < 1) {
+      this.showError(
+        'Escolha um tipo de publicação para prosseguir com o cadastro',
+      )
+      return
+    }
+    console.log('referencia:', this.allRegistries[index].reference.length)
+
+    if (this.allRegistries[index].reference.length < 5) {
+      this.showError('Siga o modelo e escreva a referência da obra.')
+      return
+    }
+
+    let testLink = this.allRegistries[index].link
+
+    if (
+      testLink != null &&
+      testLink.length &&
+      !this.validateService.validateUrl(testLink)
+    ) {
+      this.showError(
+        'Se você possui um link para a sua obra, digite-o para prosseguir. Se não, apague todo o link no campo de cadastro.',
+      )
+      return
+    }
+
+    if (this.allRegistries[index].link !== null) {
+      let link = this.allRegistries[index].link
+      if (link != null && link.length < 2) {
+        this.allRegistries[index].link = null
+      }
+    }
+
     const newRegistry: Partial<IPublication> = {
       ...this.allRegistries[index],
       publication_type_id: parseInt(
@@ -162,7 +229,6 @@ export class SpPublicationsComponent {
       },
     })
   }
-
   getSelectedPublicationTypeInstructions() {
     const selectedPublicationType = this.publicationTypeList.find(
       (publicationType) =>
@@ -172,6 +238,12 @@ export class SpPublicationsComponent {
     if (selectedPublicationType?.instructions) {
       this.reference = selectedPublicationType?.instructions
     }
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   closeError() {

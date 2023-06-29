@@ -16,6 +16,8 @@ export class ValidateService {
   cpfRegex = /^\d{11}$/
   phoneNumberRegex = /^(\d{2})?(\d{4,5})\d{4}$/
 
+  urlRegex: RegExp = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
+
   colorInput(valid: boolean, input: HTMLInputElement) {
     // Verifica se o email é válido
     if (valid) {
@@ -101,5 +103,9 @@ export class ValidateService {
     } else {
       return false
     }
+  }
+
+  validateUrl(url: string) {
+    return this.urlRegex.test(url)
   }
 }
