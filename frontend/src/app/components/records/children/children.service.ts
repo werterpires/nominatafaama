@@ -22,7 +22,8 @@ export class ChildrenService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
+            () =>
+              new Error('Não foi possível encontrar os filhos cadastrados.'),
           )
         }),
       )
@@ -39,7 +40,7 @@ export class ChildrenService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível criar a formação acadêmica.'),
+            () => new Error('Não foi possível cadastrar o filho.'),
           )
         }),
       )
@@ -56,7 +57,7 @@ export class ChildrenService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível atualizar linguagens.'),
+            () => new Error('Não foi possível atualizar os dados do filho.'),
           )
         }),
       )
@@ -74,7 +75,7 @@ export class ChildrenService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () => new Error('Não foi possível deletar os dados do filho.'),
           )
         }),
       )

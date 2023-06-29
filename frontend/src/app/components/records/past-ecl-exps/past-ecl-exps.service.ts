@@ -22,7 +22,10 @@ export class PastEclExpService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
+            () =>
+              new Error(
+                'Não foi possível encontrar as experiências eclesiásticas e evangelísticas anteriores ao SALT.',
+              ),
           )
         }),
       )
@@ -43,7 +46,10 @@ export class PastEclExpService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível criar a formação acadêmica.'),
+            () =>
+              new Error(
+                'Não foi possível criar a Experiência eclesiástica ou evangelística anterior ao SALT.',
+              ),
           )
         }),
       )
@@ -64,7 +70,10 @@ export class PastEclExpService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível atualizar linguagens.'),
+            () =>
+              new Error(
+                'Não foi possível atualizar a Experiência eclesiástica ou evangelística anterior ao SALT .',
+              ),
           )
         }),
       )
@@ -81,7 +90,10 @@ export class PastEclExpService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () =>
+              new Error(
+                'Não foi possível deletar a Experiência eclesiástica ou evangelística anterior ao SALT.',
+              ),
           )
         }),
       )

@@ -14,6 +14,11 @@ export class ValidateService {
   nameRegex =
     /^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+(\s[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+){0,8}$/
   cpfRegex = /^\d{11}$/
+  phoneNumberRegex = /^(\d{2})?(\d{4,5})\d{4}$/
+
+  urlRegex: RegExp = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
+
+  dateRegex = /^\d{4}-\d{2}-\d{2}$/
 
   colorInput(valid: boolean, input: HTMLInputElement) {
     // Verifica se o email é válido
@@ -55,9 +60,11 @@ export class ValidateService {
 
     // Verifica se a senha é válido
     if (!this.cpfRegex.test(cpf)) {
+      console.log(cpf)
       return false
     }
     if (/^(\d)\1+$/.test(cpf)) {
+      console.log(2)
       return false
     }
 
@@ -86,9 +93,28 @@ export class ValidateService {
       digit1 !== parseInt(cpf.charAt(9)) ||
       digit2 !== parseInt(cpf.charAt(10))
     ) {
+      console.log(4)
       return false
     }
 
     return true
+  }
+
+  validatePhoneNumber(phoneNumber: string) {
+    // Verifica se o número de telefone é válido
+    phoneNumber = phoneNumber.replace(/\D/g, '')
+    if (this.phoneNumberRegex.test(phoneNumber)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  validateUrl(url: string) {
+    return this.urlRegex.test(url)
+  }
+
+  validateDate(date: string) {
+    return this.dateRegex.test(date)
   }
 }

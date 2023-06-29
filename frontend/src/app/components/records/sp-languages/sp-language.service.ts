@@ -26,7 +26,10 @@ export class SpLanguageService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
+            () =>
+              new Error(
+                'Não foi possível encontrar os idiomas cadastrados para o cônjuge.',
+              ),
           )
         }),
       )
@@ -42,9 +45,7 @@ export class SpLanguageService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          return throwError(
-            () => new Error('Não foi possível criar a linguagem.'),
-          )
+          return throwError(() => new Error('Não foi possível criar o idioma'))
         }),
       )
   }
@@ -64,7 +65,7 @@ export class SpLanguageService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível atualizar linguagens.'),
+            () => new Error('Não foi possível atualizar o idioma.'),
           )
         }),
       )
@@ -81,7 +82,7 @@ export class SpLanguageService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () => new Error('Não foi possível deletar o idioma.'),
           )
         }),
       )

@@ -29,7 +29,9 @@ export class SpAcademicFormationsService {
           console.log('Veja o erro completo', error)
           return throwError(
             () =>
-              new Error('Não foi possível encontrar as formações acadêmicas.'),
+              new Error(
+                'Não foi possível encontrar as formações acadêmicas cadastradas.',
+              ),
           )
         }),
       )
@@ -71,7 +73,7 @@ export class SpAcademicFormationsService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível criar o estado civil.'),
+            () => new Error('Não foi possível editar a formação acadêmica.'),
           )
         }),
       )
@@ -88,7 +90,7 @@ export class SpAcademicFormationsService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () => new Error('Não foi possível deletar a formação acadêmica.'),
           )
         }),
       )

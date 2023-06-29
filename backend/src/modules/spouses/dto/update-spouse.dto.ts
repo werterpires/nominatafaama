@@ -93,10 +93,6 @@ export class UpdateSpouseDto {
   registry_number: string | null
 
   @IsNotEmpty()
-  @IsBoolean()
-  spouse_approved: boolean
-
-  @IsNotEmpty()
   @MinLength(2)
   name: string
 

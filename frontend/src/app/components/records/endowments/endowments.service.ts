@@ -22,7 +22,10 @@ export class EndowmentsService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
+            () =>
+              new Error(
+                'Não foi possível encontrar as investiduras cadastradas.',
+              ),
           )
         }),
       )
@@ -39,7 +42,7 @@ export class EndowmentsService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível criar a formação acadêmica.'),
+            () => new Error('Não foi possível criar a investidura.'),
           )
         }),
       )
@@ -60,7 +63,7 @@ export class EndowmentsService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível atualizar linguagens.'),
+            () => new Error('Não foi possível atualizar a investidura.'),
           )
         }),
       )
@@ -77,7 +80,7 @@ export class EndowmentsService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () => new Error('Não foi possível deletar a investidura.'),
           )
         }),
       )

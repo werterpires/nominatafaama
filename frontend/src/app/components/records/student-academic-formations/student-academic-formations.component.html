@@ -25,53 +25,63 @@
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
-      <label class="inputLabel">
-        Titulação
-        <select
-          class="smallInput"
-          name="degreeSelect"
-          [(ngModel)]="createRegistryData.degree_id"
-        >
-          <option *ngFor="let degree of allDegrees" [value]="degree.degree_id">
-            {{ degree.degree_name }}
-          </option>
-        </select>
-      </label>
-      <label class="inputLabel">
-        Área de formação<input
-          class="smallMediumInput"
-          type="text"
-          name="formationAreaInput"
-          [(ngModel)]="createRegistryData.course_area"
-        />
-      </label>
-      <label class="inputLabel">
-        Instituição:<input
-          class="largeInput"
-          type="text"
-          name="institutionInput"
-          [(ngModel)]="createRegistryData.institution"
-        />
-      </label>
+      <div class="subSection">
+        <label class="inputLabel">
+          Titulação
+          <select
+            class="smallInput"
+            name="degreeSelect"
+            [(ngModel)]="createRegistryData.degree_id"
+          >
+            <option
+              *ngFor="let degree of allDegrees"
+              [value]="degree.degree_id"
+            >
+              {{ degree.degree_name }}
+            </option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Área de formação<input
+            class="smallMediumInput"
+            type="text"
+            name="formationAreaInput"
+            [(ngModel)]="createRegistryData.course_area"
+          />
+        </label>
+      </div>
 
-      <label class="inputLabel">
-        Data de início:
-        <input
-          class="smallInput"
-          type="date"
-          name="beginDateInput"
-          [(ngModel)]="createRegistryData.begin_date"
-        />
-      </label>
-      <label class="inputLabel">
-        Data de fim:
-        <input
-          class="smallInput"
-          type="date"
-          name="beginDateInput"
-          [(ngModel)]="createRegistryData.conclusion_date"
-        />
-      </label>
+      <div class="subSection">
+        <label class="inputLabel">
+          Instituição:<input
+            class="largeInput"
+            type="text"
+            name="institutionInput"
+            [(ngModel)]="createRegistryData.institution"
+          />
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label class="inputLabel">
+          Data de início:
+          <input
+            class="smallInput"
+            type="date"
+            name="beginDateInput"
+            [(ngModel)]="createRegistryData.begin_date"
+          />
+        </label>
+        <label class="inputLabel">
+          Data de fim:
+          <input
+            class="smallInput"
+            type="date"
+            name="beginDateInput"
+            [(ngModel)]="createRegistryData.conclusion_date"
+          />
+        </label>
+      </div>
     </app-creation-form>
   </section>
   <section class="registriesWrapper">

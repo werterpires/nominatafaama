@@ -9,6 +9,7 @@ import {
   IStCreateAcademicFormation,
   IStUpdateAcademicFormation,
 } from './types'
+import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 
 @Component({
   selector: 'app-student-academic-formations',
@@ -42,9 +43,20 @@ export class StudentAcademicFormationsComponent {
     private service: StudentAcademicFormationsService,
     private academicDegreeService: AcademicDegreeService,
     private dataService: DataService,
+    private validateService: ValidateService,
   ) {}
 
   ngOnInit() {
+    this.createRegistryData = {
+      begin_date: '',
+      conclusion_date: '',
+      course_area: '',
+      degree_id: 0,
+      institution: '',
+    }
+    this.allRegistries = []
+    this.allDegrees = []
+    this.resetCreationRegistry()
     this.getAllRegistries()
   }
 
@@ -53,19 +65,22 @@ export class StudentAcademicFormationsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.getAlltypes()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
         this.error = true
+        this.getAlltypes()
         this.isLoading = false
       },
     })
+  }
 
+  getAlltypes() {
     this.academicDegreeService.findAllRegistries().subscribe({
       next: (res) => {
         this.allDegrees = res
-        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -93,6 +108,31 @@ export class StudentAcademicFormationsComponent {
 
   createRegistry() {
     this.isLoading = true
+
+    if (this.createRegistryData.degree_id < 1) {
+      this.showError('Insira um grau acadêmico para prosseguir com o registro.')
+      return
+    }
+
+    if (this.createRegistryData.course_area.length < 2) {
+      this.showError(
+        'Insira uma área de formação para prosseguir com o registro.',
+      )
+      return
+    }
+
+    if (this.createRegistryData.institution.length < 2) {
+      this.showError('Insira uma instituição para prosseguir com o registro.')
+      return
+    }
+
+    if (this.createRegistryData.begin_date.length != 10) {
+      this.showError(
+        'Insira uma data de início para prosseguir com o registro.',
+      )
+      return
+    }
+
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -106,12 +146,11 @@ export class StudentAcademicFormationsComponent {
       })
       .subscribe({
         next: (res) => {
+          this.ngOnInit()
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
-          this.getAllRegistries()
           this.showForm = false
-          this.resetCreationRegistry()
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -123,6 +162,30 @@ export class StudentAcademicFormationsComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].degree_id < 1) {
+      this.showError('Insira um grau acadêmico para prosseguir com o registro.')
+      return
+    }
+
+    if (this.allRegistries[index].course_area.length < 2) {
+      this.showError(
+        'Insira uma área de formação para prosseguir com o registro.',
+      )
+      return
+    }
+
+    if (this.allRegistries[index].institution.length < 2) {
+      this.showError('Insira uma instituição para prosseguir com o registro.')
+      return
+    }
+
+    if (this.allRegistries[index].begin_date.length != 10) {
+      this.showError(
+        'Insira uma data de início para prosseguir com o registro.',
+      )
+      return
+    }
 
     const newRegistry: IStUpdateAcademicFormation = {
       begin_date: this.dataService.dateFormatter(
@@ -158,8 +221,8 @@ export class StudentAcademicFormationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'
@@ -167,6 +230,12 @@ export class StudentAcademicFormationsComponent {
         this.isLoading = false
       },
     })
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   closeError() {

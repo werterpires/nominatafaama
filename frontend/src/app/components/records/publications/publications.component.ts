@@ -9,6 +9,7 @@ import { IPublicationType } from '../publication-types/types'
 import { PublicationsService } from './publications.service'
 import { PublicationTypeService } from '../publication-types/publication-types.service'
 import { parse } from 'uuid'
+import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 
 @Component({
   selector: 'app-publications',
@@ -40,11 +41,13 @@ export class PublicationsComponent {
   constructor(
     private service: PublicationsService,
     private publicationTypeService: PublicationTypeService,
+    private validateService: ValidateService,
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.publicationTypeList = []
     this.getAllRegistries()
-    this.getAllLanguageTypes()
   }
 
   getAllRegistries() {
@@ -52,17 +55,19 @@ export class PublicationsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.getAllTypes()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
         this.error = true
+        this.getAllTypes()
         this.isLoading = false
       },
     })
   }
 
-  getAllLanguageTypes() {
+  getAllTypes() {
     this.isLoading = true
     this.publicationTypeService.findAllRegistries().subscribe({
       next: (res) => {
@@ -95,6 +100,31 @@ export class PublicationsComponent {
 
   createRegistry() {
     this.isLoading = true
+
+    if (this.createRegistryData.publication_type_id < 1) {
+      this.showError(
+        'Escolha um tipo de publicação para prosseguir com o cadastro',
+      )
+      return
+    }
+    console.log('referencia:', this.createRegistryData.reference.length)
+
+    if (this.createRegistryData.reference.length < 5) {
+      this.showError('Siga o modelo e escreva a referência da obra.')
+      return
+    }
+
+    if (
+      this.createRegistryData.link &&
+      this.createRegistryData.link.length > 0 &&
+      !this.validateService.validateUrl(this.createRegistryData.link)
+    ) {
+      this.showError(
+        'Se você possui um link para a sua obra, digite-o para prosseguir. Se não, apague todo o link no campo de cadastro.',
+      )
+      return
+    }
+
     if (
       typeof this.createRegistryData.link == 'string' &&
       this.createRegistryData.link.length < 2
@@ -113,9 +143,9 @@ export class PublicationsComponent {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.getAllRegistries()
-          this.showForm = false
+          this.ngOnInit()
           this.resetCreationRegistry()
+          this.showForm = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -127,6 +157,32 @@ export class PublicationsComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].publication_type_id < 1) {
+      this.showError(
+        'Escolha um tipo de publicação para prosseguir com o cadastro',
+      )
+      return
+    }
+    console.log('referencia:', this.allRegistries[index].reference.length)
+
+    if (this.allRegistries[index].reference.length < 5) {
+      this.showError('Siga o modelo e escreva a referência da obra.')
+      return
+    }
+
+    let testLink = this.allRegistries[index].link
+
+    if (
+      testLink != null &&
+      testLink.length &&
+      !this.validateService.validateUrl(testLink)
+    ) {
+      this.showError(
+        'Se você possui um link para a sua obra, digite-o para prosseguir. Se não, apague todo o link no campo de cadastro.',
+      )
+      return
+    }
 
     if (this.allRegistries[index].link !== null) {
       let link = this.allRegistries[index].link
@@ -151,7 +207,7 @@ export class PublicationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
+        this.ngOnInit()
         this.isLoading = false
       },
       error: (err) => {
@@ -168,8 +224,8 @@ export class PublicationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'
@@ -187,6 +243,12 @@ export class PublicationsComponent {
     if (selectedPublicationType?.instructions) {
       this.reference = selectedPublicationType?.instructions
     }
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   closeError() {

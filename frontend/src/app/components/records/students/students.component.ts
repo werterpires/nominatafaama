@@ -12,6 +12,7 @@ import { IMaritalStatus } from '../marital-status/types'
 import { StudentService } from './students.service'
 import { ICreateStudent, IStudent, IUpdateStudent } from './types'
 import { OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core'
+import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 
 @Component({
   selector: 'app-students',
@@ -26,6 +27,7 @@ export class StudentsComponent {
     private maritalStatusService: MaritalStatusService,
     private othersService: OthersServices,
     private dataService: DataService,
+    private validateService: ValidateService,
   ) {}
   @ViewChild('phoneNumberInput') phoneNumberInput!: ElementRef
 
@@ -99,6 +101,8 @@ export class StudentsComponent {
       next: (res) => {
         if (res && res.student_id) {
           this.registry = res
+          this.phoneNumber = this.registry.phone_number
+          this.formatarTelefone()
           this.dataService.maritalStatusName =
             this.registry.marital_status_type_name
         } else {
@@ -205,7 +209,86 @@ export class StudentsComponent {
 
   createRegistry() {
     this.isLoading = true
-    this.isLoading = true
+
+    if (this.validateService.validatePhoneNumber(this.phoneNumber) == false) {
+      this.showError('Digite um número de telefone válido.')
+      return
+    }
+
+    if (
+      this.validateService.validateEmailData(this.registry.alternative_email) ==
+      false
+    ) {
+      this.showError('Insira um email válido para adicionar os dados.')
+      return
+    }
+
+    if (parseInt(this.registry.origin_field_id.toString()) < 1) {
+      this.showError(
+        'Escolha um campo de origem para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.justification.length < 1) {
+      this.showError(
+        'Justifique por que você acha que esse é seu campo de origem.',
+      )
+      return
+    }
+
+    if (this.registry.marital_status_id < 1) {
+      this.showError('Escolha um estado civil para prosseguir com o cadastro.')
+      return
+    }
+
+    if (this.registry.birth_date.length < 1) {
+      this.showError(
+        'Informe a data de nascimento para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (
+      this.registry.birth_state.length < 1 ||
+      this.registry.birth_city.length < 1
+    ) {
+      this.showError(
+        'Informe um estado e uma cidade de nascimento para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (
+      this.registry.primary_school_state.length < 1 ||
+      this.registry.primary_school_city.length < 1
+    ) {
+      this.showError(
+        'Informe o estado e a cidade onde completou o ensino fundamental para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.baptism_date.length < 1) {
+      this.showError(
+        'Informe a data de batismo para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.baptism_place.length < 12) {
+      this.showError(
+        'Informe o local de batismo para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.student_mensage.length < 12) {
+      this.showError(
+        'Escolha uma mensagem bíblica que represente seu estilo de ministério para prosseguir com o cadastro.',
+      )
+      return
+    }
 
     const newStudent: ICreateStudent = {
       alternative_email: this.registry.alternative_email,
@@ -218,7 +301,7 @@ export class StudentsComponent {
       justification: this.registry.justification,
       marital_status_id: parseInt(this.registry.marital_status_id.toString()),
       origin_field_id: parseInt(this.registry.origin_field_id.toString()),
-      phone_number: this.phoneNumber,
+      phone_number: this.phoneNumber.replace(/\D/g, ''),
       primary_school_city: this.registry.primary_school_city,
       primary_school_state: this.registry.primary_school_state,
       student_mensage: this.registry.student_mensage,
@@ -241,6 +324,86 @@ export class StudentsComponent {
 
   editRegistry() {
     this.isLoading = true
+
+    if (this.validateService.validatePhoneNumber(this.phoneNumber) == false) {
+      this.showError('Digite um número detelefone válido.')
+      return
+    }
+
+    if (
+      this.validateService.validateEmailData(this.registry.alternative_email) ==
+      false
+    ) {
+      this.showError('Insira um email válido para adicionar os dados.')
+      return
+    }
+
+    if (parseInt(this.registry.origin_field_id.toString()) < 1) {
+      this.showError(
+        'Escolha um campo de origem para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.justification.length < 1) {
+      this.showError(
+        'Justifique por que você acha que esse é seu campo de origem.',
+      )
+      return
+    }
+
+    if (this.registry.marital_status_id < 1) {
+      this.showError('Escolha um estado civil para prosseguir com o cadastro.')
+      return
+    }
+
+    if (this.registry.birth_date.length < 1) {
+      this.showError(
+        'Informe a data de nascimento para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (
+      this.registry.birth_state.length < 1 ||
+      this.registry.birth_city.length < 1
+    ) {
+      this.showError(
+        'Informe um estado e uma cidade de nascimento para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (
+      this.registry.primary_school_state.length < 1 ||
+      this.registry.primary_school_city.length < 1
+    ) {
+      this.showError(
+        'Informe o estado e a cidade onde completou o ensino fundamental para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.baptism_date.length < 1) {
+      this.showError(
+        'Informe a data de batismo para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.baptism_place.length < 12) {
+      this.showError(
+        'Informe o local de batismo para prosseguir com o cadastro.',
+      )
+      return
+    }
+
+    if (this.registry.student_mensage.length < 12) {
+      this.showError(
+        'Escolha uma mensagem bíblica que represente seu estilo de ministério para prosseguir com o cadastro.',
+      )
+      return
+    }
     this.registry.origin_field_id = Number(this.registry.origin_field_id)
     this.registry.marital_status_id = Number(this.registry.marital_status_id)
     this.registry.hiring_status_id = Number(this.registry.hiring_status_id)
@@ -263,7 +426,6 @@ export class StudentsComponent {
       baptism_date: this.dataService.dateFormatter(this.registry.baptism_date),
       baptism_place: this.registry.baptism_place,
       marital_status_id: Number(this.registry.marital_status_id),
-      hiring_status_id: this.registry.hiring_status_id,
     }
 
     this.studentServices.updateStudent(editStudentData).subscribe({
@@ -274,24 +436,6 @@ export class StudentsComponent {
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível atualizar o estudante.'
-        this.error = true
-        this.isLoading = false
-      },
-    })
-  }
-
-  deleteRegistry(id: number) {
-    this.isLoading = true
-    const studentId = this.registry.student_id
-
-    this.studentServices.deleteStudent(studentId).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Associação deletada com sucesso.'
-        this.done = true
-        this.isLoading = false
-      },
-      error: (err) => {
-        this.errorMessage = 'Não foi possível deletar a associação.'
         this.error = true
         this.isLoading = false
       },
@@ -353,11 +497,32 @@ export class StudentsComponent {
   }
 
   formatarTelefone() {
-    this.phoneNumber = this.phoneNumber.replace(
-      /(\d{2})(\d{5})(\d{4})/,
-      '($1) $2-$3',
-    )
-    console.log(this.phoneNumber)
+    let formatedNumber = ''
+    this.phoneNumber = this.phoneNumber.replace(/\D/g, '')
+
+    if (this.phoneNumber.length > 0) {
+      formatedNumber = '(' + this.phoneNumber.substring(0, 2) + ') '
+    }
+    if (this.phoneNumber.length > 2) {
+      formatedNumber += this.phoneNumber.substring(2, 6) + '-'
+    }
+    if (this.phoneNumber.length > 7) {
+      formatedNumber += this.phoneNumber.substring(6, 10)
+    }
+    if (this.phoneNumber.length == 11) {
+      formatedNumber = this.phoneNumber.replace(
+        /(\d{2})(\d{5})(\d{4})/,
+        '($1) $2-$3',
+      )
+    }
+
+    this.phoneNumber = formatedNumber
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   closeError() {

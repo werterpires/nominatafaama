@@ -109,7 +109,6 @@ export class UsersComponent {
       this.errorMessage = 'Insira um nome válido para editar o usuário.'
       this.error = true
       this.isLoading = false
-      this.ngOnInit()
       return
     }
     this.registry.cpf = this.registry.cpf.replace(/[^\d]/g, '')
@@ -133,17 +132,6 @@ export class UsersComponent {
     }
 
     if (
-      this.validateService.validatePasswordData(this.currentPassword) == false
-    ) {
-      this.errorMessage =
-        'É necessário inserir sua senha atual para alterar dados do usuário.'
-      this.error = true
-      this.isLoading = false
-      this.ngOnInit()
-      return
-    }
-
-    if (
       this.validateService.validatePasswordData(this.newPassword) == false &&
       this.newPassword.length > 0
     ) {
@@ -160,6 +148,16 @@ export class UsersComponent {
       this.error = true
       this.isLoading = false
       this.ngOnInit()
+      return
+    }
+
+    if (
+      this.validateService.validatePasswordData(this.currentPassword) == false
+    ) {
+      this.errorMessage =
+        'É necessário inserir sua senha atual para alterar dados do usuário.'
+      this.error = true
+      this.isLoading = false
       return
     }
 

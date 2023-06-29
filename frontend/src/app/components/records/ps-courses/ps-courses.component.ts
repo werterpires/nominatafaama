@@ -47,7 +47,7 @@ export class PsCoursesComponent {
       },
       error: (err) => {
         this.errorMessage = err.message
-        //this.error = true
+        this.error = true
         this.isLoading = false
       },
     })
@@ -71,6 +71,24 @@ export class PsCoursesComponent {
 
   createRegistry() {
     this.isLoading = true
+
+    if (this.createRegistryData.course_area.length < 2) {
+      this.showError('Insira a área do curso para prosseguir com o registro')
+      return
+    }
+
+    if (this.createRegistryData.institution.length < 2) {
+      this.showError('Insira a instituição para prosseguir com o registro')
+      return
+    }
+
+    if (this.createRegistryData.begin_date.length < 2) {
+      this.showError(
+        'Informe a data de início do curso para prosseguir com o registro',
+      )
+      return
+    }
+
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -102,6 +120,24 @@ export class PsCoursesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].course_area.length < 2) {
+      this.showError('Insira a área do curso para prosseguir com o registro')
+      return
+    }
+
+    if (this.allRegistries[index].institution.length < 2) {
+      this.showError('Insira a instituição para prosseguir com o registro')
+      return
+    }
+
+    if (this.allRegistries[index].begin_date.length < 2) {
+      this.showError(
+        'Informe a data de início do curso para prosseguir com o registro',
+      )
+      return
+    }
+
     const newRegistry: Partial<ICourse> = {
       ...this.allRegistries[index],
       begin_date: this.dataService.dateFormatter(
@@ -146,6 +182,12 @@ export class PsCoursesComponent {
         this.isLoading = false
       },
     })
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   closeError() {

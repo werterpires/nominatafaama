@@ -25,7 +25,8 @@ export class SpCoursesService {
           } else {
             console.log('Veja o erro completo', error)
             return throwError(
-              () => new Error('Não foi possível encontrar as linguagens.'),
+              () =>
+                new Error('Não foi possível encontrar os cursos cadastrados.'),
             )
           }
         }),
@@ -42,9 +43,7 @@ export class SpCoursesService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          return throwError(
-            () => new Error('Não foi possível criar a formação acadêmica.'),
-          )
+          return throwError(() => new Error('Não foi possível criar o curso.'))
         }),
       )
   }
@@ -60,7 +59,7 @@ export class SpCoursesService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível atualizar linguagens.'),
+            () => new Error('Não foi possível atualizar o curso.'),
           )
         }),
       )
@@ -77,7 +76,7 @@ export class SpCoursesService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () => new Error('Não foi possível deletar o curso.'),
           )
         }),
       )
