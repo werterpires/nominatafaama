@@ -9,6 +9,7 @@ import {
   IStCreateAcademicFormation,
   IStUpdateAcademicFormation,
 } from './types'
+import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 
 @Component({
   selector: 'app-student-academic-formations',
@@ -42,6 +43,7 @@ export class StudentAcademicFormationsComponent {
     private service: StudentAcademicFormationsService,
     private academicDegreeService: AcademicDegreeService,
     private dataService: DataService,
+    private validateService: ValidateService,
   ) {}
 
   ngOnInit() {
@@ -124,7 +126,7 @@ export class StudentAcademicFormationsComponent {
       return
     }
 
-    if (this.createRegistryData.begin_date.length < 2) {
+    if (this.createRegistryData.begin_date.length != 10) {
       this.showError(
         'Insira uma data de início para prosseguir com o registro.',
       )
@@ -178,7 +180,7 @@ export class StudentAcademicFormationsComponent {
       return
     }
 
-    if (this.allRegistries[index].begin_date.length < 2) {
+    if (this.allRegistries[index].begin_date.length != 10) {
       this.showError(
         'Insira uma data de início para prosseguir com o registro.',
       )

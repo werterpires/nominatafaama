@@ -22,10 +22,11 @@ export class SpPublicationsComponent {
   publicationTypeList: Array<IPublicationType> = []
   title = 'Publicações do Cônjuge'
   createRegistryData: CreatePublicationDto = {
-    link: '',
+    link: null,
     publication_type_id: 0,
     reference: '',
   }
+
   reference: string = ''
 
   showBox = false
@@ -43,8 +44,9 @@ export class SpPublicationsComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.publicationTypeList = []
     this.getAllRegistries()
-    this.getAllLanguageTypes()
   }
 
   getAllRegistries() {
@@ -52,17 +54,19 @@ export class SpPublicationsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.getAllTypes()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
         this.error = true
+        this.getAllTypes()
         this.isLoading = false
       },
     })
   }
 
-  getAllLanguageTypes() {
+  getAllTypes() {
     this.isLoading = true
     this.publicationTypeService.findAllRegistries().subscribe({
       next: (res) => {
@@ -137,10 +141,10 @@ export class SpPublicationsComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
+          this.isLoading = false
+          this.ngOnInit()
           this.resetCreationRegistry()
           this.showForm = false
-          this.ngOnInit()
-          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -202,7 +206,7 @@ export class SpPublicationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
+        this.ngOnInit()
         this.isLoading = false
       },
       error: (err) => {
@@ -219,8 +223,8 @@ export class SpPublicationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'

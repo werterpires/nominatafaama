@@ -19,7 +19,7 @@ export class SpEndowmentsComponent {
 
   allRegistries: IEndowment[] = []
   endowmentTypeList: Array<IEndowmentType> = []
-  title = 'Investiduras do Cônjuge'
+  title = 'Investiduras obtidas pelo Cônjuge'
   createRegistryData: CreateEndowmentDto = {
     endowment_type_id: 0,
   }
@@ -113,10 +113,10 @@ export class SpEndowmentsComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
           this.ngOnInit()
           this.showForm = false
           this.resetCreationRegistry()
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -146,10 +146,12 @@ export class SpEndowmentsComponent {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
         document.getElementById(buttonId)?.classList.add('hidden')
+        this.resetCreationRegistry()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
+
         this.error = true
         this.isLoading = false
       },

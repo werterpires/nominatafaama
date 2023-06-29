@@ -20,7 +20,8 @@ export class SpEvgExperiencesComponent {
 
   allRegistries: IEvangelisticExperience[] = []
   allTypes: IEvangExpType[] = []
-  title = 'Experiências Evangelísitcas do Cônjuge'
+  title =
+    'Experiências evangelísticas do Cônjuge durante a formação ministerial no SALT'
   createRegistryData: CreateEvangelisticExperienceDto = {
     evang_exp_type_id: 0,
     exp_begin_date: '',
@@ -43,6 +44,8 @@ export class SpEvgExperiencesComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.allTypes = []
     this.getAllRegistries()
   }
 
@@ -51,14 +54,14 @@ export class SpEvgExperiencesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
-        this.isLoading = false
         this.getEvgExpTypes()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
-        //this.error = true
-        this.isLoading = false
+        this.error = true
         this.getEvgExpTypes()
+        this.isLoading = false
       },
     })
   }
@@ -67,6 +70,11 @@ export class SpEvgExperiencesComponent {
     this.expTypService.findAllRegistries().subscribe({
       next: (res) => {
         this.allTypes = res
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
       },
     })
   }
@@ -89,6 +97,32 @@ export class SpEvgExperiencesComponent {
 
   createRegistry() {
     this.isLoading = true
+
+    if (this.createRegistryData.evang_exp_type_id < 1) {
+      this.showError('Informe o tipo de experiência evangelística.')
+      return
+    }
+
+    if (this.createRegistryData.project.length < 1) {
+      this.showError('Informe nome do projeto em que esteve envolvido.')
+      return
+    }
+
+    if (this.createRegistryData.place.length < 1) {
+      this.showError('Informe o local onde o projeto aconteceu.')
+      return
+    }
+
+    if (this.createRegistryData.exp_begin_date.length != 10) {
+      this.showError('Informe a data em que você foi inserido no projeto.')
+      return
+    }
+
+    if (this.createRegistryData.exp_end_date.length != 10) {
+      this.showError('Informe a data em que você concluiu o projeto.')
+      return
+    }
+
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -106,10 +140,10 @@ export class SpEvgExperiencesComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
-          this.getAllRegistries()
+          this.ngOnInit()
           this.showForm = false
           this.resetCreationRegistry()
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -121,6 +155,31 @@ export class SpEvgExperiencesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].evang_exp_type_id < 1) {
+      this.showError('Informe o tipo de experiência evangelística.')
+      return
+    }
+
+    if (this.allRegistries[index].project.length < 1) {
+      this.showError('Informe nome do projeto em que esteve envolvido.')
+      return
+    }
+
+    if (this.allRegistries[index].place.length < 1) {
+      this.showError('Informe o local onde o projeto aconteceu.')
+      return
+    }
+
+    if (this.allRegistries[index].exp_begin_date.length != 10) {
+      this.showError('Informe a data em que você foi inserido no projeto.')
+      return
+    }
+
+    if (this.allRegistries[index].exp_end_date.length != 10) {
+      this.showError('Informe a data em que você concluiu o projeto.')
+      return
+    }
 
     const updateRegistry: Partial<IEvangelisticExperience> = {
       ...this.allRegistries[index],
@@ -147,7 +206,7 @@ export class SpEvgExperiencesComponent {
         next: (res) => {
           this.doneMessage = 'Registro editado com sucesso.'
           this.done = true
-          document.getElementById(buttonId)?.classList.add('hidden')
+          this.ngOnInit()
           this.isLoading = false
         },
         error: (err) => {
@@ -156,6 +215,12 @@ export class SpEvgExperiencesComponent {
           this.isLoading = false
         },
       })
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   deleteRegistry(id: number) {

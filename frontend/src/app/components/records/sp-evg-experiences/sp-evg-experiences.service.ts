@@ -29,7 +29,10 @@ export class SpEvgExperiencesService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
+            () =>
+              new Error(
+                'Não foi possível encontrar as experiências evangelísticas.',
+              ),
           )
         }),
       )
@@ -52,7 +55,8 @@ export class SpEvgExperiencesService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível criar a formação acadêmica.'),
+            () =>
+              new Error('Não foi possível criar a experiência evangelística.'),
           )
         }),
       )
@@ -91,7 +95,10 @@ export class SpEvgExperiencesService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () =>
+              new Error(
+                'Não foi possível deletar a experiência evangelística.',
+              ),
           )
         }),
       )

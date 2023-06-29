@@ -33,6 +33,7 @@
             type="text"
             name="spouseCpfInput"
             [(ngModel)]="createRegistryData.cpf"
+            (input)="formatarCPF('create')"
           />
         </label>
       </div>
@@ -43,6 +44,7 @@
             type="text"
             name="spousePhoneNumberInput"
             [(ngModel)]="createRegistryData.phone_number"
+            (input)="formatarTelefone('create')"
           />
         </label>
         <label class="inputLabel">
@@ -64,7 +66,7 @@
           />
         </label>
       </div>
-      <div class="subSecion">
+      <div class="subSection">
         <label class="inputLabel">
           União de origem
           <select
@@ -97,15 +99,16 @@
           </select>
         </label>
       </div>
-
-      <label class="inputLabel">
-        Justifique por que você acredita ser esse o seu campo de origem
-        <input
-          class="largeInput"
-          name="justificationInput"
-          [(ngModel)]="createRegistryData.justification"
-        />
-      </label>
+      <div class="subSection">
+        <label class="inputLabel">
+          Justifique por que você acredita ser esse o seu campo de origem
+          <input
+            class="largeInput"
+            name="justificationInput"
+            [(ngModel)]="createRegistryData.justification"
+          />
+        </label>
+      </div>
 
       <div class="subSection">
         <label class="inputLabel">
@@ -174,16 +177,18 @@
           </select>
         </label>
       </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Data de casamento
+          <input
+            class="dateInput"
+            type="date"
+            name="merryDateInput"
+            [(ngModel)]="createRegistryData.civil_marriage_date"
+          />
+        </label>
+      </div>
 
-      <label class="inputLabel">
-        Data de casamento
-        <input
-          class="dateInput"
-          type="date"
-          name="merryDateInput"
-          [(ngModel)]="createRegistryData.civil_marriage_date"
-        />
-      </label>
       <div class="subSection">
         <label class="inputLabel">
           Estado do casamento
@@ -305,7 +310,7 @@
           />
         </label>
       </div>
-      <div class="subSecion">
+      <div class="subSection">
         <label class="inputLabel">
           União de origem
           <select
@@ -381,7 +386,11 @@
             name="birthCitySelect"
             [(ngModel)]="registry.birth_city"
           >
-            <option *ngFor="let city of allBirthCities" [value]="city.nome">
+            <option
+              *ngFor="let city of allBirthCities"
+              [value]="city.nome"
+              [selected]="city.nome === registry.birth_city"
+            >
               {{ city.nome }}
             </option>
           </select>
@@ -409,7 +418,11 @@
             name="schoollCitySelect"
             [(ngModel)]="registry.primary_school_city"
           >
-            <option *ngFor="let city of allSchoolCities" [value]="city.nome">
+            <option
+              *ngFor="let city of allSchoolCities"
+              [value]="city.nome"
+              [selected]="city.nome === registry.primary_school_city"
+            >
               {{ city.nome }}
             </option>
           </select>
@@ -446,7 +459,11 @@
             name="merrylCitySelect"
             [(ngModel)]="registry.civil_marriage_city"
           >
-            <option *ngFor="let city of allMerryCities" [value]="city.nome">
+            <option
+              *ngFor="let city of allMerryCities"
+              [value]="city.nome"
+              [selected]="city.nome === registry.civil_marriage_city"
+            >
               {{ city.nome }}
             </option>
           </select>

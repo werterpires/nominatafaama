@@ -132,6 +132,7 @@ export class AssociationsComponent {
 
     const newRegistry: Partial<IAssociation> = {
       ...this.allRegistries[index],
+      union_id: parseInt(this.allRegistries[index].union_id.toString()),
     }
 
     delete newRegistry.union_name

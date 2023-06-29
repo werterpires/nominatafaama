@@ -18,6 +18,8 @@ export class ValidateService {
 
   urlRegex: RegExp = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
 
+  dateRegex = /^\d{4}-\d{2}-\d{2}$/
+
   colorInput(valid: boolean, input: HTMLInputElement) {
     // Verifica se o email é válido
     if (valid) {
@@ -58,9 +60,11 @@ export class ValidateService {
 
     // Verifica se a senha é válido
     if (!this.cpfRegex.test(cpf)) {
+      console.log(cpf)
       return false
     }
     if (/^(\d)\1+$/.test(cpf)) {
+      console.log(2)
       return false
     }
 
@@ -89,6 +93,7 @@ export class ValidateService {
       digit1 !== parseInt(cpf.charAt(9)) ||
       digit2 !== parseInt(cpf.charAt(10))
     ) {
+      console.log(4)
       return false
     }
 
@@ -107,5 +112,9 @@ export class ValidateService {
 
   validateUrl(url: string) {
     return this.urlRegex.test(url)
+  }
+
+  validateDate(date: string) {
+    return this.dateRegex.test(date)
   }
 }

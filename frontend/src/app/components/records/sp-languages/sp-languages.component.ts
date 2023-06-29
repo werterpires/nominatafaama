@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { LanguageTypesService } from '../language-types/language-types.service'
 import { ILanguageType } from '../language-types/types'
-import { LanguageService } from '../languages/language.service'
 import {
   ILanguage,
   ICreateLanguageDto,
@@ -20,7 +19,7 @@ export class SpLanguagesComponent {
 
   allRegistries: ILanguage[] = []
   languageTypeList: Array<ILanguageType> = []
-  title = 'Linguagens do Cônjuge'
+  title = 'Idiomas do cônjuge'
   createRegistryData: ICreateLanguageDto = {
     chosen_language: 0,
     read: false,
@@ -45,8 +44,9 @@ export class SpLanguagesComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.languageTypeList = []
     this.getAllRegistries()
-    this.getAllLanguageTypes()
   }
 
   getAllRegistries() {
@@ -54,11 +54,13 @@ export class SpLanguagesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.getAllLanguageTypes()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
-        //this.error = true
+        this.error = true
+        this.getAllLanguageTypes()
         this.isLoading = false
       },
     })
@@ -97,6 +99,7 @@ export class SpLanguagesComponent {
       }
     })
   }
+
   createRegistry() {
     this.isLoading = true
     console.log(this.createRegistryData.chosen_language)
@@ -129,10 +132,11 @@ export class SpLanguagesComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
+
           this.resetCreationRegistry()
           this.ngOnInit()
           this.showForm = false
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -180,7 +184,7 @@ export class SpLanguagesComponent {
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
+        this.ngOnInit()
         this.isLoading = false
       },
       error: (err) => {
@@ -197,8 +201,8 @@ export class SpLanguagesComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'

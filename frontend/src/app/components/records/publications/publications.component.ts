@@ -45,8 +45,9 @@ export class PublicationsComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.publicationTypeList = []
     this.getAllRegistries()
-    this.getAllLanguageTypes()
   }
 
   getAllRegistries() {
@@ -54,17 +55,19 @@ export class PublicationsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.getAllTypes()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
         this.error = true
+        this.getAllTypes()
         this.isLoading = false
       },
     })
   }
 
-  getAllLanguageTypes() {
+  getAllTypes() {
     this.isLoading = true
     this.publicationTypeService.findAllRegistries().subscribe({
       next: (res) => {
@@ -140,9 +143,9 @@ export class PublicationsComponent {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.getAllRegistries()
-          this.showForm = false
+          this.ngOnInit()
           this.resetCreationRegistry()
+          this.showForm = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -204,7 +207,7 @@ export class PublicationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
+        this.ngOnInit()
         this.isLoading = false
       },
       error: (err) => {
@@ -221,8 +224,8 @@ export class PublicationsComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'

@@ -47,7 +47,7 @@ export class SpousesService {
         registry_number: dto.registry_number,
         name: dto.name,
         cpf: dto.cpf,
-        primary_school_state: dto.civil_marriage_state,
+        primary_school_state: dto.primary_school_state,
         student_id: student_id,
         civil_marriage_state: dto.civil_marriage_state,
       }

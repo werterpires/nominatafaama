@@ -109,10 +109,10 @@ export class EndowmentsComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
           this.ngOnInit()
           this.showForm = false
           this.resetCreationRegistry()
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -142,10 +142,12 @@ export class EndowmentsComponent {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
         document.getElementById(buttonId)?.classList.add('hidden')
+        this.resetCreationRegistry()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
+
         this.error = true
         this.isLoading = false
       },

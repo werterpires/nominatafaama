@@ -30,10 +30,10 @@ export class EclExperiencesComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.allRegistriesWithChecks = []
     this.getAllEclExpTypes()
   }
-
-  getAllRegistries() {}
 
   getAllEclExpTypes() {
     this.isLoading = true
@@ -87,7 +87,7 @@ export class EclExperiencesComponent {
     this.service.updateRegistry(newRegistry).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
-        this.getAllEclExpTypes()
+        this.ngOnInit()
         this.done = true
         this.isLoading = false
       },
@@ -105,8 +105,8 @@ export class EclExperiencesComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'

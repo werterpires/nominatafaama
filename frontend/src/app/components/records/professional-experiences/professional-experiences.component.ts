@@ -39,6 +39,7 @@ export class ProfessionalExperiencesComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
     this.getAllRegistries()
   }
 
@@ -75,6 +76,24 @@ export class ProfessionalExperiencesComponent {
 
   createRegistry() {
     this.isLoading = true
+
+    if (this.createRegistryData.job.length < 1) {
+      this.showError('Informe o trabalho desempenhado.')
+      return
+    }
+
+    if (this.createRegistryData.job_institution.length < 1) {
+      this.showError(
+        'Informe a instituição, empresa ou o nome do seu patrão, caso seja uma pessoa física.',
+      )
+      return
+    }
+
+    if (this.createRegistryData.job_begin_date.length != 10) {
+      this.showError('Informe a data de início da experiência profissional.')
+      return
+    }
+
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -90,9 +109,9 @@ export class ProfessionalExperiencesComponent {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
-          this.getAllRegistries()
-          this.showForm = false
+          this.ngOnInit()
           this.resetCreationRegistry()
+          this.showForm = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -104,6 +123,23 @@ export class ProfessionalExperiencesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].job.length < 1) {
+      this.showError('Informe o trabalho desempenhado.')
+      return
+    }
+
+    if (this.allRegistries[index].job_institution.length < 1) {
+      this.showError(
+        'Informe a instituição, empresa ou o nome do seu patrão, caso seja uma pessoa física.',
+      )
+      return
+    }
+
+    if (this.allRegistries[index].job_begin_date.length != 10) {
+      this.showError('Informe a data de início da experiência profissional.')
+      return
+    }
 
     const newRegistry: Partial<IProfessionalExperience> = {
       ...this.allRegistries[index],
@@ -126,7 +162,7 @@ export class ProfessionalExperiencesComponent {
         next: (res) => {
           this.doneMessage = 'Registro editado com sucesso.'
           this.done = true
-          document.getElementById(buttonId)?.classList.add('hidden')
+          this.ngOnInit()
           this.isLoading = false
         },
         error: (err) => {
@@ -135,6 +171,12 @@ export class ProfessionalExperiencesComponent {
           this.isLoading = false
         },
       })
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   deleteRegistry(id: number) {

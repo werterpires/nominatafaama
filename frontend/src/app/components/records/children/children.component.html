@@ -28,7 +28,11 @@
         </label>
         <label>
           CPF:
-          <input type="text" [(ngModel)]="createRegistryData.cpf" />
+          <input
+            type="text"
+            [(ngModel)]="createRegistryData.cpf"
+            (input)="formatarCPF()"
+          />
         </label>
       </div>
 
@@ -81,7 +85,11 @@
         </label>
         <label>
           CPF:
-          <input type="text" [(ngModel)]="registry.cpf" />
+          <input
+            type="text"
+            [(ngModel)]="registry.cpf"
+            (input)="formatarCPFs()"
+          />
         </label>
       </div>
 

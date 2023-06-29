@@ -40,8 +40,9 @@ export class LanguagesComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
+    this.languageTypeList = []
     this.getAllRegistries()
-    this.getAllLanguageTypes()
   }
 
   getAllRegistries() {
@@ -49,11 +50,13 @@ export class LanguagesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.getAllLanguageTypes()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
         this.error = true
+        this.getAllLanguageTypes()
         this.isLoading = false
       },
     })
@@ -125,10 +128,11 @@ export class LanguagesComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
+
           this.resetCreationRegistry()
           this.ngOnInit()
           this.showForm = false
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -176,7 +180,7 @@ export class LanguagesComponent {
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
+        this.ngOnInit()
         this.isLoading = false
       },
       error: (err) => {
@@ -193,8 +197,8 @@ export class LanguagesComponent {
       next: (res) => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
-        this.isLoading = false
         this.ngOnInit()
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'

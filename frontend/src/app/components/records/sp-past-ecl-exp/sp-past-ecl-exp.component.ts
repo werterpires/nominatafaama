@@ -17,7 +17,8 @@ export class SpPastEclExpComponent {
   @Input() permissions!: IPermissions
 
   allRegistries: IPastEclExp[] = []
-  title = 'Experiências eclesiásticas e evangelísticas passadas do Cônjuge'
+  title =
+    'Experiências eclesiásticas e evangelísticas do Cônjuge anteriores ao Salt'
   createRegistryData: CreatePastEclExpDto = {
     function: '',
     past_exp_begin_date: '',
@@ -39,6 +40,7 @@ export class SpPastEclExpComponent {
   ) {}
 
   ngOnInit() {
+    this.allRegistries = []
     this.getAllRegistries()
   }
 
@@ -51,7 +53,7 @@ export class SpPastEclExpComponent {
       },
       error: (err) => {
         this.errorMessage = err.message
-        //this.error = true
+        this.error = true
         this.isLoading = false
       },
     })
@@ -75,6 +77,27 @@ export class SpPastEclExpComponent {
 
   createRegistry() {
     this.isLoading = true
+
+    if (this.createRegistryData.function.length < 1) {
+      this.showError('Informe a função desempenhada.')
+      return
+    }
+
+    if (this.createRegistryData.place.length < 1) {
+      this.showError('Informe o local em que conseguiu tal experiência.')
+      return
+    }
+
+    if (this.createRegistryData.past_exp_begin_date.length != 10) {
+      this.showError('Informe a data de início da experiência.')
+      return
+    }
+
+    if (this.createRegistryData.past_exp_end_date.length != 10) {
+      this.showError('Informe a data de fim da experiência.')
+      return
+    }
+
     this.service
       .createRegistry({
         ...this.createRegistryData,
@@ -89,10 +112,10 @@ export class SpPastEclExpComponent {
         next: (res) => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
-          this.isLoading = false
-          this.getAllRegistries()
+          this.ngOnInit()
           this.showForm = false
           this.resetCreationRegistry()
+          this.isLoading = false
         },
         error: (err) => {
           this.errorMessage = err.message
@@ -104,6 +127,27 @@ export class SpPastEclExpComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+
+    if (this.allRegistries[index].function.length < 1) {
+      this.showError('Informe a função desempenhada.')
+      return
+    }
+
+    if (this.allRegistries[index].place.length < 1) {
+      this.showError('Informe o local em que conseguiu tal experiência.')
+      return
+    }
+
+    if (this.allRegistries[index].past_exp_begin_date.length != 10) {
+      this.showError('Informe a data de início da experiência.')
+      return
+    }
+
+    if (this.allRegistries[index].past_exp_end_date.length != 10) {
+      this.showError('Informe a data de fim da experiência.')
+      return
+    }
+
     const newRegistry: Partial<IPastEclExp> = {
       ...this.allRegistries[index],
       past_exp_begin_date: this.dataService.dateFormatter(
@@ -117,13 +161,11 @@ export class SpPastEclExpComponent {
     delete newRegistry.updated_at
     delete newRegistry.past_ecl_approved
 
-    console.log(newRegistry)
-
     this.service.updateRegistry(newRegistry as UpdatePastEclExpDto).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
+        this.ngOnInit()
         this.isLoading = false
       },
       error: (err) => {
@@ -132,6 +174,12 @@ export class SpPastEclExpComponent {
         this.isLoading = false
       },
     })
+  }
+
+  showError(message: string) {
+    this.errorMessage = message
+    this.error = true
+    this.isLoading = false
   }
 
   deleteRegistry(id: number) {

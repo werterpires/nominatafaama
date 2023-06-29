@@ -31,7 +31,7 @@ export class SpRelatedMinistriesService {
           return throwError(
             () =>
               new Error(
-                'Não foi possível encontrar os ministérios relacionados.',
+                'Não foi possível encontrar os ministérios de interesse.',
               ),
           )
         }),
@@ -55,7 +55,8 @@ export class SpRelatedMinistriesService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível criar a formação acadêmica.'),
+            () =>
+              new Error('Não foi possível criar o ministério de interesse.'),
           )
         }),
       )
@@ -76,7 +77,10 @@ export class SpRelatedMinistriesService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível atualizar linguagens.'),
+            () =>
+              new Error(
+                'Não foi possível atualizar os ministérios de interesse.',
+              ),
           )
         }),
       )
@@ -93,7 +97,8 @@ export class SpRelatedMinistriesService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () =>
+              new Error('Não foi possível deletar o ministério de interesse.'),
           )
         }),
       )

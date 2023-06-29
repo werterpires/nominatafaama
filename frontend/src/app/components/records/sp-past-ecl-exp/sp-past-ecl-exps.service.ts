@@ -26,7 +26,10 @@ export class SpPastEclExpService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
+            () =>
+              new Error(
+                'Não foi possível encontrar as experiências eclesiásticas e evangelísticas anteriores ao Salt.',
+              ),
           )
         }),
       )
@@ -47,7 +50,7 @@ export class SpPastEclExpService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível criar a formação acadêmica.'),
+            () => new Error('Não foi possível criar a experiência passada.'),
           )
         }),
       )
@@ -68,7 +71,8 @@ export class SpPastEclExpService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível atualizar linguagens.'),
+            () =>
+              new Error('Não foi possível atualizar a experiência passada.'),
           )
         }),
       )
@@ -85,7 +89,7 @@ export class SpPastEclExpService {
         catchError((error) => {
           console.log('Veja o erro completo', error)
           return throwError(
-            () => new Error('Não foi possível deletar o registro.'),
+            () => new Error('Não foi possível deletar a experiência passada.'),
           )
         }),
       )
