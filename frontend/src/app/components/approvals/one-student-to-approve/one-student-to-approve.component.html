@@ -29,7 +29,7 @@
         <span class="field">
           <p class="fieldTitle">Data de nascimento</p>
           <p class="fieldContent">
-            {{ student.student.birth_date }}
+            {{ formatDate(student.student.birth_date) }}
           </p>
         </span>
         <span class="field">
@@ -43,16 +43,22 @@
       <div class="subSection">
         <span class="field">
           <p class="fieldTitle">Batismo</p>
-          <p class="fieldContent">{{ student.student.baptism_date }}</p>
+          <p class="fieldContent">
+            {{ formatDate(student.student.baptism_date) }}
+          </p>
           <p class="fieldContent">{{ student.student.baptism_place }}</p>
         </span>
         <span class="field">
           <p class="fieldTitle">Tempo de batismo</p>
-          <p class="fieldContent">{{ student.student.baptism_date }}</p>
+          <p class="fieldContent">
+            {{ formateAge(student.student.baptism_date) }} Anos
+          </p>
         </span>
         <span class="field">
           <p class="fieldTitle">Telefone</p>
-          <p class="fieldContent">{{ student.student.phone_number }}</p>
+          <p class="fieldContent">
+            {{ formatarTelefone(student.student.phone_number) }}
+          </p>
         </span>
         <span class="field">
           <p class="fieldTitle">E-mail</p>
@@ -66,18 +72,7 @@
           student.relatedMinistries.length > 0
         "
         class="subSection"
-      >
-        <!-- <span class="field">
-          <p class="fieldTitle">Ministério com os quais se identifica</p>
-          <div class="flexBetween">
-            <span
-              *ngFor="let ministry of student.relatedMinistries"
-              class="fieldContent"
-              >{{ ministry.ministry_type_name }}</span
-            >
-          </div>
-        </span> -->
-      </div>
+      ></div>
       <div class="subSection">
         <span class="field">
           <p class="fieldTitle">Mensagem do Formando</p>
@@ -246,7 +241,13 @@
       >
         <div>
           <p class="fieldContent">
-            {{ formation.begin_date }} a {{ formation.conclusion_date }}
+            {{ formatDate(formation.begin_date)
+            }}<span *ngIf="formation.conclusion_date">
+              a {{ formatDate(formation.conclusion_date) }}</span
+            >
+            <span *ngIf="!formation.conclusion_date">
+              (Não concuído ainda)</span
+            >
           </p>
           <p class="fieldContent">
             {{ formation.degree_name }} em {{ formation.course_area }},
@@ -327,7 +328,11 @@
       >
         <div>
           <p class="fieldContent">
-            {{ course.institution }} ({{ course.conclusion_date }})
+            {{ course.institution }}
+            <span *ngIf="course.conclusion_date"
+              >({{ formatDate(course.conclusion_date) }})</span
+            >
+            <span *ngIf="!course.conclusion_date">(Não concluído)</span>
           </p>
           <p class="fieldContent">
             {{ course.course_area }}
@@ -491,10 +496,10 @@
       >
         <div>
           <p class="fieldContent wWeight">
-            {{ experience.job_begin_date
+            {{ formatDate(experience.job_begin_date)
             }}<span *ngIf="experience.job_end_date">
-              - {{ experience.job_end_date }}</span
-            >
+              a {{ formatDate(experience.job_end_date) }}</span
+            ><span *ngIf="!experience.job_end_date"> (Profissão atual)</span>
           </p>
           <p class="fieldContent">
             {{ experience.job }} - {{ experience.job_institution }}
@@ -577,8 +582,8 @@
       >
         <div>
           <p class="fieldContent wWeight">
-            {{ experience.past_exp_begin_date }} -
-            {{ experience.past_exp_end_date }}
+            {{ formatDate(experience.past_exp_begin_date) }} a
+            {{ formatDate(experience.past_exp_end_date) }}
           </p>
           <p class="fieldContent">
             {{ experience.function }}
@@ -905,8 +910,8 @@
             >
               <div>
                 <p class="fieldContent wWeight">
-                  {{ experience.exp_begin_date }} -
-                  {{ experience.exp_end_date }}
+                  {{ formatDate(experience.exp_begin_date) }} a
+                  {{ formatDate(experience.exp_end_date) }}
                 </p>
                 <p class="fieldContent">
                   {{ experience.project }}
@@ -980,9 +985,9 @@
       </div>
     </div>
     <div *ngIf="student.publications != null">
-      <p class="weightFieldTitle">Publicações acima</p>
+      <p class="weightFieldTitle">Publicações</p>
       <div *ngFor="let publicationType of publicationTypes">
-        <p class="fieldTitle">{{ publicationType }} abaixo</p>
+        <p class="fieldTitle">{{ publicationType }}</p>
         <div *ngFor="let publication of student.publications">
           <div *ngIf="publication.publication_type == publicationType">
             <div
@@ -996,8 +1001,13 @@
             >
               <div>
                 <p class="fieldContent wWeight">
-                  {{ publication.reference }} Disponível em:
-                  <a href="{{ publication.link }}">{{ publication.link }}</a>
+                  {{ publication.reference }}
+                  <span *ngIf="publication.link">
+                    Disponível em:
+                    <a href="{{ publication.link }}">{{
+                      publication.link
+                    }}</a></span
+                  >
                 </p>
 
                 <form class="formSection">
@@ -1099,9 +1109,25 @@
               </p>
             </span>
             <span class="field">
-              <p class="fieldTitle">Idade</p>
+              <p class="fieldTitle">Justificativa</p>
               <p class="fieldContent">
-                {{ student.spouse.birth_date }}
+                {{ student.spouse.justification }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Naturalidade</p>
+              <p class="fieldContent">
+                {{ student.spouse.birth_city }}-{{ student.spouse.birth_state }}
+              </p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Ensino fundamental</p>
+              <p class="fieldContent">
+                {{ student.spouse.primary_school_city }}-{{
+                  student.spouse.primary_school_state
+                }}
               </p>
             </span>
           </div>
@@ -1109,35 +1135,69 @@
             <span class="field">
               <p class="fieldTitle">Data de nascimento</p>
               <p class="fieldContent">
-                {{ student.spouse.birth_date }}
+                {{ formatDate(student.spouse.birth_date) }}
               </p>
             </span>
             <span class="field">
-              <p class="fieldTitle">Naturalidade</p>
+              <p class="fieldTitle">Idade</p>
               <p class="fieldContent">
-                {{ student.spouse.birth_city }}-{{ student.spouse.birth_state }}
+                {{ formateAge(student.spouse.birth_date) }} anos
               </p>
             </span>
           </div>
           <div class="subSection">
             <span class="field">
               <p class="fieldTitle">Batismo</p>
-              <p class="fieldContent">{{ student.spouse.baptism_date }}</p>
+              <p class="fieldContent">
+                {{ formatDate(student.spouse.baptism_date) }}
+              </p>
               <p class="fieldContent">{{ student.spouse.baptism_place }}</p>
             </span>
             <span class="field">
               <p class="fieldTitle">Tempo de batismo</p>
-              <p class="fieldContent">{{ student.spouse.baptism_date }}</p>
+              <p class="fieldContent">
+                {{ formateAge(student.spouse.baptism_date) }} anos
+              </p>
             </span>
           </div>
           <div class="subSection">
             <span class="field">
               <p class="fieldTitle">Telefone</p>
-              <p class="fieldContent">{{ student.spouse.phone_number }}</p>
+              <p class="fieldContent">
+                {{ formatarTelefone(student.spouse.phone_number) }}
+              </p>
             </span>
             <span class="field">
               <p class="fieldTitle">E-mail</p>
               <p class="fieldContent">{{ student.spouse.alternative_email }}</p>
+            </span>
+          </div>
+          <div class="subSection" *ngIf="student.spouse.civil_marriage_date">
+            <span class="field">
+              <p class="fieldTitle">Data de casamento</p>
+              <p class="fieldContent">
+                {{ formatDate(student.spouse.civil_marriage_date) }}
+              </p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Local de casamento</p>
+              <p class="fieldContent">
+                {{ student.spouse.civil_marriage_city }}-{{
+                  student.spouse.civil_marriage_state
+                }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection" *ngIf="student.spouse.civil_marriage_date">
+            <span class="field">
+              <p class="fieldTitle">Cartório do casamento</p>
+              <p class="fieldContent">
+                {{ student.spouse.registry }}
+              </p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Registro do casamento</p>
+              <p class="fieldContent">{{ student.spouse.registry_number }}</p>
             </span>
           </div>
           <div
@@ -1146,18 +1206,7 @@
               student.relatedMinistries.length > 0
             "
             class="subSection"
-          >
-            <!-- <span class="field">
-            <p class="fieldTitle">Ministério com os quais se identifica</p>
-            <div class="flexBetween">
-              <span
-                *ngFor="let ministry of student.relatedMinistries"
-                class="fieldContent"
-                >{{ ministry.ministry_type_name }}</span
-              >
-            </div>
-          </span> -->
-          </div>
+          ></div>
         </div>
         <div class="subSectionSpousePhoto">
           <div class="spousePhoto">
@@ -1223,6 +1272,8 @@
         </button>
       </form>
     </div>
+
+    <hr class="sectionDivisiion" />
     <div *ngIf="student.spRelatedMinistries != null">
       <p class="fieldTitle">Ministérios de interesse</p>
       <div
@@ -1315,7 +1366,13 @@
       >
         <div>
           <p class="fieldContent">
-            {{ formation.begin_date }} a {{ formation.conclusion_date }}
+            {{ formatDate(formation.begin_date)
+            }}<span *ngIf="formation.conclusion_date">
+              a {{ formatDate(formation.conclusion_date) }}</span
+            >
+            <span *ngIf="!formation.conclusion_date">
+              (Não concuído ainda)</span
+            >
           </p>
           <p class="fieldContent">
             {{ formation.degree_name }} em {{ formation.course_area }},
@@ -1396,7 +1453,11 @@
       >
         <div>
           <p class="fieldContent">
-            {{ course.institution }} ({{ course.conclusion_date }})
+            {{ course.institution }}
+            <span *ngIf="course.conclusion_date"
+              >({{ formatDate(course.conclusion_date) }})</span
+            >
+            <span *ngIf="!course.conclusion_date">(Não concluído)</span>
           </p>
           <p class="fieldContent">
             {{ course.course_area }}
@@ -1560,10 +1621,10 @@
       >
         <div>
           <p class="fieldContent wWeight">
-            {{ experience.job_begin_date
+            {{ formatDate(experience.job_begin_date)
             }}<span *ngIf="experience.job_end_date">
-              - {{ experience.job_end_date }}</span
-            >
+              a {{ formatDate(experience.job_end_date) }}</span
+            ><span *ngIf="!experience.job_end_date"> (Profissão atual)</span>
           </p>
           <p class="fieldContent">
             {{ experience.job }} - {{ experience.job_institution }}
@@ -1646,8 +1707,8 @@
       >
         <div>
           <p class="fieldContent wWeight">
-            {{ experience.past_exp_begin_date }} -
-            {{ experience.past_exp_end_date }}
+            {{ formatDate(experience.past_exp_begin_date) }} a
+            {{ formatDate(experience.past_exp_end_date) }}
           </p>
           <p class="fieldContent">
             {{ experience.function }}
@@ -1814,8 +1875,8 @@
             >
               <div>
                 <p class="fieldContent wWeight">
-                  {{ experience.exp_begin_date }} -
-                  {{ experience.exp_end_date }}
+                  {{ formatDate(experience.exp_begin_date) }} a
+                  {{ formatDate(experience.exp_end_date) }}
                 </p>
                 <p class="fieldContent">
                   {{ experience.project }}
@@ -1889,9 +1950,9 @@
       </div>
     </div>
     <div *ngIf="student.spPublications != null">
-      <p class="weightFieldTitle">Publicações acima</p>
+      <p class="weightFieldTitle">Publicações</p>
       <div *ngFor="let publicationType of spPublicationTypes">
-        <p class="fieldTitle">{{ publicationType }} abaixo</p>
+        <p class="fieldTitle">{{ publicationType }}</p>
         <div *ngFor="let publication of student.spPublications">
           <div *ngIf="publication.publication_type == publicationType">
             <div
@@ -1905,8 +1966,13 @@
             >
               <div>
                 <p class="fieldContent wWeight">
-                  {{ publication.reference }} Disponível em:
-                  <a href="{{ publication.link }}">{{ publication.link }}</a>
+                  {{ publication.reference }}
+                  <span *ngIf="publication.link">
+                    Disponível em:
+                    <a href="{{ publication.link }}">{{
+                      publication.link
+                    }}</a></span
+                  >
                 </p>
 
                 <form class="formSection">
@@ -1981,7 +2047,6 @@
   </div>
   <section>
     <div>
-      <!-- <p class="fieldTitle">Formações acadêmicas</p> -->
       <div
         class="subSection"
         *ngFor="let child of student.children; let i = index"
@@ -1997,7 +2062,15 @@
             {{ child.name }}
           </p>
           <p class="fieldContent">
-            {{ child.child_birth_date }} anos,
+            <span *ngIf="formateAge(child.child_birth_date) == 1">
+              {{ formateAge(child.child_birth_date) }} ano,
+            </span>
+            <span *ngIf="formateAge(child.child_birth_date) > 1">
+              {{ formateAge(child.child_birth_date) }} anos,
+            </span>
+            <span *ngIf="formateAge(child.child_birth_date) > 1"
+              >menos de 1 ano,
+            </span>
             {{ child.marital_status_type_name }},
             {{ child.study_grade }}
           </p>
@@ -2076,7 +2149,6 @@
   </div>
   <section>
     <div>
-      <!-- <p class="fieldTitle">Formações acadêmicas</p> -->
       <div
         class="subSection"
         *ngFor="let marriage of student.previousMarriage; let i = index"
@@ -2089,7 +2161,7 @@
       >
         <div>
           <p class="fieldContent wWeight">
-            Foi casado até: {{ marriage.marriage_end_date }}
+            Foi casado até: {{ formatDate(marriage.marriage_end_date) }}
           </p>
           <form class="formSection">
             <label class="labelRadio">

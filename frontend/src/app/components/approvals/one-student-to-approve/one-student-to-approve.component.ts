@@ -8,6 +8,7 @@ import { ApproveUserDto } from '../../approves/users-approves/types'
 import { ApproveDto } from './types'
 import { StudentsToApproveService } from '../student-to-approve/student-to-approve.service'
 import { ViewChildren, QueryList, ElementRef } from '@angular/core'
+import { CommonModule, DatePipe } from '@angular/common'
 
 @Component({
   selector: 'app-one-student-to-approve',
@@ -66,6 +67,7 @@ export class OneStudentToApproveComponent {
     private dataService: DataService,
     private service: OneStudentToApproveService,
     private studentToApproveService: StudentsToApproveService,
+    public datePipe: DatePipe,
   ) {}
 
   async ngOnInit() {
@@ -222,6 +224,40 @@ export class OneStudentToApproveComponent {
       this.error = true
       this.isLoading = false
     }
+  }
+
+  formatDate(date: string) {
+    return this.datePipe.transform(date, 'dd/MM/yyyy')
+  }
+
+  formateAge(date: string) {
+    return Math.floor(
+      (new Date().getTime() - new Date(date).getTime()) /
+        (1000 * 60 * 60 * 24 * 365.25),
+    )
+  }
+
+  formatarTelefone(phoneNumber: string) {
+    let formatedNumber = ''
+    phoneNumber = phoneNumber.replace(/\D/g, '')
+
+    if (phoneNumber.length > 0) {
+      formatedNumber = '(' + phoneNumber.substring(0, 2) + ') '
+    }
+    if (phoneNumber.length > 2) {
+      formatedNumber += phoneNumber.substring(2, 6) + '-'
+    }
+    if (phoneNumber.length > 7) {
+      formatedNumber += phoneNumber.substring(6, 10)
+    }
+    if (phoneNumber.length == 11) {
+      formatedNumber = phoneNumber.replace(
+        /(\d{2})(\d{5})(\d{4})/,
+        '($1) $2-$3',
+      )
+    }
+
+    return formatedNumber
   }
 
   goBack() {
