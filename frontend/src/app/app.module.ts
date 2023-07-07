@@ -61,8 +61,9 @@ import { ChildrenComponent } from './components/records/children/children.compon
 import { StudentToApproveComponent } from './components/approvals/student-to-approve/student-to-approve.component'
 import { ApprovalsMenuComponent } from './components/shared/approvals-menu/approvals-menu.component'
 import { OneStudentToApproveComponent } from './components/approvals/one-student-to-approve/one-student-to-approve.component'
-import { UsersComponent } from './components/records/users/users.component';
+import { UsersComponent } from './components/records/users/users.component'
 import { ParameterizationComponent } from './components/parameterization/parameterization.component'
+import { CommonModule, DatePipe } from '@angular/common'
 
 @NgModule({
   declarations: [
@@ -132,8 +133,9 @@ import { ParameterizationComponent } from './components/parameterization/paramet
     BrowserAnimationsModule,
     FormsModule,
     ToastrModule.forRoot(),
+    CommonModule,
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

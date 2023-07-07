@@ -459,13 +459,15 @@ export class SpousesComponent {
     }
     const newRegistry: IUpdateSpouse = {
       alternative_email: this.registry.alternative_email,
-      baptism_date: this.registry.baptism_date,
+      baptism_date: this.dataService.dateFormatter(this.registry.baptism_date),
       baptism_place: this.registry.baptism_place,
       birth_city: this.registry.birth_city,
-      birth_date: this.registry.birth_date,
+      birth_date: this.dataService.dateFormatter(this.registry.birth_date),
       birth_state: this.registry.birth_state,
       civil_marriage_city: this.registry.civil_marriage_city,
-      civil_marriage_date: this.registry.civil_marriage_date,
+      civil_marriage_date: this.registry.civil_marriage_date
+        ? this.dataService.dateFormatter(this.registry.civil_marriage_date)
+        : null,
       civil_marriage_state: this.registry.civil_marriage_state,
       cpf: this.registry.person_cpf,
       is_whatsapp: this.registry.is_whatsapp,
