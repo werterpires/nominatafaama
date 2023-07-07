@@ -72,6 +72,7 @@ export class EndowmentTypesComponent {
     this.service
       .createRegistry({
         ...this.createRegistryData,
+        application: parseInt(this.createRegistryData.application.toString()),
       })
       .subscribe({
         next: (res) => {
@@ -98,6 +99,7 @@ export class EndowmentTypesComponent {
       endowment_type_id: parseInt(
         this.allRegistries[index].endowment_type_id.toString(),
       ),
+      application: parseInt(this.allRegistries[index].application.toString()),
     }
 
     delete newRegistry.created_at

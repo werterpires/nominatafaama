@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
 import { IApproveData } from '../types/types'
+import { Console } from 'console'
 
 @Injectable()
 export class ApprovalsModel {
@@ -13,13 +14,16 @@ export class ApprovalsModel {
     await this.knex.transaction(async (trx) => {
       try {
         const { id, approve, table } = data
-        console.log(data)
 
         const columns = await this.knex(table).columnInfo()
-        console.log(columns, table)
-
         let approvedCollumn = ''
-        const firstColumn = Object.keys(columns)[0]
+        const primaryKeyColumnResult = await this.knex.raw(
+          `SHOW KEYS FROM \`${table}\` WHERE Key_name = 'PRIMARY'`,
+        )
+
+        const primaryKeyColumn = primaryKeyColumnResult[0][0].Column_name
+
+        console.log(primaryKeyColumn)
 
         for (const column in columns) {
           if (column.includes('approved')) {
@@ -28,13 +32,15 @@ export class ApprovalsModel {
           }
         }
 
-        if (approvedCollumn.length < 1 || !firstColumn) {
+        if (approvedCollumn.length < 1 || !primaryKeyColumn) {
           throw new Error(
             'Não foram encontradas colunas válidas para execuatar a aprovação.',
           )
         }
 
-        await trx(table).update(approvedCollumn, approve).where(firstColumn, id)
+        await trx(table)
+          .update(approvedCollumn, approve)
+          .where(primaryKeyColumn, id)
 
         await trx.commit()
       } catch (error) {
