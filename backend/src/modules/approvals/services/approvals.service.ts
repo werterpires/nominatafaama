@@ -44,7 +44,7 @@ export class ApprovalsService {
     private relatedMinistriesModel: RelatedMinistriesModel,
     private childrenService: ChildrenModel,
     private studentPhotoService: StudentPhotosService,
-    private approvalsModel: ApprovalsModel
+    private approvalsModel: ApprovalsModel,
   ) {}
 
   async findNotApproved(): Promise<ICompleteUser[] | null> {
@@ -54,90 +54,90 @@ export class ApprovalsService {
 
       const notApprovedStudentPersonIds =
         await this.studentsModel.findNotApprovedIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedStudentPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedStudentPersonIds)
 
       const notApprovedSpousesPersonIds =
         await this.academicFormationsModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedSpousesPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedSpousesPersonIds)
 
       const notApprovedAcademicFormationsPersonIds =
         await this.spousesModel.findNotApprovedStudentIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(
+
+      personIds = this.addPersonIds(
         personIds,
         notApprovedAcademicFormationsPersonIds,
       )
 
       const notApprovedLanguagesPersonIds =
         await this.languagesModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedLanguagesPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedLanguagesPersonIds)
 
       const notApprovedCoursesPersonIds =
         await this.coursesModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedCoursesPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedCoursesPersonIds)
 
       const notApprovedPreviousMarriagesPersonIds =
         await this.previousMarriagesModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(
+
+      personIds = this.addPersonIds(
         personIds,
         notApprovedPreviousMarriagesPersonIds,
       )
 
       const notApprovedProfessionalExpPersonIds =
         await this.professionalExperiencesModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(
+
+      personIds = this.addPersonIds(
         personIds,
         notApprovedProfessionalExpPersonIds,
       )
 
       const notApprovedPasEclExpsPersonIds =
         await this.pastEclExpsModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedPasEclExpsPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedPasEclExpsPersonIds)
 
       const notApprovedEvangExpsPersonIds =
         await this.evangelisticExperiencesModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedEvangExpsPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedEvangExpsPersonIds)
 
       const notApprovedEclExpsPersonIds =
         await this.eclExperiencesModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedEclExpsPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedEclExpsPersonIds)
 
       const notApprovedPublicationsPersonIds =
         await this.publicationsModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedPublicationsPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedPublicationsPersonIds)
 
       const notApprovedEndowmentsPersonIds =
         await this.endowmentsModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedEndowmentsPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedEndowmentsPersonIds)
 
       const notApprovedOrdinationsPersonIds =
         await this.ordinationsModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedOrdinationsPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedOrdinationsPersonIds)
 
       const notApprovedRelatedMinistriesPersonIds =
         await this.relatedMinistriesModel.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(
+
+      personIds = this.addPersonIds(
         personIds,
         notApprovedRelatedMinistriesPersonIds,
       )
 
       const notApprovedChildrenPersonIds =
         await this.childrenService.findAllNotApprovedPersonIds()
-      console.log(personIds)
-        personIds = this.addPersonIds(personIds, notApprovedChildrenPersonIds)
+
+      personIds = this.addPersonIds(personIds, notApprovedChildrenPersonIds)
 
       const result = await this.usersModel.findUsersByIds(personIds)
       let photosInfo: {
@@ -166,9 +166,7 @@ export class ApprovalsService {
     return users
   }
 
-  async findOneNotApproved(
-    userId: number
-  ): Promise<ICompleteStudent> {
+  async findOneNotApproved(userId: number): Promise<ICompleteStudent> {
     const completeStudent: ICompleteStudent = {
       student: null,
       spouse: null,
@@ -207,30 +205,29 @@ export class ApprovalsService {
 
     try {
       let studentId: number = 0
-      
+
       const student: IStudent | null =
         await this.studentsModel.findStudentByUserId(userId)
       completeStudent.student = student
 
-      let personId:number = 0
+      let personId: number = 0
 
-      if(student != null){
+      if (student != null) {
         personId = student.person_id
       }
 
       let user: IUser | null = await this.usersModel.findUserById(userId)
       completeStudent.user = user
-      
 
       if (student && student.student_id) {
         studentId = student.student_id
       }
 
-      if (personId > 0){
+      if (personId > 0) {
         const academicFormations =
-        await this.academicFormationsModel.findAcademicFormationsByPersonId(
-          personId,
-        )
+          await this.academicFormationsModel.findAcademicFormationsByPersonId(
+            personId,
+          )
         if (academicFormations.length > 0) {
           completeStudent.academicFormations = academicFormations
         }
@@ -255,9 +252,8 @@ export class ApprovalsService {
           completeStudent.professionalExperiences = professionalExperiences
         }
 
-        const pastEclExps = await this.pastEclExpsModel.findPastEclExpsByPersonId(
-          personId,
-        )
+        const pastEclExps =
+          await this.pastEclExpsModel.findPastEclExpsByPersonId(personId)
         if (pastEclExps.length > 0) {
           completeStudent.pastEclExps = pastEclExps
         }
@@ -289,9 +285,8 @@ export class ApprovalsService {
           completeStudent.endowments = endowments
         }
 
-        const ordinations = await this.ordinationsModel.findOrdinationsByPersonId(
-          personId,
-        )
+        const ordinations =
+          await this.ordinationsModel.findOrdinationsByPersonId(personId)
         if (ordinations.length > 0) {
           completeStudent.ordinations = ordinations
         }
@@ -304,8 +299,6 @@ export class ApprovalsService {
           completeStudent.relatedMinistries = relatedMinistries
         }
       }
-
-      
 
       if (studentId > 0) {
         if (
@@ -489,7 +482,7 @@ export class ApprovalsService {
     headers: Record<string, string>
   } | null> {
     let photo: {
-      file: Buffer 
+      file: Buffer
       headers: Record<string, string>
     } | null = null
     if (photoData.fileStream != null) {
@@ -540,7 +533,7 @@ export class ApprovalsService {
     )
   }
 
-  async approveAny( data:IApproveData ):Promise<boolean>{
+  async approveAny(data: IApproveData): Promise<boolean> {
     let approved: boolean | null = null
     try {
       data.id = parseInt(data.id.toString())
@@ -548,16 +541,14 @@ export class ApprovalsService {
       return approved
     } catch (error) {
       console.error(`Erro capturado no ApprovalsService approve any: ${error}`)
-      
     }
-    if(approved === null){
+    if (approved === null) {
       throw new Error('Não foi possível executar a aprovação')
     }
     return approved
-
   }
 
-  async searchStudentsByName(searchString:string):Promise<IUser[] | null>{
+  async searchStudentsByName(searchString: string): Promise<IUser[] | null> {
     let users: IUser[] | null = []
     try {
       users = await this.usersModel.searchUsersByName(searchString)
@@ -566,7 +557,6 @@ export class ApprovalsService {
         headers: Record<string, string>
       }[] = []
       if (users !== null) {
-
         for (const user of users) {
           const photoData =
             await this.studentPhotoService.findStudentPhotoByStudentId(
@@ -578,10 +568,7 @@ export class ApprovalsService {
         }
         await this.addPhotos(users, photosInfo)
       }
-      
-    } catch (error) {
-      
-    }
+    } catch (error) {}
     return users
   }
 }

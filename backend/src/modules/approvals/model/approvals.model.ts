@@ -23,8 +23,6 @@ export class ApprovalsModel {
 
         const primaryKeyColumn = primaryKeyColumnResult[0][0].Column_name
 
-        console.log(primaryKeyColumn)
-
         for (const column in columns) {
           if (column.includes('approved')) {
             approvedCollumn = column
