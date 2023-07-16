@@ -69,15 +69,16 @@ export class SpousesComponent {
   errorMessage = ''
 
   ngOnInit() {
-    this.registry = null
+    this.possibleAssociantions = []
     this.allAssociations = []
-    this.allBirthCities = []
     this.allUnions = []
     this.allStates = []
     this.allBirthCities = []
     this.allSchoolCities = []
     this.allMerryCities = []
     this.selectedUnion = ''
+    this.selectedUnion = ''
+    this.registry = null
 
     this.getAllRegistries()
     if (this.registry != null) {
