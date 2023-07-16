@@ -12,9 +12,10 @@ import { AuthModule } from './shared/auth/auth.module'
 import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard'
 import { RolesGuard } from './shared/roles/gz_guards/roles.guard'
 import { RolesModule } from './shared/roles/roles.module'
-import { ApprovalsModule } from './modules/approvals/approvals.module';
+import { ApprovalsModule } from './modules/approvals/approvals.module'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as Nodemailer from 'nodemailer'
 
 config()
 

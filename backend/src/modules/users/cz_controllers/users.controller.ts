@@ -26,6 +26,7 @@ import { RestrictRoles } from 'src/shared/roles/fz_decorators/restrictRoles.deco
 import { UsersGuard } from '../gz_guards/users.guard'
 import { AproveUserDto } from '../az_dto/aproveUserDto'
 import { UpdateUserDto } from '../az_dto/updateUserDto'
+import { CreateRecoverPassDto } from '../az_dto/createRecoverPassDto'
 
 @Controller('users')
 export class UsersController {
@@ -67,8 +68,28 @@ export class UsersController {
   async getOwnUserById(@CurrentUser() currentUser: UserFromJwt) {
     try {
       const { user_id } = currentUser
-      console.log(user_id)
+
       const user = await this.usersService.findUserById(user_id)
+
+      return user
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.DIRECAO,
+    ERoles.DOCENTE,
+    ERoles.ESTUDANTE,
+    ERoles.REPRESENTACAO,
+    ERoles.SECRETARIA,
+  )
+  @Post('pass')
+  async recoverPass(@Body() userEmail: CreateRecoverPassDto) {
+    try {
+      const email = userEmail.principalEmail
+      const user = await this.usersService.recoverPass(email)
 
       return user
     } catch (error) {

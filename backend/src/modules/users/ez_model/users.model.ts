@@ -65,6 +65,29 @@ export class UsersModel {
     return user
   }
 
+  async createRecoverPass(pass: string, email: string): Promise<boolean> {
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        await trx('users').where('principal_email', '=', email).update({
+          passRecover: pass,
+        })
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+    return true
+  }
+
   async findUserById(id: number): Promise<IUser | null> {
     let user: IUser | null = null
     let sentError: Error | null = null
@@ -332,7 +355,6 @@ export class UsersModel {
               roles.push(roleMap.get(roleId)!)
             }
           })
-          console.log(result[0])
           user = {
             user_id: result[0].user_id,
             principal_email: result[0].principal_email,
@@ -531,8 +553,6 @@ export class UsersModel {
             await this.knex('users')
               .where('user_id', id)
               .update({ user_approved: updateUser.user_approved })
-
-            console.log('passei por aqui')
           }
 
           if (updateUser.cpf) {

@@ -11,6 +11,7 @@ import {
   IValidateUser,
 } from '../bz_types/types'
 import { UpdateUserDto } from '../az_dto/updateUserDto'
+import * as Nodemailer from 'nodemailer'
 
 @Injectable()
 export class UsersService {
@@ -143,5 +144,82 @@ export class UsersService {
     } catch (error) {
       throw error
     }
+  }
+
+  getRandomChar(characters: string): string {
+    const randomIndex = Math.floor(Math.random() * characters.length)
+    return characters[randomIndex]
+  }
+
+  async recoverPass(email: string) {
+    const numerals = '0123456789'
+    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz'
+    const symbols = '!@#$%&*_-?/~'
+    const allCharacters =
+      numerals + uppercaseLetters + lowercaseLetters + symbols
+
+    let pass = ''
+
+    pass += this.getRandomChar(numerals)
+    pass += this.getRandomChar(uppercaseLetters)
+    pass += this.getRandomChar(lowercaseLetters)
+    pass += this.getRandomChar(symbols)
+
+    for (let i = 4; i < 10; i++) {
+      pass += this.getRandomChar(allCharacters)
+    }
+
+    pass = pass
+      .split('')
+      .sort(() => 0.5 - Math.random())
+      .join('')
+
+    const passHash = await bcrypt.hash(pass, 10)
+
+    const now = new Date().toISOString()
+
+    const foundUser = await this.usersModel.createRecoverPass(
+      now + passHash,
+      email,
+    )
+
+    if (!foundUser) {
+      return
+    }
+
+    console.log('operação bem sucedida com a senha:', pass)
+
+    // const transporter = Nodemailer.createTransport({
+    //   service: 'gmail',
+    //   auth: {
+    //     user: 'werter.pires@solovidasementes.com.br',
+    //     pass: 'njxwnlsjkiuhengw',
+    //   },
+    // })
+
+    // const mailOptions = {
+    //   from: 'werter.pires@solovidasementes.com.br b ',
+    //   to: 'werterpires23@hotmail.com',
+    //   subject: 'Alteração de Senha',
+    //   text: `Você solicitou uma nova senha?,
+
+    //   Sua senha agora é ${pass} para ativar sua conta.`,
+    //   html: `
+    //   <div style="background-color: green">
+    //     <h1>Recuperação de senha</h1>
+    //     <p>Você solicitou alteração de senha.</p> </hr>
+    //     <p>Utilize a senha ${pass} no campo de recuperação de senha para trocar sua senha.</p></hr></hr>
+    //     <p>Se você não solicitou essa alteração, apenas ignore este email.</p>
+    //   </div>`,
+    // }
+
+    // transporter.sendMail(mailOptions, function (error, info) {
+    //   if (error) {
+    //     console.log('Erro ao enviar email: ', error)
+    //   } else {
+    //     console.log('Email enviado:', info.response)
+    //   }
+    // })
   }
 }
