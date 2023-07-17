@@ -191,39 +191,37 @@ export class UsersService {
         return false
       }
 
-      console.log('operação bem sucedida com a senha:', pass)
+      const transporter = Nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'werter.pires@solovidasementes.com.br',
+          pass: 'njxwnlsjkiuhengw',
+        },
+      })
 
-      // const transporter = Nodemailer.createTransport({
-      //   service: 'gmail',
-      //   auth: {
-      //     user: 'werter.pires@solovidasementes.com.br',
-      //     pass: 'njxwnlsjkiuhengw',
-      //   },
-      // })
+      const mailOptions = {
+        from: 'werter.pires@solovidasementes.com.br',
+        to: email,
+        subject: 'Alteração de Senha',
+        text: `Você solicitou uma nova senha?,
 
-      // const mailOptions = {
-      //   from: 'werter.pires@solovidasementes.com.br',
-      //   to: 'werterpires23@hotmail.com',
-      //   subject: 'Alteração de Senha',
-      //   text: `Você solicitou uma nova senha?,
+        Sua senha agora é ${pass} para ativar sua conta.`,
+        html: `
+        <div style="background-color: green">
+          <h1>Recuperação de senha</h1>
+          <p>Você solicitou alteração de senha.</p> </hr>
+          <p>Utilize a senha ${pass} no campo de recuperação de senha para trocar sua senha.</p></hr></hr>
+          <p>Se você não solicitou essa alteração, apenas ignore este email.</p>
+        </div>`,
+      }
 
-      //   Sua senha agora é ${pass} para ativar sua conta.`,
-      //   html: `
-      //   <div style="background-color: green">
-      //     <h1>Recuperação de senha</h1>
-      //     <p>Você solicitou alteração de senha.</p> </hr>
-      //     <p>Utilize a senha ${pass} no campo de recuperação de senha para trocar sua senha.</p></hr></hr>
-      //     <p>Se você não solicitou essa alteração, apenas ignore este email.</p>
-      //   </div>`,
-      // }
-
-      // transporter.sendMail(mailOptions, function (error, info) {
-      //   if (error) {
-      //     console.log('Erro ao enviar email: ', error)
-      //   } else {
-      //     console.log('Email enviado:', info.response)
-      //   }
-      // })
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log('Erro ao enviar email: ', error)
+        } else {
+          console.log('Email enviado:', info.response)
+        }
+      })
 
       return true
     } catch (error) {
