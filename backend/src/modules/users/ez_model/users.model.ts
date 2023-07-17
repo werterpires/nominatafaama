@@ -65,14 +65,34 @@ export class UsersModel {
     return user
   }
 
-  async createRecoverPass(pass: string, email: string): Promise<boolean> {
+  async createRecoverPass(pass: string, email: string): Promise<number> {
     let sentError: Error | null = null
+    let valid: number = 0
 
     await this.knex.transaction(async (trx) => {
       try {
-        await trx('users').where('principal_email', '=', email).update({
-          passRecover: pass,
-        })
+        const lastPass = await trx('users')
+          .where('principal_email', '=', email)
+          .first('pass_recover')
+
+        let lessFiveMinutes: boolean = true
+
+        if (lastPass.pass_recover.length > 24) {
+          lessFiveMinutes =
+            new Date().getTime() -
+              new Date(lastPass.pass_recover.slice(0, 24)).getTime() >
+            300000
+        }
+
+        if (!lessFiveMinutes) {
+          valid = 2
+        } else {
+          valid = await trx('users')
+            .where('principal_email', '=', email)
+            .update({
+              pass_recover: pass,
+            })
+        }
 
         await trx.commit()
       } catch (error) {
@@ -85,7 +105,51 @@ export class UsersModel {
     if (sentError) {
       throw sentError
     }
-    return true
+    return valid
+  }
+
+  async createPassword(email: string, password: string): Promise<number> {
+    let sentError: Error | null = null
+    let valid: number = 0
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const lastPass = await trx('users')
+          .where('principal_email', '=', email)
+          .first('pass_recover')
+
+        console.log(email, lastPass)
+        let lessFiveMinutes: boolean = true
+
+        if (lastPass.pass_recover.length > 24) {
+          lessFiveMinutes =
+            new Date().getTime() -
+              new Date(lastPass.pass_recover.slice(0, 24)).getTime() <
+            3600000
+        }
+
+        if (!lessFiveMinutes) {
+          valid = 2
+        } else {
+          valid = await trx('users')
+            .where('principal_email', '=', email)
+            .update({
+              password_hash: password,
+            })
+        }
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+    return valid
   }
 
   async findUserById(id: number): Promise<IUser | null> {
@@ -639,6 +703,43 @@ export class UsersModel {
     }
 
     return password
+  }
+
+  async findPassCodeByEmail(email: string): Promise<string | null> {
+    let passCode: string | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('users')
+          .first('pass_recover')
+          .where('users.principal_email', '=', email)
+
+        if (!result) {
+          throw new Error(`Usuário não encontrado`)
+        }
+
+        if (result) {
+          passCode = result.pass_recover
+        }
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+      }
+    })
+
+    if (passCode === null) {
+      sentError = new Error('Usuário não encontrado.')
+    }
+    if (sentError) {
+      throw sentError
+    }
+
+    return passCode
   }
 
   async deleteUserById(id: number): Promise<string> {

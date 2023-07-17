@@ -27,6 +27,7 @@ import { UsersGuard } from '../gz_guards/users.guard'
 import { AproveUserDto } from '../az_dto/aproveUserDto'
 import { UpdateUserDto } from '../az_dto/updateUserDto'
 import { CreateRecoverPassDto } from '../az_dto/createRecoverPassDto'
+import { CompareRecoverPassDto } from '../az_dto/compareRecoverPassDto'
 
 @Controller('users')
 export class UsersController {
@@ -77,21 +78,42 @@ export class UsersController {
     }
   }
 
-  @Roles(
-    ERoles.ADMINISTRACAO,
-    ERoles.DIRECAO,
-    ERoles.DOCENTE,
-    ERoles.ESTUDANTE,
-    ERoles.REPRESENTACAO,
-    ERoles.SECRETARIA,
-  )
-  @Post('pass')
+  @IsPublic()
+  @Post('recover')
   async recoverPass(@Body() userEmail: CreateRecoverPassDto) {
     try {
       const email = userEmail.principalEmail
-      const user = await this.usersService.recoverPass(email)
+      const code = await this.usersService.recoverPass(email)
 
-      return user
+      return code
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @IsPublic()
+  @Post('pass')
+  async comparePasscode(@Body() data: CompareRecoverPassDto) {
+    try {
+      const email = data.principalEmail
+      const pass = data.passCode
+      const isValid = await this.usersService.comparePassCode(email, pass)
+
+      return isValid
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @IsPublic()
+  @Post('change')
+  async changePassword(@Body() data: CompareRecoverPassDto) {
+    try {
+      const email = data.principalEmail
+      const password = data.passCode
+      const isValid = await this.usersService.changewPassword(email, password)
+
+      return isValid
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }

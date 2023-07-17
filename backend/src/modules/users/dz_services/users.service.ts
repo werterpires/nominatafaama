@@ -151,75 +151,130 @@ export class UsersService {
     return characters[randomIndex]
   }
 
-  async recoverPass(email: string) {
-    const numerals = '0123456789'
-    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz'
-    const symbols = '!@#$%&*_-?/~'
-    const allCharacters =
-      numerals + uppercaseLetters + lowercaseLetters + symbols
+  async recoverPass(email: string): Promise<boolean> {
+    try {
+      const numerals = '0123456789'
+      const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz'
+      const symbols = '!@#$%&*_-?/~'
+      const allCharacters =
+        numerals + uppercaseLetters + lowercaseLetters + symbols
 
-    let pass = ''
+      let pass = ''
 
-    pass += this.getRandomChar(numerals)
-    pass += this.getRandomChar(uppercaseLetters)
-    pass += this.getRandomChar(lowercaseLetters)
-    pass += this.getRandomChar(symbols)
+      pass += this.getRandomChar(numerals)
+      pass += this.getRandomChar(uppercaseLetters)
+      pass += this.getRandomChar(lowercaseLetters)
+      pass += this.getRandomChar(symbols)
 
-    for (let i = 4; i < 10; i++) {
-      pass += this.getRandomChar(allCharacters)
+      for (let i = 4; i < 10; i++) {
+        pass += this.getRandomChar(allCharacters)
+      }
+
+      pass = pass
+        .split('')
+        .sort(() => 0.5 - Math.random())
+        .join('')
+
+      const passHash = await bcrypt.hash(pass, 10)
+
+      const now = new Date().toISOString()
+
+      const foundUser = await this.usersModel.createRecoverPass(
+        now + passHash,
+        email,
+      )
+
+      if (foundUser == 0) {
+        return true
+      } else if (foundUser == 2) {
+        return false
+      }
+
+      console.log('operação bem sucedida com a senha:', pass)
+
+      // const transporter = Nodemailer.createTransport({
+      //   service: 'gmail',
+      //   auth: {
+      //     user: 'werter.pires@solovidasementes.com.br',
+      //     pass: 'njxwnlsjkiuhengw',
+      //   },
+      // })
+
+      // const mailOptions = {
+      //   from: 'werter.pires@solovidasementes.com.br',
+      //   to: 'werterpires23@hotmail.com',
+      //   subject: 'Alteração de Senha',
+      //   text: `Você solicitou uma nova senha?,
+
+      //   Sua senha agora é ${pass} para ativar sua conta.`,
+      //   html: `
+      //   <div style="background-color: green">
+      //     <h1>Recuperação de senha</h1>
+      //     <p>Você solicitou alteração de senha.</p> </hr>
+      //     <p>Utilize a senha ${pass} no campo de recuperação de senha para trocar sua senha.</p></hr></hr>
+      //     <p>Se você não solicitou essa alteração, apenas ignore este email.</p>
+      //   </div>`,
+      // }
+
+      // transporter.sendMail(mailOptions, function (error, info) {
+      //   if (error) {
+      //     console.log('Erro ao enviar email: ', error)
+      //   } else {
+      //     console.log('Email enviado:', info.response)
+      //   }
+      // })
+
+      return true
+    } catch (error) {
+      console.error(`Erro capturado no UsersService recoverPass: ${error}`)
+      throw error
+    }
+  }
+
+  async comparePassCode(email: string, pass: string): Promise<boolean> {
+    let sentError: Error | null = null
+    let isPassValid: boolean = false
+    try {
+      const atualPass = await this.usersModel.findPassCodeByEmail(email)
+
+      let lessOneHour: boolean = true
+
+      if (atualPass && atualPass.length > 24) {
+        lessOneHour =
+          new Date().getTime() - new Date(atualPass.slice(0, 24)).getTime() >
+          3600000
+      }
+      if (lessOneHour) {
+        isPassValid = false
+        return isPassValid
+      }
+      if (atualPass != null) {
+        const truePass = atualPass.slice(24)
+
+        isPassValid = await bcrypt.compare(pass, truePass)
+      }
+    } catch (error) {
+      sentError = new Error(error.message)
     }
 
-    pass = pass
-      .split('')
-      .sort(() => 0.5 - Math.random())
-      .join('')
-
-    const passHash = await bcrypt.hash(pass, 10)
-
-    const now = new Date().toISOString()
-
-    const foundUser = await this.usersModel.createRecoverPass(
-      now + passHash,
-      email,
-    )
-
-    if (!foundUser) {
-      return
+    if (sentError !== null) {
+      throw sentError
     }
 
-    console.log('operação bem sucedida com a senha:', pass)
+    return isPassValid
+  }
 
-    // const transporter = Nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: 'werter.pires@solovidasementes.com.br',
-    //     pass: 'njxwnlsjkiuhengw',
-    //   },
-    // })
+  async changewPassword(email: string, password: string) {
+    const passwordHash = await bcrypt.hash(password, 10)
+    let done: number = 0
 
-    // const mailOptions = {
-    //   from: 'werter.pires@solovidasementes.com.br b ',
-    //   to: 'werterpires23@hotmail.com',
-    //   subject: 'Alteração de Senha',
-    //   text: `Você solicitou uma nova senha?,
+    try {
+      done = await this.usersModel.createPassword(email, passwordHash)
+    } catch (error) {
+      throw error
+    }
 
-    //   Sua senha agora é ${pass} para ativar sua conta.`,
-    //   html: `
-    //   <div style="background-color: green">
-    //     <h1>Recuperação de senha</h1>
-    //     <p>Você solicitou alteração de senha.</p> </hr>
-    //     <p>Utilize a senha ${pass} no campo de recuperação de senha para trocar sua senha.</p></hr></hr>
-    //     <p>Se você não solicitou essa alteração, apenas ignore este email.</p>
-    //   </div>`,
-    // }
-
-    // transporter.sendMail(mailOptions, function (error, info) {
-    //   if (error) {
-    //     console.log('Erro ao enviar email: ', error)
-    //   } else {
-    //     console.log('Email enviado:', info.response)
-    //   }
-    // })
+    return done
   }
 }
