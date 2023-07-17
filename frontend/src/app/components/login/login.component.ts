@@ -21,29 +21,33 @@ export class LoginComponent {
 
   errorMessage: string = ''
   error!: boolean
+  forgot: number = 0
+  accessCode: string = ''
+  newPassword: string = ''
+  confirmPassword: string = ''
+  done = false
+  doneMessage = ''
 
   loginData: ILoginDto = {
     email: '',
     password: '',
   }
 
+  principalEmail: string = ''
+
   seePassword: boolean = false
   isLoading: boolean = false
 
-  validateEmailData() {
-    const emailInput = document.getElementById('emailInput') as HTMLInputElement
-    const valid = this.validateService.validateEmailData(this.loginData.email)
-    this.validateService.colorInput(valid, emailInput)
+  validateEmailData(input: HTMLInputElement) {
+    const valid = this.validateService.validateEmailData(
+      input.value ? input.value : '',
+    )
+    this.validateService.colorInput(valid, input)
   }
 
-  validatePasswordData() {
-    const passwordInput = document.getElementById(
-      'senhaInput',
-    ) as HTMLInputElement
-    const valid = this.validateService.validatePasswordData(
-      this.loginData.password,
-    )
-    this.validateService.colorInput(valid, passwordInput)
+  validatePasswordData(input: HTMLInputElement) {
+    const valid = this.validateService.validatePasswordData(input.value)
+    this.validateService.colorInput(valid, input)
   }
 
   login() {
@@ -81,8 +85,150 @@ export class LoginComponent {
     })
   }
 
+  getPassCode() {
+    this.isLoading = true
+
+    const isValidEmail = this.validateService.validateEmailData(
+      this.principalEmail,
+    )
+    if (!isValidEmail) {
+      this.errorMessage =
+        'Digite um email válido para prosseguir com a recuperação de senha.'
+      this.error = true
+      this.isLoading = false
+      return
+    }
+
+    this.loginService.getPassCode(this.principalEmail).subscribe({
+      next: (res) => {
+        if (res == false) {
+          this.errorMessage = 'Aguarde 5 minutos para solicitar novo token'
+          this.error = true
+          this.isLoading = false
+          return
+        }
+        this.forgot = 2
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
+
+  validatePassCode() {
+    this.isLoading = true
+
+    const isValidCode = this.validateService.validatePasswordData(
+      this.accessCode,
+    )
+    if (!isValidCode) {
+      this.errorMessage = 'Digite o código recebido por email.'
+      this.error = true
+      this.isLoading = false
+      return
+    }
+
+    this.loginService
+      .comparePassCode(this.principalEmail, this.accessCode)
+      .subscribe({
+        next: (res) => {
+          console.log(res)
+          this.forgot = 3
+          this.isLoading = false
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
+  }
+
+  changePassword() {
+    this.isLoading = true
+
+    const isvalidPassword = this.validateService.validatePasswordData(
+      this.newPassword,
+    )
+    if (!isvalidPassword) {
+      this.errorMessage =
+        'A senha deve contar ao menos uma letra maiúscula, uma minúscula, um dígito numério e um símbolo, além de conter pelo menos 8 caracteres.'
+      this.error = true
+      this.isLoading = false
+      return
+    }
+
+    if (this.newPassword != this.confirmPassword) {
+      this.errorMessage =
+        'A nova senha e a confirmação de senha devem ser iguais.'
+      this.error = true
+      this.isLoading = false
+      return
+    }
+
+    this.loginService
+      .changePassword(this.principalEmail, this.newPassword)
+      .subscribe({
+        next: (res) => {
+          if (res == 2) {
+            this.errorMessage = `Você precisa completar o processo em menos de 1 hora. `
+            this.error = true
+            this.forgot = 0
+            this.accessCode = ''
+            this.newPassword = ''
+            this.confirmPassword = ''
+            this.principalEmail = ''
+            this.isLoading = false
+            return
+          } else if (res == 1) {
+            this.doneMessage = `Senha alterada com sucesso. Utilize seu email e nova senha para login.`
+            this.done = true
+            this.forgot = 0
+            this.isLoading = false
+          }
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
+  }
+
   cancel() {
     this.router.navigateByUrl('/')
+  }
+
+  showRecover() {
+    this.forgot = 1
+  }
+
+  closeRecover() {
+    this.accessCode = ''
+    this.newPassword = ''
+    this.confirmPassword = ''
+    this.principalEmail = ''
+    this.forgot = 0
+  }
+
+  insertCode() {
+    this.isLoading = true
+
+    const isValidEmail = this.validateService.validateEmailData(
+      this.principalEmail,
+    )
+    if (!isValidEmail) {
+      this.errorMessage =
+        'Digite um email válido para prosseguir com a recuperação de senha.'
+      this.error = true
+      this.isLoading = false
+      return
+    }
+    this.forgot = 2
+    this.isLoading = false
   }
 
   showPassword() {
@@ -100,5 +246,9 @@ export class LoginComponent {
 
   closeError() {
     this.error = false
+  }
+
+  closeDone() {
+    this.done = false
   }
 }

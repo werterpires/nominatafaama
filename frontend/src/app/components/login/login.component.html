@@ -1,5 +1,5 @@
 <div class="loginContainer">
-  <div class="loginSquare">
+  <div class="loginSquare" *ngIf="forgot == 0">
     <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA" />
     <p class="loginInstruction">Nominata Salt</p>
     <form class="loginForm">
@@ -10,10 +10,11 @@
             id="emailInput"
             type="email"
             class="specialInput"
-            placeholder="seuemail@provedor.com"
+            #emailInput
+            placeholder="saulo.tarso@sinedrio.com"
             [(ngModel)]="loginData.email"
             [ngModelOptions]="{ standalone: true }"
-            (blur)="validateEmailData()"
+            (blur)="validateEmailData(emailInput)"
         /></label>
         <img
           class="inputIcon"
@@ -29,10 +30,11 @@
             id="senhaInput"
             type="password"
             class="specialInput"
-            placeholder="123456789"
+            #passwordInput
+            placeholder="1Cor 13:1-14"
             [(ngModel)]="loginData.password"
             [ngModelOptions]="{ standalone: true }"
-            (blur)="validatePasswordData()"
+            (blur)="validatePasswordData(passwordInput)"
           />
         </label>
         <img
@@ -55,21 +57,210 @@
         </button>
       </div>
     </form>
-    <p class="recover">Esqueci minha senha</p>
-    <div *ngIf="error" class="error">
-      <div class="errorTitle">
-        <p>Atenção</p>
-      </div>
-      <div class="errorMessage">
-        <p>{{ errorMessage }}</p>
-      </div>
-      <img
-        class="closeIcon"
-        src="assets/icons/closeIcon.png"
-        alt="Fechar"
-        (click)="closeError()"
-      />
+    <p class="recover" (click)="showRecover()">Esqueci minha senha</p>
+  </div>
+  <div class="loginSquare" *ngIf="forgot == 1">
+    <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA" />
+    <p class="loginInstruction">Nominata Salt</p>
+    <div class="loginInstructions">
+      <p class="instructionPass">Passo 1</p>
+      <p class="formInstruction marginBotton4">
+        Digite o seu email de usuário e cliquem em
+        <span class="upperCase">pedir código de acesso</span>.
+      </p>
+      <p class="formInstruction">
+        Se o email digitado corresponder a um email de usuário válido, você
+        receberá nesse email, em até 10 minutos, um código para recuperar sua
+        senha.
+      </p>
     </div>
+
+    <form class="loginForm">
+      <div class="loginField">
+        <label class="label"
+          >Email.
+          <input
+            id="emailInput"
+            type="email"
+            class="specialInput"
+            placeholder="saulo.tarso@sinedrio.com"
+            #emailInput
+            [(ngModel)]="principalEmail"
+            [ngModelOptions]="{ standalone: true }"
+            (blur)="validateEmailData(emailInput)"
+        /></label>
+        <img
+          class="inputIcon"
+          src="assets/icons/usuarioIcone.png"
+          alt="icone de um usuário"
+        />
+      </div>
+      <div class="flex gap-4 w-full px-4">
+        <button class="loginButton" type="submit" (click)="getPassCode()">
+          Pedir código de acesso
+        </button>
+        <button class="loginButton" type="submit" (click)="insertCode()">
+          Tenho um código
+        </button>
+        <button
+          class="loginButton flex-wrap-reverse"
+          type="submit"
+          (click)="closeRecover()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="loginSquare" *ngIf="forgot == 2">
+    <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA" />
+    <p class="loginInstruction">Nominata Salt</p>
+    <div class="loginInstructions">
+      <p class="instructionPass">Passo 2</p>
+      <p class="formInstruction marginBotton4">
+        Se <strong>{{ principalEmail }}</strong> corresponde a um email de
+        usuário válido, você deve ter recebido um código de acesso.
+      </p>
+      <p class="formInstruction marginBotton4">
+        Esse código de acesso é válido por 1 hora. Lembre-se de veririfar na
+        caixa de Span ou Lixo Eletrônico
+      </p>
+      <p class="formInstruction">
+        Digite o código abaixo e cliquem em
+        <span class="upperCase">Validar código</span>
+      </p>
+    </div>
+    <form class="loginForm">
+      <div class="loginField">
+        <label class="label"
+          >Código de acesso
+          <input
+            id="senhaInput"
+            type="password"
+            class="specialInput"
+            #passwordInput
+            placeholder="1Cor 13:1-14"
+            [(ngModel)]="accessCode"
+            [ngModelOptions]="{ standalone: true }"
+            (blur)="validatePasswordData(passwordInput)"
+        /></label>
+        <img
+          class="inputIcon"
+          src="assets/icons/seePasswordIcon.png"
+          alt="icone de um olho"
+          (click)="showPassword()"
+        />
+      </div>
+      <div class="flex gap-4 w-full px-4">
+        <button class="loginButton" type="submit" (click)="validatePassCode()">
+          Validar código
+        </button>
+        <button class="loginButton" type="submit" (click)="getPassCode()">
+          Pedir código de novo
+        </button>
+        <button
+          class="loginButton flex-wrap-reverse"
+          type="submit"
+          (click)="closeRecover()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="loginSquare" *ngIf="forgot == 3">
+    <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA" />
+    <p class="loginInstruction">Nominata Salt</p>
+    <div class="loginInstructions">
+      <p class="instructionPass">Passo 3</p>
+      <p class="formInstruction">
+        Esolha uma nova senha (a qual deve conter ao menos uma letra maiúscula,
+        uma letra minúscula, um símbolo e um dígito numérico) com no mínimo 8
+        caracteres.
+      </p>
+    </div>
+    <form class="loginForm">
+      <div class="loginField">
+        <label class="label"
+          >Nova Senha
+          <input
+            id="senhaInput"
+            type="password"
+            class="specialInput"
+            #passwordInput
+            placeholder="1Cor 13:1-14"
+            [(ngModel)]="newPassword"
+            [ngModelOptions]="{ standalone: true }"
+            (blur)="validatePasswordData(passwordInput)"
+        /></label>
+        <img
+          class="inputIcon"
+          src="assets/icons/seePasswordIcon.png"
+          alt="icone de um olho"
+          (click)="showPassword()"
+        />
+      </div>
+
+      <div class="loginField">
+        <label class="label"
+          >Confirme a nova senha
+          <input
+            id="senhaInput"
+            type="password"
+            class="specialInput"
+            #passwordInput
+            placeholder="1Cor 13:1-14"
+            [(ngModel)]="confirmPassword"
+            [ngModelOptions]="{ standalone: true }"
+        /></label>
+        <img
+          class="inputIcon"
+          src="assets/icons/seePasswordIcon.png"
+          alt="icone de um olho"
+          (click)="showPassword()"
+        />
+      </div>
+      <div class="flex gap-4 w-full px-4">
+        <button class="loginButton" type="submit" (click)="changePassword()">
+          Trocar senha
+        </button>
+        <button
+          class="loginButton flex-wrap-reverse"
+          type="submit"
+          (click)="closeRecover()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeError()"
+    />
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{ doneMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeDone()"
+    />
   </div>
   <div *ngIf="isLoading" class="loader1"></div>
   <div *ngIf="isLoading" class="loader2"></div>

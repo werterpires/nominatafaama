@@ -55,6 +55,82 @@ export class LoginService {
       )
   }
 
+  getPassCode(principalEmail: string) {
+    return this.http
+      .post<boolean>(environment.API + '/users/recover', {
+        principalEmail,
+      })
+      .pipe(
+        catchError((error) => {
+          if ((error.name = 'HttpErrorResponse')) {
+            return throwError(
+              () => new Error('Não foi possível fazer contato com o servidor.'),
+            )
+          } else {
+            return throwError(
+              () =>
+                new Error(
+                  'Aconteceu um problema com a sua recuperação de senha',
+                ),
+            )
+          }
+        }),
+        tap((resposta) => {
+          console.log(resposta)
+        }),
+      )
+  }
+
+  comparePassCode(principalEmail: string, passCode: string) {
+    return this.http
+      .post<boolean>(environment.API + '/users/pass ', {
+        principalEmail,
+        passCode,
+      })
+      .pipe(
+        catchError((error) => {
+          if ((error.name = 'HttpErrorResponse')) {
+            return throwError(
+              () => new Error('Não foi possível fazer contato com o servidor.'),
+            )
+          } else {
+            return throwError(
+              () =>
+                new Error(
+                  'Aconteceu um problema com a sua recuperação de senha',
+                ),
+            )
+          }
+        }),
+        tap((resposta) => {}),
+      )
+  }
+
+  changePassword(principalEmail: string, passCode: string) {
+    return this.http
+      .post<number>(environment.API + '/users/change ', {
+        principalEmail,
+        passCode,
+      })
+      .pipe(
+        catchError((error) => {
+          if ((error.name = 'HttpErrorResponse')) {
+            return throwError(
+              () => new Error('Não foi possível fazer contato com o servidor.'),
+            )
+          } else {
+            return throwError(
+              () =>
+                new Error(
+                  'Aconteceu um problema com a sua recuperação de senha',
+                ),
+            )
+          }
+        }),
+        tap((resposta) => {}),
+      )
+  }
+
   getRoles(token: string) {
     if (token) {
       this.userToken = token

@@ -986,3 +986,25 @@ button:active {
   top: 110px;
   left: 28px;
 }
+
+.loginInstructions {
+  margin: 0px 12vw 20px;
+  text-align: justify;
+}
+
+.instructionPass {
+  font-family: 'Poppins';
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 15px;
+  color: rgba(40, 35, 35, 0.54);
+  margin-bottom: 12px;
+}
+
+.marginBotton4 {
+  margin-bottom: 4px;
+}
+
+.upperCase {
+  text-transform: uppercase;
+}
