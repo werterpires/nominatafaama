@@ -16,33 +16,36 @@
     </span>
   </div>
   <section class="formCreationWrapper">
-    <app-creation-form (save)="createRegistry()">
+    <app-creation-form (save)="createRegistry(0)">
       <div class="subSection">
         <label>
-          Foto ampla do estudante
+          Fotos dos formandos
+          <p class="formInstruction">
+            Os arquivos de foto selecionados devem conter nomes no seguinte
+            formato: CPF + tipo de foto.
+          </p>
+          <p class="formInstruction">
+            O CPF deve ser uma sequencia de 11 dígitos sem pontos ou traços.
+          </p>
+          <p class="formInstruction">
+            O tipo de foto deve ser uma das seguintes opções:
+            <strong>alone_photo</strong>, <strong>small_alone_photo</strong>,
+            <strong>family_photo</strong>,
+            <strong>other_family_photo</strong> ou
+            <strong>invite_photo</strong>.
+          </p>
+          <p class="formInstruction">
+            Os nomes devem, então, apresentar o seguinte aspecto:
+            12345678901alone_photo ou 98765432198family_photo.
+          </p>
           <input
             type="file"
             name="smallAlonePhoto"
             id="smallAlonePhoto"
-            (change)="onFileSelected($event)"
+            multiple
+            (change)="onFilesSelected($event)"
           />
         </label>
-      </div>
-      <div class="subSection">
-        <div class="alonePhoto">
-          <div
-            class="imageContainer"
-            [ngStyle]="{ 'background-image': 'url(' + imageUrl + ')' }"
-            *ngIf="imageUrl"
-          ></div>
-          <div
-            class="imageContainer imageModel"
-            [ngStyle]="{
-              'background-image': 'url(assets/img/smallAlone.png)'
-            }"
-            *ngIf="!imageUrl"
-          ></div>
-        </div>
       </div>
     </app-creation-form>
   </section>

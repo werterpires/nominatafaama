@@ -1,5 +1,6 @@
 <div class="sectionBoxes">
   <app-users [permissions]="permissions"></app-users>
+
   <app-students
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
@@ -166,12 +167,14 @@
     [permissions]="permissions"
   ></app-small-alone-student-photos> -->
 
-  <!-- <app-alone-student-photo
-    *ngIf="permissions.estudante || permissions.administrador"
+  <app-alone-student-photo
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
     [permissions]="permissions"
   ></app-alone-student-photo>
 
-  <app-family-student-photo
+  <!-- <app-family-student-photo
     *ngIf="permissions.estudante || permissions.administrador"
     [permissions]="permissions"
   ></app-family-student-photo>
