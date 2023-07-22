@@ -4,14 +4,14 @@ import {
   IStudentPhoto,
   UpdateStudentPhotoDto,
 } from '../small-alone-student-photos/types'
-import { SmallStudentPhotosService } from './alone-student-photo.service'
+import { StudentPhotosService } from './student-photos.service'
 
 @Component({
-  selector: 'app-alone-student-photo',
-  templateUrl: './alone-student-photo.component.html',
-  styleUrls: ['./alone-student-photo.component.css'],
+  selector: 'app-student-photos',
+  templateUrl: './student-photos.component.html',
+  styleUrls: ['./student-photos.component.css'],
 })
-export class AloneStudentPhotoComponent {
+export class StudentPhotosComponent {
   @Input() permissions!: IPermissions
   allRegistries: IStudentPhoto[] = []
   title = 'Fotos dos estudantes'
@@ -23,7 +23,7 @@ export class AloneStudentPhotoComponent {
   doneMessage = ''
   error = false
   errorMessage = ''
-  constructor(private service: SmallStudentPhotosService) {}
+  constructor(private service: StudentPhotosService) {}
   ngOnInit() {
     this.getAllRegistries()
   }

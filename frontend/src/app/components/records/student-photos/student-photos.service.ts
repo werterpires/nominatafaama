@@ -13,7 +13,7 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class SmallStudentPhotosService {
+export class StudentPhotosService {
   constructor(private http: HttpClient) {}
 
   findAllRegistries(): Observable<Blob | AddressNull> {

@@ -54,7 +54,7 @@ import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-end
 import { SpRelatedMinistriesComponent } from './components/records/sp-related-ministries/sp-related-ministries.component'
 import { PreviousMarriageComponent } from './components/records/previous-marriage/previous-marriage.component'
 import { SmallAloneStudentPhotosComponent } from './components/records/small-alone-student-photos/small-alone-student-photos.component'
-import { AloneStudentPhotoComponent } from './components/records/alone-student-photo/alone-student-photo.component'
+import { StudentPhotosComponent } from './components/records/student-photos/student-photos.component'
 import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component'
 import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'
 import { ChildrenComponent } from './components/records/children/children.component'
@@ -116,7 +116,7 @@ import { CommonModule, DatePipe } from '@angular/common'
     SpRelatedMinistriesComponent,
     PreviousMarriageComponent,
     SmallAloneStudentPhotosComponent,
-    AloneStudentPhotoComponent,
+    StudentPhotosComponent,
     FamilyStudentPhotoComponent,
     SpouseStudentPhotoComponent,
     ChildrenComponent,

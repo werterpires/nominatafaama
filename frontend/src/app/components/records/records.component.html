@@ -167,12 +167,12 @@
     [permissions]="permissions"
   ></app-small-alone-student-photos> -->
 
-  <app-alone-student-photo
+  <app-student-photos
     *ngIf="
       permissions.secretaria || permissions.administrador || permissions.direcao
     "
     [permissions]="permissions"
-  ></app-alone-student-photo>
+  ></app-student-photos>
 
   <!-- <app-family-student-photo
     *ngIf="permissions.estudante || permissions.administrador"
