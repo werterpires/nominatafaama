@@ -9,15 +9,10 @@ export interface IProfessor {
   updated_at: string
 }
 
-export interface ICreateProfessorAssgnment {
-  person_id: number
+export interface ICreateProfessorAssignment {
   assignments: string
-  approved: boolean | null
 }
 
-export interface IUpdateProfessor {
-  professor_id: number
-  assignments?: string
-  professor_photo_address?: string
-  approved: boolean | null
+export interface IUpdateProfessorAssignment {
+  assignments: string
 }

@@ -29,6 +29,7 @@ import { SpAcademicFormmationsComponent } from './components/records/sp-academic
 import { SpousesComponent } from './components/records/spouses/spouses.component'
 import { StudentAcademicFormationsComponent } from './components/records/student-academic-formations/student-academic-formations.component'
 import { StudentsComponent } from './components/records/students/students.component'
+import { ProfessorsComponent } from './components/records/professors/professors.component'
 import { UnionsComponent } from './components/records/unions/unions.component'
 import { ConfirmationDialogComponent } from './components/shared/confirmation-dialog/confirmation-dialog.component'
 import { ContainerComponent } from './components/shared/container/container.component'
@@ -125,6 +126,7 @@ import { CommonModule, DatePipe } from '@angular/common'
     OneStudentToApproveComponent,
     UsersComponent,
     ParameterizationComponent,
+    ProfessorsComponent,
   ],
   imports: [
     BrowserModule,
