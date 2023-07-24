@@ -19,7 +19,8 @@
                 permissions.direcao ||
                 permissions.estudante ||
                 permissions.representacao ||
-                permissions.secretaria) &&
+                permissions.secretaria ||
+                permissions.docente) &&
               permissions.isApproved
             "
             class="menuOption"
@@ -31,7 +32,8 @@
             *ngIf="
               (permissions.administrador ||
                 permissions.direcao ||
-                permissions.secretaria) &&
+                permissions.secretaria ||
+                permissions.docente) &&
               permissions.isApproved
             "
             (click)="$event.stopPropagation(); approvalMenu = !approvalMenu"
@@ -98,12 +100,14 @@
   <app-approvals-menu
     *ngIf="approvalMenu"
     (approvalType)="changeApprovalType($event)"
+    [permissions]="permissions"
   ></app-approvals-menu>
   <app-approves
     *ngIf="
       (permissions.administrador ||
         permissions.direcao ||
-        permissions.secretaria) &&
+        permissions.secretaria ||
+        permissions.docente) &&
       permissions.isApproved &&
       options.aprovacoes
     "
@@ -116,7 +120,8 @@
         permissions.direcao ||
         permissions.estudante ||
         permissions.representacao ||
-        permissions.secretaria) &&
+        permissions.secretaria ||
+        permissions.docente) &&
       permissions.isApproved &&
       options.cadastros
     "

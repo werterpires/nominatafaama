@@ -184,5 +184,8 @@
     [permissions]="permissions"
   ></app-spouse-student-photo> -->
 
-  <div></div>
+  <app-professors
+    *ngIf="permissions.docente || permissions.administrador"
+    [permissions]="permissions"
+  ></app-professors>
 </div>

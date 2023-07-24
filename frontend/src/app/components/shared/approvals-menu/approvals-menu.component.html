@@ -1,5 +1,11 @@
 <div class="loginMenu">
-  <button class="loginMenuButton defaultButton" (click)="choseUsers()">
+  <button
+    *ngIf="
+      permissions.secretaria || permissions.direcao || permissions.administrador
+    "
+    class="loginMenuButton defaultButton"
+    (click)="choseUsers()"
+  >
     Usuários
   </button>
   <button class="loginMenuButton defaultButton" (click)="choseStudents()">
