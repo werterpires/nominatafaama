@@ -17,13 +17,13 @@ import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
 import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
 import { UserFromJwt } from 'src/shared/auth/types/types'
 import { CreateProfessorAssignmentDto } from '../dto/create-professors.dto'
-import { UpdateProfessorAssgnment } from '../dto/update-professors.dto'
+import { UpdateProfessorAssgnmentDto } from '../dto/update-professors.dto'
 
 @Controller('professors')
 export class ProfessorsController {
   constructor(private readonly professorsService: ProfessorsService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE)
   @Post()
   async createStudent(
     @Body() input: CreateProfessorAssignmentDto,
@@ -41,18 +41,18 @@ export class ProfessorsController {
     }
   }
 
-  // @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  // @Get('edit')
-  // async getStudentByIdToEdit(@CurrentUser() user: UserFromJwt) {
-  //   const id = user.user_id
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE)
+  @Get('edit')
+  async getProfessorByIdToEdit(@CurrentUser() user: UserFromJwt) {
+    const id = user.user_id
 
-  //   try {
-  //     const student = await this.studentsService.findStudentByIdToEdit(id)
-  //     return student
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message)
-  //   }
-  // }
+    try {
+      const professor = await this.professorsService.findProfessorByIdToEdit(id)
+      return professor
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
 
   // @IsPublic()
   // @Get()
@@ -60,16 +60,18 @@ export class ProfessorsController {
   //   return await this.studentsService.findAllStudents()
   // }
 
-  // @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  // @Put()
-  // async updateStudent(@Body() input: UpdateProfessorAssgnment) {
-  //   try {
-  //     const updatedStudent = await this.studentsService.updateStudentById(input)
-  //     return updatedStudent
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message)
-  //   }
-  // }
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE)
+  @Put()
+  async updateProfessor(@Body() input: UpdateProfessorAssgnmentDto) {
+    try {
+      const updatedProfessor = await this.professorsService.updateProfessorById(
+        input,
+      )
+      return updatedProfessor
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
 
   // @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
   // @Delete(':id')

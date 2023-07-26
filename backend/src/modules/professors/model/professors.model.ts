@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
-import { ICreateProfessorAssgnment, IProfessor } from '../types/types'
+import {
+  ICreateProfessorAssgnment,
+  IProfessor,
+  IUpdateProfessor,
+} from '../types/types'
 
 @Injectable()
 export class ProfessorsModel {
@@ -54,6 +58,8 @@ export class ProfessorsModel {
       .leftJoin('people', 'professors.person_id', 'people.person_id')
       .where('professors.professor_id', '=', id)
 
+    console.log(id)
+
     if (!result) {
       throw new Error('Professor não encontrado')
     }
@@ -81,55 +87,35 @@ export class ProfessorsModel {
   //   return personIds
   // }
 
-  // async findStudentByUserId(userId: number): Promise<IStudent | null> {
-  //   let student: IStudent | null = null
-  //   let sentError: Error | null = null
-  //   try {
-  //     const result = await this.knex
-  //       .table('students')
-  //       .first(
-  //         'students.*',
-  //         'hiring_status.*',
-  //         'marital_status_types.*',
-  //         'associations.*',
-  //         'unions.*',
-  //         'people.name as person_name',
-  //         'people.person_id as person_id',
-  //       )
-  //       .leftJoin('users', 'students.person_id', 'users.person_id')
-  //       .leftJoin('people', 'students.person_id', 'people.person_id')
-  //       .leftJoin(
-  //         'marital_status_types',
-  //         'students.marital_status_id',
-  //         'marital_status_types.marital_status_type_id',
-  //       )
-  //       .leftJoin(
-  //         'hiring_status',
-  //         'students.hiring_status_id',
-  //         'hiring_status.hiring_status_id',
-  //       )
-  //       .leftJoin(
-  //         'associations',
-  //         'students.origin_field_id',
-  //         'associations.association_id',
-  //       )
-  //       .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-  //       .where('users.user_id', userId)
+  async findProfessorByUserId(userId: number): Promise<IProfessor | null> {
+    let professor: IProfessor | null = null
+    let sentError: Error | null = null
+    try {
+      const result = await this.knex
+        .table('professors')
+        .first(
+          'professors.*',
+          'people.name as person_name',
+          'people.person_id as person_id',
+        )
+        .leftJoin('users', 'professors.person_id', 'users.person_id')
+        .leftJoin('people', 'professors.person_id', 'people.person_id')
+        .where('users.user_id', userId)
 
-  //     if (result != null) {
-  //       student = result
-  //     }
-  //   } catch (error) {
-  //     console.error('Esse é o erro capturado na model: ', error)
-  //     sentError = new Error(error.message)
-  //   }
+      if (result != null) {
+        professor = result
+      }
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
 
-  //   if (sentError) {
-  //     throw sentError
-  //   }
+    if (sentError) {
+      throw sentError
+    }
 
-  //   return student
-  // }
+    return professor
+  }
 
   // async findStudentByUserCpf(cpf: string): Promise<IStudent | null> {
   //   let student: IStudent | null = null
@@ -261,71 +247,43 @@ export class ProfessorsModel {
   //   return studentList
   // }
 
-  // async updateStudentById(updateStudent: IUpdateStudent): Promise<IStudent> {
-  //   let updatedStudent: IStudent | null = null
-  //   let sentError: Error | null = null
+  async updateProfessorById(
+    updateProfessor: IUpdateProfessor,
+  ): Promise<IProfessor> {
+    let updatedProfessor: IProfessor | null = null
+    let sentError: Error | null = null
 
-  //   await this.knex.transaction(async (trx) => {
-  //     try {
-  //       const {
-  //         student_id,
-  //         phone_number,
-  //         is_whatsapp,
-  //         alternative_email,
-  //         student_mensage,
-  //         person_id,
-  //         origin_field_id,
-  //         justification,
-  //         birth_city,
-  //         birth_state,
-  //         primary_school_city,
-  //         birth_date,
-  //         baptism_date,
-  //         baptism_place,
-  //         marital_status_id,
-  //         primary_school_state,
-  //         student_approved,
-  //       } = updateStudent
+    await this.knex.transaction(async (trx) => {
+      try {
+        const { assignments, approved, professor_id } = updateProfessor
 
-  //       await trx('students').where('student_id', student_id).update({
-  //         phone_number,
-  //         is_whatsapp,
-  //         alternative_email,
-  //         student_mensage,
-  //         person_id,
-  //         origin_field_id,
-  //         justification,
-  //         birth_city,
-  //         birth_state,
-  //         primary_school_city,
-  //         birth_date,
-  //         baptism_date,
-  //         baptism_place,
-  //         marital_status_id,
-  //         primary_school_state,
-  //         student_approved,
-  //       })
+        await trx('professors').where('professor_id', professor_id).update({
+          assignments,
+          approved,
+        })
 
-  //       await trx.commit()
-  //     } catch (error) {
-  //       console.error(error)
-  //       console.error(error)
-  //       await trx.rollback()
-  //       sentError = new Error(error.message)
-  //     }
-  //   })
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
+      }
+    })
 
-  //   if (sentError) {
-  //     throw sentError
-  //   }
+    if (sentError) {
+      throw sentError
+    }
 
-  //   updatedStudent = await this.findStudentById(updateStudent.student_id)
-  //   if (updatedStudent === null) {
-  //     throw new Error('Falha ao atualizar estudante.')
-  //   }
+    updatedProfessor = await this.findProfessorById(
+      updateProfessor.professor_id,
+    )
+    if (updatedProfessor === null) {
+      throw new Error('Falha ao atualizar professor.')
+    }
 
-  //   return updatedStudent
-  // }
+    return updatedProfessor
+  }
 
   // async deleteStudentById(id: number): Promise<string> {
   //   let sentError: Error | null = null

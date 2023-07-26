@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { PeopleServices } from 'src/modules/people/dz_services/people.service'
 import { UsersService } from 'src/modules/users/dz_services/users.service'
 import { CreateProfessorAssignmentDto } from '../dto/create-professors.dto'
-import { UpdateProfessorAssgnment } from '../dto/update-professors.dto'
+import { UpdateProfessorAssgnmentDto } from '../dto/update-professors.dto'
 import { ProfessorsModel } from '../model/professors.model'
 import {
   ICreateProfessorAssgnment,
@@ -30,7 +30,7 @@ export class ProfessorsService {
       const person_id = user.person_id
 
       const professor: ICreateProfessorAssgnment = {
-        approved: null,
+        approved: true,
         assignments: dto.assignments,
         person_id: person_id,
       }
@@ -42,67 +42,47 @@ export class ProfessorsService {
     }
   }
 
-  // async findStudentById(id: number): Promise<IStudent> {
-  //   try {
-  //     const student = await this.studentsModel.findStudentById(id)
-  //     return student as IStudent
-  //   } catch (error) {
-  //     console.error(error)
-  //     return null as any
-  //   }
-  // }
+  async findProfessorByIdToEdit(id: number): Promise<IProfessor> {
+    try {
+      const professor = await this.professorsModel.findProfessorByUserId(id)
+      return professor as IProfessor
+    } catch (error) {
+      console.error(error)
+      return null as any
+    }
+  }
 
-  // async findStudentByIdToEdit(id: number): Promise<IStudent> {
-  //   try {
-  //     const student = await this.studentsModel.findStudentByUserId(id)
-  //     return student as IStudent
-  //   } catch (error) {
-  //     console.error(error)
-  //     return null as any
-  //   }
-  // }
+  async updateProfessorById(
+    input: UpdateProfessorAssgnmentDto,
+  ): Promise<IProfessor> {
+    let updatedProfessor: IProfessor | null = null
+    let sentError: Error | null = null
 
-  // async findAllStudents(): Promise<IStudent[]> {
-  //   try {
-  //     const students = await this.studentsModel.findAllStudents()
-  //     return students
-  //   } catch (error) {
-  //     throw error
-  //   }
-  // }
+    const updateData: IUpdateProfessor = {
+      ...input,
+      approved: true,
+    }
 
-  // async updateStudentById(input: UpdateStudentDto): Promise<IStudent> {
-  //   let updatedStudent: IStudent | null = null
-  //   let sentError: Error | null = null
+    try {
+      updatedProfessor = await this.professorsModel.updateProfessorById(
+        updateData,
+      )
+    } catch (error) {
+      sentError = new Error(error.message)
+    }
 
-  //   const birthDate = new Date(input.birth_date)
-  //   const baptismDate = new Date(input.baptism_date)
+    if (sentError !== null) {
+      throw sentError
+    }
 
-  //   const updateData: IUpdateStudent = {
-  //     ...input,
-  //     birth_date: birthDate,
-  //     baptism_date: baptismDate,
-  //     student_approved: null,
-  //   }
-
-  //   try {
-  //     updatedStudent = await this.studentsModel.updateStudentById(updateData)
-  //   } catch (error) {
-  //     sentError = new Error(error.message)
-  //   }
-
-  //   if (sentError !== null) {
-  //     throw sentError
-  //   }
-
-  //   if (updatedStudent === null) {
-  //     throw new Error('Failed to update student')
-  //   }
-  //   if (updatedStudent) {
-  //     return updatedStudent
-  //   }
-  //   throw new Error('deu ruim')
-  // }
+    if (updatedProfessor === null) {
+      throw new Error('Failed to update professor')
+    }
+    if (updatedProfessor) {
+      return updatedProfessor
+    }
+    throw new Error('Não foi possível atualizar o professor')
+  }
 
   // async deleteStudentById(id: number): Promise<string> {
   //   try {

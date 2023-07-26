@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, Length, IsNumber } from 'class-validator'
 
-export class UpdateProfessorAssgnment {
+export class UpdateProfessorAssgnmentDto {
   @IsNotEmpty()
   @IsString()
   @Length(1, 500)

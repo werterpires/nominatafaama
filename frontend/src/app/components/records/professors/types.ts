@@ -15,4 +15,5 @@ export interface ICreateProfessorAssignment {
 
 export interface IUpdateProfessorAssignment {
   assignments: string
+  professor_id: number
 }

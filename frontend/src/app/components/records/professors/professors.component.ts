@@ -120,6 +120,7 @@ export class ProfessorsComponent {
 
     const editProfessorData: IUpdateProfessorAssignment = {
       assignments: this.registry.assignments,
+      professor_id: this.registry.professor_id,
     }
 
     this.professorsService.updateProfessor(editProfessorData).subscribe({
