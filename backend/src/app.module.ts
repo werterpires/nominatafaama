@@ -7,6 +7,7 @@ import { PeopleModule } from './modules/people/people.module'
 import { ResourcesModule } from './modules/resources/resources.module'
 import { SpousesModule } from './modules/spouses/spouses.module'
 import { StudentsModule } from './modules/students/students.module'
+import { ProfessorsModule } from './modules/professors/professors.module'
 import { UsersModule } from './modules/users/users.module'
 import { AuthModule } from './shared/auth/auth.module'
 import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard'
@@ -86,6 +87,7 @@ const mssqlConfig: KnexModuleOptions = {
     SpousesModule,
     InfoModule,
     ApprovalsModule,
+    ProfessorsModule,
   ],
   providers: [
     {

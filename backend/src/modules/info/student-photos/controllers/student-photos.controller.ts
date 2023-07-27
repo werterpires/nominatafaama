@@ -28,17 +28,22 @@ import { diskStorage } from 'multer'
 export class StudentPhotosController {
   constructor(private studentPhotosService: StudentPhotosService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post(':photoType')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './src/modules/info/student-photos/files',
         filename: (req, file, cb) => {
-          const uniqueName = `studentphoto_${Date.now()}${extname(
-            file.originalname,
+          // Salvar o nome original do arquivo em uma variável antes de modificar o nome
+          const originalFileName = file.originalname
+
+          const uniqueName = `${originalFileName.slice(0, -4)}${extname(
+            originalFileName,
           )}`
           cb(null, uniqueName)
+
+          console.log(originalFileName)
         },
       }),
       fileFilter: (req, file, cb) => {
@@ -55,13 +60,11 @@ export class StudentPhotosController {
     @Body() createStudentPhotoDto: Express.Multer.File,
     @Param('photoType') photoType: string,
     @CurrentUser() user: UserFromJwt,
-  ): Promise<IStudentPhoto | null> {
+  ): Promise<null | number> {
     try {
-      const user_id = user.user_id
-      const studentPhoto = this.studentPhotosService.createStudentPhoto(
-        user_id,
-        photoType,
+      const studentPhoto = await this.studentPhotosService.createStudentPhoto(
         file.filename,
+        file.originalname,
       )
 
       return studentPhoto
@@ -69,6 +72,48 @@ export class StudentPhotosController {
       throw new Error(error.message)
     }
   }
+
+  // @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  // @Post(':photoType')
+  // @UseInterceptors(
+  //   FileInterceptor('file', {
+  //     storage: diskStorage({
+  //       destination: './src/modules/info/student-photos/files',
+  //       filename: (req, file, cb) => {
+  //         const uniqueName = `studentphoto_${Date.now()}${extname(
+  //           file.originalname,
+  //         )}`
+  //         cb(null, uniqueName)
+  //       },
+  //     }),
+  //     fileFilter: (req, file, cb) => {
+  //       if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+  //         cb(null, true)
+  //       } else {
+  //         cb(new Error('Apenas arquivos PNG e JPEG são permitidos.'), false)
+  //       }
+  //     },
+  //   }),
+  // )
+  // async uploadFotos(
+  //   @UploadedFile() file: Express.Multer.File,
+  //   @Body() createStudentPhotoDto: Express.Multer.File,
+  //   @Param('photoType') photoType: string,
+  //   @CurrentUser() user: UserFromJwt,
+  // ): Promise<IStudentPhoto | null> {
+  //   try {
+  //     const user_id = user.user_id
+  //     const studentPhoto = this.studentPhotosService.createStudentPhoto(
+  //       user_id,
+  //       photoType,
+  //       file.filename,
+  //     )
+
+  //     return studentPhoto
+  //   } catch (error) {
+  //     throw new Error(error.message)
+  //   }
+  // }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('student/:photoType')

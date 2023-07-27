@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { IPermissions } from '../container/types'
 
 @Component({
   selector: 'app-approvals-menu',
@@ -7,6 +8,8 @@ import { Component, EventEmitter, Output } from '@angular/core'
 })
 export class ApprovalsMenuComponent {
   @Output() approvalType = new EventEmitter<string>()
+
+  @Input() permissions!: IPermissions
 
   choseUsers() {
     this.approvalType.emit('users')

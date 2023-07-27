@@ -29,6 +29,7 @@ import { SpAcademicFormmationsComponent } from './components/records/sp-academic
 import { SpousesComponent } from './components/records/spouses/spouses.component'
 import { StudentAcademicFormationsComponent } from './components/records/student-academic-formations/student-academic-formations.component'
 import { StudentsComponent } from './components/records/students/students.component'
+import { ProfessorsComponent } from './components/records/professors/professors.component'
 import { UnionsComponent } from './components/records/unions/unions.component'
 import { ConfirmationDialogComponent } from './components/shared/confirmation-dialog/confirmation-dialog.component'
 import { ContainerComponent } from './components/shared/container/container.component'
@@ -53,8 +54,8 @@ import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-p
 import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-endowments.component'
 import { SpRelatedMinistriesComponent } from './components/records/sp-related-ministries/sp-related-ministries.component'
 import { PreviousMarriageComponent } from './components/records/previous-marriage/previous-marriage.component'
-import { SmallAloneStudentPhotosComponent } from './components/records/small-alone-student-photos/small-alone-student-photos.component'
-import { AloneStudentPhotoComponent } from './components/records/alone-student-photo/alone-student-photo.component'
+import { SmallAloneProfessorPhotosComponent } from './components/records/small-alone-student-photos/small-alone-professor-photos.component'
+import { StudentPhotosComponent } from './components/records/student-photos/student-photos.component'
 import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component'
 import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'
 import { ChildrenComponent } from './components/records/children/children.component'
@@ -115,8 +116,8 @@ import { CommonModule, DatePipe } from '@angular/common'
     SpEndowmentsComponent,
     SpRelatedMinistriesComponent,
     PreviousMarriageComponent,
-    SmallAloneStudentPhotosComponent,
-    AloneStudentPhotoComponent,
+    SmallAloneProfessorPhotosComponent,
+    StudentPhotosComponent,
     FamilyStudentPhotoComponent,
     SpouseStudentPhotoComponent,
     ChildrenComponent,
@@ -125,6 +126,7 @@ import { CommonModule, DatePipe } from '@angular/common'
     OneStudentToApproveComponent,
     UsersComponent,
     ParameterizationComponent,
+    ProfessorsComponent,
   ],
   imports: [
     BrowserModule,

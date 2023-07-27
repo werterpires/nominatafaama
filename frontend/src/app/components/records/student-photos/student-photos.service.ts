@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { environment } from 'src/environments/environment'
+import { of } from 'rxjs'
 import {
   AddressNull,
-  CreateStudentPhotoDto,
   IStudentPhoto,
   UpdateStudentPhotoDto,
-} from './types'
-import { of } from 'rxjs'
+} from '../small-alone-student-photos/types'
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +20,7 @@ export class StudentPhotosService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get(environment.API + '/student-photos/student/small-alone-photo', {
+      .get(environment.API + '/student-photos/student/alone-photo', {
         headers: head_obj,
         responseType: 'blob', // Define o tipo de resposta como Blob
       })
@@ -33,23 +32,16 @@ export class StudentPhotosService {
       )
   }
 
-  createRegistry(formData: FormData): Observable<IStudentPhoto> {
+  createRegistry(formData: FormData): Observable<number> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .post<IStudentPhoto>(
-        environment.API + '/student-photos/small-alone-photo',
-        formData,
-        {
-          headers: head_obj,
-        },
-      )
+      .post<number>(environment.API + '/student-photos/alone-photo', formData, {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
-          console.log('Veja o erro completo', error)
-          return throwError(
-            () => new Error('Não foi possível criar a formação acadêmica.'),
-          )
+          return throwError(() => new Error('Não foi possível subir as fotos.'))
         }),
       )
   }

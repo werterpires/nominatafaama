@@ -4,18 +4,18 @@ import {
   IStudentPhoto,
   UpdateStudentPhotoDto,
 } from '../small-alone-student-photos/types'
-import { SmallStudentPhotosService } from './alone-student-photo.service'
+import { StudentPhotosService } from './student-photos.service'
 
 @Component({
-  selector: 'app-alone-student-photo',
-  templateUrl: './alone-student-photo.component.html',
-  styleUrls: ['./alone-student-photo.component.css'],
+  selector: 'app-student-photos',
+  templateUrl: './student-photos.component.html',
+  styleUrls: ['./student-photos.component.css'],
 })
-export class AloneStudentPhotoComponent {
+export class StudentPhotosComponent {
   @Input() permissions!: IPermissions
   allRegistries: IStudentPhoto[] = []
-  title = 'Ampla foto do estudante sozinho'
-  createRegistryData!: File
+  title = 'Fotos dos estudantes'
+  createRegistryData!: File[]
   showBox = false
   showForm = false
   isLoading = false
@@ -23,7 +23,7 @@ export class AloneStudentPhotoComponent {
   doneMessage = ''
   error = false
   errorMessage = ''
-  constructor(private service: SmallStudentPhotosService) {}
+  constructor(private service: StudentPhotosService) {}
   ngOnInit() {
     this.getAllRegistries()
   }
@@ -49,7 +49,6 @@ export class AloneStudentPhotoComponent {
     this.isLoading = true
     this.service.findAllRegistries().subscribe({
       next: (res) => {
-        console.log(res)
         if (res instanceof Blob) {
           const reader = new FileReader()
           reader.onload = (e: any) => {
@@ -78,7 +77,6 @@ export class AloneStudentPhotoComponent {
 
   onFileSelected(event: any) {
     console.log(event)
-
     const file: File = event.target.files[0]
     const reader = new FileReader()
 
@@ -89,24 +87,60 @@ export class AloneStudentPhotoComponent {
     this.createRegistryData = event.srcElement.files[0]
   }
 
-  createRegistry() {
-    this.isLoading = true
+  onFilesSelected(event: any) {
+    const files: FileList = event.target.files
+    const createRegistryData: File[] = []
 
-    if (this.createRegistryData) {
+    for (let i = 0; i < files.length; i++) {
+      createRegistryData.push(files[i])
     }
+    this.createRegistryData = createRegistryData
+  }
+
+  okPhotos: string[] = []
+  errPhotos: string[] = []
+
+  createRegistry(index: number) {
+    if (index >= this.createRegistryData.length) {
+      let errMessage = 'As seguintes fotos não foram gravadas: '
+      if (this.errPhotos.length > 0) {
+        this.errPhotos.forEach((photo) => {
+          errMessage += `${photo} |`
+        })
+        errMessage += `. 
+        Todas as outras fotos foram gravadas com sucesso.
+        
+        Copie e cole os nomes das fotos e revise os CPFs e/ou tipos de fotos nos nomes dos arquivos.`
+
+        this.errorMessage = errMessage
+        this.error = true
+        this.errPhotos = []
+        this.isLoading = false
+        return
+      } else {
+        this.doneMessage = `Todas as fotos foram gravadas com sucesso.`
+        this.done = true
+        this.isLoading = false
+        return
+      }
+    }
+
+    const data = this.createRegistryData[index]
     const formData = new FormData()
-    formData.append(
-      'file',
-      this.createRegistryData,
-      this.createRegistryData.name,
-    )
+    formData.append('file', data, data.name)
+    console.log(data.name)
 
     this.service.createRegistry(formData).subscribe({
       next: (res) => {
-        this.doneMessage = 'Registro criado com sucesso.'
-        this.done = true
-        this.isLoading = false
-        this.getAllRegistries()
+        console.log(res)
+        if (res == 0) {
+          this.errPhotos.push(data.name)
+        } else if (res == 1) {
+          this.okPhotos.push(data.name)
+        }
+
+        // Enviar a próxima foto após o sucesso da atual
+        this.createRegistry(index + 1)
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -115,6 +149,29 @@ export class AloneStudentPhotoComponent {
       },
     })
   }
+
+  // createRegistry() {
+  //   this.isLoading = true
+
+  //   let formData
+  //   this.createRegistryData.forEach((data) => {
+  //     formData = new FormData()
+  //     formData.append('file', data, data.name)
+  //     this.service.createRegistry(formData).subscribe({
+  //       next: (res) => {
+  //         console.log(res)
+  //         this.doneMessage = 'Registro criado com sucesso.'
+  //         this.done = true
+  //         this.isLoading = false
+  //       },
+  //       error: (err) => {
+  //         this.errorMessage = err.message
+  //         this.error = true
+  //         this.isLoading = false
+  //       },
+  //     })
+  //   })
+  // }
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
     const newRegistry: Partial<IStudentPhoto> = {

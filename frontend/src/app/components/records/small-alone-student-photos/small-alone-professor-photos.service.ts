@@ -3,26 +3,27 @@ import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { environment } from 'src/environments/environment'
-import { of } from 'rxjs'
 import {
   AddressNull,
+  CreateStudentPhotoDto,
   IStudentPhoto,
   UpdateStudentPhotoDto,
-} from '../small-alone-student-photos/types'
+} from './types'
+import { of } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
 })
-export class SmallStudentPhotosService {
+export class ProfessorPhotosService {
   constructor(private http: HttpClient) {}
 
   findAllRegistries(): Observable<Blob | AddressNull> {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get(environment.API + '/student-photos/student/alone-photo', {
+      .get(environment.API + '/professors/photo', {
         headers: head_obj,
-        responseType: 'blob', // Define o tipo de resposta como Blob
+        responseType: 'blob',
       })
       .pipe(
         catchError((error) => {
@@ -36,13 +37,9 @@ export class SmallStudentPhotosService {
     const token = localStorage.getItem('access_token')
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .post<IStudentPhoto>(
-        environment.API + '/student-photos/alone-photo',
-        formData,
-        {
-          headers: head_obj,
-        },
-      )
+      .post<IStudentPhoto>(environment.API + '/professors/photo', formData, {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
@@ -60,7 +57,7 @@ export class SmallStudentPhotosService {
     let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateStudentPhotoDto>(
-        environment.API + '/student-photos',
+        environment.API + '/professors',
         updatedRegistry,
         {
           headers: head_obj,
@@ -80,7 +77,7 @@ export class SmallStudentPhotosService {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete<string>(environment.API + `/student-photos/${registryId}`, {
+      .delete<string>(environment.API + `/professors/${registryId}`, {
         headers,
       })
       .pipe(

@@ -18,30 +18,35 @@ export class StudentPhotosService {
   ) {}
 
   async createStudentPhoto(
-    user_id: number,
-    photoType: string,
     filename: string,
-  ): Promise<IStudentPhoto | null> {
+    data: string,
+  ): Promise<null | number> {
     try {
-      const student = await this.studentModel.findStudentByUserId(user_id)
+      const cpf = data.slice(0, 11)
+      const photoType = data.slice(11, -4)
+
+      const student = await this.studentModel.findStudentByUserCpf(cpf)
       if (student == null) {
-        throw new Error(
-          `Não foi encontrado um estudante vinculado ao usuário om id ${user_id}.`,
-        )
+        const filePath = `./src/modules/info/student-photos/files/${filename}`
+        fs.unlinkSync(filePath)
+        return 0
       }
       const student_id = student.student_id
       const photoTypes: string[] = [
-        'alone-photo',
-        'family-photo',
-        'other-family-photo',
-        'spouse-photo',
-        'invite-photo',
-        'small-alone-photo',
+        'alone_photo',
+        'family_photo',
+        'other_family_photo',
+        'spouse_photo',
+        'invite_photo',
+        'small_alone_photo',
       ]
 
       let photoValues: (string | null)[] = [null, null, null, null, null, null]
 
       const photoTypeIndex = photoTypes.indexOf(photoType)
+
+      console.log(photoTypeIndex)
+
       photoValues[photoTypeIndex] = filename
 
       let createStudentPhotoData: ICreateStudentPhoto = {
@@ -56,7 +61,11 @@ export class StudentPhotosService {
 
       const existing =
         await this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
+
       if (!existing) {
+        console.log(
+          `Indo criar com os seguintes dados: ${createStudentPhotoData.student_id}`,
+        )
         this.studentPhotosModel.createStudentPhoto(
           createStudentPhotoData,
           'create',
@@ -64,8 +73,6 @@ export class StudentPhotosService {
       } else {
         let correctPhotoType = photoType.replace(/-/g, '_')
         if (existing[correctPhotoType] != null) {
-          const filePath = `./src/modules/info/student-photos/files/${existing[correctPhotoType]}`
-          fs.unlinkSync(filePath)
         }
 
         this.studentPhotosModel.createStudentPhoto(
@@ -75,8 +82,9 @@ export class StudentPhotosService {
       }
 
       const createdStudentPhoto =
-        this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
-      return createdStudentPhoto
+        await this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
+      console.log('esse é o que foi criado agora', createdStudentPhoto)
+      return 1
     } catch (error) {
       console.error(
         'Erro capturado no StudentPhotosService createStudentPhoto: ',
@@ -109,10 +117,13 @@ export class StudentPhotosService {
     try {
       const student = await this.studentModel.findStudentByUserId(user_id)
       if (student == null) {
-        return {fileStream: null, headers: {
-          'Content-Type': 'image/jpeg',
-          'Content-Disposition': `attachment; filename`,
-        } }
+        return {
+          fileStream: null,
+          headers: {
+            'Content-Type': 'image/jpeg',
+            'Content-Disposition': `attachment; filename`,
+          },
+        }
       }
       const student_id = student.student_id
       if (!student_id) {

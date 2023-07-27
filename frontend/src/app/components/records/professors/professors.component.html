@@ -1,0 +1,81 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+  </div>
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form
+      *ngIf="!registry?.professor_id"
+      (save)="createRegistry()"
+    >
+      <label class="inputLabel w-full">
+        Titulação:
+
+        <input
+          class="largeInput"
+          name="justificationInput"
+          [(ngModel)]="registry.assignments"
+        />
+      </label>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form
+      (editRegistry)="editRegistry()"
+      *ngIf="registry.professor_id"
+    >
+      <label class="inputLabel w-full">
+        Titulação:
+        <input
+          class="largeInput"
+          name="justificationInput"
+          [(ngModel)]="registry.assignments"
+        />
+      </label>
+    </app-update-form>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

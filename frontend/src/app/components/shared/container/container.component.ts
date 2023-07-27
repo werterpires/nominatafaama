@@ -60,6 +60,8 @@ export class ContainerComponent {
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
     })
+
+    console.log(this.permissions)
   }
 
   changeApprovalType(approvaltype: string) {

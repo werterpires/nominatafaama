@@ -121,7 +121,7 @@ export class UsersModel {
         console.log(email, lastPass)
         let lessFiveMinutes: boolean = true
 
-        if (lastPass.pass_recover.length > 24) {
+        if (lastPass && lastPass.pass_recover.length > 24) {
           lessFiveMinutes =
             new Date().getTime() -
               new Date(lastPass.pass_recover.slice(0, 24)).getTime() <
