@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { StudentPhotosService } from '../small-alone-student-photos/small-alone-student-photos.service'
 import {
   IStudentPhoto,
   UpdateStudentPhotoDto,

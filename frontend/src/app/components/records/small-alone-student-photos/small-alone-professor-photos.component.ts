@@ -5,27 +5,27 @@ import {
   UpdateStudentPhotoDto,
   receiveStudentPhoto,
 } from './types'
-import { StudentPhotosService } from './small-alone-student-photos.service'
+import { ProfessorPhotosService } from './small-alone-professor-photos.service'
 import { IPermissions } from '../../shared/container/types'
 
 @Component({
-  selector: 'app-small-alone-student-photos',
-  templateUrl: './small-alone-student-photos.component.html',
-  styleUrls: ['./small-alone-student-photos.component.css'],
+  selector: 'app-small-alone-professor-photos',
+  templateUrl: './small-alone-professor-photos.component.html',
+  styleUrls: ['./small-alone-professor-photos.component.css'],
 })
-export class SmallAloneStudentPhotosComponent {
+export class SmallAloneProfessorPhotosComponent {
   @Input() permissions!: IPermissions
   allRegistries: IStudentPhoto[] = []
-  title = 'Pequena foto do estudante'
+  title = 'Pequena foto do professor'
   createRegistryData!: File
-  showBox = false
+  showBox = true
   showForm = false
   isLoading = false
   done = false
   doneMessage = ''
   error = false
   errorMessage = ''
-  constructor(private service: StudentPhotosService) {}
+  constructor(private service: ProfessorPhotosService) {}
   ngOnInit() {
     this.getAllRegistries()
   }

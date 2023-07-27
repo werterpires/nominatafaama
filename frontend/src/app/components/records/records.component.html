@@ -162,11 +162,6 @@
     [permissions]="permissions"
   ></app-previous-marriage>
 
-  <!-- <app-small-alone-student-photos
-    *ngIf="permissions.estudante || permissions.administrador"
-    [permissions]="permissions"
-  ></app-small-alone-student-photos> -->
-
   <app-student-photos
     *ngIf="
       permissions.secretaria || permissions.administrador || permissions.direcao
@@ -188,4 +183,9 @@
     *ngIf="permissions.docente || permissions.administrador"
     [permissions]="permissions"
   ></app-professors>
+
+  <app-small-alone-professor-photos
+    *ngIf="permissions.docente || permissions.administrador"
+    [permissions]="permissions"
+  ></app-small-alone-professor-photos>
 </div>
