@@ -285,6 +285,39 @@ export class ProfessorsModel {
     return updatedProfessor
   }
 
+  async updateProfessorPhoto(
+    professor_photo_address: string,
+    professor_id,
+  ): Promise<IProfessor> {
+    let updatedProfessor: IProfessor | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        await trx('professors').where('professor_id', professor_id).update({
+          professor_photo_address,
+        })
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    updatedProfessor = await this.findProfessorById(professor_id)
+    if (updatedProfessor === null) {
+      throw new Error('Falha ao cadastrar a foto do professor.')
+    }
+
+    return updatedProfessor
+  }
+
   // async deleteStudentById(id: number): Promise<string> {
   //   let sentError: Error | null = null
   //   let message: string = ''

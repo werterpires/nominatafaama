@@ -84,6 +84,31 @@ export class ProfessorsService {
     throw new Error('Não foi possível atualizar o professor')
   }
 
+  async createStudentPhoto(
+    user_id: number,
+    filename: string,
+  ): Promise<null | number> {
+    try {
+      const professor = await this.professorsModel.findProfessorById(user_id)
+
+      if (professor == null) {
+        throw new Error('Professor não encontrado')
+      }
+
+      const professor_id = professor.professor_id
+
+      this.professorsModel.updateProfessorPhoto(filename, professor_id)
+
+      return 1
+    } catch (error) {
+      console.error(
+        'Erro capturado no StudentPhotosService createStudentPhoto: ',
+        error,
+      )
+      throw error
+    }
+  }
+
   // async deleteStudentById(id: number): Promise<string> {
   //   try {
   //     const message = await this.studentsModel.deleteStudentById(id)
