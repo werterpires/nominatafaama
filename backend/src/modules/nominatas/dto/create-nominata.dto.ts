@@ -7,4 +7,8 @@ export class CreateNominataDto {
 
   @IsString()
   orig_field_invites_begin: string
+
+  @IsString()
+  @Length(1, 4000)
+  director_words: string
 }

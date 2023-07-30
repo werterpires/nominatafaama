@@ -51,21 +51,30 @@
       (deleteRegistry)="deleteRegistry(registry.nominata_id)"
       *ngFor="let registry of allRegistries; index as i"
     >
+      <div class="subSection">
+        <label class="inputLabel">
+          Ano<input
+            class="mediumInput"
+            type="text"
+            name="nominataYearInput"
+            [(ngModel)]="registry.year"
+          />
+        </label>
+        <label class="inputLabel">
+          Data para início de convites<input
+            class="mediumInput"
+            type="date"
+            name="nominataBeginInput"
+            [(ngModel)]="registry.orig_field_invites_begin"
+          />
+        </label>
+      </div>
       <label class="inputLabel">
-        Ano<input
-          class="mediumInput"
-          type="text"
-          name="nominataYearInput"
-          [(ngModel)]="registry.year"
-        />
-      </label>
-      <label class="inputLabel">
-        Data para início de convites<input
-          class="mediumInput"
-          type="date"
-          name="nominataBeginInput"
-          [(ngModel)]="registry.orig_field_invites_begin"
-        />
+        Palavras do diretor<textarea
+          class="largeTextArea mediumInput"
+          name="nominataDirectorWords"
+          [(ngModel)]="registry.director_words"
+        ></textarea>
       </label>
     </app-update-form>
   </section>

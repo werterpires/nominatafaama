@@ -12,6 +12,7 @@ export class NominatasService {
       const createNominataData: ICreateNominata = {
         year: dto.year,
         orig_field_invites_begin: new Date(dto.orig_field_invites_begin),
+        director_words: dto.director_words,
       }
 
       const newNominata = await this.nominatasModel.createNominata(
@@ -52,6 +53,7 @@ export class NominatasService {
         nominata_id: input.nominata_id,
         orig_field_invites_begin: new Date(input.orig_field_invites_begin),
         year: input.year,
+        director_words: input.director_words,
       }
 
       updatedNominata = await this.nominatasModel.updateNominataById(

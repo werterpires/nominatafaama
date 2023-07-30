@@ -23,6 +23,7 @@ export class NominatasModel {
           nominata_id: degree_id,
           year: createNominataData.year,
           orig_field_invites_begin: createNominataData.orig_field_invites_begin,
+          director_words: createNominataData.director_words,
           created_at: new Date(),
           updated_at: new Date(),
         }
@@ -67,6 +68,7 @@ export class NominatasModel {
           nominata_id: result.nominata_id,
           year: result.year,
           orig_field_invites_begin: result.orig_field_invites_begin,
+          director_words: result.director_words,
           created_at: result.created_at,
           updated_at: result.updated_at,
         }
@@ -99,6 +101,7 @@ export class NominatasModel {
           nominata_id: row.nominata_id,
           year: row.year,
           orig_field_invites_begin: row.orig_field_invites_begin,
+          director_words: row.director_words,
           created_at: row.created_at,
           updated_at: row.updated_at,
         }))
@@ -129,10 +132,11 @@ export class NominatasModel {
         const { year } = updateNominata
         const { orig_field_invites_begin } = updateNominata
         const { nominata_id } = updateNominata
+        const { director_words } = updateNominata
 
         await trx('nominatas')
           .where('nominata_id', nominata_id)
-          .update({ year, orig_field_invites_begin })
+          .update({ year, orig_field_invites_begin, director_words })
 
         updatedNominata = await this.findNominataById(nominata_id)
 

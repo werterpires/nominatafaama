@@ -238,6 +238,38 @@ form.registryWrapper select:focus {
   appearance: auto;
 }
 
+form.registryWrapper textarea {
+  height: 1000px;
+  width: 671px;
+  resize: none;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #23435f;
+  border: none;
+  outline: none;
+}
+
+form.registryWrapper textarea:focus {
+  height: 1000px;
+  resize: none;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #23435f;
+  border: none;
+  padding: 0.5rem 1rem;
+
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1.5px solid #dcdada;
+  appearance: auto;
+}
+
 form.registryWrapper input[type='checkbox'],
 form.registryWrapper input[type='checkbox']:focus {
   padding: 0;

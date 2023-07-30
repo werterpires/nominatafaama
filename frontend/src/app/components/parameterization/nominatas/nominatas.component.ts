@@ -17,6 +17,7 @@ export class NominatasComponent {
   createRegistryData: ICreateNominataDto = {
     orig_field_invites_begin: '',
     year: '',
+    director_words: '',
   }
 
   showBox = false
@@ -36,6 +37,7 @@ export class NominatasComponent {
     this.createRegistryData = {
       orig_field_invites_begin: '',
       year: '',
+      director_words: '',
     }
     this.getAllRegistries()
   }
@@ -103,6 +105,7 @@ export class NominatasComponent {
         this.allRegistries[index].orig_field_invites_begin,
       ),
       year: this.allRegistries[index].year,
+      director_words: this.allRegistries[index].director_words,
     }
 
     this.service.updateRegistry(updateNominataData).subscribe({
