@@ -1,9 +1,13 @@
-import { Module } from '@nestjs/common';
-import { NominatasService } from './nominatas.service';
-import { NominatasController } from './nominatas.controller';
+import { Module } from '@nestjs/common'
+import { NominatasService } from './services/nominatas.service'
+import { NominatasController } from './controllers/nominatas.controller'
+import { NominatasModel } from './model/nominatas.model'
+
+const services = [NominatasService, NominatasModel]
 
 @Module({
   controllers: [NominatasController],
-  providers: [NominatasService]
+  providers: services,
+  exports: services,
 })
 export class NominatasModule {}

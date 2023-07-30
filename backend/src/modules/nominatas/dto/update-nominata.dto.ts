@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateNominataDto } from './create-nominata.dto';
+import { IsNumber, IsNumberString, IsString, Length } from 'class-validator'
 
-export class UpdateNominataDto extends PartialType(CreateNominataDto) {}
+export class UpdateNominataDto {
+  @IsNumber()
+  nominata_id: number
+
+  @IsString()
+  @Length(4, 4)
+  year: string
+
+  @IsString()
+  orig_field_invites_begin: string
+}

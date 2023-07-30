@@ -1,10 +1,10 @@
 import { IsNotEmpty, IsString, Length } from 'class-validator'
 
-export class CreateNominataDto {}
-
-export class CreateAcademicDegreeDto {
-  @IsNotEmpty()
+export class CreateNominataDto {
   @IsString()
-  @Length(1, 150)
-  degree_name: string
+  @Length(4, 4)
+  year: string
+
+  @IsString()
+  orig_field_invites_begin: string
 }
