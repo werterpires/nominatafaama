@@ -14,6 +14,7 @@ import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard'
 import { RolesGuard } from './shared/roles/gz_guards/roles.guard'
 import { RolesModule } from './shared/roles/roles.module'
 import { ApprovalsModule } from './modules/approvals/approvals.module'
+import { NominatasModule } from './modules/nominatas/nominatas.module';
 import * as fs from 'fs'
 import * as path from 'path'
 import * as Nodemailer from 'nodemailer'
@@ -88,6 +89,7 @@ const mssqlConfig: KnexModuleOptions = {
     InfoModule,
     ApprovalsModule,
     ProfessorsModule,
+    NominatasModule,
   ],
   providers: [
     {
