@@ -15,7 +15,7 @@ export class NominatasModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const [degree_id] = await trx('academic_degrees')
+        const [degree_id] = await trx('nominatas')
           .insert(createNominataData)
           .returning('degree_id')
 
