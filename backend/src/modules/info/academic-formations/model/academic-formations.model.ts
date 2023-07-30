@@ -265,6 +265,15 @@ export class AcademicFormationsModel {
           academic_formation_approved,
         } = updateAcademicFormation
 
+        let approved = await trx('academic_formations')
+          .first('academic_formation_approved')
+          .where('formation_id', formation_id)
+
+        console.log(approved)
+        if (approved.academic_formation_approved == true) {
+          console.log(approved)
+          throw new Error('Registro já aprovado')
+        }
         await trx('academic_formations')
           .where('formation_id', formation_id)
           .update({
