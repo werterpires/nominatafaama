@@ -113,14 +113,11 @@ export class EvangelisticExperiencesController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   async updateEvangelisticExperienceById(
     @Body() dto: UpdateEvangelisticExperienceDto,
-    @CurrentUser() user: UserFromJwt,
   ): Promise<IEvangelisticExperience> {
     try {
-      const user_id = user.user_id
       const updatedEvangelisticExperience =
         await this.evangelisticExperiencesService.updateEvangelisticExperienceById(
           dto,
-          user_id,
         )
       return updatedEvangelisticExperience
     } catch (error) {

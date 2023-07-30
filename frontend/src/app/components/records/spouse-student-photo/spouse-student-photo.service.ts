@@ -8,7 +8,7 @@ import {
   AddressNull,
   IStudentPhoto,
   UpdateStudentPhotoDto,
-} from '../small-alone-student-photos/types'
+} from '../small-alone-professor-photos/types'
 
 @Injectable({
   providedIn: 'root',

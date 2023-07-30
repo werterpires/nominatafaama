@@ -27,6 +27,8 @@ export class SmallAloneProfessorPhotosComponent {
   errorMessage = ''
   constructor(private service: ProfessorPhotosService) {}
   ngOnInit() {
+    this.allRegistries = []
+    this.imageUrl = null
     this.getAllRegistries()
   }
 
@@ -104,8 +106,8 @@ export class SmallAloneProfessorPhotosComponent {
       next: (res) => {
         this.doneMessage = 'Registro criado com sucesso.'
         this.done = true
+        // this.ngOnInit()
         this.isLoading = false
-        this.getAllRegistries()
       },
       error: (err) => {
         this.errorMessage = err.message

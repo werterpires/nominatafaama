@@ -264,7 +264,6 @@ export class EvangelisticExperiencesModel {
           place,
           exp_begin_date,
           exp_end_date,
-          person_id,
           evang_exp_type_id,
           evang_exp_approved,
         } = updateEvangelisticExperience
@@ -276,7 +275,6 @@ export class EvangelisticExperiencesModel {
             place,
             exp_begin_date,
             exp_end_date,
-            person_id,
             evang_exp_type_id,
             evang_exp_approved,
           })
