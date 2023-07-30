@@ -318,6 +318,41 @@ export class ProfessorsModel {
     return updatedProfessor
   }
 
+  async findProfessorPhotoByProfessorId(
+    professorId: number,
+  ): Promise<string | null> {
+    let professorPhoto: string | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('professors')
+          .where('professor_id', '=', professorId)
+          .first()
+
+        if (!result) {
+          return
+        }
+
+        professorPhoto = result.professor_photo_address
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return professorPhoto
+  }
+
   // async deleteStudentById(id: number): Promise<string> {
   //   let sentError: Error | null = null
   //   let message: string = ''

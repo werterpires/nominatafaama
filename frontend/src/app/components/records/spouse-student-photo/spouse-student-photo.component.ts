@@ -4,7 +4,7 @@ import { IPermissions } from '../../shared/container/types'
 import {
   IStudentPhoto,
   UpdateStudentPhotoDto,
-} from '../small-alone-student-photos/types'
+} from '../small-alone-professor-photos/types'
 
 @Component({
   selector: 'app-spouse-student-photo',

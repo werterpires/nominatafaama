@@ -54,7 +54,7 @@ import { SpPastEclExpComponent } from './components/records/sp-past-ecl-exp/sp-p
 import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-endowments.component'
 import { SpRelatedMinistriesComponent } from './components/records/sp-related-ministries/sp-related-ministries.component'
 import { PreviousMarriageComponent } from './components/records/previous-marriage/previous-marriage.component'
-import { SmallAloneProfessorPhotosComponent } from './components/records/small-alone-student-photos/small-alone-professor-photos.component'
+import { SmallAloneProfessorPhotosComponent } from './components/records/small-alone-professor-photos/small-alone-professor-photos.component'
 import { StudentPhotosComponent } from './components/records/student-photos/student-photos.component'
 import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component'
 import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'

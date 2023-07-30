@@ -9,6 +9,7 @@ import {
   IProfessor,
   IUpdateProfessor,
 } from '../types/types'
+import * as fs from 'fs'
 
 @Injectable()
 export class ProfessorsService {
@@ -84,15 +85,25 @@ export class ProfessorsService {
     throw new Error('Não foi possível atualizar o professor')
   }
 
-  async createStudentPhoto(
+  async createProfessorPhoto(
     user_id: number,
     filename: string,
   ): Promise<null | number> {
     try {
-      const professor = await this.professorsModel.findProfessorById(user_id)
+      const professor = await this.professorsModel.findProfessorByUserId(
+        user_id,
+      )
 
       if (professor == null) {
         throw new Error('Professor não encontrado')
+      }
+
+      const oldFile = professor.professor_photo_address
+
+      if (oldFile != null && oldFile.length > 5) {
+        const filePath = `./src/modules/professors/files/${oldFile}`
+
+        await fs.promises.unlink(filePath)
       }
 
       const professor_id = professor.professor_id
@@ -102,7 +113,49 @@ export class ProfessorsService {
       return 1
     } catch (error) {
       console.error(
-        'Erro capturado no StudentPhotosService createStudentPhoto: ',
+        'Erro capturado no ProfessorsService createProfessorPhoto: ',
+        error,
+      )
+      throw error
+    }
+  }
+
+  async findProfessorPhotoByUserId(user_id: number): Promise<{
+    fileStream: fs.ReadStream | null
+    headers: Record<string, string>
+  }> {
+    try {
+      const professor = await this.professorsModel.findProfessorByUserId(
+        user_id,
+      )
+
+      if (professor == null) {
+        return {
+          fileStream: null,
+          headers: {
+            'Content-Type': 'image/jpeg',
+            'Content-Disposition': `attachment; filename`,
+          },
+        }
+      }
+
+      const filename = professor.professor_photo_address
+
+      const filePath = `./src/modules/professors/files/${filename}`
+
+      if (fs.existsSync(filePath)) {
+        const fileStream = fs.createReadStream(filePath)
+        const headers = {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename=${filename}`,
+        }
+        return { fileStream, headers }
+      } else {
+        return { fileStream: null, headers: {} }
+      }
+    } catch (error) {
+      console.error(
+        'Erro capturado no ProfessorService findProfessorPhotoByStudentId: ',
         error,
       )
       throw error
