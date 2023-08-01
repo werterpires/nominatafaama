@@ -12,7 +12,7 @@ import { LoginComponent } from './components/login/login.component'
 import { LogonComponent } from './components/logon/logon.component'
 import { NominataComponent } from './components/nominata/nominata.component'
 import { AcademicDegreesComponent } from './components/parameterization/academic-degrees/academic-degrees.component'
-import { AssociationsComponent } from './components/records/associations/associations.component'
+import { AssociationsComponent } from './components/parameterization/associations/associations.component'
 import { EclExpTypesComponent } from './components/records/ecl-exp-types/ecl-exp-types.component'
 import { EndowmentTypesComponent } from './components/records/endowment-types/endowment-types.component'
 import { EvangExpTypesComponent } from './components/records/evang-exp-types/evang-exp-types.component'
@@ -65,7 +65,7 @@ import { OneStudentToApproveComponent } from './components/approvals/one-student
 import { UsersComponent } from './components/records/users/users.component'
 import { ParameterizationComponent } from './components/parameterization/parameterization.component'
 import { CommonModule, DatePipe } from '@angular/common'
-import { NominatasComponent } from './components/parameterization/nominatas/nominatas.component';
+import { NominatasComponent } from './components/parameterization/nominatas/nominatas.component'
 import { NominatasStudentsComponent } from './components/parameterization/nominatas-students/nominatas-students.component'
 
 @NgModule({

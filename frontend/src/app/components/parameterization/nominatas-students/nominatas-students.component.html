@@ -1,0 +1,109 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+  </div>
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
+      <div class="subSection">
+        <label class="inputLabel">
+          Nominata
+          <select
+            class="smallInput"
+            name="nominataSelect"
+            [(ngModel)]="createRegistryData.nominata_id"
+            (change)="filterStudents()"
+          >
+            <option
+              *ngFor="let nominata of allNominatas"
+              [value]="nominata.nominata_id"
+              [selected]="allNominatas[0]"
+            >
+              {{ nominata.year }}
+            </option>
+          </select>
+        </label>
+      </div>
+      <div class="div100">
+        <p class="fieldTitle">Estudantes na nominata</p>
+        <div class="namesList">
+          <div
+            class="nameDiv"
+            *ngFor="let registry of atualNominataStudents; index as i"
+          >
+            <p>{{ registry.name }} - {{ registry.cpf }}</p>
+            <img
+              class="iconButton"
+              src="assets/icons/delete.svg"
+              alt="Icone de uma lixeira"
+              (click)="deleteStudentFromNominata(registry.student_id)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="div100">
+        <p class="fieldTitle">Adicionar estudante à nominata</p>
+        <input
+          class="smallInput"
+          name="StudentsSelect"
+          [(ngModel)]="chosenStudent"
+          (input)="filterOtherStudents()"
+        />
+        <div class="namesList">
+          <div
+            class="nameDiv"
+            *ngFor="let registry of filteredOtherStudents; index as i"
+            (click)="addStudentToNominata(registry.student_id)"
+          >
+            <p>{{ registry.name }} - {{ registry.cpf }}</p>
+          </div>
+        </div>
+      </div>
+    </app-creation-form>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

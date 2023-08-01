@@ -1059,3 +1059,34 @@ button:active {
   appearance: auto;
   outline: none;
 }
+
+.nameDiv {
+  display: flex;
+  gap: 5px;
+  width: 45%;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #23435f;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  min-height: 23px;
+  padding: 1.5px 3px 1.5px 4px;
+  margin-right: 25px;
+  margin-bottom: 15px;
+}
+
+.namesList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.div100 {
+  width: 100%;
+}

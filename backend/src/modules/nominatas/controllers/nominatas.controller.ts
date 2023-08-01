@@ -16,6 +16,8 @@ import { UpdateNominataDto } from '../dto/update-nominata.dto'
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
 import { ERoles } from 'src/shared/auth/types/roles.enum'
 import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator'
+import { ISinteticStudent } from '../types/types'
+import { UpdateNominataStudentsDto } from '../dto/update-nominata-students.dto copy'
 
 @Controller('nominatas')
 export class NominatasController {
@@ -29,6 +31,27 @@ export class NominatasController {
       return nominata
     } catch (error) {
       throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Post('students/')
+  async addStudentToNominata(@Body() input: UpdateNominataStudentsDto) {
+    try {
+      const result = await this.nominatasService.addStudentsToNominata(input)
+      return result
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Get('students/')
+  async findAllStudents(): Promise<ISinteticStudent[]> {
+    try {
+      return await this.nominatasService.findAllNOminataStudents()
+    } catch (error) {
+      throw error
     }
   }
 

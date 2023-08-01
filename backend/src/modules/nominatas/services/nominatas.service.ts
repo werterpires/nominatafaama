@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common'
 import { CreateNominataDto } from '../dto/create-nominata.dto'
 import { UpdateNominataDto } from '../dto/update-nominata.dto'
 import { NominatasModel } from '../model/nominatas.model'
-import { ICreateNominata, INominata, IUpdateNominata } from '../types/types'
+import {
+  ICreateNominata,
+  ICreateNominataStudents,
+  INominata,
+  ISinteticStudent,
+  IUpdateNominata,
+} from '../types/types'
 
 @Injectable()
 export class NominatasService {
@@ -21,6 +27,22 @@ export class NominatasService {
       return newNominata
     } catch (error) {
       throw error
+    }
+  }
+
+  async addStudentsToNominata(
+    createNominataStudentsData: ICreateNominataStudents,
+  ): Promise<boolean> {
+    try {
+      const { nominata_id, student_id } = createNominataStudentsData
+      const result = await this.nominatasModel.addStudentsToNominata(
+        student_id,
+        nominata_id,
+      )
+      return result
+    } catch (error) {
+      console.log(error)
+      throw new Error(error.message)
     }
   }
 
@@ -43,6 +65,16 @@ export class NominatasService {
     try {
       const nominatas = await this.nominatasModel.findAllNominatas()
       return nominatas
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async findAllNOminataStudents(): Promise<ISinteticStudent[]> {
+    try {
+      const students = await this.nominatasModel.findAllNominataStudents()
+      console.log('log no service', students)
+      return students
     } catch (error) {
       throw error
     }

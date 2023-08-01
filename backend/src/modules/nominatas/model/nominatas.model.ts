@@ -5,6 +5,7 @@ import {
   ICompleteNominata,
   ICreateNominata,
   INominata,
+  ISinteticStudent,
   IUpdateNominata,
 } from '../types/types'
 
@@ -54,12 +55,36 @@ export class NominatasModel {
     return nominata!
   }
 
-  async addStudentsToNominata(student_id, nominata_id): Promise<INominata> {
+  async addStudentsToNominata(
+    student_id: number[],
+    nominata_id: number,
+  ): Promise<boolean> {
     let nominata: INominata | null = null
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
+        const students: {
+          student_id: number
+          nominata_id: number
+        }[] = []
+
+        student_id.forEach((student) => {
+          students.push({
+            student_id: student,
+            nominata_id: nominata_id,
+          })
+        })
+        console.log(nominata_id)
+        await trx('nominatas_students')
+          .where('nominata_id', nominata_id)
+          .delete()
+
+        if (students.length > 0) {
+          await trx('nominatas_students').insert(students)
+        }
+
+        await trx.commit()
         const [degree_id] = await trx('nominatas_students')
           .insert({ nominata_id, student_id })
           .returning('nominata_id')
@@ -84,7 +109,7 @@ export class NominatasModel {
       throw sentError
     }
 
-    return nominata!
+    return true
   }
 
   async findNominataById(id: number): Promise<INominata | null> {
@@ -125,6 +150,56 @@ export class NominatasModel {
     }
 
     return nominata
+  }
+
+  async findAllNominataStudents(): Promise<ISinteticStudent[]> {
+    let students: ISinteticStudent[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('students')
+          .select([
+            'people.name',
+            'students.student_id',
+            'students.person_id',
+            'people.cpf',
+            'nominatas_students.nominata_id',
+          ])
+          .leftJoin('people', 'students.person_id', 'people.person_id')
+          .leftJoin(
+            'nominatas_students',
+            'students.student_id',
+            'nominatas_students.student_id',
+          )
+
+        students = Object.values(
+          result.reduce((acc, curr) => {
+            if (!acc[curr.student_id]) {
+              acc[curr.student_id] = { ...curr, nominata_id: [] }
+            }
+            if (curr.nominata_id !== null) {
+              acc[curr.student_id].nominata_id.push(curr.nominata_id)
+            }
+            return acc
+          }, {}),
+        )
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+    console.log(students)
+    return students
   }
 
   async findNominataByYear(year: string): Promise<INominata | null> {
@@ -223,7 +298,7 @@ export class NominatasModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
         }))
-
+        console.log('enviando as nominatas')
         await trx.commit()
       } catch (error) {
         console.error(error)
