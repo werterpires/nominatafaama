@@ -1,3 +1,5 @@
+import { ICompleteUser } from 'src/modules/approvals/types/types'
+
 export interface INominata {
   nominata_id: number
   year: string
@@ -5,6 +7,10 @@ export interface INominata {
   director_words: string
   created_at: Date
   updated_at: Date
+}
+
+export interface ICompleteNominata extends INominata {
+  students: ICompleteUser[]
 }
 
 export interface ICreateNominata {

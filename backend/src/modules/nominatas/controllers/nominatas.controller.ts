@@ -15,6 +15,7 @@ import { CreateNominataDto } from '../dto/create-nominata.dto'
 import { UpdateNominataDto } from '../dto/update-nominata.dto'
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
 import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator'
 
 @Controller('nominatas')
 export class NominatasController {
@@ -31,12 +32,13 @@ export class NominatasController {
     }
   }
 
-  @Get(':id')
-  async getNominataById(@Param('id') id: number) {
+  @IsPublic()
+  @Get(':year')
+  async getNominataByIYear(@Param('year') year: string) {
     try {
-      const nominata = await this.nominatasService.findNominataById(id)
+      const nominata = await this.nominatasService.findNominataByYear(year)
       if (!nominata) {
-        throw new NotFoundException(`Marital status with id ${id} not found.`)
+        throw new NotFoundException(`Nominata with year ${year} not found.`)
       }
       return nominata
     } catch (error) {

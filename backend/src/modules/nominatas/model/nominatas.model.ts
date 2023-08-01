@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
-import { ICreateNominata, INominata, IUpdateNominata } from '../types/types'
+import {
+  ICompleteNominata,
+  ICreateNominata,
+  INominata,
+  IUpdateNominata,
+} from '../types/types'
 
 @Injectable()
 export class NominatasModel {
@@ -18,7 +23,7 @@ export class NominatasModel {
         const [degree_id] = await trx('nominatas')
           .insert(createNominataData)
           .returning('degree_id')
-
+        console.log('estou mesmo entrando aui')
         nominata = {
           nominata_id: degree_id,
           year: createNominataData.year,
@@ -29,6 +34,39 @@ export class NominatasModel {
         }
 
         await trx.commit()
+      } catch (error) {
+        console.error(
+          `Erro capturado na função createNominata, na nominatasModel: ${error}`,
+        )
+        await trx.rollback()
+        if (error.code === 'ER_DUP_ENTRY') {
+          sentError = new Error('Já existe uma nominata com esses dados')
+        } else {
+          sentError = new Error(error.sqlMessage)
+        }
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return nominata!
+  }
+
+  async addStudentsToNominata(student_id, nominata_id): Promise<INominata> {
+    let nominata: INominata | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const [degree_id] = await trx('nominatas_students')
+          .insert({ nominata_id, student_id })
+          .returning('nominata_id')
+
+        await trx.commit()
+
+        nominata = await this.findNominataById(nominata_id)
       } catch (error) {
         console.error(
           `Erro capturado na função createNominata, na nominatasModel: ${error}`,
@@ -61,6 +99,86 @@ export class NominatasModel {
           .where('nominata_id', '=', id)
 
         if (result.length < 1) {
+          throw new Error('Nominata not found')
+        }
+
+        nominata = {
+          nominata_id: result.nominata_id,
+          year: result.year,
+          orig_field_invites_begin: result.orig_field_invites_begin,
+          director_words: result.director_words,
+          created_at: result.created_at,
+          updated_at: result.updated_at,
+        }
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return nominata
+  }
+
+  async findNominataByYear(year: string): Promise<INominata | null> {
+    let nominata: INominata | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('nominatas')
+          .first('*')
+          .where('year', '=', year)
+
+        if (!result) {
+          throw new Error('Nominata not found')
+        }
+
+        nominata = {
+          nominata_id: result.nominata_id,
+          year: result.year,
+          orig_field_invites_begin: result.orig_field_invites_begin,
+          director_words: result.director_words,
+          created_at: result.created_at,
+          updated_at: result.updated_at,
+        }
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return nominata
+  }
+
+  async findStudentsIds(nominata_id: number): Promise<INominata | null> {
+    let nominata: INominata | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('nominatas')
+          .first('*')
+          .where('nominata_id', '=', nominata_id)
+
+        if (!result) {
           throw new Error('Nominata not found')
         }
 

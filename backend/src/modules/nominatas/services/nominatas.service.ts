@@ -24,13 +24,17 @@ export class NominatasService {
     }
   }
 
-  async findNominataById(id: number): Promise<INominata> {
+  async findNominataByYear(year: string): Promise<INominata> {
     try {
-      const nominata = await this.nominatasModel.findNominataById(id)
+      const nominata = await this.nominatasModel.findNominataByYear(year)
+      if (nominata) {
+        const { nominata_id } = nominata
+      }
+
       return nominata as INominata
     } catch (error) {
       throw new Error(
-        `Não foi possível encontrar um grau acadêmico com id ${id}: ${error.message}`,
+        `Não foi possível encontrar uma nominata com ano ${year}: ${error.message}`,
       )
     }
   }

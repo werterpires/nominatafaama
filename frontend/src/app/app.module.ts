@@ -65,7 +65,8 @@ import { OneStudentToApproveComponent } from './components/approvals/one-student
 import { UsersComponent } from './components/records/users/users.component'
 import { ParameterizationComponent } from './components/parameterization/parameterization.component'
 import { CommonModule, DatePipe } from '@angular/common'
-import { NominatasComponent } from './components/parameterization/nominatas/nominatas.component'
+import { NominatasComponent } from './components/parameterization/nominatas/nominatas.component';
+import { NominatasStudentsComponent } from './components/parameterization/nominatas-students/nominatas-students.component'
 
 @NgModule({
   declarations: [
@@ -129,6 +130,7 @@ import { NominatasComponent } from './components/parameterization/nominatas/nomi
     ParameterizationComponent,
     ProfessorsComponent,
     NominatasComponent,
+    NominatasStudentsComponent,
   ],
   imports: [
     BrowserModule,

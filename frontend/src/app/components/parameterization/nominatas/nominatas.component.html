@@ -26,22 +26,33 @@
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
-      <label class="inputLabel">
-        Ano da nominata<input
-          class="mediumInput"
-          type="text"
-          name="nominataYearInput"
-          [(ngModel)]="createRegistryData.year"
-        />
-      </label>
-      <label class="inputLabel">
-        Data para início de convites<input
-          class="mediumInput"
-          type="date"
-          name="nominataInviteBeginInput"
-          [(ngModel)]="createRegistryData.orig_field_invites_begin"
-        />
-      </label>
+      <div class="subSection">
+        <label class="inputLabel">
+          Ano da nominata<input
+            class="mediumInput"
+            type="text"
+            name="nominataYearInput"
+            [(ngModel)]="createRegistryData.year"
+          />
+        </label>
+        <label class="inputLabel">
+          Data para início de convites<input
+            class="mediumInput"
+            type="date"
+            name="nominataInviteBeginInput"
+            [(ngModel)]="createRegistryData.orig_field_invites_begin"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Palavras do diretor<textarea
+            class="largeTextArea mediumInput"
+            name="nominataDirectorWords"
+            [(ngModel)]="createRegistryData.director_words"
+          ></textarea>
+        </label>
+      </div>
     </app-creation-form>
   </section>
   <section class="registriesWrapper">
@@ -71,7 +82,7 @@
       </div>
       <label class="inputLabel">
         Palavras do diretor<textarea
-          class="largeTextArea mediumInput"
+          class="mediumInput"
           name="nominataDirectorWords"
           [(ngModel)]="registry.director_words"
         ></textarea>
