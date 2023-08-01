@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { IUnion } from '../unions/types'
-import { UnionService } from '../unions/unions.service'
 import { AssociationService } from './associations.service'
 import { CreateAssociationDto, IAssociation } from './types'
+import { IUnion } from '../../records/unions/types'
+import { UnionService } from '../../records/unions/unions.service'
 
 @Component({
   selector: 'app-associations',
