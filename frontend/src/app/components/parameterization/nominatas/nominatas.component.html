@@ -1,0 +1,124 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+
+    <img
+      #addIcon
+      class="addIcon"
+      [ngClass]="{ hidden: !showBox }"
+      src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}"
+      (click)="showForm = true"
+    />
+  </div>
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
+      <div class="subSection">
+        <label class="inputLabel">
+          Ano da nominata<input
+            class="mediumInput"
+            type="text"
+            name="nominataYearInput"
+            [(ngModel)]="createRegistryData.year"
+          />
+        </label>
+        <label class="inputLabel">
+          Data para início de convites<input
+            class="mediumInput"
+            type="date"
+            name="nominataInviteBeginInput"
+            [(ngModel)]="createRegistryData.orig_field_invites_begin"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Palavras do diretor<textarea
+            class="largeTextArea mediumInput"
+            name="nominataDirectorWords"
+            [(ngModel)]="createRegistryData.director_words"
+          ></textarea>
+        </label>
+      </div>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.nominata_id)"
+      *ngFor="let registry of allRegistries; index as i"
+    >
+      <div class="subSection">
+        <label class="inputLabel">
+          Ano<input
+            class="mediumInput"
+            type="text"
+            name="nominataYearInput"
+            [(ngModel)]="registry.year"
+          />
+        </label>
+        <label class="inputLabel">
+          Data para início de convites<input
+            class="mediumInput"
+            type="date"
+            name="nominataBeginInput"
+            [(ngModel)]="registry.orig_field_invites_begin"
+          />
+        </label>
+      </div>
+      <label class="inputLabel">
+        Palavras do diretor<textarea
+          class="mediumInput"
+          name="nominataDirectorWords"
+          [(ngModel)]="registry.director_words"
+        ></textarea>
+      </label>
+    </app-update-form>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

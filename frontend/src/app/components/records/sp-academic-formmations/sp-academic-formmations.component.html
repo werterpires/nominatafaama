@@ -90,6 +90,10 @@
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.formation_id)"
       *ngFor="let registry of allRegistries; index as i"
+      [ngClass]="{
+        approved: registry.academic_formation_approved,
+        unapproved: registry.academic_formation_approved == false
+      }"
     >
       <span class="field">
         <p class="fieldTitle">Grau acadêmico:</p>

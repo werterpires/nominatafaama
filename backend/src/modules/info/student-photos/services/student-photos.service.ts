@@ -63,9 +63,6 @@ export class StudentPhotosService {
         await this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
 
       if (!existing) {
-        console.log(
-          `Indo criar com os seguintes dados: ${createStudentPhotoData.student_id}`,
-        )
         this.studentPhotosModel.createStudentPhoto(
           createStudentPhotoData,
           'create',

@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
-import { AcademicDegreeService } from '../academic-degrees/academic-degrees.service'
-import { IAcademicDegree } from '../academic-degrees/types'
+import { AcademicDegreeService } from '../../parameterization/academic-degrees/academic-degrees.service'
+import { IAcademicDegree } from '../../parameterization/academic-degrees/types'
 import { StudentAcademicFormationsService } from './student-academic-formations.service'
 import {
   IStAcademicFormation,

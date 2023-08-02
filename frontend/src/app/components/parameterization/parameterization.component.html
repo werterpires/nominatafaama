@@ -66,4 +66,19 @@
     "
     [permissions]="permissions"
   ></app-publication-types>
+
+  <app-nominatas
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  ></app-nominatas>
+
+  <app-nominatas-students
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  >
+  </app-nominatas-students>
 </div>

@@ -1,1 +1,74 @@
-<p>Você está vendo a nominada. Olha que fotos lindas.</p>
+<div class="sectionDataList">
+  <section #sectionBox ngClass="sectionBoxAll">
+    <div class="boxHead">
+      <p class="sectionTitle1">{{ title }}</p>
+    </div>
+    <form class="formSearch" action="">
+      <label class="inputLabel" for="">
+        Busque um estudante espefífico pelo nome:
+        <input
+          type="search"
+          class="searchInput"
+          name="searchStudent"
+          id=""
+          placeholder="Simão Ped.."
+          [(ngModel)]="searchString"
+        />
+      </label>
+
+      <!-- <button type="button" (click)="searchByNam()">Buscar</button> -->
+      <button type="button" (click)="ngOnInit()">Cancelar</button>
+    </form>
+    <section class="perfilList">
+      <div *ngFor="let student of Registry?.students; index as i">
+        <div>
+          <div class="smallAlonePhoto">
+            <div
+              *ngIf="student.imgUrl"
+              class="imageContainer"
+              [ngStyle]="{ 'background-image': 'url(' + student.imgUrl + ')' }"
+            ></div>
+          </div>
+          <div class="studentDatacontainer">
+            <p class="studentName">{{ student.name }}</p>
+            <p class="studentCompData">
+              {{ student.union_acronym }}/{{ student.association_acronym }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeError()"
+    />
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{ doneMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeDone()"
+    />
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

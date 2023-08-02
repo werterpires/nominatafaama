@@ -3,8 +3,6 @@ import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { OthersServices } from '../../shared/shared.service.ts/others.service'
 import { ICity, IUF } from '../../shared/types'
-import { AssociationService } from '../associations/associations.service'
-import { IAssociation } from '../associations/types'
 import { HiringStatusService } from '../hiring-status/hiring_status.service'
 import { IHiringStatus } from '../hiring-status/types'
 import { MaritalStatusService } from '../marital-status/marital-status.service'
@@ -13,6 +11,8 @@ import { StudentService } from './students.service'
 import { ICreateStudent, IStudent, IUpdateStudent } from './types'
 import { OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
+import { AssociationService } from '../../parameterization/associations/associations.service'
+import { IAssociation } from '../../parameterization/associations/types'
 
 @Component({
   selector: 'app-students',
