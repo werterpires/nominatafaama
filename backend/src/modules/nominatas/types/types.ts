@@ -7,10 +7,7 @@ export interface INominata {
   director_words: string
   created_at: Date
   updated_at: Date
-}
-
-export interface ICompleteNominata extends INominata {
-  students: ICompleteUser[]
+  students?: IBasicStudent[] | null
 }
 
 export interface ICreateNominata {
@@ -37,4 +34,16 @@ export interface ISinteticStudent {
 export interface ICreateNominataStudents {
   nominata_id: number
   student_id: number[]
+}
+
+export interface IBasicStudent {
+  student_id: number
+  user_id: number
+  person_id: number
+  name: string
+  union_acronym: string
+  association_acronym: string
+  hiring_status_name: string
+  small_alone_photo: string
+  photo?: { file: Buffer; headers: Record<string, string> } | null
 }

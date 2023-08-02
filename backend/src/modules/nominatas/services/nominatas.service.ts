@@ -3,12 +3,14 @@ import { CreateNominataDto } from '../dto/create-nominata.dto'
 import { UpdateNominataDto } from '../dto/update-nominata.dto'
 import { NominatasModel } from '../model/nominatas.model'
 import {
+  IBasicStudent,
   ICreateNominata,
   ICreateNominataStudents,
   INominata,
   ISinteticStudent,
   IUpdateNominata,
 } from '../types/types'
+import * as fs from 'fs'
 
 @Injectable()
 export class NominatasService {
@@ -49,8 +51,15 @@ export class NominatasService {
   async findNominataByYear(year: string): Promise<INominata> {
     try {
       const nominata = await this.nominatasModel.findNominataByYear(year)
+      let photosInfo: {
+        fileStream: fs.ReadStream | null
+        headers: Record<string, string>
+      }[] = []
+
       if (nominata) {
         const { nominata_id } = nominata
+        const students = await this.findNominataBasicStudents(nominata_id)
+        nominata.students = students
       }
 
       return nominata as INominata
@@ -58,6 +67,62 @@ export class NominatasService {
       throw new Error(
         `Não foi possível encontrar uma nominata com ano ${year}: ${error.message}`,
       )
+    }
+  }
+
+  async findNominataBasicStudents(
+    nominata_id: number,
+  ): Promise<IBasicStudent[] | null> {
+    try {
+      let students = await this.nominatasModel.findAllNominataBasicStudents(
+        nominata_id,
+      )
+      if (students == null) {
+        return null
+      }
+      for (const student of students) {
+        if (student.small_alone_photo == null) {
+          student.photo = null
+        } else {
+          const filePath = `./src/modules/info/student-photos/files/${student.small_alone_photo}`
+
+          if (!fs.existsSync(filePath)) {
+            return null
+          }
+          const fileStream = fs.createReadStream(filePath)
+          const headers = {
+            'Content-Type': 'image/jpeg',
+            'Content-Disposition': `attachment; filename=${student.small_alone_photo}`,
+          }
+
+          const filePromise = new Promise<Buffer>((resolve, reject) => {
+            const chunks: Buffer[] = []
+            fileStream.on('data', (chunk: Buffer) => {
+              chunks.push(chunk)
+            })
+            fileStream.on('end', () => {
+              const file = Buffer.concat(chunks)
+              resolve(file)
+            })
+            fileStream.on('error', (error: Error) => {
+              reject(error)
+            })
+          })
+
+          const file = await filePromise
+          student.photo = {
+            file,
+            headers,
+          }
+        }
+
+        // console.log(student.photo)
+      }
+
+      return students
+    } catch (error) {
+      console.error(error)
+      throw error
     }
   }
 
@@ -73,7 +138,6 @@ export class NominatasService {
   async findAllNOminataStudents(): Promise<ISinteticStudent[]> {
     try {
       const students = await this.nominatasModel.findAllNominataStudents()
-      console.log('log no service', students)
       return students
     } catch (error) {
       throw error

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
 import {
-  ICompleteNominata,
+  IBasicStudent,
   ICreateNominata,
   INominata,
   ISinteticStudent,
@@ -199,6 +199,67 @@ export class NominatasModel {
       throw sentError
     }
     console.log(students)
+    return students
+  }
+
+  async findAllNominataBasicStudents(
+    nominata_id,
+  ): Promise<IBasicStudent[] | null> {
+    let students: IBasicStudent[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        students = await this.knex
+          .select(
+            'students.student_id',
+            'users.user_id',
+            'students.person_id',
+            'people.name',
+            'unions.union_acronym',
+            'associations.association_acronym',
+            'hiring_status.hiring_status_name',
+            'student_photos.small_alone_photo',
+          )
+          .from('students')
+          .leftJoin('people', 'students.person_id', 'people.person_id')
+          .leftJoin('users', 'students.person_id', 'users.person_id')
+          .leftJoin(
+            'associations',
+            'students.origin_field_id',
+            'associations.association_id',
+          )
+          .leftJoin('unions', 'associations.union_id', 'unions.union_id')
+          .leftJoin(
+            'hiring_status',
+            'students.hiring_status_id',
+            'hiring_status.hiring_status_id',
+          )
+          .leftJoin(
+            'nominatas_students',
+            'students.student_id',
+            'nominatas_students.student_id',
+          )
+          .leftJoin(
+            'student_photos',
+            'students.student_id',
+            'student_photos.student_id',
+          )
+          .where('nominatas_students.nominata_id', nominata_id)
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
     return students
   }
 

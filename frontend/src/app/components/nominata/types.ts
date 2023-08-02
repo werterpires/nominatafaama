@@ -1,3 +1,25 @@
+import { SafeResourceUrl } from '@angular/platform-browser'
 import { INominata } from '../parameterization/nominatas/types'
 
-export interface ICompleteNominata extends INominata {}
+export interface ICompleteNominata {
+  nominata_id: number
+  year: string
+  orig_field_invites_begin: Date
+  director_words: string
+  created_at: Date
+  updated_at: Date
+  students?: IBasicStudent[] | null
+}
+
+export interface IBasicStudent {
+  student_id: number
+  user_id: number
+  person_id: number
+  name: string
+  union_acronym: string
+  association_acronym: string
+  hiring_status_name: string
+  small_alone_photo: string
+  photo?: { file: any; headers: Record<string, string> } | null
+  imgUrl?: SafeResourceUrl
+}

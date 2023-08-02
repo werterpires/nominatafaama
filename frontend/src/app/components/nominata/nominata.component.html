@@ -20,21 +20,23 @@
       <button type="button" (click)="ngOnInit()">Cancelar</button>
     </form>
     <section class="perfilList">
-      <!-- <div *ngFor="let registry of allRegistries; index as i">
-            <div (click)="getOneStudent(registry.user_id)">
-              <div class="smallAlonePhoto">
-                <div
-                  *ngIf="registry.imageUrl"
-                  class="imageContainer"
-                  [ngStyle]="{ 'background-image': 'url(' + registry.imageUrl + ')' }"
-                ></div>
-              </div>
-              <div class="studentDatacontainer">
-                <p class="studentName">{{ registry.name }}</p>
-                <p class="studentCompData">{{ registry.principal_email }}</p>
-              </div>
-            </div>
-          </div> -->
+      <div *ngFor="let student of Registry?.students; index as i">
+        <div>
+          <div class="smallAlonePhoto">
+            <div
+              *ngIf="student.imgUrl"
+              class="imageContainer"
+              [ngStyle]="{ 'background-image': 'url(' + student.imgUrl + ')' }"
+            ></div>
+          </div>
+          <div class="studentDatacontainer">
+            <p class="studentName">{{ student.name }}</p>
+            <p class="studentCompData">
+              {{ student.union_acronym }}/{{ student.association_acronym }}
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
   </section>
 

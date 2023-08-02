@@ -41,7 +41,6 @@ export class NominataComponent {
   ngOnInit() {
     this.getAllRegistries()
     this.seeAll.emit()
-    console.log(new Date().getMonth())
   }
 
   getAllRegistries() {
@@ -49,24 +48,23 @@ export class NominataComponent {
     this.service.findAllRegistries(this.nominataYear).subscribe({
       next: async (res) => {
         this.Registry = res
-        console.log(res)
 
-        // this.allRegistries.forEach((registry) => {
-        //   const blob = new Blob([new Uint8Array(registry.photo?.file.data)], {
-        //     type: 'image/jpeg',
-        //   })
-        //   if (blob instanceof Blob) {
-        //     const reader = new FileReader()
-        //     reader.onload = (e: any) => {
-        //       registry.imageUrl = e.target.result
-        //       this.isLoading = false
-        //     }
-        //     reader.readAsDataURL(blob)
-        //   } else {
-        //     this.showForm = true
-        //     this.isLoading = false
-        //   }
-        // })
+        this.Registry.students?.forEach((student) => {
+          const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
+            type: 'image/jpeg',
+          })
+          if (blob instanceof Blob) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+              student.imgUrl = e.target.result
+              this.isLoading = false
+            }
+            reader.readAsDataURL(blob)
+          } else {
+            this.showForm = true
+            this.isLoading = false
+          }
+        })
 
         this.isLoading = false
       },
