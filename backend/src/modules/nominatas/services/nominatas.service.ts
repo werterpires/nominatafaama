@@ -5,8 +5,10 @@ import { NominatasModel } from '../model/nominatas.model'
 import {
   IBasicStudent,
   ICreateNominata,
+  ICreateNominataProfessors,
   ICreateNominataStudents,
   INominata,
+  ISinteticProfessor,
   ISinteticStudent,
   IUpdateNominata,
 } from '../types/types'
@@ -39,6 +41,22 @@ export class NominatasService {
       const { nominata_id, student_id } = createNominataStudentsData
       const result = await this.nominatasModel.addStudentsToNominata(
         student_id,
+        nominata_id,
+      )
+      return result
+    } catch (error) {
+      console.log(error)
+      throw new Error(error.message)
+    }
+  }
+
+  async addProfessorsToNominata(
+    createNominataProfessorsData: ICreateNominataProfessors,
+  ): Promise<boolean> {
+    try {
+      const { nominata_id, professor_id } = createNominataProfessorsData
+      const result = await this.nominatasModel.addProfessorsToNominata(
+        professor_id,
         nominata_id,
       )
       return result
@@ -139,6 +157,15 @@ export class NominatasService {
     try {
       const students = await this.nominatasModel.findAllNominataStudents()
       return students
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async findAllNOminataProfessors(): Promise<ISinteticProfessor[]> {
+    try {
+      const professors = await this.nominatasModel.findAllNominataProfessors()
+      return professors
     } catch (error) {
       throw error
     }

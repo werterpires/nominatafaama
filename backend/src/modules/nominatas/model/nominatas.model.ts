@@ -5,6 +5,7 @@ import {
   IBasicStudent,
   ICreateNominata,
   INominata,
+  ISinteticProfessor,
   ISinteticStudent,
   IUpdateNominata,
 } from '../types/types'
@@ -75,7 +76,6 @@ export class NominatasModel {
             nominata_id: nominata_id,
           })
         })
-        console.log(nominata_id)
         await trx('nominatas_students')
           .where('nominata_id', nominata_id)
           .delete()
@@ -85,16 +85,9 @@ export class NominatasModel {
         }
 
         await trx.commit()
-        const [degree_id] = await trx('nominatas_students')
-          .insert({ nominata_id, student_id })
-          .returning('nominata_id')
-
-        await trx.commit()
-
-        nominata = await this.findNominataById(nominata_id)
       } catch (error) {
         console.error(
-          `Erro capturado na função createNominata, na nominatasModel: ${error}`,
+          `Erro capturado na função addStudentsToNominata, na nominatasModel: ${error}`,
         )
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
@@ -102,6 +95,57 @@ export class NominatasModel {
         } else {
           sentError = new Error(error.sqlMessage)
         }
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return true
+  }
+
+  async addProfessorsToNominata(
+    professor_id: number[],
+    nominata_id: number,
+  ): Promise<boolean> {
+    let nominata: INominata | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const professors: {
+          professor_id: number
+          nominata_id: number
+        }[] = []
+
+        professor_id.forEach((professor) => {
+          professors.push({
+            professor_id: professor,
+            nominata_id: nominata_id,
+          })
+        })
+        await trx('nominatas_professors')
+          .where('nominata_id', nominata_id)
+          .delete()
+
+        if (professors.length > 0) {
+          await trx('nominatas_professors').insert(professors)
+        }
+
+        await trx.commit()
+        const [id] = await trx('nominatas_professors')
+          .insert({ nominata_id, professor_id })
+          .returning('nominata_id')
+
+        await trx.commit()
+      } catch (error) {
+        console.error(
+          `Erro capturado na função addProfessorsToNominata, na nominatasModel: ${error}`,
+        )
+        await trx.rollback()
+
+        sentError = new Error(error.sqlMessage)
       }
     })
 
@@ -198,8 +242,57 @@ export class NominatasModel {
     if (sentError) {
       throw sentError
     }
-    console.log(students)
     return students
+  }
+
+  async findAllNominataProfessors(): Promise<ISinteticProfessor[]> {
+    let professors: ISinteticProfessor[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('professors')
+          .select([
+            'people.name',
+            'professors.professor_id',
+            'professors.person_id',
+            'people.cpf',
+            'nominatas_professors.nominata_id',
+          ])
+          .leftJoin('people', 'professors.person_id', 'people.person_id')
+          .leftJoin(
+            'nominatas_professors',
+            'professors.professor_id',
+            'nominatas_professors.professor_id',
+          )
+
+        professors = Object.values(
+          result.reduce((acc, curr) => {
+            if (!acc[curr.professor_id]) {
+              acc[curr.professor_id] = { ...curr, nominata_id: [] }
+            }
+            if (curr.nominata_id !== null) {
+              acc[curr.professor_id].nominata_id.push(curr.nominata_id)
+            }
+            return acc
+          }, {}),
+        )
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return professors
   }
 
   async findAllNominataBasicStudents(

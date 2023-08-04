@@ -67,6 +67,7 @@ import { ParameterizationComponent } from './components/parameterization/paramet
 import { CommonModule, DatePipe } from '@angular/common'
 import { NominatasComponent } from './components/parameterization/nominatas/nominatas.component'
 import { NominatasStudentsComponent } from './components/parameterization/nominatas-students/nominatas-students.component'
+import { NominatasProfessorsComponent } from './components/parameterization/nominatas-professors/nominatas-professors.component'
 
 @NgModule({
   declarations: [
@@ -131,6 +132,7 @@ import { NominatasStudentsComponent } from './components/parameterization/nomina
     ProfessorsComponent,
     NominatasComponent,
     NominatasStudentsComponent,
+    NominatasProfessorsComponent,
   ],
   imports: [
     BrowserModule,

@@ -31,9 +31,22 @@ export interface ISinteticStudent {
   nominata_id: number[] | null
 }
 
+export interface ISinteticProfessor {
+  name: string
+  professor_id: number
+  person_id: number
+  cpf: string
+  nominata_id: number[] | null
+}
+
 export interface ICreateNominataStudents {
   nominata_id: number
   student_id: number[]
+}
+
+export interface ICreateNominataProfessors {
+  nominata_id: number
+  professor_id: number[]
 }
 
 export interface IBasicStudent {
