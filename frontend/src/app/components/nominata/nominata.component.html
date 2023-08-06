@@ -5,21 +5,21 @@
     </div>
 
     <div class="directorSpace">
-      <div
-        class="directorPhotoContainer"
-        *ngIf="
-          Registry &&
-          Registry.professors &&
-          Registry.professors.length > 0 &&
-          Registry.professors[0].imgUrl
-        "
-        [ngStyle]="{
-          'background-image': 'url(' + Registry.professors[0].imgUrl + ')'
-        }"
-      ></div>
       <div class="directorTextContainer">
+        <div
+          class="directorPhotoContainer"
+          *ngIf="
+            Registry &&
+            Registry.professors &&
+            Registry.professors.length > 0 &&
+            Registry.professors[0].imgUrl
+          "
+          [ngStyle]="{
+            'background-image': 'url(' + Registry.professors[0].imgUrl + ')'
+          }"
+        ></div>
         <p class="nomintaTitle">Palavras do Diretor</p>
-        <div class="traco"></div>
+        <p class="traco"></p>
         <p *ngFor="let paragraph of words" class="directorWordsParag">
           {{ paragraph }}
         </p>

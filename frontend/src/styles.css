@@ -1136,7 +1136,7 @@ button:active {
 .directorWordsParag {
   color: #737373;
   font-family: Montserrat;
-  font-size: 12px;
+  font-size: 13px;
   font-style: normal;
   font-weight: 500;
   line-height: 20px;
@@ -1167,6 +1167,10 @@ button:active {
     --01,
     linear-gradient(180deg, #202c3d 10.49%, #223a52 42.28%, #244c6c 100%)
   );
+}
+
+.directorTextContainer .traco {
+  margin-left: 471.58px;
 }
 
 .directorSpace {
@@ -1221,4 +1225,10 @@ button:active {
 
 .hiringStatusSpace {
   display: flex;
+}
+
+.directorPhotoContainer {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 5px;
 }
