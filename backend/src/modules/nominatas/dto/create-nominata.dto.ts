@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator'
 
 export class CreateNominataDto {
   @IsString()
@@ -11,4 +11,7 @@ export class CreateNominataDto {
   @IsString()
   @Length(1, 4000)
   director_words: string
+
+  @IsNumber()
+  director: number
 }

@@ -26,12 +26,12 @@ export class NominatasModel {
         const [degree_id] = await trx('nominatas')
           .insert(createNominataData)
           .returning('degree_id')
-        console.log('estou mesmo entrando aui')
         nominata = {
           nominata_id: degree_id,
           year: createNominataData.year,
           orig_field_invites_begin: createNominataData.orig_field_invites_begin,
           director_words: createNominataData.director_words,
+          director: createNominataData.director,
           class_photo: null,
           created_at: new Date(),
           updated_at: new Date(),
@@ -181,6 +181,7 @@ export class NominatasModel {
           class_photo: result.class_photo,
           created_at: result.created_at,
           updated_at: result.updated_at,
+          director: result.director,
         }
 
         await trx.commit()
@@ -458,6 +459,7 @@ export class NominatasModel {
           orig_field_invites_begin: result.orig_field_invites_begin,
           director_words: result.director_words,
           class_photo: result.class_photo,
+          director: result.director,
           created_at: result.created_at,
           updated_at: result.updated_at,
         }
@@ -532,6 +534,7 @@ export class NominatasModel {
           orig_field_invites_begin: row.orig_field_invites_begin,
           director_words: row.director_words,
           class_photo: row.class_photo,
+          director: row.director,
           created_at: row.created_at,
           updated_at: row.updated_at,
         }))

@@ -3,6 +3,7 @@ import { INominata } from '../parameterization/nominatas/types'
 
 export interface ICompleteNominata {
   nominata_id: number
+  director: number
   year: string
   orig_field_invites_begin: Date
   director_words: string
@@ -10,6 +11,8 @@ export interface ICompleteNominata {
   updated_at: Date
   students?: IBasicStudent[] | null
   professors?: IBasicProfessor[] | null
+  photo?: { file: any; headers: Record<string, string> } | null
+  imgUrl?: SafeResourceUrl
 }
 
 export interface IBasicStudent {

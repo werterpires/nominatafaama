@@ -24,6 +24,7 @@ export class NominatasService {
         year: dto.year,
         orig_field_invites_begin: new Date(dto.orig_field_invites_begin),
         director_words: dto.director_words,
+        director: dto.director,
       }
 
       const newNominata = await this.nominatasModel.createNominata(
@@ -77,6 +78,9 @@ export class NominatasService {
 
       if (nominata) {
         const { nominata_id } = nominata
+
+        const photo = await this.findNominaPhoto(nominata.class_photo)
+        nominata.photo = photo
 
         const students = await this.findNominataBasicStudents(nominata_id)
         nominata.students = students
@@ -143,6 +147,53 @@ export class NominatasService {
       }
 
       return students
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  async findNominaPhoto(
+    address: string | null,
+  ): Promise<{ file: Buffer; headers: Record<string, string> } | null> {
+    try {
+      let photo: { file: Buffer; headers: Record<string, string> } | null
+      if (!address) {
+        return null
+      } else {
+        const filePath = `./src/modules/nominatas/files/${address}`
+
+        if (!fs.existsSync(filePath)) {
+          return null
+        }
+        const fileStream = fs.createReadStream(filePath)
+        const headers = {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename=${address}`,
+        }
+
+        const filePromise = new Promise<Buffer>((resolve, reject) => {
+          const chunks: Buffer[] = []
+          fileStream.on('data', (chunk: Buffer) => {
+            chunks.push(chunk)
+          })
+          fileStream.on('end', () => {
+            const file = Buffer.concat(chunks)
+            resolve(file)
+          })
+          fileStream.on('error', (error: Error) => {
+            reject(error)
+          })
+        })
+
+        const file = await filePromise
+        photo = {
+          file,
+          headers,
+        }
+      }
+
+      return photo
     } catch (error) {
       console.error(error)
       throw error

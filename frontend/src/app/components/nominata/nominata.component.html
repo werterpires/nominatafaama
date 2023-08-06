@@ -1,5 +1,12 @@
 <div class="sectionDataList">
   <section #sectionBox ngClass="sectionBoxAll">
+    <div
+      class="classPhotoContainer"
+      *ngIf="Registry && Registry.imgUrl"
+      [ngStyle]="{
+        'background-image': 'url(' + Registry.imgUrl + ')'
+      }"
+    ></div>
     <div class="boxHead">
       <p class="sectionTitle1">{{ title }} {{ Registry?.year }}</p>
     </div>
@@ -8,20 +15,19 @@
       <div class="directorTextContainer">
         <div
           class="directorPhotoContainer"
-          *ngIf="
-            Registry &&
-            Registry.professors &&
-            Registry.professors.length > 0 &&
-            Registry.professors[0].imgUrl
-          "
+          *ngIf="director && Registry?.imgUrl"
           [ngStyle]="{
-            'background-image': 'url(' + Registry.professors[0].imgUrl + ')'
+            'background-image': 'url(' + director.imgUrl + ')'
           }"
         ></div>
         <p class="nomintaTitle">Palavras do Diretor</p>
         <p class="traco"></p>
         <p *ngFor="let paragraph of words" class="directorWordsParag">
           {{ paragraph }}
+        </p>
+        <p class="directorWordsName">{{ director?.name }}</p>
+        <p class="directorWordsParag">
+          Diretor da Sede Regional do SALT (FAAMA) - {{ nominataYear }}
         </p>
       </div>
     </div>
@@ -45,6 +51,68 @@
     <p class="nomintaTitle">Formandos</p>
     <div class="traco"></div>
     <section class="perfilList">
+      <div *ngFor="let student of Registry?.students; index as i">
+        <div>
+          <div class="smallAlonePhoto">
+            <div
+              *ngIf="student.imgUrl"
+              class="imageContainer"
+              [ngStyle]="{ 'background-image': 'url(' + student.imgUrl + ')' }"
+            ></div>
+          </div>
+          <div class="studentDatacontainer">
+            <div class="hiringStatusSpace">
+              <div
+                [ngClass]="{
+                  disponivelIndicator:
+                    student.hiring_status_name == 'Disponível',
+                  contratadoIndicator:
+                    student.hiring_status_name == 'Contratado',
+                  chamadoIndicator: student.hiring_status_name == 'Chamado'
+                }"
+              ></div>
+              <span class="hiringStatusText">{{
+                student.hiring_status_name
+              }}</span>
+            </div>
+            <p class="nominataStudentName">{{ student.name }}</p>
+            <p class="studentCompData">
+              {{ student.union_acronym }}/{{ student.association_acronym }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div *ngFor="let student of Registry?.students; index as i">
+        <div>
+          <div class="smallAlonePhoto">
+            <div
+              *ngIf="student.imgUrl"
+              class="imageContainer"
+              [ngStyle]="{ 'background-image': 'url(' + student.imgUrl + ')' }"
+            ></div>
+          </div>
+          <div class="studentDatacontainer">
+            <div class="hiringStatusSpace">
+              <div
+                [ngClass]="{
+                  disponivelIndicator:
+                    student.hiring_status_name == 'Disponível',
+                  contratadoIndicator:
+                    student.hiring_status_name == 'Contratado',
+                  chamadoIndicator: student.hiring_status_name == 'Chamado'
+                }"
+              ></div>
+              <span class="hiringStatusText">{{
+                student.hiring_status_name
+              }}</span>
+            </div>
+            <p class="nominataStudentName">{{ student.name }}</p>
+            <p class="studentCompData">
+              {{ student.union_acronym }}/{{ student.association_acronym }}
+            </p>
+          </div>
+        </div>
+      </div>
       <div *ngFor="let student of Registry?.students; index as i">
         <div>
           <div class="smallAlonePhoto">

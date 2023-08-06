@@ -2,6 +2,7 @@ import { ICompleteUser } from 'src/modules/approvals/types/types'
 
 export interface INominata {
   nominata_id: number
+  director: number
   year: string
   orig_field_invites_begin: Date
   director_words: string
@@ -9,6 +10,7 @@ export interface INominata {
   updated_at: Date
   students?: IBasicStudent[] | null
   professors?: IBasicProfessor[] | null
+  photo?: { file: Buffer; headers: Record<string, string> } | null
   class_photo: string | null
 }
 
@@ -16,6 +18,7 @@ export interface ICreateNominata {
   year: string
   orig_field_invites_begin: Date
   director_words: string
+  director: number
 }
 
 export interface IUpdateNominata {

@@ -15,7 +15,8 @@
     #223a52 43.15%,
     #244c6c 111.37%
   );
-  margin-bottom: 25px;
+  position: sticky;
+  top: 0px;
 }
 
 .headerWrapper {
