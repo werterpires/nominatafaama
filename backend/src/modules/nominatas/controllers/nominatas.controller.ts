@@ -18,7 +18,7 @@ import { ERoles } from 'src/shared/auth/types/roles.enum'
 import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator'
 import { ISinteticProfessor, ISinteticStudent } from '../types/types'
 import { UpdateNominataStudentsDto } from '../dto/update-nominata-students.dto'
-import { UpdateNominataProfessorsDto } from '../dto/update-nominata-professors.dto copy'
+import { UpdateNominataProfessorsDto } from '../dto/update-nominata-professors.dto'
 
 @Controller('nominatas')
 export class NominatasController {

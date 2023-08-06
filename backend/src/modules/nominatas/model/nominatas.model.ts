@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
 import {
+  IBasicProfessor,
   IBasicStudent,
   ICreateNominata,
   INominata,
@@ -354,6 +355,49 @@ export class NominatasModel {
     }
 
     return students
+  }
+
+  async findAllNominataBasicProfessors(
+    nominata_id: number,
+  ): Promise<IBasicProfessor[] | null> {
+    let professors: IBasicProfessor[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        professors = await this.knex
+          .select(
+            'professors.professor_id',
+            'users.user_id',
+            'professors.person_id',
+            'people.name',
+            'professors.assignments',
+            'professors.professor_photo_address',
+          )
+          .from('professors')
+          .leftJoin('people', 'professors.person_id', 'people.person_id')
+          .leftJoin('users', 'professors.person_id', 'users.person_id')
+          .leftJoin(
+            'nominatas_professors',
+            'professors.professor_id',
+            'nominatas_professors.professor_id',
+          )
+          .where('nominatas_professors.nominata_id', nominata_id)
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return professors
   }
 
   async findNominataByYear(year: string): Promise<INominata | null> {

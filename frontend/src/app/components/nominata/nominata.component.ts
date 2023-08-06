@@ -21,7 +21,9 @@ export class NominataComponent {
     new Date().getMonth() > 6
       ? new Date().getFullYear().toString()
       : (new Date().getFullYear() - 1).toString()
-  title = 'Formandos'
+  title = 'Nominata'
+
+  words: string[] = []
 
   searchString: string = ''
 
@@ -49,6 +51,8 @@ export class NominataComponent {
       next: async (res) => {
         this.Registry = res
 
+        this.words = this.Registry.director_words.split('\n\n')
+
         this.Registry.students?.forEach((student) => {
           const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
             type: 'image/jpeg',
@@ -57,6 +61,23 @@ export class NominataComponent {
             const reader = new FileReader()
             reader.onload = (e: any) => {
               student.imgUrl = e.target.result
+              this.isLoading = false
+            }
+            reader.readAsDataURL(blob)
+          } else {
+            this.showForm = true
+            this.isLoading = false
+          }
+        })
+
+        this.Registry.professors?.forEach((professor) => {
+          const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
+            type: 'image/jpeg',
+          })
+          if (blob instanceof Blob) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+              professor.imgUrl = e.target.result
               this.isLoading = false
             }
             reader.readAsDataURL(blob)

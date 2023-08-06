@@ -3,6 +3,7 @@ import { CreateNominataDto } from '../dto/create-nominata.dto'
 import { UpdateNominataDto } from '../dto/update-nominata.dto'
 import { NominatasModel } from '../model/nominatas.model'
 import {
+  IBasicProfessor,
   IBasicStudent,
   ICreateNominata,
   ICreateNominataProfessors,
@@ -76,8 +77,12 @@ export class NominatasService {
 
       if (nominata) {
         const { nominata_id } = nominata
+
         const students = await this.findNominataBasicStudents(nominata_id)
         nominata.students = students
+
+        const professors = await this.findNominataBasicProfessors(nominata_id)
+        nominata.professors = professors
       }
 
       return nominata as INominata
@@ -138,6 +143,62 @@ export class NominatasService {
       }
 
       return students
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  async findNominataBasicProfessors(
+    nominata_id: number,
+  ): Promise<IBasicProfessor[] | null> {
+    try {
+      let professors = await this.nominatasModel.findAllNominataBasicProfessors(
+        nominata_id,
+      )
+      if (professors == null) {
+        return null
+      }
+      for (const professor of professors) {
+        if (professor.professor_photo_address == null) {
+          professor.photo = null
+        } else {
+          const filePath = `./src/modules/professors/files/${professor.professor_photo_address}`
+
+          if (!fs.existsSync(filePath)) {
+            return null
+          }
+          const fileStream = fs.createReadStream(filePath)
+          const headers = {
+            'Content-Type': 'image/jpeg',
+            'Content-Disposition': `attachment; filename=${professor.professor_photo_address}`,
+          }
+
+          const filePromise = new Promise<Buffer>((resolve, reject) => {
+            const chunks: Buffer[] = []
+            fileStream.on('data', (chunk: Buffer) => {
+              chunks.push(chunk)
+            })
+            fileStream.on('end', () => {
+              const file = Buffer.concat(chunks)
+              resolve(file)
+            })
+            fileStream.on('error', (error: Error) => {
+              reject(error)
+            })
+          })
+
+          const file = await filePromise
+          professor.photo = {
+            file,
+            headers,
+          }
+        }
+
+        // console.log(professor.photo)
+      }
+
+      return professors
     } catch (error) {
       console.error(error)
       throw error
