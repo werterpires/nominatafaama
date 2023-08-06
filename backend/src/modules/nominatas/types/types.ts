@@ -9,6 +9,7 @@ export interface INominata {
   updated_at: Date
   students?: IBasicStudent[] | null
   professors?: IBasicProfessor[] | null
+  class_photo: string | null
 }
 
 export interface ICreateNominata {

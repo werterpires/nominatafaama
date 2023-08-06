@@ -68,6 +68,7 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { NominatasComponent } from './components/parameterization/nominatas/nominatas.component'
 import { NominatasStudentsComponent } from './components/parameterization/nominatas-students/nominatas-students.component'
 import { NominatasProfessorsComponent } from './components/parameterization/nominatas-professors/nominatas-professors.component'
+import { NominatasPhotosComponent } from './components/parameterization/nominatas-photos/nominatas-photos.component'
 
 @NgModule({
   declarations: [
@@ -120,6 +121,7 @@ import { NominatasProfessorsComponent } from './components/parameterization/nomi
     SpRelatedMinistriesComponent,
     PreviousMarriageComponent,
     SmallAloneProfessorPhotosComponent,
+    NominatasPhotosComponent,
     StudentPhotosComponent,
     FamilyStudentPhotoComponent,
     SpouseStudentPhotoComponent,

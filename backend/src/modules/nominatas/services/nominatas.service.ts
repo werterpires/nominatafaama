@@ -232,6 +232,46 @@ export class NominatasService {
     }
   }
 
+  async findNominataPhotoByNominataId(nominataId: number): Promise<{
+    fileStream: fs.ReadStream | null
+    headers: Record<string, string>
+  }> {
+    try {
+      const address = await this.nominatasModel.findNominataPhotoByNominataId(
+        nominataId,
+      )
+
+      if (address == null) {
+        return {
+          fileStream: null,
+          headers: {
+            'Content-Type': 'image/jpeg',
+            'Content-Disposition': `attachment; filename`,
+          },
+        }
+      }
+
+      const filePath = `./src/modules/nominatas/files/${address}`
+
+      if (fs.existsSync(filePath)) {
+        const fileStream = fs.createReadStream(filePath)
+        const headers = {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename=${address}`,
+        }
+        return { fileStream, headers }
+      } else {
+        return { fileStream: null, headers: {} }
+      }
+    } catch (error) {
+      console.error(
+        'Erro capturado no ProfessorService findProfessorPhotoByStudentId: ',
+        error,
+      )
+      throw error
+    }
+  }
+
   async updateNominataById(input: UpdateNominataDto): Promise<INominata> {
     let updatedNominata: INominata | null = null
     let sentError: Error | null = null
@@ -260,6 +300,39 @@ export class NominatasService {
     }
 
     return updatedNominata
+  }
+
+  async createNominataPhoto(
+    nominataId: number,
+    filename: string,
+  ): Promise<null | number> {
+    try {
+      const nominata = await this.nominatasModel.findNominataById(nominataId)
+
+      if (nominata == null) {
+        throw new Error('Nominata não encontrada')
+      }
+
+      const oldFile = nominata.class_photo
+
+      if (oldFile != null && oldFile.length > 5) {
+        const filePath = `./src/modules/nominatas/files/${oldFile}`
+
+        await fs.promises.unlink(filePath)
+      }
+
+      const nominata_id = nominata.nominata_id
+
+      this.nominatasModel.updateNominataPhoto(filename, nominata_id)
+
+      return 1
+    } catch (error) {
+      console.error(
+        'Erro capturado no NominatasService createNominataPhoto: ',
+        error,
+      )
+      throw error
+    }
   }
 
   async deleteNominataById(id: number): Promise<string> {
