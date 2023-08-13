@@ -250,6 +250,54 @@ export class EvangelisticExperiencesModel {
     return evangelisticExperiencesList
   }
 
+  async findApprovedEvangelisticExperiencesByPersonId(
+    personId: number,
+  ): Promise<IEvangelisticExperience[]> {
+    let evangelisticExperiencesList: IEvangelisticExperience[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('evangelistic_experiences')
+          .select('evangelistic_experiences.*', 'evang_exp_types.*')
+          .leftJoin(
+            'evang_exp_types',
+            'evangelistic_experiences.evang_exp_type_id',
+            'evang_exp_types.evang_exp_type_id',
+          )
+          .where('evangelistic_experiences.person_id', '=', personId)
+          .andWhere('evang_exp_approved', '=', true)
+
+        evangelisticExperiencesList = results.map((row: any) => ({
+          evang_exp_id: row.evang_exp_id,
+          project: row.project,
+          place: row.place,
+          exp_begin_date: row.exp_begin_date,
+          exp_end_date: row.exp_end_date,
+          person_id: row.person_id,
+          evang_exp_type_id: row.evang_exp_type_id,
+          evang_exp_approved: row.evang_exp_approved,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          evang_exp_type_name: row.evang_exp_type_name,
+        }))
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return evangelisticExperiencesList
+  }
+
   async updateEvangelisticExperienceById(
     updateEvangelisticExperience: IUpdateEvangelisticExperience,
   ): Promise<IEvangelisticExperience> {

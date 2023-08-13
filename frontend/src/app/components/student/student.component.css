@@ -1,0 +1,233 @@
+.studentSectionBox {
+  width: auto;
+}
+.headSection {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 24px 11vw 24px 11vw;
+  flex-wrap: wrap;
+}
+
+.oneStudentPhoto {
+  width: 128px;
+  height: 128px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: solid #ffffff 6px;
+  margin-right: 41px;
+}
+
+.oneStudentName {
+  font-family: 'Roboto', Sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 32px;
+  margin-bottom: 14px;
+
+  color: #1f2736;
+}
+
+.dispIndicator {
+  border-radius: 100%;
+  background-color: #4edf72;
+  width: 16px;
+  height: 16px;
+}
+
+.contIndicator {
+  border-radius: 100%;
+  background-color: #f60e0e;
+  width: 16px;
+  height: 16px;
+}
+
+.hiringSpace {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.chamIndicator {
+  border-radius: 100%;
+  background-color: #ff7f00;
+  width: 16px;
+  height: 16px;
+}
+
+.hiringStatusName {
+  font-family: 'Roboto', Sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #454654;
+
+  margin-left: 6px;
+}
+
+hr {
+  background: #333;
+  opacity: 0.4;
+}
+
+.normalSection {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin: 24px 11vw 24px 11vw;
+  z-index: 2;
+  position: relative;
+}
+
+.dinamicNormalSection {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin: 24px 0vw 24px 0vw;
+  z-index: 2;
+  position: relative;
+}
+
+.dinamicSpouseSection {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 24px 0vw 24px 0vw;
+  z-index: 2;
+  position: relative;
+}
+
+.oneStudentField {
+  flex-grow: 1;
+  width: 20%;
+}
+
+.oneStudentDinamicField {
+  width: 50%;
+  min-width: 333px;
+  margin-bottom: 24px;
+}
+
+.oneStudentFieldTitle {
+  font-size: 16px;
+  line-height: 16px;
+  font-family: roboto;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: #1f2736;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.oneStudentFieldBoldContent {
+  color: #454654;
+  font-family: 'Roboto', Sans-serif;
+  font-size: 14px;
+  text-transform: none;
+  line-height: 24px;
+  font-weight: bold;
+}
+
+.oneStudentFieldContent {
+  color: #454654;
+  font-family: 'Roboto', Sans-serif;
+  font-size: 14px;
+  text-transform: none;
+  line-height: 24px;
+}
+
+.oneStudentSubItens {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.oneAlonePhoto {
+  min-width: 77.7vw;
+  height: 50.18vw;
+  overflow: hidden;
+  border: solid 12px #ffffff;
+}
+
+.familyPhoto {
+  max-width: 408px;
+  max-height: 598px;
+  min-width: 263px;
+  min-height: 379px;
+  width: 37vw;
+  height: 55.38vw;
+  overflow: hidden;
+  border: solid 12px #ffffff;
+}
+
+.whiteSpace {
+  width: 100%;
+  height: 2000px;
+  background-color: #fcfcfc;
+  position: absolute;
+  z-index: 1;
+  top: 700px;
+}
+
+.subWhiteSpace {
+  width: 100%;
+  background-color: #fcfcfc;
+  padding: 24px;
+  margin-bottom: 50px;
+}
+
+.oneStudentSpaceHeader {
+  display: flex;
+  margin-top: 50px;
+}
+
+.oneStudentSpaceTitle {
+  font-family: 'Roboto', Sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 24px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+.oneStudentSubSpaceTitle {
+  font-family: 'Roboto', Sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 24px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+.oneStudentSpouseTitle {
+  font-family: 'Roboto', Sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 24px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+.curriculumSpace {
+  background-color: #f0f0f0;
+  padding: 64px 64px 64px 64px;
+}
+
+.curriculumArea {
+  margin-bottom: 50px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.oneSpouseContent {
+  flex-grow: 0.8;
+}
+
+.reference {
+  margin-bottom: 15px;
+}

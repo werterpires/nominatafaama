@@ -15,7 +15,10 @@ export class NominataComponent {
   @Input() permissions!: IPermissions
   @Output() selectOne: EventEmitter<void> = new EventEmitter<void>()
   @Output() seeAll: EventEmitter<void> = new EventEmitter<void>()
-
+  @Output() toStudent = new EventEmitter<{
+    option: string
+    studentId: string
+  }>()
   Registry: ICompleteNominata | null = null
   nominataYear: string =
     new Date().getMonth() > 6
@@ -197,6 +200,11 @@ export class NominataComponent {
   //     },
   //   })
   // }
+
+  selectStudent(studentId: string) {
+    console.log('oi')
+    this.toStudent.emit({ option: 'student', studentId: studentId })
+  }
 
   closeError() {
     this.error = false

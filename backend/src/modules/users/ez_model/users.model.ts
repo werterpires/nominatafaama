@@ -227,6 +227,82 @@ export class UsersModel {
     return user
   }
 
+  async findApprovedUserByPersonId(id: number): Promise<IUser | null> {
+    let user: IUser | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('users')
+          .select(
+            'users.user_id',
+            'users.principal_email',
+            'users.person_id',
+            'people.name',
+            'people.cpf',
+            'roles.role_id',
+            'roles.role_name',
+            'roles.role_description',
+          )
+          .leftJoin('people', 'users.person_id', 'people.person_id')
+          .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
+          .leftJoin('roles', 'users_roles.role_id', 'roles.role_id')
+          .where('people.person_id', '=', id)
+          .andWhere('users.user_approved', '=', true)
+
+        if (result.length < 1) {
+          user = null
+        }
+
+        if (result) {
+          // Transforma o resultado em um objeto IUser
+          const roleMap = new Map<number, IRole>()
+          const roles: IRole[] = []
+
+          result.forEach((row: any) => {
+            const roleId = row.role_id
+
+            if (roleId) {
+              if (!roleMap.has(roleId)) {
+                roleMap.set(roleId, {
+                  role_id: roleId,
+                  role_name: row.role_name,
+                  role_description: row.role_description,
+                })
+              }
+              roles.push(roleMap.get(roleId)!)
+            }
+          })
+
+          user = {
+            user_id: result[0].user_id,
+            principal_email: result[0].principal_email,
+            person_id: result[0].person_id,
+            name: result[0].name,
+            cpf: result[0].cpf,
+            roles,
+            created_at: result[0].created_at,
+            updated_at: result[0].updated_at,
+          }
+        }
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return user
+  }
+
   async findUsersByIds(ids: number[]): Promise<IUser[] | null> {
     let users: IUser[] | null = null
     let sentError: Error | null = null

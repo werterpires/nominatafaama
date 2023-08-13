@@ -133,6 +133,35 @@ export class ProfessionalExperiencesModel {
     return experienceList
   }
 
+  async findApprovedProfessionalExperiencesByPersonId(
+    personId: number,
+  ): Promise<IProfessionalExperience[]> {
+    let experienceList: IProfessionalExperience[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        experienceList = await trx
+          .table('professional_experiences')
+          .where('person_id', '=', personId)
+          .andWhere('experience_approved', '=', true)
+          .select('*')
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return experienceList
+  }
+
   async findAllProfessionalExperiences(): Promise<IProfessionalExperience[]> {
     let experienceList: IProfessionalExperience[] = []
     let sentError: Error | null = null

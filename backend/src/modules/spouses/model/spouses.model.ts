@@ -189,6 +189,53 @@ export class SpousesModel {
     return spouse
   }
 
+  async findApprovedSpouseByStudentId(
+    studentId: number,
+  ): Promise<ISpouse | null> {
+    let spouse: ISpouse | null = null
+    let sentError: Error | null = null
+
+    try {
+      const result = await this.knex('spouses')
+        .first(
+          'spouses.*',
+          'associations.*',
+          'unions.*',
+          'people.name as person_name',
+          'people.person_id as person_id',
+          'people.cpf as person_cpf',
+        )
+        .leftJoin('students', 'spouses.student_id', 'students.student_id')
+        .leftJoin('users', 'students.person_id', 'users.person_id')
+        .leftJoin('people', 'spouses.person_id', 'people.person_id')
+        .leftJoin(
+          'associations',
+          'spouses.origin_field_id',
+          'associations.association_id',
+        )
+        .leftJoin('unions', 'associations.union_id', 'unions.union_id')
+        .where('spouses.student_id', '=', studentId)
+        .andWhere('spouses.spouse_approved', '=', true)
+
+      if (result == undefined) {
+        spouse = null
+      } else {
+        spouse = result
+      }
+    } catch (error) {
+      console.error(
+        'Erro capturado no SpousesModel findSpouseByUserId: ',
+        error,
+      )
+      sentError = new Error(error.message)
+    }
+    if (sentError) {
+      throw sentError
+    }
+
+    return spouse
+  }
+
   async findAllSpouses(): Promise<ISpouse[]> {
     let spouseList: ISpouse[] = []
     let sentError: Error | null = null

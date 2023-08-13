@@ -123,6 +123,34 @@ export class PreviousMarriagesModel {
     return previousMarriageList
   }
 
+  async findApprovedPreviousMarriagesByStudentId(
+    studentId: number,
+  ): Promise<IPreviousMarriage[]> {
+    let previousMarriageList: IPreviousMarriage[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        previousMarriageList = await trx
+          .table('previous_marriages')
+          .where('student_id', '=', studentId)
+          .select('*')
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return previousMarriageList
+  }
+
   async findAllPreviousMarriages(): Promise<IPreviousMarriage[]> {
     let previousMarriageList: IPreviousMarriage[] = []
     let sentError: Error | null = null

@@ -236,6 +236,56 @@ export class LanguagesModel {
     return languageList
   }
 
+  async findApprovedLanguagesByPersonId(
+    personId: number,
+  ): Promise<ILanguage[]> {
+    let languageList: ILanguage[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('languages')
+          .select('languages.*', 'language_types.language')
+          .leftJoin(
+            'language_types',
+            'languages.chosen_language',
+            'language_types.language_id',
+          )
+          .where('person_id', '=', personId)
+          .andWhere('languages.language_approved', '=', true)
+
+        languageList = results.map((row: any) => ({
+          language_id: row.language_id,
+          chosen_language: row.chosen_language,
+          read: row.read,
+          understand: row.understand,
+          speak: row.speak,
+          write: row.write,
+          fluent: row.fluent,
+          unknown: row.unknown,
+          person_id: row.person_id,
+          language_approved: row.language_approved,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          language: row.language,
+        }))
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return languageList
+  }
+
   async updateLanguageById(
     updateLanguage: IUpdateLanguage,
   ): Promise<ILanguage> {

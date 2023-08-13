@@ -52,6 +52,19 @@ export class StudentsController {
   }
 
   @IsPublic()
+  @Get(':studentId')
+  async getOneStudent(@Param('studentId') studentId: string) {
+    try {
+      const id = parseInt(studentId.toString())
+
+      const student = await this.studentsService.findOneStudent(id)
+      return student
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @IsPublic()
   @Get()
   async findAllStudents() {
     return await this.studentsService.findAllStudents()

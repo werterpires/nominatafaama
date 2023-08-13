@@ -219,6 +219,50 @@ export class EclExperiencesModel {
     return eclExperiencesList
   }
 
+  async findApprovedEclExperiencesByPersonId(
+    personId: number,
+  ): Promise<IEclExperience[]> {
+    let eclExperiencesList: IEclExperience[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('ecl_experiences')
+          .select('ecl_experiences.*', 'ecl_exp_types.*')
+          .leftJoin(
+            'ecl_exp_types',
+            'ecl_experiences.ecl_exp_type_id',
+            'ecl_exp_types.ecl_exp_type_id',
+          )
+          .where('ecl_experiences.person_id', '=', personId)
+          .andWhere('ecl_experiences.ecl_exp_approved', '=', true)
+
+        eclExperiencesList = results.map((row: any) => ({
+          ecl_exp_id: row.ecl_exp_id,
+          person_id: row.person_id,
+          ecl_exp_type_id: row.ecl_exp_type_id,
+          ecl_exp_approved: row.ecl_exp_approved,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          ecl_exp_type_name: row.ecl_exp_type_name,
+        }))
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return eclExperiencesList
+  }
+
   async updateEclExperienceByPersonId(
     updateEclExperience: IUpdateEclExperiences,
   ): Promise<void> {

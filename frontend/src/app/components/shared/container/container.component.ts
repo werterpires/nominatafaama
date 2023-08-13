@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { LoginService } from '../shared.service.ts/login.service'
 import { IOptions, IPermissions, IUserApproved } from './types'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-container',
@@ -10,8 +11,9 @@ import { IOptions, IPermissions, IUserApproved } from './types'
 export class ContainerComponent {
   loginMenu = false
   approvalMenu = false
+  studentId!: number
 
-  constructor(private loginService: LoginService) {}
+  constructor(private loginService: LoginService, private router: Router) {}
   permissions: IPermissions = {
     estudante: false,
     secretaria: false,
@@ -30,6 +32,7 @@ export class ContainerComponent {
     vagas: false,
     chamados: false,
     parametrizacao: false,
+    student: false,
   }
 
   @Input() approvalType: string = 'students'
@@ -60,13 +63,16 @@ export class ContainerComponent {
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
     })
-
-    console.log(this.permissions)
   }
 
   changeApprovalType(approvaltype: string) {
     this.approvalType = approvaltype
     this.choseOption('aprovacoes')
     this.approvalMenu = false
+  }
+
+  changeToStudent(parameter: { option: string; studentId: string }) {
+    this.studentId = parseInt(parameter.studentId)
+    this.choseOption(parameter.option)
   }
 }

@@ -102,6 +102,7 @@
     (approvalType)="changeApprovalType($event)"
     [permissions]="permissions"
   ></app-approvals-menu>
+
   <app-approves
     *ngIf="
       (permissions.administrador ||
@@ -140,5 +141,12 @@
   <app-nominata
     *ngIf="options.nominata"
     [permissions]="permissions"
+    (toStudent)="changeToStudent($event)"
   ></app-nominata>
+  <app-student
+    *ngIf="options.student"
+    [permissions]="permissions"
+    [studentId]="studentId"
+  >
+  </app-student>
 </div>

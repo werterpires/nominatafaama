@@ -68,7 +68,8 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { NominatasComponent } from './components/parameterization/nominatas/nominatas.component'
 import { NominatasStudentsComponent } from './components/parameterization/nominatas-students/nominatas-students.component'
 import { NominatasProfessorsComponent } from './components/parameterization/nominatas-professors/nominatas-professors.component'
-import { NominatasPhotosComponent } from './components/parameterization/nominatas-photos/nominatas-photos.component'
+import { NominatasPhotosComponent } from './components/parameterization/nominatas-photos/nominatas-photos.component';
+import { StudentComponent } from './components/student/student.component'
 
 @NgModule({
   declarations: [
@@ -135,6 +136,7 @@ import { NominatasPhotosComponent } from './components/parameterization/nominata
     NominatasComponent,
     NominatasStudentsComponent,
     NominatasProfessorsComponent,
+    StudentComponent,
   ],
   imports: [
     BrowserModule,

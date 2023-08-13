@@ -52,69 +52,7 @@
     <div class="traco"></div>
     <section class="perfilList">
       <div *ngFor="let student of Registry?.students; index as i">
-        <div>
-          <div class="smallAlonePhoto">
-            <div
-              *ngIf="student.imgUrl"
-              class="imageContainer"
-              [ngStyle]="{ 'background-image': 'url(' + student.imgUrl + ')' }"
-            ></div>
-          </div>
-          <div class="studentDatacontainer">
-            <div class="hiringStatusSpace">
-              <div
-                [ngClass]="{
-                  disponivelIndicator:
-                    student.hiring_status_name == 'Disponível',
-                  contratadoIndicator:
-                    student.hiring_status_name == 'Contratado',
-                  chamadoIndicator: student.hiring_status_name == 'Chamado'
-                }"
-              ></div>
-              <span class="hiringStatusText">{{
-                student.hiring_status_name
-              }}</span>
-            </div>
-            <p class="nominataStudentName">{{ student.name }}</p>
-            <p class="studentCompData">
-              {{ student.union_acronym }}/{{ student.association_acronym }}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div *ngFor="let student of Registry?.students; index as i">
-        <div>
-          <div class="smallAlonePhoto">
-            <div
-              *ngIf="student.imgUrl"
-              class="imageContainer"
-              [ngStyle]="{ 'background-image': 'url(' + student.imgUrl + ')' }"
-            ></div>
-          </div>
-          <div class="studentDatacontainer">
-            <div class="hiringStatusSpace">
-              <div
-                [ngClass]="{
-                  disponivelIndicator:
-                    student.hiring_status_name == 'Disponível',
-                  contratadoIndicator:
-                    student.hiring_status_name == 'Contratado',
-                  chamadoIndicator: student.hiring_status_name == 'Chamado'
-                }"
-              ></div>
-              <span class="hiringStatusText">{{
-                student.hiring_status_name
-              }}</span>
-            </div>
-            <p class="nominataStudentName">{{ student.name }}</p>
-            <p class="studentCompData">
-              {{ student.union_acronym }}/{{ student.association_acronym }}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div *ngFor="let student of Registry?.students; index as i">
-        <div>
+        <div (click)="selectStudent(student.student_id.toString())">
           <div class="smallAlonePhoto">
             <div
               *ngIf="student.imgUrl"

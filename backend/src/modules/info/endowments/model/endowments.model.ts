@@ -222,6 +222,55 @@ export class EndowmentsModel {
     return endowmentsList
   }
 
+  async findApprovedEndowmentsByPersonId(
+    personId: number,
+  ): Promise<IEndowment[]> {
+    let endowmentsList: IEndowment[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('endowments')
+          .select(
+            'endowments.*',
+            'endowment_types.endowment_type_name',
+            'endowment_types.application',
+          )
+          .leftJoin(
+            'endowment_types',
+            'endowments.endowment_type_id',
+            'endowment_types.endowment_type_id',
+          )
+          .where('endowments.person_id', '=', personId)
+          .andWhere('endowments.endowment_approved', '=', true)
+
+        endowmentsList = results.map((row: any) => ({
+          endowment_id: row.endowment_id,
+          endowment_type_id: row.endowment_type_id,
+          person_id: row.person_id,
+          endowment_approved: row.endowment_approved,
+          endowment_type_name: row.endowment_type_name,
+          application: row.application,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+        }))
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return endowmentsList
+  }
+
   async updateEndowmentById(
     updateEndowment: IUpdateEndowment,
   ): Promise<number> {

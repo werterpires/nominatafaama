@@ -61,6 +61,7 @@ export class OneStudentToApproveComponent {
   alonePhoto: SafeResourceUrl | null = null
   spousePhoto: SafeResourceUrl | null = null
   familyPhoto: SafeResourceUrl | null = null
+  smallAllonePhoto: SafeResourceUrl | null = null
   @ViewChildren('saveButton') saveButtons!: QueryList<ElementRef>
 
   constructor(
@@ -104,6 +105,10 @@ export class OneStudentToApproveComponent {
     await this.getFile(this.student.photos?.alone_photo?.file.data, 'alone')
     await this.getFile(this.student.photos?.spouse_photo?.file.data, 'spouse')
     await this.getFile(this.student.photos?.family_photo?.file.data, 'family')
+    await this.getFile(
+      this.student.photos?.small_alone_photo?.file.data,
+      'small_alone',
+    )
   }
 
   async getFile(data: any, photo: string) {
@@ -119,6 +124,8 @@ export class OneStudentToApproveComponent {
           this.spousePhoto = e.target.result
         } else if (photo == 'family') {
           this.familyPhoto = e.target.result
+        } else if (photo == 'small_alone') {
+          this.smallAllonePhoto = e.target.result
         }
       }
       reader.readAsDataURL(blob1)
