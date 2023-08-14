@@ -123,6 +123,33 @@ export class CoursesModel {
     return courseList
   }
 
+  async findApprovedCoursesByPersonId(personId: number): Promise<ICourse[]> {
+    let courseList: ICourse[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        courseList = await trx
+          .table('courses')
+          .where('person_id', '=', personId)
+          .andWhere('course_approved', '=', true)
+          .select('*')
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return courseList
+  }
+
   async findAllCourses(): Promise<ICourse[]> {
     let courseList: ICourse[] = []
     let sentError: Error | null = null

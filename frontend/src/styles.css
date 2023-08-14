@@ -217,6 +217,7 @@ form.registryWrapper p {
   font-size: 14px;
   line-height: 21px;
   color: #23435f;
+  font-family: 'Poppins';
 }
 
 form.registryWrapper input,
@@ -626,6 +627,7 @@ button:active {
   flex-direction: column;
   align-items: center;
   min-height: 85vh;
+  margin-top: 20px;
 }
 
 .sectionDataList {
@@ -659,10 +661,10 @@ button:active {
 
 .sectionBoxAll {
   width: 80vw;
-  max-width: 1450.71px;
+  /* max-width: 1450.71px; */
   background: transparent;
-  margin-bottom: 12px;
   transition: height 5s ease;
+  padding-bottom: 15px;
 }
 
 .boxHead {
@@ -871,10 +873,21 @@ button:active {
 
 .studentDatacontainer {
   width: 260.85px;
-  height: 183.88px;
+  height: 130px;
   background: #23435f;
   padding: 16.5px;
   box-shadow: 0px 4.01028px 4.01028px rgba(0, 0, 0, 0.25);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.professorDatacontainer {
+  width: 260.85px;
+  height: 122.04px;
+  background: #e1e1e3;
+  padding: 16.5px;
+  box-shadow: 0px 4.010276794433594px 4.010276794433594px 0px
+    rgba(0, 0, 0, 0.25);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
@@ -900,6 +913,27 @@ button:active {
   line-height: 21px;
   letter-spacing: 0.25px;
   color: #ffffff;
+}
+
+.nominataStudentName {
+  margin-top: 20px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.25px;
+  color: #ffffff;
+}
+
+.professorName {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.25px;
+  color: #474545d0;
 }
 
 .perfilList {
@@ -942,6 +976,15 @@ button:active {
   font-size: 12px;
   line-height: 18px;
   color: #ffffff;
+}
+.professorCompData {
+  font-family: 'Poppins';
+  font-style: normal;
+  margin-top: 7px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #000000;
 }
 
 .fieldContent {
@@ -1089,4 +1132,127 @@ button:active {
 
 .div100 {
   width: 100%;
+}
+
+.directorWordsParag {
+  color: #2f2b2b;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 23px;
+  letter-spacing: 0.3px;
+  padding-bottom: 9px;
+  text-align: justify;
+}
+
+.directorWordsName {
+  color: #2f2b2b;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  text-align: justify;
+  padding-top: 20px;
+}
+
+.nomintaTitle {
+  margin-top: 80px;
+  color: var(--text-color, #252b42);
+  font-family: Montserrat;
+  font-size: 27px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 50px; /* 185.185% */
+  letter-spacing: 0.2px;
+}
+
+.directorTextContainer .nomintaTitle {
+  margin-top: 0px; /* Altere a cor conforme a sua preferência */
+}
+
+.traco {
+  margin-bottom: 34px;
+  width: 48.327px;
+  height: 3.013px;
+  background: var(
+    --01,
+    linear-gradient(180deg, #202c3d 10.49%, #223a52 42.28%, #244c6c 100%)
+  );
+}
+
+.directorTextContainer .traco {
+  margin-left: 471.58px;
+}
+
+.directorSpace {
+  margin-top: 100px;
+  display: flex;
+  gap: 34px;
+}
+
+.directorPhotoContainer {
+  min-width: 451.513px;
+  height: 526.55px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.classPhotoContainer {
+  min-width: auto;
+  height: 457px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.directorTextContainer {
+  flex: 1;
+}
+
+.disponivelIndicator {
+  border-radius: 100%;
+  background-color: #4edf72;
+  width: 12px;
+  height: 12px;
+}
+
+.contratadoIndicator {
+  border-radius: 100%;
+  background-color: #f60e0e;
+  width: 12px;
+  height: 12px;
+}
+
+.chamadoIndicator {
+  border-radius: 100%;
+  background-color: #ff7f00;
+  width: 12px;
+  height: 12px;
+}
+
+.hiringStatusText {
+  margin-left: 4px;
+
+  color: #fff;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.hiringStatusSpace {
+  display: flex;
+}
+
+.directorPhotoContainer {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 5px;
 }

@@ -60,12 +60,6 @@ export class ProfessorsController {
     }
   }
 
-  // @IsPublic()
-  // @Get()
-  // async findAllStudents() {
-  //   return await this.studentsService.findAllStudents()
-  // }
-
   @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE)
   @Put()
   async updateProfessor(@Body() input: UpdateProfessorAssgnmentDto) {
@@ -78,17 +72,6 @@ export class ProfessorsController {
       throw new InternalServerErrorException(error.message)
     }
   }
-
-  // @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
-  // @Delete(':id')
-  // async deleteStudentById(@Param('id') id: number) {
-  //   try {
-  //     const message = await this.studentsService.deleteStudentById(id)
-  //     return { message }
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message)
-  //   }
-  // }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE, ERoles.DIRECAO)
   @Post('photo')

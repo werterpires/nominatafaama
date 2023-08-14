@@ -197,6 +197,46 @@ export class OrdinationsModel {
     return ordinationsList
   }
 
+  async findApprovedOrdinationsByPersonId(
+    person_id: number,
+  ): Promise<IOrdination[]> {
+    let ordinationsList: IOrdination[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx('ordinations')
+          .select('ordinations.*')
+          .where('ordinations.person_id', '=', person_id)
+          .andWhere('ordinations.ordination_approved', '=', true)
+
+        ordinationsList = results.map((row: any) => ({
+          ordination_id: row.ordination_id,
+          ordination_name: row.ordination_name,
+          place: row.place,
+          year: row.year,
+          person_id: row.person_id,
+          personName: row.person_name,
+          ordination_approved: row.ordination_approved,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+        }))
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return ordinationsList
+  }
+
   async updateOrdinationById(
     updateOrdination: IUpdateOrdination,
   ): Promise<number> {

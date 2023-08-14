@@ -30,7 +30,7 @@ export class NominatasComponent {
 
   constructor(
     private service: NominatasService,
-    private dataService: DataService,
+    public dataService: DataService,
   ) {}
 
   ngOnInit() {
@@ -47,6 +47,7 @@ export class NominatasComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.dataService.nominatas = this.allRegistries
         this.isLoading = false
       },
       error: (err) => {

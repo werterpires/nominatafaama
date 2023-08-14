@@ -237,6 +237,57 @@ export class PublicationsModel {
     return publicationsList
   }
 
+  async findApprovedPublicationsByPersonId(
+    personId: number,
+  ): Promise<IPublication[]> {
+    let publicationsList: IPublication[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('publications')
+          .select(
+            'publications.*',
+            'publication_types.publication_type',
+            'publication_types.instructions',
+          )
+          .leftJoin(
+            'publication_types',
+            'publications.publication_type_id',
+            'publication_types.publication_type_id',
+          )
+          .where('publications.person_id', '=', personId)
+          .where('publications.publication_approved', '=', true)
+
+        publicationsList = results.map((row: any) => ({
+          publication_id: row.publication_id,
+          publication_type_id: row.publication_type_id,
+          reference: row.reference,
+          link: row.link,
+          publication_approved: row.publication_approved,
+          person_id: row.person_id,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          publication_type: row.publication_type,
+          instructions: row.instructions,
+        }))
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return publicationsList
+  }
+
   async updatePublicationById(
     updatePublication: IUpdatePublication,
   ): Promise<number> {

@@ -81,4 +81,20 @@
     [permissions]="permissions"
   >
   </app-nominatas-students>
+
+  <app-nominatas-professors
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  >
+  </app-nominatas-professors>
+
+  <app-nominatas-photos
+    *ngIf="
+      permissions.secretaria || permissions.administrador || permissions.direcao
+    "
+    [permissions]="permissions"
+  >
+  </app-nominatas-photos>
 </div>

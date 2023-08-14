@@ -247,6 +247,58 @@ export class AcademicFormationsModel {
     return academicFormationsList
   }
 
+  async findApprovedAcademicFormationsByPersonId(
+    personId: number,
+  ): Promise<IAcademicFormation[]> {
+    let academicFormationsList: IAcademicFormation[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('academic_formations')
+          .select('academic_formations.*', 'academic_degrees.degree_name')
+          .leftJoin(
+            'academic_degrees',
+            'academic_formations.degree_id',
+            'academic_degrees.degree_id',
+          )
+          .where('academic_formations.person_id', '=', personId)
+          .andWhere(
+            'academic_formations.academic_formation_approved',
+            '=',
+            true,
+          )
+        academicFormationsList = results.map((row: any) => ({
+          formation_id: row.formation_id,
+          course_area: row.course_area,
+          institution: row.institution,
+          begin_date: row.begin_date,
+          conclusion_date: row.conclusion_date,
+          person_id: row.person_id,
+          academic_formation_approved: row.academic_formation_approved,
+          degree_name: row.degree_name,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          degree_id: row.degree_id,
+        }))
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return academicFormationsList
+  }
+
   async updateAcademicFormationById(
     updateAcademicFormation: IUpdateAcademicFormation,
   ): Promise<IAcademicFormation> {

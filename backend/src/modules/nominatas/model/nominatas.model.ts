@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
 import {
+  IBasicProfessor,
   IBasicStudent,
   ICreateNominata,
   INominata,
+  ISinteticProfessor,
   ISinteticStudent,
   IUpdateNominata,
 } from '../types/types'
@@ -24,12 +26,13 @@ export class NominatasModel {
         const [degree_id] = await trx('nominatas')
           .insert(createNominataData)
           .returning('degree_id')
-        console.log('estou mesmo entrando aui')
         nominata = {
           nominata_id: degree_id,
           year: createNominataData.year,
           orig_field_invites_begin: createNominataData.orig_field_invites_begin,
           director_words: createNominataData.director_words,
+          director: createNominataData.director,
+          class_photo: null,
           created_at: new Date(),
           updated_at: new Date(),
         }
@@ -75,7 +78,6 @@ export class NominatasModel {
             nominata_id: nominata_id,
           })
         })
-        console.log(nominata_id)
         await trx('nominatas_students')
           .where('nominata_id', nominata_id)
           .delete()
@@ -85,16 +87,9 @@ export class NominatasModel {
         }
 
         await trx.commit()
-        const [degree_id] = await trx('nominatas_students')
-          .insert({ nominata_id, student_id })
-          .returning('nominata_id')
-
-        await trx.commit()
-
-        nominata = await this.findNominataById(nominata_id)
       } catch (error) {
         console.error(
-          `Erro capturado na função createNominata, na nominatasModel: ${error}`,
+          `Erro capturado na função addStudentsToNominata, na nominatasModel: ${error}`,
         )
         await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
@@ -102,6 +97,57 @@ export class NominatasModel {
         } else {
           sentError = new Error(error.sqlMessage)
         }
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return true
+  }
+
+  async addProfessorsToNominata(
+    professor_id: number[],
+    nominata_id: number,
+  ): Promise<boolean> {
+    let nominata: INominata | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const professors: {
+          professor_id: number
+          nominata_id: number
+        }[] = []
+
+        professor_id.forEach((professor) => {
+          professors.push({
+            professor_id: professor,
+            nominata_id: nominata_id,
+          })
+        })
+        await trx('nominatas_professors')
+          .where('nominata_id', nominata_id)
+          .delete()
+
+        if (professors.length > 0) {
+          await trx('nominatas_professors').insert(professors)
+        }
+
+        await trx.commit()
+        const [id] = await trx('nominatas_professors')
+          .insert({ nominata_id, professor_id })
+          .returning('nominata_id')
+
+        await trx.commit()
+      } catch (error) {
+        console.error(
+          `Erro capturado na função addProfessorsToNominata, na nominatasModel: ${error}`,
+        )
+        await trx.rollback()
+
+        sentError = new Error(error.sqlMessage)
       }
     })
 
@@ -123,7 +169,7 @@ export class NominatasModel {
           .first('*')
           .where('nominata_id', '=', id)
 
-        if (result.length < 1) {
+        if (!result || result.length < 1) {
           throw new Error('Nominata not found')
         }
 
@@ -132,8 +178,10 @@ export class NominatasModel {
           year: result.year,
           orig_field_invites_begin: result.orig_field_invites_begin,
           director_words: result.director_words,
+          class_photo: result.class_photo,
           created_at: result.created_at,
           updated_at: result.updated_at,
+          director: result.director,
         }
 
         await trx.commit()
@@ -198,8 +246,92 @@ export class NominatasModel {
     if (sentError) {
       throw sentError
     }
-    console.log(students)
     return students
+  }
+
+  async findAllNominataProfessors(): Promise<ISinteticProfessor[]> {
+    let professors: ISinteticProfessor[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('professors')
+          .select([
+            'people.name',
+            'professors.professor_id',
+            'professors.person_id',
+            'people.cpf',
+            'nominatas_professors.nominata_id',
+          ])
+          .leftJoin('people', 'professors.person_id', 'people.person_id')
+          .leftJoin(
+            'nominatas_professors',
+            'professors.professor_id',
+            'nominatas_professors.professor_id',
+          )
+
+        professors = Object.values(
+          result.reduce((acc, curr) => {
+            if (!acc[curr.professor_id]) {
+              acc[curr.professor_id] = { ...curr, nominata_id: [] }
+            }
+            if (curr.nominata_id !== null) {
+              acc[curr.professor_id].nominata_id.push(curr.nominata_id)
+            }
+            return acc
+          }, {}),
+        )
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return professors
+  }
+
+  async findNominataPhotoByNominataId(
+    nominataId: number,
+  ): Promise<string | null> {
+    let nominataPhoto: string | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const result = await trx
+          .table('nominatas')
+          .where('nominata_id', '=', nominataId)
+          .first()
+
+        if (!result) {
+          return
+        }
+
+        nominataPhoto = result.class_photo
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return nominataPhoto
   }
 
   async findAllNominataBasicStudents(
@@ -263,6 +395,49 @@ export class NominatasModel {
     return students
   }
 
+  async findAllNominataBasicProfessors(
+    nominata_id: number,
+  ): Promise<IBasicProfessor[] | null> {
+    let professors: IBasicProfessor[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        professors = await this.knex
+          .select(
+            'professors.professor_id',
+            'users.user_id',
+            'professors.person_id',
+            'people.name',
+            'professors.assignments',
+            'professors.professor_photo_address',
+          )
+          .from('professors')
+          .leftJoin('people', 'professors.person_id', 'people.person_id')
+          .leftJoin('users', 'professors.person_id', 'users.person_id')
+          .leftJoin(
+            'nominatas_professors',
+            'professors.professor_id',
+            'nominatas_professors.professor_id',
+          )
+          .where('nominatas_professors.nominata_id', nominata_id)
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return professors
+  }
+
   async findNominataByYear(year: string): Promise<INominata | null> {
     let nominata: INominata | null = null
     let sentError: Error | null = null
@@ -283,6 +458,8 @@ export class NominatasModel {
           year: result.year,
           orig_field_invites_begin: result.orig_field_invites_begin,
           director_words: result.director_words,
+          class_photo: result.class_photo,
+          director: result.director,
           created_at: result.created_at,
           updated_at: result.updated_at,
         }
@@ -303,45 +480,45 @@ export class NominatasModel {
     return nominata
   }
 
-  async findStudentsIds(nominata_id: number): Promise<INominata | null> {
-    let nominata: INominata | null = null
-    let sentError: Error | null = null
+  // async findStudentsIds(nominata_id: number): Promise<INominata | null> {
+  //   let nominata: INominata | null = null
+  //   let sentError: Error | null = null
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const result = await trx
-          .table('nominatas')
-          .first('*')
-          .where('nominata_id', '=', nominata_id)
+  //   await this.knex.transaction(async (trx) => {
+  //     try {
+  //       const result = await trx
+  //         .table('nominatas')
+  //         .first('*')
+  //         .where('nominata_id', '=', nominata_id)
 
-        if (!result) {
-          throw new Error('Nominata not found')
-        }
+  //       if (!result) {
+  //         throw new Error('Nominata not found')
+  //       }
 
-        nominata = {
-          nominata_id: result.nominata_id,
-          year: result.year,
-          orig_field_invites_begin: result.orig_field_invites_begin,
-          director_words: result.director_words,
-          created_at: result.created_at,
-          updated_at: result.updated_at,
-        }
+  //       nominata = {
+  //         nominata_id: result.nominata_id,
+  //         year: result.year,
+  //         orig_field_invites_begin: result.orig_field_invites_begin,
+  //         director_words: result.director_words,
+  //         created_at: result.created_at,
+  //         updated_at: result.updated_at,
+  //       }
 
-        await trx.commit()
-      } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
-        throw error
-      }
-    })
+  //       await trx.commit()
+  //     } catch (error) {
+  //       console.error(error)
+  //       sentError = new Error(error.message)
+  //       await trx.rollback()
+  //       throw error
+  //     }
+  //   })
 
-    if (sentError) {
-      throw sentError
-    }
+  //   if (sentError) {
+  //     throw sentError
+  //   }
 
-    return nominata
-  }
+  //   return nominata
+  // }
 
   async findAllNominatas(): Promise<INominata[]> {
     let nominatasList: INominata[] = []
@@ -356,6 +533,8 @@ export class NominatasModel {
           year: row.year,
           orig_field_invites_begin: row.orig_field_invites_begin,
           director_words: row.director_words,
+          class_photo: row.class_photo,
+          director: row.director,
           created_at: row.created_at,
           updated_at: row.updated_at,
         }))
@@ -408,6 +587,39 @@ export class NominatasModel {
 
     if (updatedNominata === null) {
       throw new Error('Não foi possível atualizar o grau acadêmico.')
+    }
+
+    return updatedNominata
+  }
+
+  async updateNominataPhoto(
+    class_photo: string,
+    nominata_id,
+  ): Promise<INominata> {
+    let updatedNominata: INominata | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        await trx('nominatas').where('nominata_id', nominata_id).update({
+          class_photo,
+        })
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    updatedNominata = await this.findNominataById(nominata_id)
+    if (updatedNominata === null) {
+      throw new Error('Falha ao atualizar a foto da nominata.')
     }
 
     return updatedNominata

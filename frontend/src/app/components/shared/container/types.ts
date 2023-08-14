@@ -16,6 +16,7 @@ export interface IOptions {
   vagas: boolean
   chamados: boolean
   parametrizacao: boolean
+  student: boolean
 }
 
 export interface IPermissions {

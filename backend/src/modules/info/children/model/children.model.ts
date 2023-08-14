@@ -247,6 +247,59 @@ export class ChildrenModel {
     return childrenList
   }
 
+  async findApprovedChildrenByStudentId(student_id: number): Promise<IChild[]> {
+    let childrenList: IChild[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('children')
+          .select(
+            'children.*',
+            'marital_status_types.marital_status_type_name',
+            'people.name',
+            'people.cpf',
+          )
+          .leftJoin('people', 'children.person_id', 'people.person_id')
+          .leftJoin(
+            'marital_status_types',
+            'children.marital_status_id',
+            'marital_status_types.marital_status_type_id',
+          )
+          .where('children.student_id', '=', student_id)
+          .andWhere('children.child_approved', '=', true)
+
+        childrenList = results.map((row: any) => ({
+          child_id: row.child_id,
+          child_birth_date: row.child_birth_date,
+          study_grade: row.study_grade,
+          marital_status_id: row.marital_status_id,
+          person_id: row.person_id,
+          student_id: row.student_id,
+          child_approved: row.child_approved,
+          marital_status_type_name: row.marital_status_type_name,
+          name: row.name,
+          cpf: row.cpf,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+        }))
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return childrenList
+  }
+
   async updateChildById(updateChild: IUpdateChild): Promise<number> {
     let updatedChild: number | null = null
     let sentError: Error | null = null

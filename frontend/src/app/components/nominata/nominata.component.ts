@@ -4,7 +4,7 @@ import { ICompleteUser } from '../approvals/student-to-approve/types'
 import { DataService } from '../shared/shared.service.ts/data.service'
 import { DomSanitizer } from '@angular/platform-browser'
 import { NominataService } from './nominata.service'
-import { ICompleteNominata } from './types'
+import { IBasicProfessor, ICompleteNominata } from './types'
 
 @Component({
   selector: 'app-nominata',
@@ -15,15 +15,22 @@ export class NominataComponent {
   @Input() permissions!: IPermissions
   @Output() selectOne: EventEmitter<void> = new EventEmitter<void>()
   @Output() seeAll: EventEmitter<void> = new EventEmitter<void>()
-
+  @Output() toStudent = new EventEmitter<{
+    option: string
+    studentId: string
+  }>()
   Registry: ICompleteNominata | null = null
   nominataYear: string =
     new Date().getMonth() > 6
       ? new Date().getFullYear().toString()
       : (new Date().getFullYear() - 1).toString()
-  title = 'Formandos'
+  title = 'Nominata'
+
+  words: string[] = []
 
   searchString: string = ''
+
+  director!: IBasicProfessor | undefined
 
   showForm = false
   isLoading = false
@@ -48,6 +55,28 @@ export class NominataComponent {
     this.service.findAllRegistries(this.nominataYear).subscribe({
       next: async (res) => {
         this.Registry = res
+        console.log(this.Registry)
+
+        this.words = this.Registry.director_words.split('\n\n')
+
+        const blob = new Blob(
+          [new Uint8Array(this.Registry.photo?.file.data)],
+          {
+            type: 'image/jpeg',
+          },
+        )
+        if (blob instanceof Blob) {
+          const reader = new FileReader()
+          reader.onload = (e: any) => {
+            if (this.Registry?.photo) {
+              this.Registry.imgUrl = e.target.result
+            }
+          }
+          reader.readAsDataURL(blob)
+        } else {
+          this.showForm = true
+          this.isLoading = false
+        }
 
         this.Registry.students?.forEach((student) => {
           const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
@@ -57,12 +86,28 @@ export class NominataComponent {
             const reader = new FileReader()
             reader.onload = (e: any) => {
               student.imgUrl = e.target.result
-              this.isLoading = false
             }
             reader.readAsDataURL(blob)
           } else {
             this.showForm = true
-            this.isLoading = false
+          }
+        })
+
+        this.Registry.professors?.forEach((professor) => {
+          const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
+            type: 'image/jpeg',
+          })
+          if (blob instanceof Blob) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+              professor.imgUrl = e.target.result
+            }
+            reader.readAsDataURL(blob)
+          } else {
+            this.showForm = true
+          }
+          if (this.Registry && this.Registry.professors) {
+            this.findDirector(this.Registry.professors, this.Registry?.director)
           }
         })
 
@@ -75,6 +120,13 @@ export class NominataComponent {
         this.error = true
       },
     })
+  }
+
+  findDirector(professors: IBasicProfessor[], directorId: number) {
+    console.log(directorId)
+    this.director = professors.find(
+      (professor) => professor.professor_id === directorId,
+    )
   }
 
   // searchByNam() {
@@ -148,6 +200,11 @@ export class NominataComponent {
   //     },
   //   })
   // }
+
+  selectStudent(studentId: string) {
+    console.log('oi')
+    this.toStudent.emit({ option: 'student', studentId: studentId })
+  }
 
   closeError() {
     this.error = false

@@ -129,6 +129,35 @@ export class PastEclExpsModel {
     return pastEclExpList
   }
 
+  async findApprovedPastEclExpsByPersonId(
+    personId: number,
+  ): Promise<IPastEclExp[]> {
+    let pastEclExpList: IPastEclExp[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        pastEclExpList = await trx
+          .table('past_ecl_exps')
+          .where('person_id', '=', personId)
+          .andWhere('past_ecl_approved', '=', true)
+          .select('*')
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return pastEclExpList
+  }
+
   async findAllPastEclExps(): Promise<IPastEclExp[]> {
     let pastEclExpList: IPastEclExp[] = []
     let sentError: Error | null = null

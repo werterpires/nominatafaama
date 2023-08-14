@@ -229,6 +229,59 @@ export class RelatedMinistriesModel {
     return relatedMinistriesList
   }
 
+  async findApprovedRelatedMinistriesByPersonId(
+    personId: number,
+  ): Promise<IRelatedMinistry[]> {
+    let relatedMinistriesList: IRelatedMinistry[] = []
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const existingRelatedMinistries = await trx('related_ministries')
+          .select('person_id')
+          .where('person_id', personId)
+          .andWhere('related_ministry_approved', true)
+          .first()
+
+        if (existingRelatedMinistries) {
+          const results = await trx
+            .table('related_ministries')
+            .select('related_ministries.*', 'ministry_types.ministry_type_name')
+            .leftJoin(
+              'ministry_types',
+              'related_ministries.ministry_type_id',
+              'ministry_types.ministry_type_id',
+            )
+            .where('related_ministries.person_id', '=', personId)
+            .andWhere('related_ministry_approved', true)
+
+          relatedMinistriesList = results.map((row: any) => ({
+            related_ministry_id: row.related_ministry_id,
+            person_id: row.person_id,
+            ministry_type_id: row.ministry_type_id,
+            priority: row.priority,
+            related_ministry_approved: row.related_ministry_approved,
+            ministry_type_name: row.ministry_type_name,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
+          }))
+
+          await trx.commit()
+        }
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return relatedMinistriesList
+  }
+
   async updateRelatedMinistryById(
     updateRelatedMinistry: IUpdateRelatedMinistry,
   ): Promise<number> {
