@@ -104,9 +104,11 @@ export class NominatasService {
       let students = await this.nominatasModel.findAllNominataBasicStudents(
         nominata_id,
       )
+
       if (students == null) {
         return null
       }
+
       for (const student of students) {
         if (student.small_alone_photo == null) {
           student.photo = null
@@ -114,32 +116,33 @@ export class NominatasService {
           const filePath = `./src/modules/info/student-photos/files/${student.small_alone_photo}`
 
           if (!fs.existsSync(filePath)) {
-            return null
-          }
-          const fileStream = fs.createReadStream(filePath)
-          const headers = {
-            'Content-Type': 'image/jpeg',
-            'Content-Disposition': `attachment; filename=${student.small_alone_photo}`,
-          }
+            student.photo = null
+          } else {
+            const fileStream = fs.createReadStream(filePath)
+            const headers = {
+              'Content-Type': 'image/jpeg',
+              'Content-Disposition': `attachment; filename=${student.small_alone_photo}`,
+            }
 
-          const filePromise = new Promise<Buffer>((resolve, reject) => {
-            const chunks: Buffer[] = []
-            fileStream.on('data', (chunk: Buffer) => {
-              chunks.push(chunk)
+            const filePromise = new Promise<Buffer>((resolve, reject) => {
+              const chunks: Buffer[] = []
+              fileStream.on('data', (chunk: Buffer) => {
+                chunks.push(chunk)
+              })
+              fileStream.on('end', () => {
+                const file = Buffer.concat(chunks)
+                resolve(file)
+              })
+              fileStream.on('error', (error: Error) => {
+                reject(error)
+              })
             })
-            fileStream.on('end', () => {
-              const file = Buffer.concat(chunks)
-              resolve(file)
-            })
-            fileStream.on('error', (error: Error) => {
-              reject(error)
-            })
-          })
 
-          const file = await filePromise
-          student.photo = {
-            file,
-            headers,
+            const file = await filePromise
+            student.photo = {
+              file,
+              headers,
+            }
           }
         }
 
