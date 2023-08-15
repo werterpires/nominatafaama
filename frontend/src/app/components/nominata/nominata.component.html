@@ -1,6 +1,6 @@
 <div class="sectionDataList">
   <section #sectionBox ngClass="sectionBoxAll">
-    <div
+    <!-- <div
       class="classPhotoContainer"
       *ngIf="Registry && Registry.imgUrl"
       [ngStyle]="{
@@ -9,9 +9,9 @@
     ></div>
     <div class="boxHead">
       <p class="sectionTitle1">{{ title }} {{ Registry?.year }}</p>
-    </div>
+    </div> -->
 
-    <div class="directorSpace">
+    <!-- <div class="directorSpace">
       <div class="directorTextContainer">
         <div
           class="directorPhotoContainer"
@@ -30,11 +30,11 @@
           Diretor da Sede Regional do SALT (FAAMA) - {{ nominataYear }}
         </p>
       </div>
-    </div>
+    </div> -->
 
-    <form class="formSearch" action="">
+    <!-- <form class="formSearch" action="">
       <label class="inputLabel" for="">
-        Busque um estudante espefífico pelo nome:
+        Busque um estudante específico pelo nome:
         <input
           type="search"
           class="searchInput"
@@ -45,9 +45,9 @@
         />
       </label>
 
-      <!-- <button type="button" (click)="searchByNam()">Buscar</button> -->
+      <button type="button" (click)="searchByNam()">Buscar</button>
       <button type="button" (click)="ngOnInit()">Cancelar</button>
-    </form>
+    </form> -->
     <p class="nomintaTitle">Formandos</p>
     <div class="traco"></div>
     <section class="perfilList">
@@ -84,7 +84,7 @@
       </div>
     </section>
 
-    <p class="nomintaTitle">Professores</p>
+    <!-- <p class="nomintaTitle">Professores</p>
     <div class="traco"></div>
     <section class="perfilList">
       <div *ngFor="let professor of Registry?.professors; index as i">
@@ -106,7 +106,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
   </section>
 
   <div *ngIf="error" class="error">

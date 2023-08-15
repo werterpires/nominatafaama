@@ -89,6 +89,9 @@
           <p class="oneStudentFieldContent">
             {{ student.user?.principal_email }}
           </p>
+          <p class="oneStudentFieldContent">
+            {{ student.student.alternative_email }}
+          </p>
         </span>
       </div>
       <hr />
@@ -421,7 +424,13 @@
       >
         <span class="oneStudentField">
           <div class="oneStudentSpaceHeader">
-            <p class="oneStudentSpaceTitle">Informações do cônjuge</p>
+            <p class="oneStudentSpaceTitle">
+              Informações do
+              <span *ngIf="student.student.marital_status_type_name == 'Noivo'"
+                >futuro</span
+              >
+              cônjuge
+            </p>
             <img src="assets/icons/barra.svg" alt="" />
           </div>
 
@@ -453,7 +462,7 @@
                   <span class="oneStudentField">
                     <p class="oneStudentFieldTitle">Idade</p>
                     <p class="oneStudentFieldContent">
-                      {{ formateAge(student.spouse.union_acronym) }} anos.
+                      {{ formateAge(student.spouse.birth_date) }} anos.
                     </p>
                   </span>
 
@@ -469,9 +478,9 @@
                 <hr />
                 <div class="dinamicNormalSection">
                   <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Local de batismo</p>
+                    <p class="oneStudentFieldTitle">Data de batismo</p>
                     <p class="oneStudentFieldContent">
-                      {{ student.spouse.baptism_place }}
+                      {{ formatDate(student.spouse.baptism_date) }}
                     </p>
                   </span>
 
