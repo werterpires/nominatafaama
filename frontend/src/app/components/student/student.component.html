@@ -233,7 +233,7 @@
                 >
                   <p class="oneStudentFieldBoldContent">
                     {{ formatConclusionYear(experience.job_begin_date) }} -
-                    {{ formatConclusionYear(experience.job_begin_date) }}
+                    {{ formatConclusionYear(experience.job_end_date) }}
                   </p>
                   <p class="oneStudentFieldContent">
                     {{ experience.job }}
@@ -394,7 +394,7 @@
           </div>
 
           <section class="curriculumSpace">
-            <div *ngIf="student.academicFormations" ngClass="curriculumArea">
+            <div *ngIf="student.children" ngClass="curriculumArea">
               <hr />
               <div class="dinamicNormalSection">
                 <div
@@ -405,7 +405,7 @@
                     {{ child.name }}
                   </p>
                   <p class="oneStudentFieldContent">
-                    {{ formateAge(child.child_birth_date) }},
+                    {{ formateAge(child.child_birth_date) }} anos,
                     {{ child.marital_status_type_name }},
                     {{ child.study_grade }}
                   </p>
@@ -612,7 +612,7 @@
                 >
                   <p class="oneStudentFieldBoldContent">
                     {{ formatConclusionYear(experience.job_begin_date) }} -
-                    {{ formatConclusionYear(experience.job_begin_date) }}
+                    {{ formatConclusionYear(experience.job_end_date) }}
                   </p>
                   <p class="oneStudentFieldContent">
                     {{ experience.job }}
@@ -766,5 +766,5 @@
   />
 </div>
 
-<div *ngIf="isLoading" class="loader1"></div>
-<div *ngIf="isLoading" class="loader2"></div>
+<div *ngIf="isLoading == true" class="loader1"></div>
+<div *ngIf="isLoading == true" class="loader2"></div>

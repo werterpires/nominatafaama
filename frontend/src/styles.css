@@ -632,7 +632,8 @@ button:active {
 
 .sectionDataList {
   min-height: 85vh;
-  margin: 0px 165px 0px 165px;
+  display: flex;
+  justify-content: center;
 }
 
 .smallSectionBox {
@@ -830,7 +831,7 @@ button:active {
   left: 50%;
   margin-top: -60px;
   margin-left: -60px;
-  z-index: 9999;
+  z-index: 99;
 }
 
 .loader2 {
@@ -845,7 +846,7 @@ button:active {
   left: 50%;
   margin-top: -60px;
   margin-left: -60px;
-  z-index: 9998;
+  z-index: 98;
 }
 
 @keyframes spin {
@@ -1201,8 +1202,8 @@ button:active {
 }
 
 .classPhotoContainer {
-  min-width: auto;
-  height: 457px;
+  width: 80.04vw;
+  height: 27.38vw;
   border-radius: 5px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   background-position: center;
