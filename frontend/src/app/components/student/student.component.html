@@ -1,5 +1,5 @@
 <section class="studentSectionBox">
-  <div class="headSection">
+  <!-- <div class="headSection">
     <div
       class="oneStudentPhoto"
       [ngStyle]="{ 'background-image': 'url(' + smallAlonePhoto + ')' }"
@@ -734,7 +734,46 @@
         </span>
       </div>
     </div>
-  </section>
+  </section> -->
+
+  <div class="pdfContainer" #pdfContainer>
+    <div class="pdfAlonePhotoContainer">
+      <!-- <div
+        class="pdfAlonePhoto"
+        [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
+      ></div> -->
+      <img class="pdfAlonePhoto" [src]="alonePhoto" alt="" />
+    </div>
+
+    <!-- style="background-image: url('assets/img/capturac.png')" -->
+
+    <div *ngIf="student.student" class="pdfPage" #pdfPage>
+      <img class="pagecover" src="assets/img/capturac.png" alt="" />
+      <div class="pdfStudentName">
+        <p class="pdfStudentFirstname">{{ firstName }}</p>
+        <p class="pdfStudentSurname">{{ surname }}</p>
+      </div>
+
+      <p>
+        {{ student.student.association_name }} -
+        {{ student.student.union_acronym }}
+      </p>
+      <p>
+        {{ formatDate(student.student.birth_date) }}
+      </p>
+      <p>{{ formateAge(student.student.birth_date) }} anos</p>
+      <p>{{ student.student.marital_status_type_name }} anos</p>
+      <p>{{ student.student.birth_city }}-{{ student.student.birth_state }}</p>
+      <p>{{ formatarTelefone(student.student.phone_number) }}</p>
+      <p>{{ student.student.alternative_email }}</p>
+    </div>
+    <div class="pdfPage">Essa é a segunda página do pdf</div>
+    <div class="pdfPage">Essa é a segunda página do pdf</div>
+    <div class="pdfPage">Essa é a segunda página do pdf</div>
+    <div class="pdfPage">Essa é a segunda página do pdf</div>
+  </div>
+
+  <button (click)="printPDF()">Baixar PDF</button>
 </section>
 
 <div *ngIf="error" class="error">
@@ -768,3 +807,5 @@
 
 <div *ngIf="isLoading == true" class="loader1"></div>
 <div *ngIf="isLoading == true" class="loader2"></div>
+
+<app-student-pdf></app-student-pdf>
