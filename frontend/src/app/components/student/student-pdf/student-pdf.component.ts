@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import { jsPDF } from 'jspdf'
+// import { jsPDF } from 'jspdf'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { ICompleteStudent } from '../../approvals/student-to-approve/types'
 import { DatePipe } from '@angular/common'
@@ -28,15 +28,15 @@ export class StudentPdfComponent {
     console.log(this.student)
   }
 
-  printPDF() {
-    let pdf = new jsPDF('l', 'pt', 'a4')
+  // printPDF() {
+  //   let pdf = new jsPDF('l', 'pt', 'a4')
 
-    pdf.html(this.pdfContainer.nativeElement, {
-      callback: (pdf) => {
-        pdf.save('Teste.pdf')
-      },
-    })
-  }
+  //   pdf.html(this.pdfContainer.nativeElement, {
+  //     callback: (pdf) => {
+  //       pdf.save('Teste.pdf')
+  //     },
+  //   })
+  // }
 
   formatDate(date: string) {
     return this.datePipe.transform(date, 'dd/MM/yyyy')

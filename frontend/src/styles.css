@@ -727,7 +727,7 @@ button:active {
 
 .formSearch {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   margin-top: 35px;
   gap: 10px;
 }
@@ -1256,7 +1256,4 @@ button:active {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-.directorPhotoContainer {
 }
