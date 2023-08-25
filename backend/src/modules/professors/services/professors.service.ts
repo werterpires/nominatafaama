@@ -21,23 +21,42 @@ export class ProfessorsService {
 
   async createProfessor(
     dto: CreateProfessorAssignmentDto,
-    userId: number,
+    userId?: number,
   ): Promise<IProfessor> {
     try {
-      const user = await this.usersService.findUserById(userId)
-      if (user == null) {
-        throw new Error('Nenhum Usuário válido foi encontrado.')
-      }
-      const person_id = user.person_id
+      if (userId) {
+        const user = await this.usersService.findUserById(userId)
+        if (user == null) {
+          throw new Error('Nenhum Usuário válido foi encontrado.')
+        }
+        const person_id = user.person_id
 
-      const professor: ICreateProfessorAssgnment = {
-        approved: true,
-        assignments: dto.assignments,
-        person_id: person_id,
-      }
+        const professor: ICreateProfessorAssgnment = {
+          approved: true,
+          assignments: dto.assignments,
+          person_id: person_id,
+        }
 
-      const newProfessor = await this.professorsModel.createProfessor(professor)
-      return newProfessor
+        const newProfessor = await this.professorsModel.createProfessor(
+          professor,
+        )
+        return newProfessor
+      } else {
+        if (dto.cpf && dto.name) {
+          const professor = {
+            approved: true,
+            assignments: dto.assignments,
+            cpf: dto.cpf,
+            name: dto.name,
+          }
+          const newProfessor = await this.professorsModel.createProfessor(
+            professor,
+          )
+          return newProfessor
+        } else {
+          throw new Error('Parâmetros insuficientes para criar um professor.')
+        }
+      }
     } catch (error) {
       throw error
     }
@@ -120,6 +139,39 @@ export class ProfessorsService {
     }
   }
 
+  async createProfessorPhotoByProfessorId(
+    professor_id: number,
+    filename: string,
+  ): Promise<null | number> {
+    try {
+      const professor = await this.professorsModel.findProfessorById(
+        professor_id,
+      )
+
+      if (professor == null) {
+        throw new Error('Professor não encontrado')
+      }
+
+      const oldFile = professor.professor_photo_address
+
+      if (oldFile != null && oldFile.length > 5) {
+        const filePath = `./src/modules/professors/files/${oldFile}`
+
+        await fs.promises.unlink(filePath)
+      }
+
+      this.professorsModel.updateProfessorPhoto(filename, professor_id)
+
+      return 1
+    } catch (error) {
+      console.error(
+        'Erro capturado no ProfessorsService createProfessorPhoto: ',
+        error,
+      )
+      throw error
+    }
+  }
+
   async findProfessorPhotoByUserId(user_id: number): Promise<{
     fileStream: fs.ReadStream | null
     headers: Record<string, string>
@@ -162,12 +214,54 @@ export class ProfessorsService {
     }
   }
 
-  // async deleteStudentById(id: number): Promise<string> {
-  //   try {
-  //     const message = await this.studentsModel.deleteStudentById(id)
-  //     return message
-  //   } catch (error) {
-  //     throw error
-  //   }
-  // }
+  async findProfessorPhotoByProfessorId(professorId: number): Promise<{
+    fileStream: fs.ReadStream | null
+    headers: Record<string, string>
+  }> {
+    try {
+      const professor = await this.professorsModel.findProfessorById(
+        professorId,
+      )
+
+      if (professor == null) {
+        return {
+          fileStream: null,
+          headers: {
+            'Content-Type': 'image/jpeg',
+            'Content-Disposition': `attachment; filename`,
+          },
+        }
+      }
+
+      const filename = professor.professor_photo_address
+
+      const filePath = `./src/modules/professors/files/${filename}`
+
+      if (fs.existsSync(filePath)) {
+        const fileStream = fs.createReadStream(filePath)
+        const headers = {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename=${filename}`,
+        }
+        return { fileStream, headers }
+      } else {
+        return { fileStream: null, headers: {} }
+      }
+    } catch (error) {
+      console.error(
+        'Erro capturado no ProfessorService findProfessorPhotoByStudentId: ',
+        error,
+      )
+      throw error
+    }
+  }
+
+  async deleteProfessorById(id: number): Promise<string> {
+    try {
+      const message = await this.professorsModel.deleteProfessorById(id)
+      return message
+    } catch (error) {
+      throw error
+    }
+  }
 }

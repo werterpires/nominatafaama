@@ -47,6 +47,17 @@ export class ProfessorsController {
     }
   }
 
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.SECRETARIA)
+  @Post('notuser')
+  async createPersonAndProfessor(@Body() input: CreateProfessorAssignmentDto) {
+    try {
+      const professor = await this.professorsService.createProfessor(input)
+      return professor
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
   @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE)
   @Get('edit')
   async getProfessorByIdToEdit(@CurrentUser() user: UserFromJwt) {
@@ -87,8 +98,6 @@ export class ProfessorsController {
             -4,
           )}${new Date()}${extname(originalFileName)}`
           cb(null, uniqueName)
-
-          console.log(uniqueName)
         },
       }),
       fileFilter: (req, file, cb) => {
@@ -117,13 +126,51 @@ export class ProfessorsController {
     }
   }
 
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE, ERoles.DIRECAO)
+  @Post('photo/:professorId')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './src/modules/professors/files',
+        filename: (req, file, cb) => {
+          const originalFileName = file.originalname
+
+          const uniqueName = `${originalFileName.slice(
+            0,
+            -4,
+          )}${new Date()}${extname(originalFileName)}`
+          cb(null, uniqueName)
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+          cb(null, true)
+        } else {
+          cb(new Error('Apenas arquivos PNG e JPEG são permitidos.'), false)
+        }
+      },
+    }),
+  )
+  async uploadFotosByProfessorId(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('professorId') professorId: string,
+  ): Promise<null | number> {
+    try {
+      const studentPhoto =
+        await this.professorsService.createProfessorPhotoByProfessorId(
+          parseInt(professorId),
+          file.filename,
+        )
+
+      return studentPhoto
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
   @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE)
   @Get('photo')
-  async getPhoto(
-    @CurrentUser() user: UserFromJwt,
-    @Res() res: any,
-    @Param('photoType') phototype: string,
-  ) {
+  async getPhoto(@CurrentUser() user: UserFromJwt, @Res() res: any) {
     try {
       const userId = user.user_id
       const result = await this.professorsService.findProfessorPhotoByUserId(
@@ -139,13 +186,54 @@ export class ProfessorsController {
         Object.entries(headers).forEach(([key, value]) => {
           res.set(key, value)
         })
-        console.log('cheguei bem até aqui.')
+
         fileStream.pipe(res)
       } else {
         res.status(404).json({ error: 'Foto não encontrada.' })
       }
     } catch (error) {
       res.status(500).json({ error: 'Erro ao recuperar a foto.' })
+    }
+  }
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Get('photo/:professorId')
+  async getPhotoByprofessorId(
+    @Res() res: any,
+    @Param('professorId') ProfessorId: string,
+  ) {
+    try {
+      const result =
+        await this.professorsService.findProfessorPhotoByProfessorId(
+          parseInt(ProfessorId),
+        )
+
+      if (result == null) {
+        res.status(404).json({ error: 'Foto não encontrada.' })
+      }
+      const { fileStream, headers } = result
+
+      if (fileStream) {
+        Object.entries(headers).forEach(([key, value]) => {
+          res.set(key, value)
+        })
+
+        fileStream.pipe(res)
+      } else {
+        res.status(404).json({ error: 'Foto não encontrada.' })
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao recuperar a foto.' })
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
+  @Delete(':id')
+  async deleteStudentById(@Param('id') id: number) {
+    try {
+      const message = await this.professorsService.deleteProfessorById(id)
+      return { message }
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
     }
   }
 }

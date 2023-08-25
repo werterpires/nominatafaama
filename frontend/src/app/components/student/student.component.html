@@ -1,5 +1,5 @@
 <section class="studentSectionBox">
-  <!-- <div class="headSection">
+  <div class="headSection">
     <div
       class="oneStudentPhoto"
       [ngStyle]="{ 'background-image': 'url(' + smallAlonePhoto + ')' }"
@@ -734,18 +734,18 @@
         </span>
       </div>
     </div>
-  </section> -->
+  </section>
 
-  <div class="pdfContainer" #pdfContainer>
+  <!-- <div class="pdfContainer" #pdfContainer>
     <div class="pdfAlonePhotoContainer">
-      <!-- <div
+      <div
         class="pdfAlonePhoto"
         [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
-      ></div> -->
+      ></div>
       <img class="pdfAlonePhoto" [src]="alonePhoto" alt="" />
     </div>
 
-    <!-- style="background-image: url('assets/img/capturac.png')" -->
+    style="background-image: url('assets/img/capturac.png')"
 
     <div *ngIf="student.student" class="pdfPage" #pdfPage>
       <img class="pagecover" src="assets/img/capturac.png" alt="" />
@@ -773,7 +773,7 @@
     <div class="pdfPage">Essa é a segunda página do pdf</div>
   </div>
 
-  <button (click)="printPDF()">Baixar PDF</button>
+  <button (click)="printPDF()">Baixar PDF</button> -->
 </section>
 
 <div *ngIf="error" class="error">

@@ -102,19 +102,18 @@ export class NominatasStudentsComponent {
   filterStudents() {
     this.atualNominataStudents = []
     this.atualOtherStudents = []
-    console.log('avaliando a nominata', this.createRegistryData.nominata_id),
-      this.allRegistries.forEach((student) => {
-        if (
-          student.nominata_id?.includes(
-            parseInt(this.createRegistryData.nominata_id.toString()),
-          )
-        ) {
-          this.atualNominataStudents.push(student)
-        } else {
-          this.atualOtherStudents.push(student)
-          console.log(student.nominata_id)
-        }
-      })
+
+    this.allRegistries.forEach((student) => {
+      if (
+        student.nominata_id?.includes(
+          parseInt(this.createRegistryData.nominata_id.toString()),
+        )
+      ) {
+        this.atualNominataStudents.push(student)
+      } else {
+        this.atualOtherStudents.push(student)
+      }
+    })
     this.filterOtherStudents()
   }
 
@@ -129,7 +128,6 @@ export class NominatasStudentsComponent {
           student.cpf.includes(this.chosenStudent),
       )
     }
-    console.log(this.filteredOtherStudents)
   }
 
   deleteStudentFromNominata(id: number) {
@@ -150,7 +148,6 @@ export class NominatasStudentsComponent {
       (obj) => obj.student_id === id,
     )
 
-    console.log(index)
     if (index !== -1) {
       const removedObject = this.atualOtherStudents.splice(index, 1)[0]
       this.atualNominataStudents.push(removedObject)

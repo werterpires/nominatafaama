@@ -11,9 +11,13 @@ export interface IProfessor {
 
 export interface ICreateProfessorAssignment {
   assignments: string
+  name?: string
+  cpf?: string
 }
 
 export interface IUpdateProfessorAssignment {
   assignments: string
   professor_id: number
+  name?: string
+  cpf?: string
 }

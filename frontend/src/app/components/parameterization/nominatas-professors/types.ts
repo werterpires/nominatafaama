@@ -4,6 +4,7 @@ export interface ISinteticProfessor {
   person_id: number
   cpf: string
   nominata_id: number[] | null
+  assignments: string
 }
 
 export interface CreateNominataProfessors {
