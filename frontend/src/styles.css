@@ -1194,13 +1194,6 @@ button:active {
   gap: 34px;
 }
 
-.directorPhotoContainer {
-  min-width: 451.513px;
-  height: 526.55px;
-  border-radius: 5px;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-}
-
 .classPhotoContainer {
   width: 80.04vw;
   height: 27.38vw;
@@ -1256,4 +1249,14 @@ button:active {
   float: left;
   margin-right: 20px;
   margin-bottom: 5px;
+  min-width: 451.513px;
+  height: 526.55px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.directorPhotoContainer {
 }

@@ -118,7 +118,6 @@ export class UsersModel {
           .where('principal_email', '=', email)
           .first('pass_recover')
 
-        console.log(email, lastPass)
         let lessFiveMinutes: boolean = true
 
         if (lastPass && lastPass.pass_recover.length > 24) {

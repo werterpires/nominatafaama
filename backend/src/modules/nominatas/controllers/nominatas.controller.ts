@@ -143,7 +143,6 @@ export class NominatasController {
         Object.entries(headers).forEach(([key, value]) => {
           res.set(key, value)
         })
-        console.log('cheguei bem até aqui.')
         fileStream.pipe(res)
       } else {
         res.status(404).json({ error: 'Foto não encontrada.' })

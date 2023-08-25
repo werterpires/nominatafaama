@@ -1,0 +1,88 @@
+.pdfContainer {
+  position: relative;
+  z-index: 5;
+  margin-left: 20px;
+  overflow: hidden;
+}
+
+button {
+  position: relative;
+  z-index: 5;
+}
+
+.pdfPage {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  width: 100%;
+  height: auto;
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: underline;
+  color: #333;
+
+  text-align: center;
+  line-height: 1.5;
+
+  height: 595.0625px;
+  width: 841.5883px;
+
+  overflow: hidden;
+  margin-bottom: 25px;
+  background-size: cover; /* Controla como a imagem é dimensionada */
+  background-position: center; /* Controla a posição da imagem */
+  position: relative;
+  z-index: 7;
+}
+
+.p1QuadradoBranco {
+  background-color: white;
+  transform: rotate(45deg);
+  width: 224.6612px;
+  height: 224.6612px;
+  position: relative;
+  z-index: 10;
+  left: 41.5px;
+  bottom: 119px;
+}
+
+.p1QuadradoDeBaixo {
+  background-color: transparent;
+  transform: rotate(53.1deg);
+  width: 510.884px;
+  height: 510.884px;
+  position: relative;
+  z-index: 11;
+  left: 319px;
+  bottom: 418.5px;
+  border: white 13px solid;
+}
+
+.p1QuadradoDeCima {
+  background-color: transparent;
+  transform: rotate(45deg);
+  width: 510.884px;
+  height: 510.884px;
+  position: relative;
+  z-index: 11;
+  left: 312px;
+  bottom: 480px;
+  border: white 13px solid;
+}
+
+.pdfAlonePhoto {
+  width: 736px;
+  height: 403px;
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.pdfAlonePhotoContainer {
+  position: absolute;
+  left: 237px;
+  top: 0px;
+  width: 605px;
+  height: 403px;
+  overflow: hidden;
+}

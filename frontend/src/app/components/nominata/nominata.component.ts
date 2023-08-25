@@ -57,7 +57,11 @@ export class NominataComponent {
         this.Registry = res
         console.log(this.Registry)
 
-        this.words = this.Registry.director_words.split('\n\n')
+        this.Registry.director_words = this.Registry.director_words
+          .replace(/<b>(.*?)<\/b>/g, '<strong>$1</strong>')
+          .replace(/<i>(.*?)<\/i>/g, '<em>$1</em>')
+
+        this.words = this.Registry.director_words.split('\n')
 
         const blob = new Blob(
           [new Uint8Array(this.Registry.photo?.file.data)],

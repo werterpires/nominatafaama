@@ -55,6 +55,7 @@ import { SpEndowmentsComponent } from './components/records/sp-endowments/sp-end
 import { SpRelatedMinistriesComponent } from './components/records/sp-related-ministries/sp-related-ministries.component'
 import { PreviousMarriageComponent } from './components/records/previous-marriage/previous-marriage.component'
 import { SmallAloneProfessorPhotosComponent } from './components/records/small-alone-professor-photos/small-alone-professor-photos.component'
+import { ProfessorPhotosComponent } from './components/parameterization/professor-photos/professor-photos.component'
 import { StudentPhotosComponent } from './components/records/student-photos/student-photos.component'
 import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component'
 import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'
@@ -68,8 +69,10 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { NominatasComponent } from './components/parameterization/nominatas/nominatas.component'
 import { NominatasStudentsComponent } from './components/parameterization/nominatas-students/nominatas-students.component'
 import { NominatasProfessorsComponent } from './components/parameterization/nominatas-professors/nominatas-professors.component'
-import { NominatasPhotosComponent } from './components/parameterization/nominatas-photos/nominatas-photos.component';
+import { NominatasPhotosComponent } from './components/parameterization/nominatas-photos/nominatas-photos.component'
 import { StudentComponent } from './components/student/student.component'
+import { StudentPdfComponent } from './components/student/student-pdf/student-pdf.component'
+import { GeneralProfessorsComponent } from './components/parameterization/general-professors/general-professors.component'
 
 @NgModule({
   declarations: [
@@ -122,6 +125,7 @@ import { StudentComponent } from './components/student/student.component'
     SpRelatedMinistriesComponent,
     PreviousMarriageComponent,
     SmallAloneProfessorPhotosComponent,
+    ProfessorPhotosComponent,
     NominatasPhotosComponent,
     StudentPhotosComponent,
     FamilyStudentPhotoComponent,
@@ -137,6 +141,8 @@ import { StudentComponent } from './components/student/student.component'
     NominatasStudentsComponent,
     NominatasProfessorsComponent,
     StudentComponent,
+    StudentPdfComponent,
+    GeneralProfessorsComponent,
   ],
   imports: [
     BrowserModule,

@@ -263,6 +263,7 @@ export class NominatasModel {
             'professors.person_id',
             'people.cpf',
             'nominatas_professors.nominata_id',
+            'professors.assignments',
           ])
           .leftJoin('people', 'professors.person_id', 'people.person_id')
           .leftJoin(
@@ -538,7 +539,6 @@ export class NominatasModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
         }))
-        console.log('enviando as nominatas')
         await trx.commit()
       } catch (error) {
         console.error(error)

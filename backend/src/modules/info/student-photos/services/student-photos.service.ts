@@ -45,8 +45,6 @@ export class StudentPhotosService {
 
       const photoTypeIndex = photoTypes.indexOf(photoType)
 
-      console.log(photoTypeIndex)
-
       photoValues[photoTypeIndex] = filename
 
       let createStudentPhotoData: ICreateStudentPhoto = {
@@ -80,7 +78,7 @@ export class StudentPhotosService {
 
       const createdStudentPhoto =
         await this.studentPhotosModel.findStudentPhotoByStudentId(student_id)
-      console.log('esse é o que foi criado agora', createdStudentPhoto)
+
       return 1
     } catch (error) {
       console.error(

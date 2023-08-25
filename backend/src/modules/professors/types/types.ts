@@ -10,9 +10,18 @@ export interface IProfessor {
 }
 
 export interface ICreateProfessorAssgnment {
-  person_id: number
+  person_id?: number
   assignments: string
   approved: boolean | null
+  name?: string
+  cpf?: string
+}
+
+export interface ICreateProfessor {
+  assignments: string
+  approved: boolean | null
+  name: string
+  cpf: string
 }
 
 export interface IUpdateProfessor {

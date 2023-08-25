@@ -42,8 +42,6 @@ export class StudentPhotosController {
             originalFileName,
           )}`
           cb(null, uniqueName)
-
-          console.log(originalFileName)
         },
       }),
       fileFilter: (req, file, cb) => {

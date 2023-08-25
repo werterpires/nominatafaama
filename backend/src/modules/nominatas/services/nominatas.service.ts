@@ -145,8 +145,6 @@ export class NominatasService {
             }
           }
         }
-
-        // console.log(student.photo)
       }
 
       return students
@@ -248,8 +246,6 @@ export class NominatasService {
             headers,
           }
         }
-
-        // console.log(professor.photo)
       }
 
       return professors
@@ -280,6 +276,7 @@ export class NominatasService {
   async findAllNOminataProfessors(): Promise<ISinteticProfessor[]> {
     try {
       const professors = await this.nominatasModel.findAllNominataProfessors()
+
       return professors
     } catch (error) {
       throw error
@@ -372,7 +369,14 @@ export class NominatasService {
       if (oldFile != null && oldFile.length > 5) {
         const filePath = `./src/modules/nominatas/files/${oldFile}`
 
-        await fs.promises.unlink(filePath)
+        const fileExists = await fs.promises
+          .access(filePath)
+          .then(() => true)
+          .catch(() => false)
+
+        if (fileExists) {
+          await fs.promises.unlink(filePath)
+        }
       }
 
       const nominata_id = nominata.nominata_id

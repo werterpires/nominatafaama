@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, Length, IsNumber } from 'class-validator'
+import {
+  IsNotEmpty,
+  IsString,
+  Length,
+  IsNumber,
+  IsOptional,
+} from 'class-validator'
 
 export class UpdateProfessorAssgnmentDto {
   @IsNotEmpty()
@@ -9,4 +15,12 @@ export class UpdateProfessorAssgnmentDto {
   @IsNotEmpty()
   @IsNumber()
   professor_id: number
+
+  @IsOptional()
+  @IsString()
+  name?: string
+
+  @IsOptional()
+  @IsString()
+  cpf?: string
 }

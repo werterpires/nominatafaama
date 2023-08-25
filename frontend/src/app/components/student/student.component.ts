@@ -5,6 +5,8 @@ import { StudentService } from './student.service'
 import { ICompleteStudent } from '../approvals/student-to-approve/types'
 import { DatePipe } from '@angular/common'
 import { SafeResourceUrl } from '@angular/platform-browser'
+import { DataService } from '../shared/shared.service.ts/data.service'
+import { jsPDF } from 'jspdf'
 
 @Component({
   selector: 'app-student',
@@ -14,6 +16,8 @@ import { SafeResourceUrl } from '@angular/platform-browser'
 export class StudentComponent {
   @Input() permissions!: IPermissions
   @ViewChild('whiteSpace') whiteSpaceElement!: ElementRef
+  @ViewChild('pdfPage') pdfPage!: ElementRef
+  @ViewChild('pdfContainer') pdfContainer!: ElementRef
 
   isLoading = false
   done = false
@@ -33,10 +37,14 @@ export class StudentComponent {
   publicationTypes: string[] = []
   spPublicationTypes: string[] = []
 
+  firstName!: string
+  surname!: string
+
   constructor(
     private route: ActivatedRoute,
     private service: StudentService,
     public datePipe: DatePipe,
+    private dataService: DataService,
   ) {}
 
   @Input() studentId!: number
@@ -79,6 +87,13 @@ export class StudentComponent {
             }
           })
         }
+        if (this.student.student) {
+          this.firstName = this.student.student.person_name.split(' ')[0]
+          this.surname = this.student.student.person_name
+            .split(' ')
+            .slice(1)
+            .join(' ')
+        }
 
         await this.getFile(this.student.photos?.alone_photo?.file.data, 'alone')
         await this.getFile(
@@ -93,7 +108,12 @@ export class StudentComponent {
           this.student.photos?.family_photo?.file.data,
           'family',
         )
-        // this.ngAfterViewInit()
+        this.dataService.receiveStudent(
+          this.student,
+          this.alonePhoto,
+          this.spousePhoto,
+          this.familyPhoto,
+        )
         this.isLoading = false
       },
       error: (err) => {
@@ -183,6 +203,19 @@ export class StudentComponent {
     }
 
     return formatedNumber
+  }
+
+  printPDF() {
+    let pdf = new jsPDF('l', 'pt', 'a4')
+    pdf.addFont('Myriad Pro Regular', 'normal', 'normal')
+
+    pdf.setFont('Myriad Pro Regular')
+    pdf.html(this.pdfContainer.nativeElement, {
+      margin: 0,
+      callback: (pdf) => {
+        pdf.save('Teste.pdf')
+      },
+    })
   }
 
   closeError() {

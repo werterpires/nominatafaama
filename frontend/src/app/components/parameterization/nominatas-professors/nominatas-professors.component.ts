@@ -101,19 +101,17 @@ export class NominatasProfessorsComponent {
   filterProfessors() {
     this.atualNominataProfessors = []
     this.atualOtherProfessors = []
-    console.log('avaliando a nominata', this.createRegistryData.nominata_id),
-      this.allRegistries.forEach((professor) => {
-        if (
-          professor.nominata_id?.includes(
-            parseInt(this.createRegistryData.nominata_id.toString()),
-          )
-        ) {
-          this.atualNominataProfessors.push(professor)
-        } else {
-          this.atualOtherProfessors.push(professor)
-          console.log(professor.nominata_id)
-        }
-      })
+    this.allRegistries.forEach((professor) => {
+      if (
+        professor.nominata_id?.includes(
+          parseInt(this.createRegistryData.nominata_id.toString()),
+        )
+      ) {
+        this.atualNominataProfessors.push(professor)
+      } else {
+        this.atualOtherProfessors.push(professor)
+      }
+    })
     this.filterOtherProfessors()
   }
 
@@ -128,7 +126,6 @@ export class NominatasProfessorsComponent {
           professor.cpf.includes(this.chosenProfessor),
       )
     }
-    console.log(this.filteredOtherProfessors)
   }
 
   deleteProfessorFromNominata(id: number) {
@@ -149,7 +146,6 @@ export class NominatasProfessorsComponent {
       (obj) => obj.professor_id === id,
     )
 
-    console.log(index)
     if (index !== -1) {
       const removedObject = this.atualOtherProfessors.splice(index, 1)[0]
       this.atualNominataProfessors.push(removedObject)

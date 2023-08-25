@@ -11,7 +11,7 @@
       <p class="sectionTitle1">{{ title }} {{ Registry?.year }}</p>
     </div>
 
-    <!-- <div class="directorSpace">
+    <div class="directorSpace">
       <div class="directorTextContainer">
         <div
           class="directorPhotoContainer"
@@ -22,15 +22,17 @@
         ></div>
         <p class="nomintaTitle">Palavras do Diretor</p>
         <p class="traco"></p>
-        <p *ngFor="let paragraph of words" class="directorWordsParag">
-          {{ paragraph }}
-        </p>
+        <p
+          *ngFor="let paragraph of words"
+          class="directorWordsParag"
+          [innerHTML]="paragraph"
+        ></p>
         <p class="directorWordsName">{{ director?.name }}</p>
         <p class="directorWordsParag">
           Diretor da Sede Regional do SALT (FAAMA) - {{ nominataYear }}
         </p>
       </div>
-    </div> -->
+    </div>
 
     <!-- <form class="formSearch" action="">
       <label class="inputLabel" for="">
@@ -84,7 +86,7 @@
       </div>
     </section>
 
-    <!-- <p class="nomintaTitle">Professores</p>
+    <p class="nomintaTitle">Professores</p>
     <div class="traco"></div>
     <section class="perfilList">
       <div *ngFor="let professor of Registry?.professors; index as i">
@@ -106,7 +108,7 @@
           </div>
         </div>
       </div>
-    </section> -->
+    </section>
   </section>
 
   <div *ngIf="error" class="error">

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
 import {
+  ICreateProfessor,
   ICreateProfessorAssgnment,
   IProfessor,
   IUpdateProfessor,
@@ -19,9 +20,22 @@ export class ProfessorsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
+        if (
+          createProfessor.name &&
+          createProfessor.cpf &&
+          !createProfessor.person_id
+        ) {
+          createProfessor.person_id = await trx('people').insert({
+            name: createProfessor.name,
+            cpf: createProfessor.cpf,
+          })
+        }
+
         const [professor_id] = await trx('professors')
           .insert({
-            ...createProfessor,
+            person_id: createProfessor.person_id,
+            assignments: createProfessor.assignments,
+            approved: createProfessor.approved,
           })
           .returning('professor_id')
 
@@ -57,8 +71,6 @@ export class ProfessorsModel {
       .leftJoin('users', 'professors.person_id', 'users.person_id')
       .leftJoin('people', 'professors.person_id', 'people.person_id')
       .where('professors.professor_id', '=', id)
-
-    console.log(id)
 
     if (!result) {
       throw new Error('Professor não encontrado')
@@ -201,5 +213,29 @@ export class ProfessorsModel {
     }
 
     return professorPhoto
+  }
+
+  async deleteProfessorById(id: number): Promise<string> {
+    let sentError: Error | null = null
+    let message: string = ''
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        await trx('professors').where('professor_id', id).del()
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    message = 'Professor excluído com sucesso.'
+    return message
   }
 }
