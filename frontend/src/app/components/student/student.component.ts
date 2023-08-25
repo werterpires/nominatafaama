@@ -6,7 +6,7 @@ import { ICompleteStudent } from '../approvals/student-to-approve/types'
 import { DatePipe } from '@angular/common'
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { DataService } from '../shared/shared.service.ts/data.service'
-import { jsPDF } from 'jspdf'
+// import { jsPDF } from 'jspdf'
 
 @Component({
   selector: 'app-student',
@@ -205,18 +205,18 @@ export class StudentComponent {
     return formatedNumber
   }
 
-  printPDF() {
-    let pdf = new jsPDF('l', 'pt', 'a4')
-    pdf.addFont('Myriad Pro Regular', 'normal', 'normal')
+  // printPDF() {
+  //   let pdf = new jsPDF('l', 'pt', 'a4')
+  //   pdf.addFont('Myriad Pro Regular', 'normal', 'normal')
 
-    pdf.setFont('Myriad Pro Regular')
-    pdf.html(this.pdfContainer.nativeElement, {
-      margin: 0,
-      callback: (pdf) => {
-        pdf.save('Teste.pdf')
-      },
-    })
-  }
+  //   pdf.setFont('Myriad Pro Regular')
+  //   pdf.html(this.pdfContainer.nativeElement, {
+  //     margin: 0,
+  //     callback: (pdf) => {
+  //       pdf.save('Teste.pdf')
+  //     },
+  //   })
+  // }
 
   closeError() {
     this.error = false
