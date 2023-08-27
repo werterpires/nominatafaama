@@ -1,1 +1,38 @@
+.readMore {
+  background-color: transparent;
+  box-shadow: none;
+  font-size: 14px;
+  font-family: 'Roboto';
+  margin-top: 15px;
+  text-decoration: underline;
+  padding: 0px;
+}
 
+#directorText {
+  max-height: 337.516px;
+  overflow: hidden;
+  transition: max-height 5s ease-in-out;
+}
+
+.oneStudentSpaceHeader {
+  display: flex;
+  margin-top: 50px;
+}
+
+.oneStudentSpaceTitle {
+  font-family: 'Roboto', Sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 24px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+section {
+  margin-bottom: 110px;
+}
+
+section:last-of-type {
+  margin-bottom: 0;
+}

@@ -8,11 +8,35 @@
       }"
     ></div>
     <div class="boxHead">
-      <p class="sectionTitle1">{{ title }} {{ Registry?.year }}</p>
+      <div class="oneStudentSpaceHeader">
+        <p class="oneStudentSpaceTitle">{{ title }} {{ Registry?.year }}</p>
+        <img src="assets/icons/barra.svg" alt="" />
+      </div>
     </div>
 
-    <div class="directorSpace">
-      <div class="directorTextContainer">
+    <section *ngIf="words && words.length > 10">
+      <div class="oneStudentSpaceHeader">
+        <p class="oneStudentSpaceTitle">Palavras do diretor</p>
+        <img src="assets/icons/barra.svg" alt="" />
+      </div>
+      <div class="directorSpace">
+        <div class="directorTextContainer">
+          <div id="directorText" #directorText>
+            <p
+              *ngFor="let paragraph of words"
+              class="directorWordsParag"
+              [innerHTML]="paragraph"
+            ></p>
+          </div>
+          <button class="readMore" #readMore (click)="growText()">
+            Continue lendo
+          </button>
+
+          <p class="directorWordsName">{{ director?.name }}</p>
+          <p class="directorWordsParag">
+            Diretor da Sede Regional do SALT (FAAMA) - {{ nominataYear }}
+          </p>
+        </div>
         <div
           class="directorPhotoContainer"
           *ngIf="director && Registry?.imgUrl"
@@ -20,19 +44,8 @@
             'background-image': 'url(' + director.imgUrl + ')'
           }"
         ></div>
-        <p class="nomintaTitle">Palavras do Diretor</p>
-        <p class="traco"></p>
-        <p
-          *ngFor="let paragraph of words"
-          class="directorWordsParag"
-          [innerHTML]="paragraph"
-        ></p>
-        <p class="directorWordsName">{{ director?.name }}</p>
-        <p class="directorWordsParag">
-          Diretor da Sede Regional do SALT (FAAMA) - {{ nominataYear }}
-        </p>
       </div>
-    </div>
+    </section>
 
     <!-- <form class="formSearch" action="">
       <label class="inputLabel" for="">
@@ -50,8 +63,10 @@
       <button type="button" (click)="searchByNam()">Buscar</button>
       <button type="button" (click)="ngOnInit()">Cancelar</button>
     </form> -->
-    <p class="nomintaTitle">Formandos</p>
-    <div class="traco"></div>
+    <div class="oneStudentSpaceHeader">
+      <p class="oneStudentSpaceTitle">Formandos</p>
+      <img src="assets/icons/barra.svg" alt="" />
+    </div>
     <section class="perfilList">
       <div *ngFor="let student of Registry?.students; index as i">
         <div (click)="selectStudent(student.student_id.toString())">
@@ -86,8 +101,11 @@
       </div>
     </section>
 
-    <p class="nomintaTitle">Professores</p>
-    <div class="traco"></div>
+    <div class="oneStudentSpaceHeader">
+      <p class="oneStudentSpaceTitle">Professores</p>
+      <img src="assets/icons/barra.svg" alt="" />
+    </div>
+
     <section class="perfilList">
       <div *ngFor="let professor of Registry?.professors; index as i">
         <div>

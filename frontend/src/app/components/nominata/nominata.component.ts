@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core'
 import { IPermissions } from '../shared/container/types'
 import { ICompleteUser } from '../approvals/student-to-approve/types'
 import { DataService } from '../shared/shared.service.ts/data.service'
@@ -19,6 +26,10 @@ export class NominataComponent {
     option: string
     studentId: string
   }>()
+
+  @ViewChild('directorText') directorText!: ElementRef
+  @ViewChild('readMore') readMore!: ElementRef
+
   Registry: ICompleteNominata | null = null
   nominataYear: string =
     new Date().getMonth() > 6
@@ -31,6 +42,9 @@ export class NominataComponent {
   searchString: string = ''
 
   director!: IBasicProfessor | undefined
+
+  urlThiago =
+    'https://cdn.folhape.com.br/img/pc/1100/1/dn_arquivo/2023/08/onca-na-mata-com-pastor.png'
 
   showForm = false
   isLoading = false
@@ -55,7 +69,6 @@ export class NominataComponent {
     this.service.findAllRegistries(this.nominataYear).subscribe({
       next: async (res) => {
         this.Registry = res
-        console.log(this.Registry)
 
         this.Registry.director_words = this.Registry.director_words
           .replace(/<b>(.*?)<\/b>/g, '<strong>$1</strong>')
@@ -63,57 +76,57 @@ export class NominataComponent {
 
         this.words = this.Registry.director_words.split('\n')
 
-        const blob = new Blob(
-          [new Uint8Array(this.Registry.photo?.file.data)],
-          {
-            type: 'image/jpeg',
-          },
-        )
-        if (blob instanceof Blob) {
-          const reader = new FileReader()
-          reader.onload = (e: any) => {
-            if (this.Registry?.photo) {
-              this.Registry.imgUrl = e.target.result
-            }
-          }
-          reader.readAsDataURL(blob)
-        } else {
-          this.showForm = true
-          this.isLoading = false
-        }
+        // const blob = new Blob(
+        //   [new Uint8Array(this.Registry.photo?.file.data)],
+        //   {
+        //     type: 'image/jpeg',
+        //   },
+        // )
+        // if (blob instanceof Blob) {
+        //   const reader = new FileReader()
+        //   reader.onload = (e: any) => {
+        //     if (this.Registry?.photo) {
+        //       this.Registry.imgUrl = e.target.result
+        //     }
+        //   }
+        //   reader.readAsDataURL(blob)
+        // } else {
+        //   this.showForm = true
+        //   this.isLoading = false
+        // }
 
-        this.Registry.students?.forEach((student) => {
-          const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
-            type: 'image/jpeg',
-          })
-          if (blob instanceof Blob) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-              student.imgUrl = e.target.result
-            }
-            reader.readAsDataURL(blob)
-          } else {
-            this.showForm = true
-          }
-        })
+        // this.Registry.students?.forEach((student) => {
+        //   const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
+        //     type: 'image/jpeg',
+        //   })
+        //   if (blob instanceof Blob) {
+        //     const reader = new FileReader()
+        //     reader.onload = (e: any) => {
+        //       student.imgUrl = e.target.result
+        //     }
+        //     reader.readAsDataURL(blob)
+        //   } else {
+        //     this.showForm = true
+        //   }
+        // })
 
-        this.Registry.professors?.forEach((professor) => {
-          const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
-            type: 'image/jpeg',
-          })
-          if (blob instanceof Blob) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-              professor.imgUrl = e.target.result
-            }
-            reader.readAsDataURL(blob)
-          } else {
-            this.showForm = true
-          }
-          if (this.Registry && this.Registry.professors) {
-            this.findDirector(this.Registry.professors, this.Registry?.director)
-          }
-        })
+        // this.Registry.professors?.forEach((professor) => {
+        //   const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
+        //     type: 'image/jpeg',
+        //   })
+        //   if (blob instanceof Blob) {
+        //     const reader = new FileReader()
+        //     reader.onload = (e: any) => {
+        //       professor.imgUrl = e.target.result
+        //     }
+        //     reader.readAsDataURL(blob)
+        //   } else {
+        //     this.showForm = true
+        //   }
+        //   if (this.Registry && this.Registry.professors) {
+        //     this.findDirector(this.Registry.professors, this.Registry?.director)
+        //   }
+        // })
 
         this.isLoading = false
       },
@@ -187,6 +200,24 @@ export class NominataComponent {
       }
       reader.readAsDataURL(blob)
     })
+  }
+
+  small: boolean = true
+
+  growText() {
+    const divElement = this.directorText.nativeElement
+    const buttonElement = this.readMore.nativeElement
+    divElement.style.transition = 'max-height 5s ease-in-out'
+    if (this.small == true) {
+      divElement.style.maxHeight = 'fit-content'
+      buttonElement.innerText = 'Mostrar menos'
+      this.small = !this.small
+    } else {
+      divElement.style.maxHeight = '337.516px'
+      buttonElement.innerText = 'Continue lendo'
+
+      this.small = !this.small
+    }
   }
 
   // getOneStudent(userId: number) {
