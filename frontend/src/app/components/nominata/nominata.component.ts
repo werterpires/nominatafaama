@@ -76,59 +76,61 @@ export class NominataComponent {
 
         this.words = this.Registry.director_words.split('\n')
 
-        // const blob = new Blob(
-        //   [new Uint8Array(this.Registry.photo?.file.data)],
-        //   {
-        //     type: 'image/jpeg',
-        //   },
-        // )
-        // if (blob instanceof Blob) {
-        //   const reader = new FileReader()
-        //   reader.onload = (e: any) => {
-        //     if (this.Registry?.photo) {
-        //       this.Registry.imgUrl = e.target.result
-        //     }
-        //   }
-        //   reader.readAsDataURL(blob)
-        // } else {
-        //   this.showForm = true
-        //   this.isLoading = false
-        // }
+        const blob = new Blob(
+          [new Uint8Array(this.Registry.photo?.file.data)],
+          {
+            type: 'image/jpeg',
+          },
+        )
+        if (blob instanceof Blob) {
+          const reader = new FileReader()
+          reader.onload = (e: any) => {
+            if (this.Registry?.photo) {
+              this.Registry.imgUrl = e.target.result
+            }
+          }
+          reader.readAsDataURL(blob)
+        } else {
+          this.showForm = true
+          this.isLoading = false
+        }
 
-        // this.Registry.students?.forEach((student) => {
-        //   const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
-        //     type: 'image/jpeg',
-        //   })
-        //   if (blob instanceof Blob) {
-        //     const reader = new FileReader()
-        //     reader.onload = (e: any) => {
-        //       student.imgUrl = e.target.result
-        //     }
-        //     reader.readAsDataURL(blob)
-        //   } else {
-        //     this.showForm = true
-        //   }
-        // })
+        this.Registry.students?.forEach((student) => {
+          const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
+            type: 'image/jpeg',
+          })
+          if (blob instanceof Blob) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+              student.imgUrl = e.target.result
+            }
+            reader.readAsDataURL(blob)
+          } else {
+            this.showForm = true
+          }
+        })
 
-        // this.Registry.professors?.forEach((professor) => {
-        //   const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
-        //     type: 'image/jpeg',
-        //   })
-        //   if (blob instanceof Blob) {
-        //     const reader = new FileReader()
-        //     reader.onload = (e: any) => {
-        //       professor.imgUrl = e.target.result
-        //     }
-        //     reader.readAsDataURL(blob)
-        //   } else {
-        //     this.showForm = true
-        //   }
-        //   if (this.Registry && this.Registry.professors) {
-        //     this.findDirector(this.Registry.professors, this.Registry?.director)
-        //   }
-        // })
+        this.Registry.professors?.forEach((professor) => {
+          const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
+            type: 'image/jpeg',
+          })
+          if (blob instanceof Blob) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+              professor.imgUrl = e.target.result
+            }
+            reader.readAsDataURL(blob)
+          } else {
+            this.showForm = true
+          }
+          if (this.Registry && this.Registry.professors) {
+            this.findDirector(this.Registry.professors, this.Registry?.director)
+          }
+        })
 
         this.isLoading = false
+
+        console.log(this.Registry.professors)
       },
       error: (err) => {
         this.nominataYear = (parseInt(this.nominataYear) - 1).toString()

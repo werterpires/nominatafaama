@@ -10,7 +10,6 @@
     <div class="boxHead">
       <div class="oneStudentSpaceHeader">
         <p class="oneStudentSpaceTitle">{{ title }} {{ Registry?.year }}</p>
-        <img src="assets/icons/barra.svg" alt="" />
       </div>
     </div>
 
@@ -47,22 +46,6 @@
       </div>
     </section>
 
-    <!-- <form class="formSearch" action="">
-      <label class="inputLabel" for="">
-        Busque um estudante específico pelo nome:
-        <input
-          type="search"
-          class="searchInput"
-          name="searchStudent"
-          id=""
-          placeholder="Simão Ped.."
-          [(ngModel)]="searchString"
-        />
-      </label>
-
-      <button type="button" (click)="searchByNam()">Buscar</button>
-      <button type="button" (click)="ngOnInit()">Cancelar</button>
-    </form> -->
     <div class="oneStudentSpaceHeader">
       <p class="oneStudentSpaceTitle">Formandos</p>
       <img src="assets/icons/barra.svg" alt="" />
@@ -124,6 +107,32 @@
               {{ professor.assignments }}
             </p>
           </div>
+        </div>
+      </div>
+    </section>
+    <div *ngIf="Registry?.events" class="oneStudentSpaceHeader">
+      <p class="oneStudentSpaceTitle">Solenidades da formatura</p>
+      <img src="assets/icons/barra.svg" alt="" />
+    </div>
+    <section class="perfilList">
+      <div
+        *ngFor="let event of Registry?.events; index as i"
+        class="eventSpace"
+      >
+        <p class="eventTitle">
+          {{ event.event_title }}
+        </p>
+        <div class="eventSection">
+          <span> <strong> Data:</strong> {{ event.event_date }} </span>
+          <span> <strong> Horário:</strong> {{ event.event_time }} </span>
+        </div>
+
+        <div class="eventSection">
+          <span> <strong> Local:</strong> {{ event.event_place }} </span>
+        </div>
+
+        <div class="eventSection">
+          <span> <strong> Endereço:</strong> {{ event.event_address }} </span>
         </div>
       </div>
     </section>

@@ -15,6 +15,7 @@ import { RolesGuard } from './shared/roles/gz_guards/roles.guard'
 import { RolesModule } from './shared/roles/roles.module'
 import { ApprovalsModule } from './modules/approvals/approvals.module'
 import { NominatasModule } from './modules/nominatas/nominatas.module';
+import { EventsModule } from './modules/events/events.module';
 import * as fs from 'fs'
 import * as path from 'path'
 import * as Nodemailer from 'nodemailer'
@@ -90,6 +91,7 @@ const mssqlConfig: KnexModuleOptions = {
     ApprovalsModule,
     ProfessorsModule,
     NominatasModule,
+    EventsModule,
   ],
   providers: [
     {

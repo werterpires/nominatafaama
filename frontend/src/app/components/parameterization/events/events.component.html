@@ -1,0 +1,182 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+
+    <img
+      #addIcon
+      class="addIcon"
+      [ngClass]="{ hidden: !showBox }"
+      src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}"
+      (click)="showForm = true"
+    />
+  </div>
+
+  <label class="inputLabel">
+    Nominata
+    <select
+      class="smallInput"
+      name="nominataSelect"
+      [(ngModel)]="createRegistryData.nominata_id"
+      (change)="getAllEvents()"
+    >
+      <option
+        *ngFor="let nominata of allNominatas; let first = first"
+        [value]="nominata.nominata_id"
+        [selected]="first"
+      >
+        {{ nominata.year }}
+      </option>
+    </select>
+  </label>
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
+      <div class="subSection">
+        <label class="inputLabel">
+          Título do evento<input
+            class="mediumInput"
+            type="text"
+            name="eventTitleInput"
+            [(ngModel)]="createRegistryData.event_title"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Local do evento<input
+            class="smallInput"
+            type="text"
+            name="eventPlaceInput"
+            [(ngModel)]="createRegistryData.event_place"
+          />
+        </label>
+        <label class="inputLabel">
+          Endereço<input
+            class="smallInput"
+            type="text"
+            name="eventAddressInput"
+            [(ngModel)]="createRegistryData.event_address"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Data do evento<input
+            class="smallInput"
+            type="date"
+            name="eventDateInput"
+            [(ngModel)]="createRegistryData.event_date"
+          />
+        </label>
+        <label class="inputLabel">
+          Horário de início do evento<input
+            class="smallInput"
+            type="datetime"
+            name="eventTimeInput"
+            [(ngModel)]="createRegistryData.event_time"
+          />
+        </label>
+      </div>
+    </app-creation-form>
+  </section>
+  <section class="registriesWrapper">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.event_id)"
+      *ngFor="let registry of allRegistries; index as i"
+    >
+      <div class="subSection">
+        <label class="inputLabel">
+          Título do evento<input
+            class="mediumInput"
+            type="text"
+            name="eventTitleInput"
+            [(ngModel)]="registry.event_title"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Local do evento<input
+            class="smallInput"
+            type="text"
+            name="eventPlaceInput"
+            [(ngModel)]="registry.event_place"
+          />
+        </label>
+        <label class="inputLabel">
+          Endereço<input
+            class="smallInput"
+            type="text"
+            name="eventAddressInput"
+            [(ngModel)]="registry.event_address"
+          />
+        </label>
+      </div>
+      <div class="subSection">
+        <label class="inputLabel">
+          Data do evento<input
+            class="smallInput"
+            type="date"
+            name="eventDateInput"
+            [(ngModel)]="registry.event_date"
+          />
+        </label>
+        <label class="inputLabel">
+          Horário de início do evento<input
+            class="smallInput"
+            type="datetime"
+            name="eventTimeInput"
+            [(ngModel)]="registry.event_time"
+          />
+        </label>
+      </div>
+    </app-update-form>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
