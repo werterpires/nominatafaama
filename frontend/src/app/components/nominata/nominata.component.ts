@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core'
 import { IPermissions } from '../shared/container/types'
 import { ICompleteUser } from '../approvals/student-to-approve/types'
 import { DataService } from '../shared/shared.service.ts/data.service'
@@ -19,6 +26,10 @@ export class NominataComponent {
     option: string
     studentId: string
   }>()
+
+  @ViewChild('directorText') directorText!: ElementRef
+  @ViewChild('readMore') readMore!: ElementRef
+
   Registry: ICompleteNominata | null = null
   nominataYear: string =
     new Date().getMonth() > 6
@@ -31,6 +42,9 @@ export class NominataComponent {
   searchString: string = ''
 
   director!: IBasicProfessor | undefined
+
+  urlThiago =
+    'https://cdn.folhape.com.br/img/pc/1100/1/dn_arquivo/2023/08/onca-na-mata-com-pastor.png'
 
   showForm = false
   isLoading = false
@@ -55,7 +69,6 @@ export class NominataComponent {
     this.service.findAllRegistries(this.nominataYear).subscribe({
       next: async (res) => {
         this.Registry = res
-        console.log(this.Registry)
 
         this.Registry.director_words = this.Registry.director_words
           .replace(/<b>(.*?)<\/b>/g, '<strong>$1</strong>')
@@ -116,6 +129,8 @@ export class NominataComponent {
         })
 
         this.isLoading = false
+
+        console.log(this.Registry.professors)
       },
       error: (err) => {
         this.nominataYear = (parseInt(this.nominataYear) - 1).toString()
@@ -187,6 +202,24 @@ export class NominataComponent {
       }
       reader.readAsDataURL(blob)
     })
+  }
+
+  small: boolean = true
+
+  growText() {
+    const divElement = this.directorText.nativeElement
+    const buttonElement = this.readMore.nativeElement
+    divElement.style.transition = 'max-height 5s ease-in-out'
+    if (this.small == true) {
+      divElement.style.maxHeight = 'fit-content'
+      buttonElement.innerText = 'Mostrar menos'
+      this.small = !this.small
+    } else {
+      divElement.style.maxHeight = '337.516px'
+      buttonElement.innerText = 'Continue lendo'
+
+      this.small = !this.small
+    }
   }
 
   // getOneStudent(userId: number) {

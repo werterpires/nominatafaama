@@ -127,9 +127,8 @@ export class StudentComponent {
   ngAfterViewInit() {
     this.isLoading = true
     const contentHeight = document.body.scrollHeight - 640
-    console.log('passo 1')
+
     const divElement = this.whiteSpaceElement.nativeElement
-    console.log('passo 2')
 
     divElement.style.height = contentHeight + 'px'
     this.isLoading = false

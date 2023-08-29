@@ -1,5 +1,6 @@
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { INominata } from '../parameterization/nominatas/types'
+import { IEvent } from '../parameterization/events/types'
 
 export interface ICompleteNominata {
   nominata_id: number
@@ -13,6 +14,7 @@ export interface ICompleteNominata {
   professors?: IBasicProfessor[] | null
   photo?: { file: any; headers: Record<string, string> } | null
   imgUrl?: SafeResourceUrl
+  events: IEvent[] | null
 }
 
 export interface IBasicStudent {

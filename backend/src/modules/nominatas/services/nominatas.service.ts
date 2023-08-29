@@ -14,10 +14,14 @@ import {
   IUpdateNominata,
 } from '../types/types'
 import * as fs from 'fs'
+import { EventsModel } from 'src/modules/events/model/events.model'
 
 @Injectable()
 export class NominatasService {
-  constructor(private nominatasModel: NominatasModel) {}
+  constructor(
+    private nominatasModel: NominatasModel,
+    private eventsModel: EventsModel,
+  ) {}
   async createNominata(dto: CreateNominataDto): Promise<INominata> {
     try {
       const createNominataData: ICreateNominata = {
@@ -87,6 +91,11 @@ export class NominatasService {
 
         const professors = await this.findNominataBasicProfessors(nominata_id)
         nominata.professors = professors
+
+        const events = await this.eventsModel.findAllEventsByNominataId(
+          nominata_id,
+        )
+        nominata.events = events
       }
 
       return nominata as INominata
@@ -208,6 +217,7 @@ export class NominatasService {
       let professors = await this.nominatasModel.findAllNominataBasicProfessors(
         nominata_id,
       )
+      console.log(professors)
       if (professors == null) {
         return null
       }
@@ -218,32 +228,33 @@ export class NominatasService {
           const filePath = `./src/modules/professors/files/${professor.professor_photo_address}`
 
           if (!fs.existsSync(filePath)) {
-            return null
-          }
-          const fileStream = fs.createReadStream(filePath)
-          const headers = {
-            'Content-Type': 'image/jpeg',
-            'Content-Disposition': `attachment; filename=${professor.professor_photo_address}`,
-          }
+            professor.photo = null
+          } else {
+            const fileStream = fs.createReadStream(filePath)
+            const headers = {
+              'Content-Type': 'image/jpeg',
+              'Content-Disposition': `attachment; filename=${professor.professor_photo_address}`,
+            }
 
-          const filePromise = new Promise<Buffer>((resolve, reject) => {
-            const chunks: Buffer[] = []
-            fileStream.on('data', (chunk: Buffer) => {
-              chunks.push(chunk)
+            const filePromise = new Promise<Buffer>((resolve, reject) => {
+              const chunks: Buffer[] = []
+              fileStream.on('data', (chunk: Buffer) => {
+                chunks.push(chunk)
+              })
+              fileStream.on('end', () => {
+                const file = Buffer.concat(chunks)
+                resolve(file)
+              })
+              fileStream.on('error', (error: Error) => {
+                reject(error)
+              })
             })
-            fileStream.on('end', () => {
-              const file = Buffer.concat(chunks)
-              resolve(file)
-            })
-            fileStream.on('error', (error: Error) => {
-              reject(error)
-            })
-          })
 
-          const file = await filePromise
-          professor.photo = {
-            file,
-            headers,
+            const file = await filePromise
+            professor.photo = {
+              file,
+              headers,
+            }
           }
         }
       }

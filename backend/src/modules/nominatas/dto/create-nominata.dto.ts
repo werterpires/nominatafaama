@@ -9,7 +9,7 @@ export class CreateNominataDto {
   orig_field_invites_begin: string
 
   @IsString()
-  @Length(1, 4000)
+  @Length(1, 7000)
   director_words: string
 
   @IsNumber()

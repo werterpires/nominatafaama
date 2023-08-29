@@ -662,7 +662,7 @@ button:active {
 
 .sectionBoxAll {
   width: 80vw;
-  /* max-width: 1450.71px; */
+  max-width: 1450.71px;
   background: transparent;
   transition: height 5s ease;
   padding-bottom: 15px;
@@ -1136,27 +1136,25 @@ button:active {
 }
 
 .directorWordsParag {
-  color: #2f2b2b;
-  font-family: Montserrat;
-  font-size: 15px;
+  color: #ffffff;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 23px;
-  letter-spacing: 0.3px;
+  line-height: 24px;
   padding-bottom: 9px;
-  text-align: justify;
 }
 
 .directorWordsName {
-  color: #2f2b2b;
-  font-family: Montserrat;
-  font-size: 16px;
+  color: #ffffff;
+  font-family: Roboto, sans-serif;
+  font-size: 18px;
   font-style: normal;
-  font-weight: 600;
-  line-height: 20px;
+  font-weight: bold;
+  line-height: 26px;
   letter-spacing: 0.2px;
-  text-align: justify;
   padding-top: 20px;
+  text-transform: capitalize;
 }
 
 .nomintaTitle {
@@ -1189,9 +1187,9 @@ button:active {
 }
 
 .directorSpace {
-  margin-top: 100px;
   display: flex;
   gap: 34px;
+  flex-wrap: wrap;
 }
 
 .classPhotoContainer {
@@ -1206,6 +1204,10 @@ button:active {
 
 .directorTextContainer {
   flex: 1;
+  max-width: 664px;
+  padding: 56px;
+  background-image: linear-gradient(180deg, #1f2736 0%, #255071 100%);
+  background-color: transparent;
 }
 
 .disponivelIndicator {
@@ -1246,14 +1248,19 @@ button:active {
 }
 
 .directorPhotoContainer {
-  float: left;
-  margin-right: 20px;
+  /* float: left; */
+  /* margin-right: 20px; */
   margin-bottom: 5px;
-  min-width: 451.513px;
-  height: 526.55px;
+  width: 40vw;
+  max-width: 430px;
+  height: 51vw;
+  max-height: 556.516px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  border-style: solid;
+  border-width: 12px 12px 12px 12px;
+  border-color: #ffffff;
 }

@@ -156,22 +156,6 @@ export class NominatasStudentsComponent {
     this.filterOtherStudents()
   }
 
-  // resetCreationRegistry() {
-  //   Object.keys(this.createRegistryData).forEach((key) => {
-  //     switch (typeof key) {
-  //       case 'boolean':
-  //         Object.defineProperty(this.createRegistryData, key, { value: false })
-  //         break
-  //       case 'number':
-  //         Object.defineProperty(this.createRegistryData, key, { value: 0 })
-  //         break
-  //       case 'string':
-  //         Object.defineProperty(this.createRegistryData, key, { value: '' })
-  //         break
-  //     }
-  //   })
-  // }
-
   createRegistry() {
     this.isLoading = true
     let studentIds: number[]
