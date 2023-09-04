@@ -137,11 +137,25 @@
       </div>
       <div class="normalSection">
         <span class="oneStudentField">
-          <div class="oneStudentSpaceHeader">
-            <p class="oneStudentSpaceTitle">
-              Conheça {{ student.student.person_name }}
-            </p>
-            <img src="assets/icons/barra.svg" alt="" />
+          <div class="oneStudentKnowWhoSpace">
+            <div class="oneStudentSpaceHeader">
+              <p class="oneStudentSpaceTitle">
+                Conheça {{ student.student.person_name }}
+              </p>
+              <img src="assets/icons/barra.svg" alt="" />
+            </div>
+
+            <a
+              class="download"
+              *ngIf="student.user && student.user.cpf"
+              [href]="curriculumLink"
+              ><span>Baixar currículo</span>
+              <img
+                class="downloadIcon"
+                src="assets/icons/download.svg"
+                alt=""
+              />
+            </a>
           </div>
 
           <section class="curriculumSpace">

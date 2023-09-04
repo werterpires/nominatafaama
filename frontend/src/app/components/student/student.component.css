@@ -191,6 +191,12 @@ hr {
   margin-right: 16px;
 }
 
+.oneStudentKnowWhoSpace {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
 .oneStudentSubSpaceTitle {
   font-family: 'Roboto', Sans-serif;
   font-size: 22px;
@@ -232,4 +238,20 @@ a {
   margin-bottom: 15px;
 }
 
+.download {
+  background-color: #fc6a4d;
+  width: 213px;
+  height: 46px;
+  padding: 15px 30px 15px 30px;
+  text-transform: uppercase;
+  font-family: 'Roboto';
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+}
+
+.downloadIcon {
+  margin-left: 5px;
+}
 /* daqui pra baixo é do pdf */
