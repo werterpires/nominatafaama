@@ -123,7 +123,9 @@
           {{ event.event_title }}
         </p>
         <div class="eventSection">
-          <span> <strong> Data:</strong> {{ event.event_date }} </span>
+          <span>
+            <strong> Data:</strong> {{ formatDate(event.event_date) }}
+          </span>
           <span> <strong> Horário:</strong> {{ event.event_time }} </span>
         </div>
 
