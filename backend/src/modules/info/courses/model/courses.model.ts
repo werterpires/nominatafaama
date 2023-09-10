@@ -218,6 +218,14 @@ export class CoursesModel {
           course_approved,
         } = updateCourse
 
+        let approved = await trx('courses')
+          .first('course_approved')
+          .where('course_id', course_id)
+
+        if (approved.course_approved == true) {
+          throw new Error('Registro já aprovado')
+        }
+
         await trx('courses').where('course_id', course_id).update({
           course_area,
           institution,

@@ -318,6 +318,14 @@ export class ChildrenModel {
           cpf,
         } = updateChild
 
+        let approved = await trx('children')
+          .first('child_approved')
+          .where('child_id', child_id)
+
+        if (approved.child_approved == true) {
+          throw new Error('Registro já aprovado')
+        }
+
         const updatedPerson = await trx('people')
           .where('person_id', person_id)
           .update({

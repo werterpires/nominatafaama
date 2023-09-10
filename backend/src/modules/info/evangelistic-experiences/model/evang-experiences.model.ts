@@ -316,6 +316,14 @@ export class EvangelisticExperiencesModel {
           evang_exp_approved,
         } = updateEvangelisticExperience
 
+        let approved = await trx('evangelistic_experiences')
+          .first('evang_exp_approved')
+          .where('evang_exp_id', evang_exp_id)
+
+        if (approved.evang_exp_approved == true) {
+          throw new Error('Registro já aprovado')
+        }
+
         await trx('evangelistic_experiences')
           .where('evang_exp_id', evang_exp_id)
           .update({
