@@ -12,6 +12,7 @@ import { DataService } from '../shared/shared.service.ts/data.service'
 import { DomSanitizer } from '@angular/platform-browser'
 import { NominataService } from './nominata.service'
 import { IBasicProfessor, ICompleteNominata } from './types'
+import { DatePipe } from '@angular/common'
 
 @Component({
   selector: 'app-nominata',
@@ -43,9 +44,6 @@ export class NominataComponent {
 
   director!: IBasicProfessor | undefined
 
-  urlThiago =
-    'https://cdn.folhape.com.br/img/pc/1100/1/dn_arquivo/2023/08/onca-na-mata-com-pastor.png'
-
   showForm = false
   isLoading = false
   done = false
@@ -57,6 +55,7 @@ export class NominataComponent {
     private service: NominataService,
     private dataService: DataService,
     private sanitizer: DomSanitizer,
+    public datePipe: DatePipe,
   ) {}
 
   ngOnInit() {
@@ -128,9 +127,27 @@ export class NominataComponent {
           }
         })
 
-        this.isLoading = false
+        if (this.Registry.events) {
+          this.Registry.events = this.Registry.events.sort((a, b) => {
+            const dataA = new Date(a.event_date)
+            const dataB = new Date(b.event_date)
 
-        console.log(this.Registry.professors)
+            // Primeiro, ordena pelos valores de data
+            if (dataA < dataB) {
+              return -1
+            } else if (dataA > dataB) {
+              return 1
+            } else {
+              // Se as datas forem iguais, ordene pelos valores de horário
+              const horaA = parseInt(a.event_time)
+              const horaB = parseInt(b.event_time)
+
+              return horaA - horaB
+            }
+          })
+        }
+
+        this.isLoading = false
       },
       error: (err) => {
         this.nominataYear = (parseInt(this.nominataYear) - 1).toString()
@@ -222,6 +239,10 @@ export class NominataComponent {
     }
   }
 
+  formatDate(date: string) {
+    return this.datePipe.transform(date, 'dd/MM/yyyy')
+  }
+
   // getOneStudent(userId: number) {
   //   this.isLoading = true
   //   this.service.findOneRegistry(userId).subscribe({
@@ -239,7 +260,6 @@ export class NominataComponent {
   // }
 
   selectStudent(studentId: string) {
-    console.log('oi')
     this.toStudent.emit({ option: 'student', studentId: studentId })
   }
 

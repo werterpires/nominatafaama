@@ -286,6 +286,14 @@ export class EndowmentsModel {
           endowment_approved,
         } = updateEndowment
 
+        let approved = await trx('endowments')
+          .first('endowment_approved')
+          .where('endowment_id', endowment_id)
+
+        if (approved.endowment_approved == true) {
+          throw new Error('Registro já aprovado')
+        }
+
         updatedEndowment = await trx('endowments')
           .where('endowment_id', endowment_id)
           .update({
