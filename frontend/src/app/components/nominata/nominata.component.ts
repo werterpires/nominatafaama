@@ -11,7 +11,7 @@ import { ICompleteUser } from '../approvals/student-to-approve/types'
 import { DataService } from '../shared/shared.service.ts/data.service'
 import { DomSanitizer } from '@angular/platform-browser'
 import { NominataService } from './nominata.service'
-import { IBasicProfessor, ICompleteNominata } from './types'
+import { IBasicProfessor, IBasicStudent, ICompleteNominata } from './types'
 import { DatePipe } from '@angular/common'
 
 @Component({
@@ -43,6 +43,14 @@ export class NominataComponent {
   searchString: string = ''
 
   director!: IBasicProfessor | undefined
+
+  unions: string[] = []
+  associations: string[] = []
+  searchedUnion: string = ''
+  searchedAssociation: string = ''
+  searchedStudent: string = ''
+
+  studentsToList!: IBasicStudent[] | null
 
   showForm = false
   isLoading = false
@@ -107,6 +115,12 @@ export class NominataComponent {
           } else {
             this.showForm = true
           }
+
+          // Separação das uniões e associações
+          const union = student.union_acronym
+          if (!this.unions.includes(union)) {
+            this.unions.push(union)
+          }
         })
 
         this.Registry.professors?.forEach((professor) => {
@@ -147,6 +161,8 @@ export class NominataComponent {
           })
         }
 
+        this.studentsToList = this.Registry.students
+
         this.isLoading = false
       },
       error: (err) => {
@@ -165,46 +181,67 @@ export class NominataComponent {
     )
   }
 
-  // searchByNam() {
-  //   this.isLoading = true
-  //   console.log(this.searchString.length)
-  //   if (this.searchString.length < 1) {
-  //     this.errorMessage = 'Escreva algo para ser pesquisado'
-  //     this.error = true
-  //     this.isLoading = false
-  //     return
-  //   }
-  //   const searchString = this.searchString.toLowerCase().replace(/\s+/g, '_')
-  //   this.service.findRegistriesByName(searchString).subscribe({
-  //     next: async (res) => {
-  //       this.allRegistries = res
+  filterStudents(union?: boolean) {
+    if (this.Registry?.students) {
+      this.studentsToList = this.Registry?.students
+      if (union) {
+        this.searchedAssociation = ''
+        this.associations = []
+      }
+      if (this.searchedUnion != '') {
+        this.filterStudentsByUnion()
+      }
+      if (this.searchedAssociation != '') {
+        this.filterStudentsByAssociation()
+      }
+      if (this.searchedStudent.length > 0) {
+        this.filterStudentByname()
+      }
+    }
+  }
 
-  //       this.allRegistries.forEach((registry) => {
-  //         const blob = new Blob([new Uint8Array(registry.photo?.file.data)], {
-  //           type: 'image/jpeg',
-  //         })
-  //         if (blob instanceof Blob) {
-  //           const reader = new FileReader()
-  //           reader.onload = (e: any) => {
-  //             registry.imageUrl = e.target.result
-  //             this.isLoading = false
-  //           }
-  //           reader.readAsDataURL(blob)
-  //         } else {
-  //           this.showForm = true
-  //           this.isLoading = false
-  //         }
-  //       })
+  filterStudentsByUnion() {
+    if (this.studentsToList) {
+      this.studentsToList = this.studentsToList.filter((student) => {
+        return student.union_acronym === this.searchedUnion
+      })
 
-  //       this.isLoading = false
-  //     },
-  //     error: (err) => {
-  //       this.errorMessage = err.message
-  //       this.error = true
-  //       this.isLoading = false
-  //     },
-  //   })
-  // }
+      this.studentsToList.forEach((student) => {
+        const association = student.association_acronym
+        if (!this.associations.includes(association)) {
+          this.associations.push(association)
+        }
+      })
+    }
+  }
+
+  filterStudentsByAssociation() {
+    if (this.studentsToList) {
+      this.studentsToList = this.studentsToList.filter((student) => {
+        return student.association_acronym === this.searchedAssociation
+      })
+    }
+  }
+
+  filterStudentByname() {
+    if (this.studentsToList) {
+      console.log('estou chegando aqui')
+      this.studentsToList = this.studentsToList.filter((student) => {
+        return student.name
+          .toLowerCase()
+          .includes(this.searchedStudent.toLocaleLowerCase())
+      })
+    }
+  }
+
+  cleanFilters() {
+    this.searchedAssociation = ''
+    this.searchedUnion = ''
+    this.searchedStudent = ''
+    if (this.Registry?.students) {
+      this.studentsToList = this.Registry?.students
+    }
+  }
 
   getPhotoUrl(fileData: Uint8Array): Promise<string> {
     return new Promise((resolve, reject) => {

@@ -50,8 +50,44 @@
       <p class="oneStudentSpaceTitle">Formandos</p>
       <img src="assets/icons/barra.svg" alt="" />
     </div>
+    <form action="" id="searchForm">
+      <select
+        name="unionSelect"
+        id=""
+        class="searchConrols"
+        [(ngModel)]="searchedUnion"
+        (change)="filterStudents(true)"
+      >
+        <option value="">Todas as uniões</option>
+        <option *ngFor="let union of unions" [value]="union">
+          {{ union }}
+        </option>
+      </select>
+      <select
+        name="associationSelect"
+        class="searchConrols"
+        id=""
+        [(ngModel)]="searchedAssociation"
+        (change)="filterStudents()"
+      >
+        <option value="">Todas as associações</option>
+        <option *ngFor="let association of associations" [value]="association">
+          {{ association }}
+        </option>
+      </select>
+      <input
+        type="text"
+        name="searchedStudentInput"
+        class="searchConrols"
+        [(ngModel)]="searchedStudent"
+        (input)="filterStudents()"
+      />
+      <button (click)="cleanFilters()" id="cleanSearchButton">
+        Limpar filtros
+      </button>
+    </form>
     <section class="perfilList">
-      <div *ngFor="let student of Registry?.students; index as i">
+      <div *ngFor="let student of studentsToList; index as i">
         <div (click)="selectStudent(student.student_id.toString())">
           <div class="smallAlonePhoto">
             <div

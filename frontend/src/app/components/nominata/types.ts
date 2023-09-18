@@ -10,7 +10,7 @@ export interface ICompleteNominata {
   director_words: string
   created_at: Date
   updated_at: Date
-  students?: IBasicStudent[] | null
+  students: IBasicStudent[] | null
   professors?: IBasicProfessor[] | null
   photo?: { file: any; headers: Record<string, string> } | null
   imgUrl?: SafeResourceUrl
