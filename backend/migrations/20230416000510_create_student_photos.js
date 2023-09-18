@@ -10,6 +10,7 @@ exports.up = function (knex) {
     table.string('other_family_photo', 300).unique()
     table.string('spouse_photo', 300).unique()
     table.string('invite_photo', 300).unique()
+    table.string('small_alone_photo', 300).unique()
 
     table.integer('student_id').unsigned().notNullable()
 

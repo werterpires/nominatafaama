@@ -4,7 +4,7 @@
  */
 exports.up = function (knex) {
   return knex.schema.createTableIfNotExists('nominatas_professors', (table) => {
-    table.increments('nominata_student_id').primary()
+    table.increments('nominata_professors_id').primary()
     table.integer('nominata_id').unsigned().notNullable()
     table.integer('professor_id').unsigned().notNullable()
 

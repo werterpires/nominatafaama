@@ -9,6 +9,8 @@ exports.up = function (knex) {
     table.string('event_time')
     table.string('event_place')
     table.string('event_address')
+    table.string('event_address')
+    table.string('event_title').notNullable()
 
     table.integer('nominata_id').unsigned().notNullable()
 
