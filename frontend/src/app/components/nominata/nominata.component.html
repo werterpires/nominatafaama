@@ -79,6 +79,7 @@
         type="text"
         name="searchedStudentInput"
         class="searchConrols"
+        placeholder="Pesquisar por nome"
         [(ngModel)]="searchedStudent"
         (input)="filterStudents()"
       />
@@ -174,6 +175,16 @@
         </div>
       </div>
     </section>
+    <iframe
+      id="maps"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d361015.0698193393!2d-48.43358455917986!3d-1.3622449870032622!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a4582202b83843%3A0xc676477c454cb1f0!2sFAAMA%20-%20Faculdade%20Adventista%20da%20Amaz%C3%B4nia!5e0!3m2!1spt-BR!2sbr!4v1695132166437!5m2!1spt-BR!2sbr"
+      width="600"
+      height="450"
+      style="border: 0"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
   </section>
 
   <div *ngIf="isLoading" class="loader1"></div>
