@@ -117,3 +117,69 @@ section:last-of-type {
   height: 22vw;
   margin-top: 41px;
 }
+
+footer {
+  background-image: linear-gradient(180deg, #1f2736 0%, #255071 100%);
+  width: 100%;
+  height: 20vw;
+  max-height: 370px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#faamaLogo {
+  width: 128px;
+}
+
+#footerContent {
+  width: 80vw;
+  max-width: 1450.71px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.socialMediaDiv {
+  display: flex;
+  gap: 32px;
+  margin-top: 41px;
+}
+
+.socialMediaIcon {
+  height: 30px;
+}
+
+.contactDiv {
+  display: flex;
+  gap: 142px;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+.contactTitle {
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+.contactcContent {
+  margin-top: 15px;
+  color: white;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 26px;
+  text-transform: uppercase;
+}
+
+#whatsapp {
+  text-decoration: none;
+  color: white;
+}
