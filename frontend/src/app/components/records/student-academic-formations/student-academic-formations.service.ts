@@ -70,6 +70,14 @@ export class StudentAcademicFormationsService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar um item ja aprovado (com colração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível atualizar a formação acadêmia.'),
           )
