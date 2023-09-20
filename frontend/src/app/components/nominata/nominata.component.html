@@ -56,7 +56,7 @@
         name="unionSelect"
         id=""
         class="searchConrols"
-        [(ngModel)]="searchedUnion"
+        ([ngModel)]="searchedUnion"
         (change)="filterStudents(true)"
       >
         <option value="">Todas as uniões</option>
@@ -103,10 +103,10 @@
               <div
                 [ngClass]="{
                   disponivelIndicator:
-                    student.hiring_status_name == 'Disponível',
+                    student.hiring_status_name === 'Disponível',
                   contratadoIndicator:
-                    student.hiring_status_name == 'Contratado',
-                  chamadoIndicator: student.hiring_status_name == 'Chamado'
+                    student.hiring_status_name === 'Contratado',
+                  chamadoIndicator: student.hiring_status_name === 'Chamado'
                 }"
               ></div>
               <span class="hiringStatusText">{{
