@@ -92,7 +92,7 @@
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{
         approved: registry.academic_formation_approved,
-        unapproved: registry.academic_formation_approved == false
+        unapproved: registry.academic_formation_approved === false
       }"
     >
       <span class="field">

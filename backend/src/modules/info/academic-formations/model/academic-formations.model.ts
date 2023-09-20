@@ -1,21 +1,21 @@
-import { Injectable } from '@nestjs/common'
-import { Knex } from 'knex'
-import { InjectModel } from 'nest-knexjs'
+import { Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { InjectModel } from 'nest-knexjs';
 import {
   IAcademicFormation,
   ICreateAcademicFormation,
   IUpdateAcademicFormation,
-} from '../types/types'
+} from '../types/types';
 
 @Injectable()
 export class AcademicFormationsModel {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
   async createAcademicFormation(
-    createAcademicFormationData: ICreateAcademicFormation,
+    createAcademicFormationData: ICreateAcademicFormation
   ): Promise<IAcademicFormation> {
-    let academicFormation: IAcademicFormation | null = null
-    let sentError: Error | null = null
+    let academicFormation: IAcademicFormation | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -27,7 +27,7 @@ export class AcademicFormationsModel {
           person_id,
           degree_id,
           academic_formation_approved,
-        } = createAcademicFormationData
+        } = createAcademicFormationData;
 
         const [formation_id] = await trx('academic_formations')
           .insert({
@@ -39,7 +39,7 @@ export class AcademicFormationsModel {
             degree_id,
             academic_formation_approved,
           })
-          .returning('formation_id')
+          .returning('formation_id');
 
         academicFormation = {
           formation_id: formation_id,
@@ -53,33 +53,33 @@ export class AcademicFormationsModel {
           updated_at: new Date(),
           academic_formation_approved: null,
           degree_name: `${degree_id}`,
-        }
+        };
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        console.error(error)
-        await trx.rollback()
+        console.error(error);
+        console.error(error);
+        await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Academic Formation already exists')
+          sentError = new Error('Academic Formation already exists');
         } else {
-          sentError = new Error(error.sqlMessage)
+          sentError = new Error(error.sqlMessage);
         }
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return academicFormation!
+    return academicFormation!;
   }
 
   async findAcademicFormationById(
-    id: number,
+    id: number
   ): Promise<IAcademicFormation | null> {
-    let academicFormation: IAcademicFormation | null = null
-    let sentError: Error | null = null
+    let academicFormation: IAcademicFormation | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -89,12 +89,12 @@ export class AcademicFormationsModel {
           .leftJoin(
             'academic_degrees',
             'academic_formations.degree_id',
-            'academic_degrees.degree_id',
+            'academic_degrees.degree_id'
           )
-          .where('formation_id', '=', id)
+          .where('formation_id', '=', id);
 
         if (result.length < 1) {
-          throw new Error('Academic Formation not found')
+          throw new Error('Academic Formation not found');
         }
 
         academicFormation = {
@@ -109,56 +109,56 @@ export class AcademicFormationsModel {
           updated_at: result.updated_at,
           degree_id: result.degree_id,
           degree_name: result.degree_name,
-        }
+        };
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
-        throw error
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
+        throw error;
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return academicFormation
+    return academicFormation;
   }
 
   async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null
-    let sentError: Error | null = null
+    let personIds: { person_id: number }[] | null = null;
+    let sentError: Error | null = null;
 
     try {
       const studentResult = await this.knex
         .table('academic_formations')
         .join('users', 'users.person_id', 'academic_formations.person_id')
         .select('users.person_id')
-        .whereNull('academic_formation_approved')
+        .whereNull('academic_formation_approved');
 
       const spouseResult = await this.knex
         .table('academic_formations')
         .join('spouses', 'spouses.person_id', 'academic_formations.person_id')
         .join('students', 'students.student_id', 'spouses.student_id')
         .select('students.person_id')
-        .whereNull('academic_formations.academic_formation_approved')
+        .whereNull('academic_formations.academic_formation_approved');
 
       personIds = [...studentResult, ...spouseResult].map((row) => ({
         person_id: row.person_id,
-      }))
+      }));
     } catch (error) {
-      console.error('Erro capturado na model: ', error)
-      sentError = new Error(error.message)
+      console.error('Erro capturado na model: ', error);
+      sentError = new Error(error.message);
     }
 
-    return personIds
+    return personIds;
   }
 
   async findAllAcademicFormations(): Promise<IAcademicFormation[]> {
-    let academicFormationsList: IAcademicFormation[] = []
-    let sentError: Error | null = null
+    let academicFormationsList: IAcademicFormation[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -168,8 +168,8 @@ export class AcademicFormationsModel {
           .leftJoin(
             'academic_degrees',
             'academic_formations.degree_id',
-            'academic_degrees.degree_id',
-          )
+            'academic_degrees.degree_id'
+          );
 
         academicFormationsList = results.map((row: any) => ({
           formation_id: row.formation_id,
@@ -183,28 +183,28 @@ export class AcademicFormationsModel {
           updated_at: row.updated_at,
           degree_id: row.updated_at,
           degree_name: row.degree_name,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return academicFormationsList
+    return academicFormationsList;
   }
 
   async findAcademicFormationsByPersonId(
-    personId: number,
+    personId: number
   ): Promise<IAcademicFormation[]> {
-    let academicFormationsList: IAcademicFormation[] = []
-    let sentError: Error | null = null
+    let academicFormationsList: IAcademicFormation[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -214,9 +214,9 @@ export class AcademicFormationsModel {
           .leftJoin(
             'academic_degrees',
             'academic_formations.degree_id',
-            'academic_degrees.degree_id',
+            'academic_degrees.degree_id'
           )
-          .where('academic_formations.person_id', '=', personId)
+          .where('academic_formations.person_id', '=', personId);
         academicFormationsList = results.map((row: any) => ({
           formation_id: row.formation_id,
           course_area: row.course_area,
@@ -229,29 +229,29 @@ export class AcademicFormationsModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
           degree_id: row.degree_id,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return academicFormationsList
+    return academicFormationsList;
   }
 
   async findApprovedAcademicFormationsByPersonId(
-    personId: number,
+    personId: number
   ): Promise<IAcademicFormation[]> {
-    let academicFormationsList: IAcademicFormation[] = []
-    let sentError: Error | null = null
+    let academicFormationsList: IAcademicFormation[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -261,14 +261,14 @@ export class AcademicFormationsModel {
           .leftJoin(
             'academic_degrees',
             'academic_formations.degree_id',
-            'academic_degrees.degree_id',
+            'academic_degrees.degree_id'
           )
           .where('academic_formations.person_id', '=', personId)
           .andWhere(
             'academic_formations.academic_formation_approved',
             '=',
-            true,
-          )
+            true
+          );
         academicFormationsList = results.map((row: any) => ({
           formation_id: row.formation_id,
           course_area: row.course_area,
@@ -281,29 +281,29 @@ export class AcademicFormationsModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
           degree_id: row.degree_id,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return academicFormationsList
+    return academicFormationsList;
   }
 
   async updateAcademicFormationById(
-    updateAcademicFormation: IUpdateAcademicFormation,
+    updateAcademicFormation: IUpdateAcademicFormation
   ): Promise<IAcademicFormation> {
-    let updatedAcademicFormation: IAcademicFormation | null = null
-    let sentError: Error | null = null
+    let updatedAcademicFormation: IAcademicFormation | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -315,14 +315,14 @@ export class AcademicFormationsModel {
           begin_date,
           conclusion_date,
           academic_formation_approved,
-        } = updateAcademicFormation
+        } = updateAcademicFormation;
 
         let approved = await trx('academic_formations')
           .first('academic_formation_approved')
-          .where('formation_id', formation_id)
+          .where('formation_id', formation_id);
 
         if (approved.academic_formation_approved == true) {
-          throw new Error('Registro já aprovado')
+          throw new Error('Registro já aprovado');
         }
         await trx('academic_formations')
           .where('formation_id', formation_id)
@@ -333,61 +333,69 @@ export class AcademicFormationsModel {
             begin_date,
             conclusion_date,
             academic_formation_approved,
-          })
+          });
 
         updatedAcademicFormation = await this.findAcademicFormationById(
-          formation_id,
-        )
+          formation_id
+        );
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.message)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.message);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
     if (!updatedAcademicFormation) {
-      throw new Error('Academic Formation not found')
+      throw new Error('Academic Formation not found');
     }
 
-    return updatedAcademicFormation
+    return updatedAcademicFormation;
   }
 
   async deleteAcademicFormationById(id: number): Promise<string> {
-    let sentError: Error | null = null
-    let message: string = ''
+    let sentError: Error | null = null;
+    let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
         const existingFormation = await trx('academic_formations')
           .select('formation_id')
           .where('formation_id', id)
-          .first()
+          .first();
 
         if (!existingFormation) {
-          throw new Error('Academic Formation not found')
+          throw new Error('Academic Formation not found');
         }
 
-        await trx('academic_formations').where('formation_id', id).del()
+        let approved = await trx('academic_formations')
+          .first('academic_formation_approved')
+          .where('formation_id', id);
 
-        await trx.commit()
+        if (approved.academic_formation_approved == true) {
+          throw new Error('Registro já aprovado');
+        }
+
+        await trx('academic_formations').where('formation_id', id).del();
+
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    message = 'Academic Formation deleted successfully.'
-    return message
+    message = 'Academic Formation deleted successfully.';
+    return message;
   }
 }

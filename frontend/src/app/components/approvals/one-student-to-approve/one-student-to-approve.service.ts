@@ -20,7 +20,7 @@ export class OneStudentToApproveService {
   //     })
   //     .pipe(
   //       catchError((error) => {
-  //         console.log('Veja o erro completo', error)
+  //
   //         return throwError(
   //           () => new Error('Não foi possível encontrar as linguagens.'),
   //         )
@@ -47,7 +47,7 @@ export class OneStudentToApproveService {
 
   approveAny(data: ApproveDto, table: string): Observable<boolean> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<boolean>(environment.API + `/approvals/${table}`, data, {
         headers: head_obj,

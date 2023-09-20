@@ -18,7 +18,7 @@ export class StudentAcademicFormationsService {
 
   findAllRegistries(): Observable<IStAcademicFormation[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IStAcademicFormation[]>(
         environment.API + '/academic-formations/student',
@@ -39,7 +39,7 @@ export class StudentAcademicFormationsService {
     createAcademicFormationData: IStCreateAcademicFormation,
   ): Observable<IStAcademicFormation> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IStAcademicFormation>(
         environment.API + '/academic-formations/student',
@@ -60,7 +60,7 @@ export class StudentAcademicFormationsService {
     editAcademicFormationData: IStUpdateAcademicFormation,
   ): Observable<IStAcademicFormation> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<IStAcademicFormation>(
         environment.API + '/academic-formations',
@@ -74,7 +74,7 @@ export class StudentAcademicFormationsService {
             return throwError(
               () =>
                 new Error(
-                  'Não é possível atualizar um item ja aprovado (com colração verde).',
+                  'Não é possível atualizar ou deletar um item ja aprovado (com colração verde).',
                 ),
             )
           }
@@ -95,6 +95,15 @@ export class StudentAcademicFormationsService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          console.log(error.error.message)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível deletar a formação acadêmica.'),
           )
