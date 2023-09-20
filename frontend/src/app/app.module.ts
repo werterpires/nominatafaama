@@ -72,8 +72,9 @@ import { NominatasProfessorsComponent } from './components/parameterization/nomi
 import { NominatasPhotosComponent } from './components/parameterization/nominatas-photos/nominatas-photos.component'
 import { StudentComponent } from './components/student/student.component'
 import { StudentPdfComponent } from './components/student/student-pdf/student-pdf.component'
-import { GeneralProfessorsComponent } from './components/parameterization/general-professors/general-professors.component';
+import { GeneralProfessorsComponent } from './components/parameterization/general-professors/general-professors.component'
 import { EventsComponent } from './components/parameterization/events/events.component'
+import { ScrollToAnchorDirective } from './components/nominata/scroll-to-anchor.directive'
 
 @NgModule({
   declarations: [
@@ -145,6 +146,7 @@ import { EventsComponent } from './components/parameterization/events/events.com
     StudentPdfComponent,
     GeneralProfessorsComponent,
     EventsComponent,
+    ScrollToAnchorDirective,
   ],
   imports: [
     BrowserModule,

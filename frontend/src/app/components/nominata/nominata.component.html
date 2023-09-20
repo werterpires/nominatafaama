@@ -1,6 +1,7 @@
 <div class="sectionDataList">
   <section #sectionBox ngClass="sectionBoxAll">
     <div
+      id="classPhoto"
       class="classPhotoContainer"
       *ngIf="Registry && Registry.imgUrl"
       [ngStyle]="{
@@ -15,7 +16,7 @@
 
     <section *ngIf="words && words.length > 10">
       <div class="oneStudentSpaceHeader">
-        <p class="oneStudentSpaceTitle">Palavras do diretor</p>
+        <p class="oneStudentSpaceTitle" id="words">Palavras do diretor</p>
         <img src="assets/icons/barra.svg" alt="" />
       </div>
       <div class="directorSpace">
@@ -47,7 +48,7 @@
     </section>
 
     <div class="oneStudentSpaceHeader">
-      <p class="oneStudentSpaceTitle">Formandos</p>
+      <p class="oneStudentSpaceTitle" id="students">Formandos</p>
       <img src="assets/icons/barra.svg" alt="" />
     </div>
     <form action="" id="searchForm">
@@ -122,7 +123,7 @@
     </section>
 
     <div class="oneStudentSpaceHeader">
-      <p class="oneStudentSpaceTitle">Professores</p>
+      <p class="oneStudentSpaceTitle" id="professors">Professores</p>
       <img src="assets/icons/barra.svg" alt="" />
     </div>
 
@@ -148,7 +149,7 @@
       </div>
     </section>
     <div *ngIf="Registry?.events" class="oneStudentSpaceHeader">
-      <p class="oneStudentSpaceTitle">Solenidades da formatura</p>
+      <p class="oneStudentSpaceTitle" id="events">Solenidades da formatura</p>
       <img src="assets/icons/barra.svg" alt="" />
     </div>
     <section class="perfilList">

@@ -10,7 +10,37 @@
       </div>
       <nav class="navDiv">
         <ul class="menuOptions">
-          <li class="menuOption" (click)="choseOption('nominata')">
+          <li *ngIf="!permissions.isApproved" class="menuOption">
+            <a href="#classPhoto" class="openMenuOption" scrollToAnchor
+              >Início</a
+            >
+          </li>
+          <li *ngIf="!permissions.isApproved" class="menuOption">
+            <a href="#words" class="openMenuOption" scrollToAnchor
+              >Palavras do diretor</a
+            >
+          </li>
+          <li *ngIf="!permissions.isApproved" class="menuOption">
+            <a href="#students" class="openMenuOption" scrollToAnchor
+              >Formandos</a
+            >
+          </li>
+          <li *ngIf="!permissions.isApproved" class="menuOption">
+            <a href="#professors" class="openMenuOption" scrollToAnchor
+              >Professores</a
+            >
+          </li>
+          <li *ngIf="!permissions.isApproved" class="menuOption">
+            <a href="#events" class="openMenuOption" scrollToAnchor
+              >Formatura</a
+            >
+          </li>
+
+          <li
+            *ngIf="permissions.isApproved"
+            class="menuOption"
+            (click)="choseOption('nominata')"
+          >
             <a>Nominata</a>
           </li>
           <li
@@ -85,7 +115,7 @@
               alt="Ícone de usuário"
             />
           </li>
-          <li class="menuOption">
+          <li *ngIf="permissions.isApproved" class="menuOption">
             <img
               class="menuIcon"
               src="assets/icons/notificationIcon.png"

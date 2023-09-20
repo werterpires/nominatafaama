@@ -62,3 +62,10 @@
 .menuIcon {
   height: 17px;
 }
+
+.openMenuOption {
+  color: white;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: bold;
+}
