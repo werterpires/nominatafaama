@@ -39,7 +39,6 @@ export class EclExperiencesComponent {
     this.isLoading = true
     this.eclExptypesService.findAllRegistries().subscribe({
       next: (res) => {
-        this.isLoading = true
         this.service.findAllRegistries().subscribe({
           next: (ress) => {
             this.allRegistriesWithChecks.splice(0)
@@ -49,6 +48,22 @@ export class EclExperiencesComponent {
                 checked: !!ress.find(
                   (reg) => reg.ecl_exp_type_id == registry.ecl_exp_type_id,
                 ),
+                approved: !!ress.find((reg) => {
+                  if (
+                    reg.ecl_exp_type_id == registry.ecl_exp_type_id &&
+                    reg.ecl_exp_approved == true
+                  ) {
+                    return true
+                  } else if (
+                    reg.ecl_exp_type_id == registry.ecl_exp_type_id &&
+                    reg.ecl_exp_approved == false
+                  ) {
+                    return false
+                  } else {
+                    console.log('esse seria null')
+                    return null
+                  }
+                }),
               })
             })
             this.isLoading = false
@@ -86,30 +101,14 @@ export class EclExperiencesComponent {
 
     this.service.updateRegistry(newRegistry).subscribe({
       next: (res) => {
-        this.doneMessage = 'Registro editado com sucesso.'
+        this.doneMessage =
+          'Todos os registros passíveis de edição foram editados com sucesso.'
         this.ngOnInit()
         this.done = true
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
-  }
-
-  deleteRegistry(id: number) {
-    this.isLoading = true
-    this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Registro removido com sucesso.'
-        this.done = true
-        this.ngOnInit()
-        this.isLoading = false
-      },
-      error: (err) => {
-        this.errorMessage = 'Não foi possível remover o registro.'
         this.error = true
         this.isLoading = false
       },

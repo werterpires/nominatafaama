@@ -16,4 +16,5 @@ export interface IUpdateEclExpType {
 
 export interface IEclExperienceList extends IEclExpType {
   checked: boolean
+  approved?: boolean | null
 }
