@@ -13,7 +13,7 @@ export class SpCoursesService {
 
   findAllRegistries(): Observable<ICourse[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<ICourse[]>(environment.API + '/courses/person/spouse', {
         headers: head_obj,
@@ -35,7 +35,7 @@ export class SpCoursesService {
 
   createRegistry(newRegistry: ICreateCourse): Observable<ICourse> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<ICourse>(environment.API + '/courses/spouse', newRegistry, {
         headers: head_obj,
@@ -50,7 +50,7 @@ export class SpCoursesService {
 
   updateRegistry(updatedRegistry: IUpdateCourse): Observable<IUpdateCourse> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<IUpdateCourse>(environment.API + '/courses', updatedRegistry, {
         headers: head_obj,
@@ -58,6 +58,14 @@ export class SpCoursesService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível atualizar o curso.'),
           )
@@ -75,6 +83,14 @@ export class SpCoursesService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível deletar o curso.'),
           )

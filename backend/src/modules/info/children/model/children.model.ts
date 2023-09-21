@@ -322,6 +322,8 @@ export class ChildrenModel {
           .first('child_approved')
           .where('child_id', child_id);
 
+        console.log(approved.child_approved);
+
         if (approved.child_approved == true) {
           throw new Error('Registro já aprovado');
         }
@@ -376,6 +378,14 @@ export class ChildrenModel {
 
         if (!existingChild) {
           throw new Error('Child not found');
+        }
+
+        let approved = await trx('children')
+          .first('child_approved')
+          .where('child_id', id);
+
+        if (approved.child_approved == true) {
+          throw new Error('Registro já aprovado');
         }
 
         await trx('children').where('child_id', existingChild.child_id).del();

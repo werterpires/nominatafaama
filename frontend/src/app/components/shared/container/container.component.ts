@@ -26,8 +26,8 @@ export class ContainerComponent {
   user: IUserApproved | null = null
 
   options: IOptions = {
-    nominata: true,
-    cadastros: false,
+    nominata: false,
+    cadastros: true,
     aprovacoes: false,
     vagas: false,
     chamados: false,
@@ -35,7 +35,7 @@ export class ContainerComponent {
     student: false,
   }
 
-  @Input() approvalType: string = 'students'
+  @Input() approvalType = 'students'
 
   choseOption(chosenOption: string): void {
     Object.keys(this.options).forEach((option: string) => {
