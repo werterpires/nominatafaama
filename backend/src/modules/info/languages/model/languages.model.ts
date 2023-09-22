@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common'
-import { Knex } from 'knex'
-import { InjectModel } from 'nest-knexjs'
-import { ICreateLanguage, ILanguage, IUpdateLanguage } from '../types/types'
+import { Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { InjectModel } from 'nest-knexjs';
+import { ICreateLanguage, ILanguage, IUpdateLanguage } from '../types/types';
 
 @Injectable()
 export class LanguagesModel {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
   async createLanguage(
-    createLanguageData: ICreateLanguage,
+    createLanguageData: ICreateLanguage
   ): Promise<ILanguage> {
-    let language: ILanguage | null = null
-    let sentError: Error | null = null
+    let language: ILanguage | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -25,7 +25,7 @@ export class LanguagesModel {
           unknown,
           person_id,
           language_approved,
-        } = createLanguageData
+        } = createLanguageData;
 
         const [language_id] = await trx('languages')
           .insert({
@@ -39,32 +39,32 @@ export class LanguagesModel {
             person_id,
             language_approved,
           })
-          .returning('language_id')
+          .returning('language_id');
 
-        await trx.commit()
+        await trx.commit();
 
-        language = await this.findLanguageById(language_id)
+        language = await this.findLanguageById(language_id);
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
+        console.error(error);
+        await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Language already exists')
+          sentError = new Error('Language already exists');
         } else {
-          sentError = new Error(error.sqlMessage)
+          sentError = new Error(error.sqlMessage);
         }
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return language!
+    return language!;
   }
 
   async findLanguageById(id: number): Promise<ILanguage | null> {
-    let language: ILanguage | null = null
-    let sentError: Error | null = null
+    let language: ILanguage | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -74,12 +74,12 @@ export class LanguagesModel {
           .leftJoin(
             'language_types',
             'languages.chosen_language',
-            'language_types.language_id',
+            'language_types.language_id'
           )
-          .where('languages.language_id', '=', id)
+          .where('languages.language_id', '=', id);
 
         if (!result) {
-          throw new Error('Language not found')
+          throw new Error('Language not found');
         }
 
         language = {
@@ -96,56 +96,56 @@ export class LanguagesModel {
           created_at: result.created_at,
           updated_at: result.updated_at,
           language: result.language,
-        }
+        };
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
-        throw error
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
+        throw error;
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return language
+    return language;
   }
 
   async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null
-    let sentError: Error | null = null
+    let personIds: { person_id: number }[] | null = null;
+    let sentError: Error | null = null;
 
     try {
       const studentResult = await this.knex
         .table('languages')
         .join('users', 'users.person_id', 'languages.person_id')
         .select('users.person_id')
-        .whereNull('language_approved')
+        .whereNull('language_approved');
 
       const spouseResult = await this.knex
         .table('languages')
         .join('spouses', 'spouses.person_id', 'languages.person_id')
         .join('students', 'students.student_id', 'spouses.student_id')
         .select('students.person_id')
-        .whereNull('languages.language_approved')
+        .whereNull('languages.language_approved');
 
       personIds = [...studentResult, ...spouseResult].map((row) => ({
         person_id: row.person_id,
-      }))
+      }));
     } catch (error) {
-      console.error('Erro capturado na model: ', error)
-      sentError = new Error(error.message)
+      console.error('Erro capturado na model: ', error);
+      sentError = new Error(error.message);
     }
 
-    return personIds
+    return personIds;
   }
 
   async findAllLanguages(): Promise<ILanguage[]> {
-    let languageList: ILanguage[] = []
-    let sentError: Error | null = null
+    let languageList: ILanguage[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -155,8 +155,8 @@ export class LanguagesModel {
           .leftJoin(
             'language_types',
             'languages.chosen_language',
-            'language_types.language_id',
-          )
+            'language_types.language_id'
+          );
 
         languageList = results.map((row: any) => ({
           language_id: row.language_id,
@@ -172,26 +172,26 @@ export class LanguagesModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
           language: row.language,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.sqlMessage)
-        await trx.rollback()
+        console.error(error);
+        sentError = new Error(error.sqlMessage);
+        await trx.rollback();
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return languageList
+    return languageList;
   }
 
   async findLanguagesByPersonId(personId: number): Promise<ILanguage[]> {
-    let languageList: ILanguage[] = []
-    let sentError: Error | null = null
+    let languageList: ILanguage[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -201,9 +201,9 @@ export class LanguagesModel {
           .leftJoin(
             'language_types',
             'languages.chosen_language',
-            'language_types.language_id',
+            'language_types.language_id'
           )
-          .where('person_id', '=', personId)
+          .where('person_id', '=', personId);
 
         languageList = results.map((row: any) => ({
           language_id: row.language_id,
@@ -219,28 +219,28 @@ export class LanguagesModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
           language: row.language,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return languageList
+    return languageList;
   }
 
   async findApprovedLanguagesByPersonId(
-    personId: number,
+    personId: number
   ): Promise<ILanguage[]> {
-    let languageList: ILanguage[] = []
-    let sentError: Error | null = null
+    let languageList: ILanguage[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -250,10 +250,10 @@ export class LanguagesModel {
           .leftJoin(
             'language_types',
             'languages.chosen_language',
-            'language_types.language_id',
+            'language_types.language_id'
           )
           .where('person_id', '=', personId)
-          .andWhere('languages.language_approved', '=', true)
+          .andWhere('languages.language_approved', '=', true);
 
         languageList = results.map((row: any) => ({
           language_id: row.language_id,
@@ -269,28 +269,28 @@ export class LanguagesModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
           language: row.language,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return languageList
+    return languageList;
   }
 
   async updateLanguageById(
-    updateLanguage: IUpdateLanguage,
+    updateLanguage: IUpdateLanguage
   ): Promise<ILanguage> {
-    let updatedLanguage: ILanguage | null = null
-    let sentError: Error | null = null
+    let updatedLanguage: ILanguage | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -305,7 +305,15 @@ export class LanguagesModel {
           unknown,
           person_id,
           language_approved,
-        } = updateLanguage
+        } = updateLanguage;
+
+        let approved = await trx('languages')
+          .first('language_approved')
+          .where('language_id', language_id);
+
+        if (approved.language_approved == true) {
+          throw new Error('Registro já aprovado');
+        }
 
         await trx('languages').where('language_id', language_id).update({
           chosen_language,
@@ -317,55 +325,62 @@ export class LanguagesModel {
           unknown,
           person_id,
           language_approved,
-        })
+        });
 
-        await trx.commit()
+        await trx.commit();
 
-        updatedLanguage = await this.findLanguageById(language_id)
+        updatedLanguage = await this.findLanguageById(language_id);
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.message)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.message);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return updatedLanguage!
+    return updatedLanguage!;
   }
 
   async deleteLanguageById(id: number): Promise<string> {
-    let sentError: Error | null = null
-    let message: string = ''
+    let sentError: Error | null = null;
+    let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
         const existingLanguage = await trx('languages')
           .select('language_id')
           .where('language_id', id)
-          .first()
+          .first();
 
         if (!existingLanguage) {
-          throw new Error('Language not found')
+          throw new Error('Language not found');
+        }
+        let approved = await trx('languages')
+          .first('language_approved')
+          .where('language_id', id);
+
+        if (approved.language_approved == true) {
+          throw new Error('Registro já aprovado');
         }
 
-        await trx('languages').where('language_id', id).del()
+        await trx('languages').where('language_id', id).del();
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.message)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.message);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    message = 'Language deleted successfully.'
-    return message
+    message = 'Language deleted successfully.';
+    return message;
   }
 }

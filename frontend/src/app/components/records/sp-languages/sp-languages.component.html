@@ -89,6 +89,10 @@
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.language_id)"
       *ngFor="let registry of allRegistries; index as i"
+      [ngClass]="{
+        approved: registry.language_approved,
+        unapproved: registry.language_approved === false
+      }"
     >
       <label class="w-full">
         Linguagem

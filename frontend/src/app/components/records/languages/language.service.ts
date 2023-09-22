@@ -13,7 +13,7 @@ export class LanguageService {
 
   findAllRegistries(): Observable<ILanguage[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<ILanguage[]>(environment.API + '/languages/person/student', {
         headers: head_obj,
@@ -33,7 +33,7 @@ export class LanguageService {
 
   createRegistry(newRegistry: ICreateLanguageDto): Observable<ILanguage> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<ILanguage>(environment.API + '/languages/student', newRegistry, {
         headers: head_obj,
@@ -50,7 +50,7 @@ export class LanguageService {
     updatedRegistry: IUpdateLanguageDto,
   ): Observable<IUpdateLanguageDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<IUpdateLanguageDto>(
         environment.API + '/languages',
@@ -60,6 +60,14 @@ export class LanguageService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível atualizar o idioma.'),
           )
@@ -77,6 +85,14 @@ export class LanguageService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível deletar o idioma.'),
           )
