@@ -5,9 +5,9 @@ import {
   IPublication,
   UpdatePublicationDto,
 } from './types'
-import { IPublicationType } from '../publication-types/types'
+import { IPublicationType } from '../../parameterization/publication-types/types'
 import { PublicationsService } from './publications.service'
-import { PublicationTypeService } from '../publication-types/publication-types.service'
+import { PublicationTypeService } from '../../parameterization/publication-types/publication-types.service'
 import { parse } from 'uuid'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 

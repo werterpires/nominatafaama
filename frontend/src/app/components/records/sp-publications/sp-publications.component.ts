@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { PublicationTypeService } from '../publication-types/publication-types.service'
-import { IPublicationType } from '../publication-types/types'
+import { PublicationTypeService } from '../../parameterization/publication-types/publication-types.service'
+import { IPublicationType } from '../../parameterization/publication-types/types'
 import {
   CreatePublicationDto,
   IPublication,

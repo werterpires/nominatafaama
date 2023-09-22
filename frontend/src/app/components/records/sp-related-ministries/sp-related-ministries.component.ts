@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { MinistryTypesService } from '../minstry-types/ministry-types.service'
-import { IMinistryType } from '../minstry-types/types'
+import { MinistryTypesService } from '../../parameterization/minstry-types/ministry-types.service'
+import { IMinistryType } from '../../parameterization/minstry-types/types'
 import {
   IRelatedMinistry,
   CreateRelatedMinistryDto,

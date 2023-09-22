@@ -5,9 +5,9 @@ import {
   IRelatedMinistry,
   UpdateRelatedMinistryDto,
 } from './types'
-import { IMinistryType } from '../minstry-types/types'
+import { IMinistryType } from '../../parameterization/minstry-types/types'
 import { RelatedMinistriesService } from './related-ministries.service'
-import { MinistryTypesService } from '../minstry-types/ministry-types.service'
+import { MinistryTypesService } from '../../parameterization/minstry-types/ministry-types.service'
 
 @Component({
   selector: 'app-related-ministries',
