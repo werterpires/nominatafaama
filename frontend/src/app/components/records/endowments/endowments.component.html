@@ -31,7 +31,7 @@
             <option
               *ngFor="let endowmentType of endowmentTypeList"
               [value]="endowmentType.endowment_type_id"
-              [disabled]="endowmentType.used == true"
+              [disabled]="endowmentType.used === true"
             >
               {{ endowmentType.endowment_type_name }}
             </option>
@@ -46,6 +46,10 @@
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.endowment_id)"
       *ngFor="let registry of allRegistries; index as i"
+      [ngClass]="{
+        approved: registry.endowment_approved,
+        unapproved: registry.endowment_approved === false
+      }"
     >
       <div class="subSection">
         <label class="w-full">
@@ -55,8 +59,8 @@
               *ngFor="let endowmentType of endowmentTypeList"
               [value]="endowmentType.endowment_type_id"
               [disabled]="
-                endowmentType.used == true &&
-                endowmentType.endowment_type_id != registry.endowment_type_id
+                endowmentType.used === true &&
+                endowmentType.endowment_type_id !== registry.endowment_type_id
               "
             >
               {{ endowmentType.endowment_type_name }}
