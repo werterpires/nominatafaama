@@ -71,6 +71,10 @@
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.evang_exp_id)"
       *ngFor="let registry of allRegistries; index as i"
+      [ngClass]="{
+        approved: registry.evang_exp_approved,
+        unapproved: registry.evang_exp_approved === false
+      }"
     >
       <label>
         Tipo de Experiência:

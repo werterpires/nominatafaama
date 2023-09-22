@@ -1,21 +1,21 @@
-import { Injectable } from '@nestjs/common'
-import { Knex } from 'knex'
-import { InjectModel } from 'nest-knexjs'
+import { Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { InjectModel } from 'nest-knexjs';
 import {
   ICreateEvangelisticExperience,
   IEvangelisticExperience,
   IUpdateEvangelisticExperience,
-} from '../types/types'
+} from '../types/types';
 
 @Injectable()
 export class EvangelisticExperiencesModel {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
   async createEvangelisticExperience(
-    createEvangelisticExperienceData: ICreateEvangelisticExperience,
+    createEvangelisticExperienceData: ICreateEvangelisticExperience
   ): Promise<IEvangelisticExperience> {
-    let evangelisticExperience: IEvangelisticExperience | null = null
-    let sentError: Error | null = null
+    let evangelisticExperience: IEvangelisticExperience | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -27,7 +27,7 @@ export class EvangelisticExperiencesModel {
           person_id,
           evang_exp_type_id,
           evang_exp_approved,
-        } = createEvangelisticExperienceData
+        } = createEvangelisticExperienceData;
 
         const [evang_exp_id] = await trx('evangelistic_experiences')
           .insert({
@@ -39,7 +39,7 @@ export class EvangelisticExperiencesModel {
             evang_exp_type_id,
             evang_exp_approved,
           })
-          .returning('evang_exp_id')
+          .returning('evang_exp_id');
 
         evangelisticExperience = {
           evang_exp_id: evang_exp_id,
@@ -53,32 +53,32 @@ export class EvangelisticExperiencesModel {
           created_at: new Date(),
           updated_at: new Date(),
           evang_exp_type_name: 'experiência',
-        }
+        };
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
+        console.error(error);
+        await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Evangelistic Experience already exists')
+          sentError = new Error('Evangelistic Experience already exists');
         } else {
-          sentError = new Error(error.sqlMessage)
+          sentError = new Error(error.sqlMessage);
         }
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return evangelisticExperience!
+    return evangelisticExperience!;
   }
 
   async findEvangelisticExperienceById(
-    id: number,
+    id: number
   ): Promise<IEvangelisticExperience | null> {
-    let evangelisticExperience: IEvangelisticExperience | null = null
-    let sentError: Error | null = null
+    let evangelisticExperience: IEvangelisticExperience | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -88,12 +88,12 @@ export class EvangelisticExperiencesModel {
           .leftJoin(
             'evang_exp_types',
             'evangelistic_experiences.evang_exp_type_id',
-            'evang_exp_types.evang_exp_type_id',
+            'evang_exp_types.evang_exp_type_id'
           )
-          .where('evangelistic_experiences.evang_exp_id', '=', id)
+          .where('evangelistic_experiences.evang_exp_id', '=', id);
 
         if (result.length < 1) {
-          throw new Error('Evangelistic Experience not found')
+          throw new Error('Evangelistic Experience not found');
         }
 
         evangelisticExperience = {
@@ -108,27 +108,27 @@ export class EvangelisticExperiencesModel {
           created_at: result[0].created_at,
           updated_at: result[0].updated_at,
           evang_exp_type_name: result[0].evang_exp_type_name,
-        }
+        };
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
-        throw error
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
+        throw error;
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return evangelisticExperience
+    return evangelisticExperience;
   }
 
   async findAllEvangelisticExperiences(): Promise<IEvangelisticExperience[]> {
-    let evangelisticExperiencesList: IEvangelisticExperience[] = []
-    let sentError: Error | null = null
+    let evangelisticExperiencesList: IEvangelisticExperience[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -138,8 +138,8 @@ export class EvangelisticExperiencesModel {
           .leftJoin(
             'evang_exp_types',
             'evangelistic_experiences.evang_exp_type_id',
-            'evang_exp_types.evang_exp_type_id',
-          )
+            'evang_exp_types.evang_exp_type_id'
+          );
 
         evangelisticExperiencesList = results.map((row: any) => ({
           evang_exp_id: row.evang_exp_id,
@@ -153,61 +153,61 @@ export class EvangelisticExperiencesModel {
           exp_end_date: row.exp_end_date,
           exp_begin_date: row.exp_begin_date,
           evang_exp_type_name: row.evang_exp_type_name,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.sqlMessage)
-        await trx.rollback()
+        console.error(error);
+        sentError = new Error(error.sqlMessage);
+        await trx.rollback();
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return evangelisticExperiencesList
+    return evangelisticExperiencesList;
   }
 
   async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null
-    let sentError: Error | null = null
+    let personIds: { person_id: number }[] | null = null;
+    let sentError: Error | null = null;
 
     try {
       const studentResult = await this.knex
         .table('evangelistic_experiences')
         .join('users', 'users.person_id', 'evangelistic_experiences.person_id')
         .select('users.person_id')
-        .whereNull('evang_exp_approved')
+        .whereNull('evang_exp_approved');
 
       const spouseResult = await this.knex
         .table('evangelistic_experiences')
         .join(
           'spouses',
           'spouses.person_id',
-          'evangelistic_experiences.person_id',
+          'evangelistic_experiences.person_id'
         )
         .join('students', 'students.student_id', 'spouses.student_id')
         .select('students.person_id')
-        .whereNull('evangelistic_experiences.evang_exp_approved')
+        .whereNull('evangelistic_experiences.evang_exp_approved');
 
       personIds = [...studentResult, ...spouseResult].map((row) => ({
         person_id: row.person_id,
-      }))
+      }));
     } catch (error) {
-      console.error('Erro capturado na model: ', error)
-      sentError = new Error(error.message)
+      console.error('Erro capturado na model: ', error);
+      sentError = new Error(error.message);
     }
 
-    return personIds
+    return personIds;
   }
 
   async findEvangelisticExperiencesByPersonId(
-    personId: number,
+    personId: number
   ): Promise<IEvangelisticExperience[]> {
-    let evangelisticExperiencesList: IEvangelisticExperience[] = []
-    let sentError: Error | null = null
+    let evangelisticExperiencesList: IEvangelisticExperience[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -217,9 +217,9 @@ export class EvangelisticExperiencesModel {
           .leftJoin(
             'evang_exp_types',
             'evangelistic_experiences.evang_exp_type_id',
-            'evang_exp_types.evang_exp_type_id',
+            'evang_exp_types.evang_exp_type_id'
           )
-          .where('evangelistic_experiences.person_id', '=', personId)
+          .where('evangelistic_experiences.person_id', '=', personId);
 
         evangelisticExperiencesList = results.map((row: any) => ({
           evang_exp_id: row.evang_exp_id,
@@ -233,28 +233,28 @@ export class EvangelisticExperiencesModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
           evang_exp_type_name: row.evang_exp_type_name,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return evangelisticExperiencesList
+    return evangelisticExperiencesList;
   }
 
   async findApprovedEvangelisticExperiencesByPersonId(
-    personId: number,
+    personId: number
   ): Promise<IEvangelisticExperience[]> {
-    let evangelisticExperiencesList: IEvangelisticExperience[] = []
-    let sentError: Error | null = null
+    let evangelisticExperiencesList: IEvangelisticExperience[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -264,10 +264,10 @@ export class EvangelisticExperiencesModel {
           .leftJoin(
             'evang_exp_types',
             'evangelistic_experiences.evang_exp_type_id',
-            'evang_exp_types.evang_exp_type_id',
+            'evang_exp_types.evang_exp_type_id'
           )
           .where('evangelistic_experiences.person_id', '=', personId)
-          .andWhere('evang_exp_approved', '=', true)
+          .andWhere('evang_exp_approved', '=', true);
 
         evangelisticExperiencesList = results.map((row: any) => ({
           evang_exp_id: row.evang_exp_id,
@@ -281,28 +281,28 @@ export class EvangelisticExperiencesModel {
           created_at: row.created_at,
           updated_at: row.updated_at,
           evang_exp_type_name: row.evang_exp_type_name,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return evangelisticExperiencesList
+    return evangelisticExperiencesList;
   }
 
   async updateEvangelisticExperienceById(
-    updateEvangelisticExperience: IUpdateEvangelisticExperience,
+    updateEvangelisticExperience: IUpdateEvangelisticExperience
   ): Promise<IEvangelisticExperience> {
-    let updatedEvangelisticExperience: IEvangelisticExperience | null = null
-    let sentError: Error | null = null
+    let updatedEvangelisticExperience: IEvangelisticExperience | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -314,14 +314,14 @@ export class EvangelisticExperiencesModel {
           exp_end_date,
           evang_exp_type_id,
           evang_exp_approved,
-        } = updateEvangelisticExperience
+        } = updateEvangelisticExperience;
 
         let approved = await trx('evangelistic_experiences')
           .first('evang_exp_approved')
-          .where('evang_exp_id', evang_exp_id)
+          .where('evang_exp_id', evang_exp_id);
 
         if (approved.evang_exp_approved == true) {
-          throw new Error('Registro já aprovado')
+          throw new Error('Registro já aprovado');
         }
 
         await trx('evangelistic_experiences')
@@ -333,56 +333,64 @@ export class EvangelisticExperiencesModel {
             exp_end_date,
             evang_exp_type_id,
             evang_exp_approved,
-          })
+          });
 
         updatedEvangelisticExperience =
-          await this.findEvangelisticExperienceById(evang_exp_id)
+          await this.findEvangelisticExperienceById(evang_exp_id);
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.message)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.message);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return updatedEvangelisticExperience!
+    return updatedEvangelisticExperience!;
   }
 
   async deleteEvangelisticExperienceById(id: number): Promise<string> {
-    let sentError: Error | null = null
-    let message: string = ''
+    let sentError: Error | null = null;
+    let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
         const existingExperience = await trx('evangelistic_experiences')
           .select('evang_exp_id')
           .where('evang_exp_id', id)
-          .first()
+          .first();
 
         if (!existingExperience) {
-          throw new Error('Evangelistic Experience not found')
+          throw new Error('Evangelistic Experience not found');
         }
 
-        await trx('evangelistic_experiences').where('evang_exp_id', id).del()
+        let approved = await trx('evangelistic_experiences')
+          .first('evang_exp_approved')
+          .where('evang_exp_id', id);
 
-        await trx.commit()
+        if (approved.evang_exp_approved == true) {
+          throw new Error('Registro já aprovado');
+        }
+
+        await trx('evangelistic_experiences').where('evang_exp_id', id).del();
+
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    message = 'Evangelistic Experience deleted successfully.'
-    return message
+    message = 'Evangelistic Experience deleted successfully.';
+    return message;
   }
 }

@@ -17,7 +17,7 @@ export class EvgExperiencesService {
 
   findAllRegistries(): Observable<IEvangelisticExperience[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IEvangelisticExperience[]>(
         environment.API + '/evangelistic-experiences/person/student',
@@ -42,7 +42,7 @@ export class EvgExperiencesService {
     newRegistry: CreateEvangelisticExperienceDto,
   ): Observable<IEvangelisticExperience> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IEvangelisticExperience>(
         environment.API + '/evangelistic-experiences/student',
@@ -66,7 +66,7 @@ export class EvgExperiencesService {
     updatedRegistry: UpdateEvangelisticExperienceDto,
   ): Observable<UpdateEvangelisticExperienceDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateEvangelisticExperienceDto>(
         environment.API + '/evangelistic-experiences',
@@ -76,6 +76,14 @@ export class EvgExperiencesService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () =>
               new Error(
@@ -86,17 +94,27 @@ export class EvgExperiencesService {
       )
   }
 
-  deleteRegistry(registryId: number): Observable<ArrayBuffer> {
+  deleteRegistry(registryId: number): Observable<string> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
     return this.http
-      .delete(environment.API + `/evangelistic-experiences/${registryId}`, {
-        headers,
-        responseType: 'arraybuffer',
-      })
+      .delete<string>(
+        environment.API + `/evangelistic-experiences/${registryId}`,
+        {
+          headers,
+        },
+      )
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () =>
               new Error(
