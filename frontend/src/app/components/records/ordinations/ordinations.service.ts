@@ -13,7 +13,7 @@ export class OrdinationsService {
 
   findAllRegistries(): Observable<IOrdination[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IOrdination[]>(environment.API + '/ordinations/person/student', {
         headers: head_obj,
@@ -30,7 +30,7 @@ export class OrdinationsService {
 
   createRegistry(newRegistry: CreateOrdinationDto): Observable<IOrdination> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IOrdination>(
         environment.API + '/ordinations/student',
@@ -53,7 +53,7 @@ export class OrdinationsService {
     updatedRegistry: UpdateOrdinationDto,
   ): Observable<UpdateOrdinationDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateOrdinationDto>(
         environment.API + '/ordinations',
@@ -63,6 +63,14 @@ export class OrdinationsService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível atualizar a ordenação.'),
           )
@@ -80,6 +88,14 @@ export class OrdinationsService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível deletar a ordenação.'),
           )
