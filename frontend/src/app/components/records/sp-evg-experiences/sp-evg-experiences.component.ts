@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
-import { EvangExpTypesService } from '../evang-exp-types/evang-exp-types.service'
-import { IEvangExpType } from '../evang-exp-types/types'
+import { EvangExpTypesService } from '../../parameterization/evang-exp-types/evang-exp-types.service'
+import { IEvangExpType } from '../../parameterization/evang-exp-types/types'
 import {
   IEvangelisticExperience,
   CreateEvangelisticExperienceDto,

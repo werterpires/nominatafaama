@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { EclExpTypesService } from '../ecl-exp-types/ecl-exp-types.service'
-import { IEclExperienceList } from '../ecl-exp-types/types'
+import { EclExpTypesService } from '../../parameterization/ecl-exp-types/ecl-exp-types.service'
+import { IEclExperienceList } from '../../parameterization/ecl-exp-types/types'
 import { EclExperiencesService } from './ecl-experiences.service'
 import { IEclExperience, UpdateEclExperiencesDto } from './types'
 
