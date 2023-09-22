@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { CreateEndowmentDto, IEndowment, UpdateEndowmentDto } from './types'
-import { IEndowmentType } from '../endowment-types/types'
+import { IEndowmentType } from '../../parameterization/endowment-types/types'
 import { EndowmentsService } from './endowments.service'
-import { EndowmentTypesService } from '../endowment-types/endowment-types.service'
+import { EndowmentTypesService } from '../../parameterization/endowment-types/endowment-types.service'
 
 @Component({
   selector: 'app-endowments',
