@@ -1,21 +1,21 @@
-import { Injectable } from '@nestjs/common'
-import { Knex } from 'knex'
-import { InjectModel } from 'nest-knexjs'
+import { Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { InjectModel } from 'nest-knexjs';
 import {
   ICreatePublication,
   IPublication,
   IUpdatePublication,
-} from '../types/types'
+} from '../types/types';
 
 @Injectable()
 export class PublicationsModel {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
   async createPublication(
-    createPublicationData: ICreatePublication,
+    createPublicationData: ICreatePublication
   ): Promise<IPublication> {
-    let publication: IPublication | null = null
-    let sentError: Error | null = null
+    let publication: IPublication | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -25,7 +25,7 @@ export class PublicationsModel {
           link,
           publication_approved,
           person_id,
-        } = createPublicationData
+        } = createPublicationData;
 
         const [publication_id] = await trx('publications')
           .insert({
@@ -35,32 +35,32 @@ export class PublicationsModel {
             publication_approved,
             person_id,
           })
-          .returning('publication_id')
+          .returning('publication_id');
 
-        await trx.commit()
+        await trx.commit();
 
-        publication = await this.findPublicationById(publication_id)
+        publication = await this.findPublicationById(publication_id);
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
+        console.error(error);
+        await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Publication already exists')
+          sentError = new Error('Publication already exists');
         } else {
-          sentError = new Error(error.sqlMessage)
+          sentError = new Error(error.sqlMessage);
         }
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return publication!
+    return publication!;
   }
 
   async findPublicationById(id: number): Promise<IPublication> {
-    let publication: IPublication | null = null
-    let sentError: Error | null = null
+    let publication: IPublication | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -69,17 +69,17 @@ export class PublicationsModel {
           .first(
             'publications.*',
             'publication_types.publication_type',
-            'publication_types.instructions',
+            'publication_types.instructions'
           )
           .leftJoin(
             'publication_types',
             'publications.publication_type_id',
-            'publication_types.publication_type_id',
+            'publication_types.publication_type_id'
           )
-          .where('publication_id', '=', id)
+          .where('publication_id', '=', id);
 
         if (result.length < 1) {
-          throw new Error('Publication not found')
+          throw new Error('Publication not found');
         }
 
         publication = {
@@ -93,29 +93,29 @@ export class PublicationsModel {
           updated_at: result.updated_at,
           publication_type: result.publication_type,
           instructions: result.instructions,
-        }
+        };
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        sentError = new Error(error.message)
-        await trx.rollback()
+        sentError = new Error(error.message);
+        await trx.rollback();
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
     if (publication == null) {
-      throw new Error('Publication not found')
+      throw new Error('Publication not found');
     }
 
-    return publication
+    return publication;
   }
 
   async findAllPublications(): Promise<IPublication[]> {
-    let publicationsList: IPublication[] = []
-    let sentError: Error | null = null
+    let publicationsList: IPublication[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -124,13 +124,13 @@ export class PublicationsModel {
           .select(
             'publications.*',
             'publication_types.publication_type',
-            'publication_types.instructions',
+            'publication_types.instructions'
           )
           .leftJoin(
             'publication_types',
             'publications.publication_type_id',
-            'publication_types.publication_type_id',
-          )
+            'publication_types.publication_type_id'
+          );
 
         publicationsList = results.map((row: any) => ({
           publication_id: row.publication_id,
@@ -143,55 +143,55 @@ export class PublicationsModel {
           updated_at: row.updated_at,
           publication_type: row.publication_type,
           instructions: row.instructions,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return publicationsList
+    return publicationsList;
   }
 
   async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null
-    let sentError: Error | null = null
+    let personIds: { person_id: number }[] | null = null;
+    let sentError: Error | null = null;
 
     try {
       const studentResult = await this.knex
         .table('publications')
         .join('users', 'users.person_id', 'publications.person_id')
         .select('users.person_id')
-        .whereNull('publication_approved')
+        .whereNull('publication_approved');
 
       const spouseResult = await this.knex
         .table('publications')
         .join('spouses', 'spouses.person_id', 'publications.person_id')
         .join('students', 'students.student_id', 'spouses.student_id')
         .select('students.person_id')
-        .whereNull('publications.publication_approved')
+        .whereNull('publications.publication_approved');
 
       personIds = [...studentResult, ...spouseResult].map((row) => ({
         person_id: row.person_id,
-      }))
+      }));
     } catch (error) {
-      console.error('Erro capturado na model: ', error)
-      sentError = new Error(error.message)
+      console.error('Erro capturado na model: ', error);
+      sentError = new Error(error.message);
     }
 
-    return personIds
+    return personIds;
   }
 
   async findPublicationsByPersonId(personId: number): Promise<IPublication[]> {
-    let publicationsList: IPublication[] = []
-    let sentError: Error | null = null
+    let publicationsList: IPublication[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -200,14 +200,14 @@ export class PublicationsModel {
           .select(
             'publications.*',
             'publication_types.publication_type',
-            'publication_types.instructions',
+            'publication_types.instructions'
           )
           .leftJoin(
             'publication_types',
             'publications.publication_type_id',
-            'publication_types.publication_type_id',
+            'publication_types.publication_type_id'
           )
-          .where('publications.person_id', '=', personId)
+          .where('publications.person_id', '=', personId);
 
         publicationsList = results.map((row: any) => ({
           publication_id: row.publication_id,
@@ -220,28 +220,28 @@ export class PublicationsModel {
           updated_at: row.updated_at,
           publication_type: row.publication_type,
           instructions: row.instructions,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return publicationsList
+    return publicationsList;
   }
 
   async findApprovedPublicationsByPersonId(
-    personId: number,
+    personId: number
   ): Promise<IPublication[]> {
-    let publicationsList: IPublication[] = []
-    let sentError: Error | null = null
+    let publicationsList: IPublication[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -250,15 +250,15 @@ export class PublicationsModel {
           .select(
             'publications.*',
             'publication_types.publication_type',
-            'publication_types.instructions',
+            'publication_types.instructions'
           )
           .leftJoin(
             'publication_types',
             'publications.publication_type_id',
-            'publication_types.publication_type_id',
+            'publication_types.publication_type_id'
           )
           .where('publications.person_id', '=', personId)
-          .where('publications.publication_approved', '=', true)
+          .where('publications.publication_approved', '=', true);
 
         publicationsList = results.map((row: any) => ({
           publication_id: row.publication_id,
@@ -271,28 +271,28 @@ export class PublicationsModel {
           updated_at: row.updated_at,
           publication_type: row.publication_type,
           instructions: row.instructions,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return publicationsList
+    return publicationsList;
   }
 
   async updatePublicationById(
-    updatePublication: IUpdatePublication,
+    updatePublication: IUpdatePublication
   ): Promise<number> {
-    let updatedPublication: number | null = null
-    let sentError: Error | null = null
+    let updatedPublication: number | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -302,7 +302,15 @@ export class PublicationsModel {
           reference,
           link,
           publication_approved,
-        } = updatePublication
+        } = updatePublication;
+
+        let approved = await trx('publications')
+          .first('publication_approved')
+          .where('publication_id', publication_id);
+
+        if (approved.publication_approved == true) {
+          throw new Error('Registro já aprovado');
+        }
 
         updatedPublication = await trx('publications')
           .where('publication_id', publication_id)
@@ -311,56 +319,64 @@ export class PublicationsModel {
             reference,
             link,
             publication_approved,
-          })
+          });
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        await trx.rollback()
-        sentError = new Error(error.message)
+        await trx.rollback();
+        sentError = new Error(error.message);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
     if (updatedPublication == null) {
-      throw new Error('publication not found')
+      throw new Error('publication not found');
     }
 
-    return updatedPublication
+    return updatedPublication;
   }
 
   async deletePublicationById(id: number): Promise<string> {
-    let sentError: Error | null = null
-    let message: string = ''
+    let sentError: Error | null = null;
+    let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
         const existingPublication = await trx('publications')
           .select('publication_id')
           .where('publication_id', id)
-          .first()
+          .first();
 
         if (!existingPublication) {
-          throw new Error('Publication not found')
+          throw new Error('Publication not found');
         }
 
-        await trx('publications').where('publication_id', id).del()
+        let approved = await trx('publications')
+          .first('publication_approved')
+          .where('publication_id', id);
 
-        await trx.commit()
+        if (approved.publication_approved == true) {
+          throw new Error('Registro já aprovado');
+        }
+
+        await trx('publications').where('publication_id', id).del();
+
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    message = 'Publication deleted successfully'
-    return message
+    message = 'Publication deleted successfully';
+    return message;
   }
 }

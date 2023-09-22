@@ -17,7 +17,7 @@ export class PublicationsService {
 
   findAllRegistries(): Observable<IPublication[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IPublication[]>(environment.API + '/publications/person/student', {
         headers: head_obj,
@@ -37,7 +37,7 @@ export class PublicationsService {
 
   createRegistry(newRegistry: CreatePublicationDto): Observable<IPublication> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IPublication>(
         environment.API + '/publications/student',
@@ -60,7 +60,7 @@ export class PublicationsService {
     updatedRegistry: UpdatePublicationDto,
   ): Observable<UpdatePublicationDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdatePublicationDto>(
         environment.API + '/publications',
@@ -70,6 +70,14 @@ export class PublicationsService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível atualizar a publicação.'),
           )
@@ -87,6 +95,14 @@ export class PublicationsService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível deletar a publicação.'),
           )

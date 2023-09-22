@@ -27,7 +27,7 @@ export class SpPublicationsComponent {
     reference: '',
   }
 
-  reference: string = ''
+  reference = ''
 
   showBox = false
   showForm = false
@@ -170,7 +170,7 @@ export class SpPublicationsComponent {
       return
     }
 
-    let testLink = this.allRegistries[index].link
+    const testLink = this.allRegistries[index].link
 
     if (
       testLink != null &&
@@ -184,7 +184,7 @@ export class SpPublicationsComponent {
     }
 
     if (this.allRegistries[index].link !== null) {
-      let link = this.allRegistries[index].link
+      const link = this.allRegistries[index].link
       if (link != null && link.length < 2) {
         this.allRegistries[index].link = null
       }
@@ -227,7 +227,7 @@ export class SpPublicationsComponent {
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível remover o registro.'
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },

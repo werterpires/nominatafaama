@@ -70,6 +70,10 @@
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.publication_id)"
       *ngFor="let registry of allRegistries; index as i"
+      [ngClass]="{
+        approved: registry.publication_approved,
+        unapproved: registry.publication_approved === false
+      }"
     >
       <div class="subSection">
         <label class="w-full">
