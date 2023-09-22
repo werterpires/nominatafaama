@@ -8,7 +8,6 @@ import {
   UpdateRelatedMinistryDto,
 } from '../related-ministries/types'
 import { SpRelatedMinistriesService } from './sp-related-ministries.service'
-import { RelatedMinistriesService } from '../related-ministries/related-ministries.service'
 
 @Component({
   selector: 'app-sp-related-ministries',
@@ -99,7 +98,7 @@ export class SpRelatedMinistriesComponent {
 
   createRegistry(priority: number) {
     this.isLoading = true
-    const idx = priority + 1
+
     this.service
       .createRegistry({
         ministry_type_id: parseInt(
@@ -204,7 +203,7 @@ export class SpRelatedMinistriesComponent {
         this.ngOnInit()
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível remover o registro.'
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },

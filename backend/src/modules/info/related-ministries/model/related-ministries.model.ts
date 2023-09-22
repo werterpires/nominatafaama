@@ -1,21 +1,21 @@
-import { Injectable } from '@nestjs/common'
-import { Knex } from 'knex'
-import { InjectModel } from 'nest-knexjs'
+import { Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { InjectModel } from 'nest-knexjs';
 import {
   ICreateRelatedMinistry,
   IRelatedMinistry,
   IUpdateRelatedMinistry,
-} from '../types/types'
+} from '../types/types';
 
 @Injectable()
 export class RelatedMinistriesModel {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
   async createRelatedMinistry(
-    createRelatedMinistryData: ICreateRelatedMinistry,
+    createRelatedMinistryData: ICreateRelatedMinistry
   ): Promise<number> {
-    let related_ministry_id!: number
-    let sentError: Error | null = null
+    let related_ministry_id!: number;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -24,43 +24,43 @@ export class RelatedMinistriesModel {
           ministry_type_id,
           priority,
           related_ministry_approved,
-        } = createRelatedMinistryData
+        } = createRelatedMinistryData;
 
-        ;[related_ministry_id] = await trx('related_ministries')
+        [related_ministry_id] = await trx('related_ministries')
           .insert({
             person_id,
             ministry_type_id,
             priority,
             related_ministry_approved,
           })
-          .returning('related_ministry_id')
+          .returning('related_ministry_id');
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
+        console.error(error);
+        await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Related ministry already exists')
+          sentError = new Error('Related ministry already exists');
         } else {
-          sentError = new Error(error.sqlMessage)
+          sentError = new Error(error.sqlMessage);
         }
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
     if (!related_ministry_id) {
-      throw new Error('Não foi possível criar ministério relacionado.')
+      throw new Error('Não foi possível criar ministério relacionado.');
     }
 
-    return related_ministry_id
+    return related_ministry_id;
   }
 
   async findRelatedMinistryById(id: number): Promise<IRelatedMinistry> {
-    let relatedMinistry: IRelatedMinistry | null = null
-    let sentError: Error | null = null
+    let relatedMinistry: IRelatedMinistry | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -70,12 +70,12 @@ export class RelatedMinistriesModel {
           .leftJoin(
             'ministry_types',
             'related_ministries.ministry_type_id',
-            'ministry_types.ministry_type_id',
+            'ministry_types.ministry_type_id'
           )
-          .where('related_ministry_id', '=', id)
+          .where('related_ministry_id', '=', id);
 
         if (!result) {
-          throw new Error('Related ministry not found')
+          throw new Error('Related ministry not found');
         }
 
         relatedMinistry = {
@@ -87,30 +87,30 @@ export class RelatedMinistriesModel {
           ministry_type_name: result.ministry_type_name,
           created_at: result.created_at,
           updated_at: result.updated_at,
-        }
+        };
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
     if (relatedMinistry == null) {
-      throw new Error('Related ministry not found')
+      throw new Error('Related ministry not found');
     }
 
-    return relatedMinistry
+    return relatedMinistry;
   }
 
   async findAllRelatedMinistries(): Promise<IRelatedMinistry[]> {
-    let relatedMinistriesList: IRelatedMinistry[] = []
-    let sentError: Error | null = null
+    let relatedMinistriesList: IRelatedMinistry[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -120,8 +120,8 @@ export class RelatedMinistriesModel {
           .leftJoin(
             'ministry_types',
             'related_ministries.ministry_type_id',
-            'ministry_types.ministry_type_id',
-          )
+            'ministry_types.ministry_type_id'
+          );
 
         relatedMinistriesList = results.map((row: any) => ({
           related_ministry_id: row.related_ministry_id,
@@ -132,64 +132,64 @@ export class RelatedMinistriesModel {
           ministry_type_name: row.ministry_type_name,
           created_at: row.created_at,
           updated_at: row.updated_at,
-        }))
+        }));
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return relatedMinistriesList
+    return relatedMinistriesList;
   }
 
   async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null
-    let sentError: Error | null = null
+    let personIds: { person_id: number }[] | null = null;
+    let sentError: Error | null = null;
 
     try {
       const studentResult = await this.knex
         .table('related_ministries')
         .join('users', 'users.person_id', 'related_ministries.person_id')
         .select('users.person_id')
-        .whereNull('related_ministry_approved')
+        .whereNull('related_ministry_approved');
 
       const spouseResult = await this.knex
         .table('related_ministries')
         .join('spouses', 'spouses.person_id', 'related_ministries.person_id')
         .join('students', 'students.student_id', 'spouses.student_id')
         .select('students.person_id')
-        .whereNull('related_ministries.related_ministry_approved')
+        .whereNull('related_ministries.related_ministry_approved');
 
       personIds = [...studentResult, ...spouseResult].map((row) => ({
         person_id: row.person_id,
-      }))
+      }));
     } catch (error) {
-      console.error('Erro capturado na model: ', error)
-      sentError = new Error(error.message)
+      console.error('Erro capturado na model: ', error);
+      sentError = new Error(error.message);
     }
 
-    return personIds
+    return personIds;
   }
 
   async findRelatedMinistriesByPersonId(
-    personId: number,
+    personId: number
   ): Promise<IRelatedMinistry[]> {
-    let relatedMinistriesList: IRelatedMinistry[] = []
-    let sentError: Error | null = null
+    let relatedMinistriesList: IRelatedMinistry[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
         const existingRelatedMinistries = await trx('related_ministries')
           .select('person_id')
           .where('person_id', personId)
-          .first()
+          .first();
 
         if (existingRelatedMinistries) {
           const results = await trx
@@ -198,9 +198,9 @@ export class RelatedMinistriesModel {
             .leftJoin(
               'ministry_types',
               'related_ministries.ministry_type_id',
-              'ministry_types.ministry_type_id',
+              'ministry_types.ministry_type_id'
             )
-            .where('related_ministries.person_id', '=', personId)
+            .where('related_ministries.person_id', '=', personId);
 
           relatedMinistriesList = results.map((row: any) => ({
             related_ministry_id: row.related_ministry_id,
@@ -211,29 +211,29 @@ export class RelatedMinistriesModel {
             ministry_type_name: row.ministry_type_name,
             created_at: row.created_at,
             updated_at: row.updated_at,
-          }))
+          }));
 
-          await trx.commit()
+          await trx.commit();
         }
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return relatedMinistriesList
+    return relatedMinistriesList;
   }
 
   async findApprovedRelatedMinistriesByPersonId(
-    personId: number,
+    personId: number
   ): Promise<IRelatedMinistry[]> {
-    let relatedMinistriesList: IRelatedMinistry[] = []
-    let sentError: Error | null = null
+    let relatedMinistriesList: IRelatedMinistry[] = [];
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -241,7 +241,7 @@ export class RelatedMinistriesModel {
           .select('person_id')
           .where('person_id', personId)
           .andWhere('related_ministry_approved', true)
-          .first()
+          .first();
 
         if (existingRelatedMinistries) {
           const results = await trx
@@ -250,10 +250,10 @@ export class RelatedMinistriesModel {
             .leftJoin(
               'ministry_types',
               'related_ministries.ministry_type_id',
-              'ministry_types.ministry_type_id',
+              'ministry_types.ministry_type_id'
             )
             .where('related_ministries.person_id', '=', personId)
-            .andWhere('related_ministry_approved', true)
+            .andWhere('related_ministry_approved', true);
 
           relatedMinistriesList = results.map((row: any) => ({
             related_ministry_id: row.related_ministry_id,
@@ -264,29 +264,29 @@ export class RelatedMinistriesModel {
             ministry_type_name: row.ministry_type_name,
             created_at: row.created_at,
             updated_at: row.updated_at,
-          }))
+          }));
 
-          await trx.commit()
+          await trx.commit();
         }
       } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.sqlMessage)
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.sqlMessage);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    return relatedMinistriesList
+    return relatedMinistriesList;
   }
 
   async updateRelatedMinistryById(
-    updateRelatedMinistry: IUpdateRelatedMinistry,
+    updateRelatedMinistry: IUpdateRelatedMinistry
   ): Promise<number> {
-    let updatedRelatedMinistry: number | null = null
-    let sentError: Error | null = null
+    let updatedRelatedMinistry: number | null = null;
+    let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -296,7 +296,15 @@ export class RelatedMinistriesModel {
           ministry_type_id,
           priority,
           related_ministry_approved,
-        } = updateRelatedMinistry
+        } = updateRelatedMinistry;
+
+        let approved = await trx('related_ministries')
+          .first('related_ministry_approved')
+          .where('related_ministry_id', related_ministry_id);
+
+        if (approved.related_ministry_approved == true) {
+          throw new Error('Registro já aprovado');
+        }
 
         updatedRelatedMinistry = await trx('related_ministries')
           .where('related_ministry_id', related_ministry_id)
@@ -305,56 +313,63 @@ export class RelatedMinistriesModel {
             ministry_type_id,
             priority,
             related_ministry_approved,
-          })
+          });
 
-        await trx.commit()
+        await trx.commit();
       } catch (error) {
-        await trx.rollback()
-        sentError = new Error(error.message)
+        await trx.rollback();
+        sentError = new Error(error.message);
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
     if (updatedRelatedMinistry == null) {
-      throw new Error('Related ministry not found')
+      throw new Error('Related ministry not found');
     }
 
-    return updatedRelatedMinistry
+    return updatedRelatedMinistry;
   }
 
   async deleteRelatedMinistryById(id: number): Promise<string> {
-    let sentError: Error | null = null
-    let message: string = ''
+    let sentError: Error | null = null;
+    let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
         const existingRelatedMinistry = await trx('related_ministries')
           .select('related_ministry_id')
           .where('related_ministry_id', id)
-          .first()
+          .first();
 
         if (!existingRelatedMinistry) {
-          throw new Error('Related ministry not found')
+          throw new Error('Related ministry not found');
         }
 
-        await trx('related_ministries').where('related_ministry_id', id).del()
+        let approved = await trx('related_ministries')
+          .first('related_ministry_approved')
+          .where('related_ministry_id', id);
 
-        await trx.commit()
+        if (approved.related_ministry_approved == true) {
+          throw new Error('Registro já aprovado');
+        }
+        await trx('related_ministries').where('related_ministry_id', id).del();
+
+        await trx.commit();
       } catch (error) {
-        console.error(error)
-        sentError = new Error(error.message)
-        await trx.rollback()
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
       }
-    })
+    });
 
     if (sentError) {
-      throw sentError
+      throw sentError;
     }
 
-    message = 'Related ministry deleted successfully'
-    return message
+    message = 'Related ministry deleted successfully';
+    return message;
   }
 }

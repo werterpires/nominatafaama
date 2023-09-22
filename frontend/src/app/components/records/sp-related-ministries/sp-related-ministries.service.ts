@@ -17,7 +17,7 @@ export class SpRelatedMinistriesService {
 
   findAllRegistries(): Observable<IRelatedMinistry[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IRelatedMinistry[]>(
         environment.API + '/related-ministries/person/spouse',
@@ -42,7 +42,7 @@ export class SpRelatedMinistriesService {
     newRegistry: CreateRelatedMinistryDto,
   ): Observable<IRelatedMinistry> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IRelatedMinistry>(
         environment.API + '/related-ministries/spouse',
@@ -66,7 +66,7 @@ export class SpRelatedMinistriesService {
     updatedRegistry: UpdateRelatedMinistryDto,
   ): Observable<UpdateRelatedMinistryDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateRelatedMinistryDto>(
         environment.API + '/related-ministries',
@@ -76,6 +76,14 @@ export class SpRelatedMinistriesService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () =>
               new Error(
@@ -96,6 +104,14 @@ export class SpRelatedMinistriesService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () =>
               new Error('Não foi possível deletar o ministério de interesse.'),

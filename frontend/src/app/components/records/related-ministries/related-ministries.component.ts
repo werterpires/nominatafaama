@@ -98,7 +98,6 @@ export class RelatedMinistriesComponent {
 
   createRegistry(priority: number) {
     this.isLoading = true
-    const idx = priority + 1
     this.service
       .createRegistry({
         ministry_type_id: parseInt(
@@ -203,7 +202,7 @@ export class RelatedMinistriesComponent {
         this.ngOnInit()
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível remover o registro.'
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },
