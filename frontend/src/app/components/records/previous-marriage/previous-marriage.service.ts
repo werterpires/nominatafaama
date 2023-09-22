@@ -17,7 +17,7 @@ export class PreviousMarriageService {
 
   findAllRegistries(): Observable<IPreviousMarriage[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IPreviousMarriage[]>(environment.API + '/previous-marriages/', {
         headers: head_obj,
@@ -36,7 +36,7 @@ export class PreviousMarriageService {
     newRegistry: CreatePreviousMarriageDto,
   ): Observable<IPreviousMarriage> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IPreviousMarriage>(
         environment.API + '/previous-marriages/',
@@ -59,7 +59,7 @@ export class PreviousMarriageService {
     updatedRegistry: UpdatePreviousMarriageDto,
   ): Observable<UpdatePreviousMarriageDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdatePreviousMarriageDto>(
         environment.API + '/previous-marriages',
@@ -69,6 +69,14 @@ export class PreviousMarriageService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível atualizar linguagens.'),
           )
@@ -86,6 +94,14 @@ export class PreviousMarriageService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível deletar o registro.'),
           )

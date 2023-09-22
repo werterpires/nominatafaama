@@ -138,7 +138,7 @@ export class PreviousMarriageComponent {
         this.ngOnInit()
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível remover o registro.'
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },

@@ -44,6 +44,10 @@
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.previous_marriage_id)"
       *ngFor="let registry of allRegistries; index as i"
+      [ngClass]="{
+        approved: registry.previous_marriage_approved,
+        unapproved: registry.previous_marriage_approved === false
+      }"
     >
       <div class="subSection">
         <label>
