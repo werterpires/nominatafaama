@@ -17,7 +17,7 @@ export class SpPastEclExpService {
 
   findAllRegistries(): Observable<IPastEclExp[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IPastEclExp[]>(environment.API + '/past-ecl-exps/person/spouse', {
         headers: head_obj,
@@ -37,7 +37,7 @@ export class SpPastEclExpService {
 
   createRegistry(newRegistry: CreatePastEclExpDto): Observable<IPastEclExp> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IPastEclExp>(
         environment.API + '/past-ecl-exps/spouse',
@@ -60,7 +60,7 @@ export class SpPastEclExpService {
     updatedRegistry: UpdatePastEclExpDto,
   ): Observable<UpdatePastEclExpDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdatePastEclExpDto>(
         environment.API + '/past-ecl-exps',
@@ -70,6 +70,14 @@ export class SpPastEclExpService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () =>
               new Error('Não foi possível atualizar a experiência passada.'),
@@ -88,6 +96,14 @@ export class SpPastEclExpService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível deletar a experiência passada.'),
           )

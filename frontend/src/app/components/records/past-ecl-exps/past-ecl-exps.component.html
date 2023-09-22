@@ -67,6 +67,10 @@
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.past_ecl_id)"
       *ngFor="let registry of allRegistries; index as i"
+      [ngClass]="{
+        approved: registry.past_ecl_approved,
+        unapproved: registry.past_ecl_approved === false
+      }"
     >
       <div class="subSection">
         <label>
