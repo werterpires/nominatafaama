@@ -17,7 +17,7 @@ export class SpEndowmentsService {
 
   findAllRegistries(): Observable<IEndowment[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IEndowment[]>(environment.API + '/endowments/person/spouse', {
         headers: head_obj,
@@ -37,7 +37,7 @@ export class SpEndowmentsService {
 
   createRegistry(newRegistry: CreateEndowmentDto): Observable<IEndowment> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IEndowment>(environment.API + '/endowments/spouse', newRegistry, {
         headers: head_obj,
@@ -56,7 +56,7 @@ export class SpEndowmentsService {
     updatedRegistry: UpdateEndowmentDto,
   ): Observable<UpdateEndowmentDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateEndowmentDto>(
         environment.API + '/endowments',
@@ -66,6 +66,14 @@ export class SpEndowmentsService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível atualizar a investidura.'),
           )
@@ -83,6 +91,14 @@ export class SpEndowmentsService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
+                ),
+            )
+          }
           return throwError(
             () => new Error('Não foi possível deletar a investidura.'),
           )
