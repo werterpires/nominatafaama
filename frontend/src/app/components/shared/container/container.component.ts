@@ -26,8 +26,8 @@ export class ContainerComponent {
   user: IUserApproved | null = null
 
   options: IOptions = {
-    nominata: false,
-    cadastros: true,
+    nominata: true,
+    cadastros: false,
     aprovacoes: false,
     vagas: false,
     chamados: false,
