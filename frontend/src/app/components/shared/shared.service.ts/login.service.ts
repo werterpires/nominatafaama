@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { BehaviorSubject, catchError, tap, throwError } from 'rxjs'
+import { BehaviorSubject, catchError, switchMap, tap, throwError } from 'rxjs'
 import { ILoginDto } from '../../login/login.Dto'
 import { IUserApproved } from '../container/types'
 import { environment } from 'src/environments/environment'
@@ -30,16 +30,89 @@ export class LoginService {
     this.user.next(null)
   }
 
+  // login(loginData: ILoginDto) {
+  //   return this.http
+  //     .post<{ access_token: string }>(environment.API + '/login', loginData)
+  //     .pipe(
+  //       switchMap((res) => {
+  //         this.userToken = res.access_token
+  //         localStorage.setItem('access_token', this.userToken)
+  //         this.http
+  //           .get<IUserApproved>(environment.API + '/users/roles', {
+  //             headers: { Authorization: 'bearer ' + res.access_token },
+  //           })
+  //           .subscribe({
+  //             next: (userApproved) => {
+  //               if (userApproved.user_approved) {
+  //                 this.user.next(userApproved)
+  //                 this.router.navigateByUrl('/')
+  //               } else throw Error('User not approved')
+  //             },
+  //             error: (error: HttpErrorResponse) => {
+  //               console.error(error)
+  //               if (error.status === 401) {
+  //                 this.logout()
+  //               }
+  //             },
+  //           })
+  //       }),
+  //       catchError((error) => {
+  //         if (error.statusText == 'Unauthorized') {
+  //           return throwError(
+  //             () => new Error('Senha ou email não localizados.'),
+  //           )
+  //         } else if (error.name == 'HttpErrorResponse') {
+  //           return throwError(
+  //             () => new Error('Não foi possível fazer contato com o servidor.'),
+  //           )
+  //         } else {
+  //           return throwError(
+  //             () => new Error('Aconteceu um problema com o seu login'),
+  //           )
+  //         }
+  //       }),
+  //       // ,
+  //       // tap((resposta) => {
+  //       //   this.getRoles(resposta.access_token)
+  //       // }),
+  //     )
+  // }
+
   login(loginData: ILoginDto) {
     return this.http
       .post<{ access_token: string }>(environment.API + '/login', loginData)
       .pipe(
+        switchMap((res) => {
+          this.userToken = res.access_token
+          localStorage.setItem('access_token', this.userToken)
+          return this.http
+            .get<IUserApproved>(environment.API + '/users/roles', {
+              headers: { Authorization: 'Bearer ' + res.access_token },
+            })
+            .pipe(
+              catchError((error: HttpErrorResponse) => {
+                console.error(error)
+                if (error.status === 401) {
+                  this.logout()
+                }
+                return throwError(() => {
+                  if (error.statusText === 'Unauthorized') {
+                    return new Error('Senha ou email não localizados.')
+                  } else {
+                    return new Error(
+                      'Não foi possível fazer contato com o servidor.',
+                    )
+                  }
+                })
+              }),
+            )
+        }),
         catchError((error) => {
-          if ((error.statusText = 'Unauthorized')) {
+          if (error.statusText === 'Unauthorized') {
             return throwError(
               () => new Error('Senha ou email não localizados.'),
             )
-          } else if ((error.name = 'HttpErrorResponse')) {
+          } else if (error.name === 'HttpErrorResponse') {
             return throwError(
               () => new Error('Não foi possível fazer contato com o servidor.'),
             )
@@ -49,8 +122,15 @@ export class LoginService {
             )
           }
         }),
-        tap((resposta) => {
-          this.getRoles(resposta.access_token)
+        tap((userApproved) => {
+          if (userApproved && userApproved.user_approved) {
+            this.user.next(userApproved)
+            this.router.navigateByUrl('/')
+          } else {
+            throw Error(
+              'Seu usuário ainda não foi aprovado pela equipe da coordenação.',
+            )
+          }
         }),
       )
   }
@@ -62,7 +142,7 @@ export class LoginService {
       })
       .pipe(
         catchError((error) => {
-          if ((error.name = 'HttpErrorResponse')) {
+          if (error.name == 'HttpErrorResponse') {
             return throwError(
               () => new Error('Não foi possível fazer contato com o servidor.'),
             )
@@ -89,7 +169,7 @@ export class LoginService {
       })
       .pipe(
         catchError((error) => {
-          if ((error.name = 'HttpErrorResponse')) {
+          if (error.name == 'HttpErrorResponse') {
             return throwError(
               () => new Error('Não foi possível fazer contato com o servidor.'),
             )
@@ -102,7 +182,6 @@ export class LoginService {
             )
           }
         }),
-        tap((resposta) => {}),
       )
   }
 
@@ -114,7 +193,7 @@ export class LoginService {
       })
       .pipe(
         catchError((error) => {
-          if ((error.name = 'HttpErrorResponse')) {
+          if (error.name == 'HttpErrorResponse') {
             return throwError(
               () => new Error('Não foi possível fazer contato com o servidor.'),
             )
@@ -127,7 +206,6 @@ export class LoginService {
             )
           }
         }),
-        tap((resposta) => {}),
       )
   }
 

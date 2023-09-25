@@ -19,12 +19,12 @@ export class LoginComponent {
   @Output() mailChange = new EventEmitter<string>()
   @Output() passwordChange = new EventEmitter<string>()
 
-  errorMessage: string = ''
+  errorMessage = ''
   error!: boolean
-  forgot: number = 0
-  accessCode: string = ''
-  newPassword: string = ''
-  confirmPassword: string = ''
+  forgot = 0
+  accessCode = ''
+  newPassword = ''
+  confirmPassword = ''
   done = false
   doneMessage = ''
 
@@ -33,10 +33,10 @@ export class LoginComponent {
     password: '',
   }
 
-  principalEmail: string = ''
+  principalEmail = ''
 
-  seePassword: boolean = false
-  isLoading: boolean = false
+  seePassword = false
+  isLoading = false
 
   validateEmailData(input: HTMLInputElement) {
     const valid = this.validateService.validateEmailData(
