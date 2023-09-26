@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment'
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
-  private user = new BehaviorSubject<IUserApproved | null>(null)
+  private user = new BehaviorSubject<IUserApproved | null | string>('wait')
   user$ = this.user.asObservable()
   userToken!: string
 
@@ -21,6 +21,8 @@ export class LoginService {
     if (token) {
       this.userToken = token
       this.getRoles(token)
+    } else {
+      this.user.next(null)
     }
   }
 
@@ -221,7 +223,7 @@ export class LoginService {
           next: (userApproved) => {
             if (userApproved.user_approved) {
               this.user.next(userApproved)
-              this.router.navigateByUrl('/')
+              // this.router.navigateByUrl('/')
             } else throw Error('User not approved')
           },
           error: (error: HttpErrorResponse) => {

@@ -47,10 +47,17 @@ export class ContainerComponent {
 
   ngOnInit(): void {
     this.loginService.user$.subscribe((user) => {
+      if (user === 'wait') {
+        return
+      }
+
       let roles: Array<string> = []
-      if (user) {
+      console.log(user)
+      if (typeof user !== 'string' && user) {
         this.user = user
+
         roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+
         this.permissions.isApproved = this.user.user_approved
       } else {
         this.user = null
@@ -64,6 +71,25 @@ export class ContainerComponent {
       this.permissions.docente = roles.includes('docente')
     })
   }
+  // ngOnInit(): void {
+  //   this.loginService.user$.subscribe((user) => {
+  //     let roles: Array<string> = []
+  //     if (user) {
+  //       this.user = user
+  //       roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+  //       this.permissions.isApproved = this.user.user_approved
+  //     } else {
+  //       this.user = null
+  //       this.permissions.isApproved = false
+  //     }
+  //     this.permissions.estudante = roles.includes('estudante')
+  //     this.permissions.secretaria = roles.includes('secretaria')
+  //     this.permissions.direcao = roles.includes('direção')
+  //     this.permissions.representacao = roles.includes('representacao')
+  //     this.permissions.administrador = roles.includes('administrador')
+  //     this.permissions.docente = roles.includes('docente')
+  //   })
+  // }
 
   changeApprovalType(approvaltype: string) {
     this.approvalType = approvaltype

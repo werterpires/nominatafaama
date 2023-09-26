@@ -1,32 +1,32 @@
-import { Injectable } from '@nestjs/common'
-import { PeopleServices } from 'src/modules/people/dz_services/people.service'
-import { UsersService } from 'src/modules/users/dz_services/users.service'
-import { CreateStudentDto } from '../dto/create-student.dto'
-import { UpdateStudentDto } from '../dto/update-student.dto'
-import { StudentsModel } from '../model/students.model'
-import { ICreateStudent, IStudent, IUpdateStudent } from '../types/types'
+import { Injectable } from '@nestjs/common';
+import { PeopleServices } from 'src/modules/people/dz_services/people.service';
+import { UsersService } from 'src/modules/users/dz_services/users.service';
+import { CreateStudentDto } from '../dto/create-student.dto';
+import { UpdateStudentDto } from '../dto/update-student.dto';
+import { StudentsModel } from '../model/students.model';
+import { ICreateStudent, IStudent, IUpdateStudent } from '../types/types';
 import {
   ICompleteStudent,
   ICompleteUser,
-} from 'src/modules/approvals/types/types'
-import { IUser } from 'src/modules/users/bz_types/types'
-import { UsersModel } from 'src/modules/users/ez_model/users.model'
-import { AcademicFormationsModel } from 'src/modules/info/academic-formations/model/academic-formations.model'
-import { LanguagesModel } from 'src/modules/info/languages/model/languages.model'
-import { CoursesModel } from 'src/modules/info/courses/model/courses.model'
-import { ProfessionalExperiencesModel } from 'src/modules/info/professional-experiences/model/professional-experiences.model'
-import { PastEclExpsModel } from 'src/modules/info/past-ecl-experiences/model/past-ecl-experiences.model'
-import { EvangelisticExperiencesModel } from 'src/modules/info/evangelistic-experiences/model/evang-experiences.model'
-import { EclExperiencesModel } from 'src/modules/info/ecl-experiences/model/ecl-experiences.model'
-import { PublicationsModel } from 'src/modules/info/publications/model/publications.model'
-import { EndowmentsModel } from 'src/modules/info/endowments/model/endowments.model'
-import { OrdinationsModel } from 'src/modules/info/ordinations/model/ordinations.model'
-import { RelatedMinistriesModel } from 'src/modules/info/related-ministries/model/related-ministries.model'
-import { PreviousMarriagesModel } from 'src/modules/info/previous-marriage/model/previous-marriage.model'
-import { ChildrenModel } from 'src/modules/info/children/model/children.model'
-import { SpousesModel } from 'src/modules/spouses/model/spouses.model'
-import * as fs from 'fs'
-import { StudentPhotosService } from 'src/modules/info/student-photos/services/student-photos.service'
+} from 'src/modules/approvals/types/types';
+import { IUser } from 'src/modules/users/bz_types/types';
+import { UsersModel } from 'src/modules/users/ez_model/users.model';
+import { AcademicFormationsModel } from 'src/modules/info/academic-formations/model/academic-formations.model';
+import { LanguagesModel } from 'src/modules/info/languages/model/languages.model';
+import { CoursesModel } from 'src/modules/info/courses/model/courses.model';
+import { ProfessionalExperiencesModel } from 'src/modules/info/professional-experiences/model/professional-experiences.model';
+import { PastEclExpsModel } from 'src/modules/info/past-ecl-experiences/model/past-ecl-experiences.model';
+import { EvangelisticExperiencesModel } from 'src/modules/info/evangelistic-experiences/model/evang-experiences.model';
+import { EclExperiencesModel } from 'src/modules/info/ecl-experiences/model/ecl-experiences.model';
+import { PublicationsModel } from 'src/modules/info/publications/model/publications.model';
+import { EndowmentsModel } from 'src/modules/info/endowments/model/endowments.model';
+import { OrdinationsModel } from 'src/modules/info/ordinations/model/ordinations.model';
+import { RelatedMinistriesModel } from 'src/modules/info/related-ministries/model/related-ministries.model';
+import { PreviousMarriagesModel } from 'src/modules/info/previous-marriage/model/previous-marriage.model';
+import { ChildrenModel } from 'src/modules/info/children/model/children.model';
+import { SpousesModel } from 'src/modules/spouses/model/spouses.model';
+import * as fs from 'fs';
+import { StudentPhotosService } from 'src/modules/info/student-photos/services/student-photos.service';
 @Injectable()
 export class StudentsService {
   constructor(
@@ -48,23 +48,23 @@ export class StudentsService {
     private previousMarriagesModel: PreviousMarriagesModel,
     private childrenService: ChildrenModel,
     private spousesModel: SpousesModel,
-    private studentPhotoService: StudentPhotosService,
+    private studentPhotoService: StudentPhotosService
   ) {}
 
   async createStudent(
     dto: CreateStudentDto,
-    userId: number,
+    userId: number
   ): Promise<IStudent> {
     try {
-      const user = await this.usersService.findUserById(userId)
+      const user = await this.usersService.findUserById(userId);
       if (user == null) {
-        throw new Error('Nenhum Usuário válido foi encontrado.')
+        throw new Error('Nenhum Usuário válido foi encontrado.');
       }
-      const name = user.name
-      const person_id = user.person_id
+      const name = user.name;
+      const person_id = user.person_id;
 
-      const birthDate = new Date(dto.birth_date)
-      const baptismDate = new Date(dto.baptism_date)
+      const birthDate = new Date(dto.birth_date);
+      const baptismDate = new Date(dto.baptism_date);
 
       const student: ICreateStudent = {
         phone_number: dto.phone_number,
@@ -84,32 +84,32 @@ export class StudentsService {
         hiring_status_id: 1,
         primary_school_state: dto.primary_school_state,
         student_approved: null,
-      }
+      };
 
-      const newStudent = await this.studentsModel.createStudent(student, name)
-      return newStudent
+      const newStudent = await this.studentsModel.createStudent(student, name);
+      return newStudent;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async findStudentById(id: number): Promise<IStudent> {
     try {
-      const student = await this.studentsModel.findStudentById(id)
-      return student as IStudent
+      const student = await this.studentsModel.findStudentById(id);
+      return student as IStudent;
     } catch (error) {
-      console.error(error)
-      return null as any
+      console.error(error);
+      return null as any;
     }
   }
 
   async findStudentByIdToEdit(id: number): Promise<IStudent> {
     try {
-      const student = await this.studentsModel.findStudentByUserId(id)
-      return student as IStudent
+      const student = await this.studentsModel.findStudentByUserId(id);
+      return student as IStudent;
     } catch (error) {
-      console.error(error)
-      return null as any
+      console.error(error);
+      return null as any;
     }
   }
 
@@ -148,105 +148,104 @@ export class StudentsService {
         small_alone_photo: null,
         spouse_photo: null,
       },
-    }
+    };
 
     try {
       const student: IStudent | null =
-        await this.studentsModel.findApprovedStudentByUserId(studentId)
-
-      completeStudent.student = student
+        await this.studentsModel.findApprovedStudentByUserId(studentId);
+      completeStudent.student = student;
 
       if (!student || !student.person_id) {
-        return completeStudent
+        return completeStudent;
       }
 
-      const personId = student.person_id
+      const personId = student.person_id;
 
       let user: IUser | null = await this.usersModel.findApprovedUserByPersonId(
-        student.person_id,
-      )
+        student.person_id
+      );
       if (user) {
-        user.cpf = '00000000000'
+        user.cpf = '00000000000';
       }
-      completeStudent.user = user
+      completeStudent.user = user;
 
       const academicFormations =
         await this.academicFormationsModel.findApprovedAcademicFormationsByPersonId(
-          personId,
-        )
+          personId
+        );
       if (academicFormations.length > 0) {
-        completeStudent.academicFormations = academicFormations
+        completeStudent.academicFormations = academicFormations;
       }
 
       const languages =
-        await this.languagesModel.findApprovedLanguagesByPersonId(personId)
+        await this.languagesModel.findApprovedLanguagesByPersonId(personId);
       if (languages.length > 0) {
-        completeStudent.languages = languages
+        completeStudent.languages = languages;
       }
 
       const courses = await this.coursesModel.findApprovedCoursesByPersonId(
-        personId,
-      )
+        personId
+      );
       if (courses.length > 0) {
-        completeStudent.courses = courses
+        completeStudent.courses = courses;
       }
 
       const professionalExperiences =
         await this.professionalExperiencesModel.findApprovedProfessionalExperiencesByPersonId(
-          personId,
-        )
+          personId
+        );
       if (professionalExperiences.length > 0) {
-        completeStudent.professionalExperiences = professionalExperiences
+        completeStudent.professionalExperiences = professionalExperiences;
       }
 
       const pastEclExps =
-        await this.pastEclExpsModel.findApprovedPastEclExpsByPersonId(personId)
+        await this.pastEclExpsModel.findApprovedPastEclExpsByPersonId(personId);
       if (pastEclExps.length > 0) {
-        completeStudent.pastEclExps = pastEclExps
+        completeStudent.pastEclExps = pastEclExps;
       }
 
       const evangelisticExperiences =
         await this.evangelisticExperiencesModel.findApprovedEvangelisticExperiencesByPersonId(
-          personId,
-        )
+          personId
+        );
       if (evangelisticExperiences.length > 0) {
-        completeStudent.evangelisticExperiences = evangelisticExperiences
+        completeStudent.evangelisticExperiences = evangelisticExperiences;
       }
 
       const eclExperiences =
         await this.eclExperiencesModel.findApprovedEclExperiencesByPersonId(
-          personId,
-        )
+          personId
+        );
       if (eclExperiences.length > 0) {
-        completeStudent.eclExperiences = eclExperiences
+        completeStudent.eclExperiences = eclExperiences;
       }
 
       const publications =
         await this.publicationsModel.findApprovedPublicationsByPersonId(
-          personId,
-        )
+          personId
+        );
       if (publications.length > 0) {
-        completeStudent.publications = publications
+        completeStudent.publications = publications;
       }
 
       const endowments =
-        await this.endowmentsModel.findApprovedEndowmentsByPersonId(personId)
+        await this.endowmentsModel.findApprovedEndowmentsByPersonId(personId);
       if (endowments.length > 0) {
-        completeStudent.endowments = endowments
+        completeStudent.endowments = endowments;
       }
 
       const ordinations =
-        await this.ordinationsModel.findApprovedOrdinationsByPersonId(personId)
+        await this.ordinationsModel.findApprovedOrdinationsByPersonId(personId);
       if (ordinations.length > 0) {
-        completeStudent.ordinations = ordinations
+        completeStudent.ordinations = ordinations;
       }
 
       const relatedMinistries =
         await this.relatedMinistriesModel.findApprovedRelatedMinistriesByPersonId(
-          personId,
-        )
+          personId
+        );
       if (relatedMinistries.length > 0) {
-        completeStudent.relatedMinistries = relatedMinistries
+        completeStudent.relatedMinistries = relatedMinistries;
       }
 
       if (
@@ -255,17 +254,17 @@ export class StudentsService {
       ) {
         const previousMarriage =
           await this.previousMarriagesModel.findApprovedPreviousMarriagesByStudentId(
-            studentId,
-          )
+            studentId
+          );
         if (previousMarriage.length > 0) {
-          completeStudent.previousMarriage = previousMarriage
+          completeStudent.previousMarriage = previousMarriage;
         }
       }
 
       const children =
-        await this.childrenService.findApprovedChildrenByStudentId(studentId)
+        await this.childrenService.findApprovedChildrenByStudentId(studentId);
       if (children.length > 0) {
-        completeStudent.children = children
+        completeStudent.children = children;
       }
 
       if (
@@ -274,86 +273,86 @@ export class StudentsService {
           student.marital_status_type_name == 'Noivo')
       ) {
         const spouse = await this.spousesModel.findApprovedSpouseByStudentId(
-          studentId,
-        )
-        completeStudent.spouse = spouse
+          studentId
+        );
+        completeStudent.spouse = spouse;
 
-        let spousePersonId
+        let spousePersonId;
         if (spouse != null && spouse.spouse_id) {
-          spousePersonId = spouse.person_id
+          spousePersonId = spouse.person_id;
 
           const spAcademicFormations =
             await this.academicFormationsModel.findApprovedAcademicFormationsByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spAcademicFormations.length > 0) {
-            completeStudent.spAcademicFormations = spAcademicFormations
+            completeStudent.spAcademicFormations = spAcademicFormations;
           }
 
           const spLanguages =
             await this.languagesModel.findApprovedLanguagesByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spLanguages.length > 0) {
-            completeStudent.spLanguages = spLanguages
+            completeStudent.spLanguages = spLanguages;
           }
 
           const spCourses =
             await this.coursesModel.findApprovedCoursesByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spCourses.length > 0) {
-            completeStudent.spCourses = spCourses
+            completeStudent.spCourses = spCourses;
           }
 
           const spProfessionalExperiences =
             await this.professionalExperiencesModel.findApprovedProfessionalExperiencesByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spProfessionalExperiences.length > 0) {
             completeStudent.spProfessionalExperiences =
-              spProfessionalExperiences
+              spProfessionalExperiences;
           }
 
           const spPastEclExps =
             await this.pastEclExpsModel.findApprovedPastEclExpsByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spPastEclExps.length > 0) {
-            completeStudent.spPastEclExps = spPastEclExps
+            completeStudent.spPastEclExps = spPastEclExps;
           }
 
           const spEvangelisticExperiences =
             await this.evangelisticExperiencesModel.findApprovedEvangelisticExperiencesByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spEvangelisticExperiences.length > 0) {
             completeStudent.spEvangelisticExperiences =
-              spEvangelisticExperiences
+              spEvangelisticExperiences;
           }
 
           const spPublications =
             await this.publicationsModel.findApprovedPublicationsByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spPublications.length > 0) {
-            completeStudent.spPublications = spPublications
+            completeStudent.spPublications = spPublications;
           }
 
           const spEndowments =
             await this.endowmentsModel.findApprovedEndowmentsByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spEndowments.length > 0) {
-            completeStudent.spEndowments = spEndowments
+            completeStudent.spEndowments = spEndowments;
           }
 
           const spRelatedMinistries =
             await this.relatedMinistriesModel.findApprovedRelatedMinistriesByPersonId(
-              spousePersonId,
-            )
+              spousePersonId
+            );
           if (spRelatedMinistries.length > 0) {
-            completeStudent.spRelatedMinistries = spRelatedMinistries
+            completeStudent.spRelatedMinistries = spRelatedMinistries;
           }
         }
       }
@@ -362,186 +361,190 @@ export class StudentsService {
         await this.createPhotoFile(
           user.user_id,
           completeStudent,
-          'small-alone-photo',
-        )
+          'small-alone-photo'
+        );
 
-        await this.createPhotoFile(user.user_id, completeStudent, 'alone-photo')
         await this.createPhotoFile(
           user.user_id,
           completeStudent,
-          'family-photo',
-        )
+          'alone-photo'
+        );
         await this.createPhotoFile(
           user.user_id,
           completeStudent,
-          'other-family-photo',
-        )
+          'family-photo'
+        );
         await this.createPhotoFile(
           user.user_id,
           completeStudent,
-          'spouse-photo',
-        )
+          'other-family-photo'
+        );
         await this.createPhotoFile(
           user.user_id,
           completeStudent,
-          'invite-photo',
-        )
+          'spouse-photo'
+        );
+        await this.createPhotoFile(
+          user.user_id,
+          completeStudent,
+          'invite-photo'
+        );
       }
     } catch (error) {
       console.error(
         'Erro capturado no ApprovalsService findOneNotApproved:',
-        error,
-      )
+        error
+      );
     }
-
-    return completeStudent
+    console.log('completeStudent:', completeStudent);
+    return completeStudent;
   }
 
   async addPhotos(
     users: ICompleteUser[],
     photosInfo: {
-      fileStream: fs.ReadStream | null
-      headers: Record<string, string>
-    }[],
+      fileStream: fs.ReadStream | null;
+      headers: Record<string, string>;
+    }[]
   ) {
     for (let i = 0; i < users.length; i++) {
       if (photosInfo[i].fileStream != null) {
-        const { fileStream, headers } = photosInfo[i]
+        const { fileStream, headers } = photosInfo[i];
 
         if (fileStream) {
           const filePromise = new Promise<Buffer>((resolve, reject) => {
-            const chunks: Buffer[] = []
+            const chunks: Buffer[] = [];
             fileStream.on('data', (chunk: Buffer) => {
-              chunks.push(chunk)
-            })
+              chunks.push(chunk);
+            });
             fileStream.on('end', () => {
-              const file = Buffer.concat(chunks)
-              resolve(file)
-            })
+              const file = Buffer.concat(chunks);
+              resolve(file);
+            });
             fileStream.on('error', (error: Error) => {
-              reject(error)
-            })
-          })
+              reject(error);
+            });
+          });
 
-          const file = await filePromise
+          const file = await filePromise;
           users[i].photo = {
             file,
             headers,
-          }
+          };
         }
       } else {
-        users[i].photo = null
+        users[i].photo = null;
       }
     }
   }
 
   async addPhotoToStudent(photoData: {
-    fileStream: fs.ReadStream | null
-    headers: Record<string, string>
+    fileStream: fs.ReadStream | null;
+    headers: Record<string, string>;
   }): Promise<{
-    file: Buffer
-    headers: Record<string, string>
+    file: Buffer;
+    headers: Record<string, string>;
   } | null> {
     let photo: {
-      file: Buffer
-      headers: Record<string, string>
-    } | null = null
+      file: Buffer;
+      headers: Record<string, string>;
+    } | null = null;
     if (photoData.fileStream != null) {
-      const { fileStream, headers } = photoData
+      const { fileStream, headers } = photoData;
 
       if (fileStream) {
         const filePromise = new Promise<Buffer>((resolve, reject) => {
-          const chunks: Buffer[] = []
+          const chunks: Buffer[] = [];
           fileStream.on('data', (chunk: Buffer) => {
-            chunks.push(chunk)
-          })
+            chunks.push(chunk);
+          });
           fileStream.on('end', () => {
-            const file = Buffer.concat(chunks)
-            resolve(file)
-          })
+            const file = Buffer.concat(chunks);
+            resolve(file);
+          });
           fileStream.on('error', (error: Error) => {
-            reject(error)
-          })
-        })
+            reject(error);
+          });
+        });
 
-        const file = await filePromise
+        const file = await filePromise;
 
         photo = {
           file,
           headers,
-        }
+        };
       }
     }
-    return photo
+    return photo;
   }
 
   async createPhotoFile(
     userId: number,
     completeStudent: ICompleteStudent,
-    photoType: string,
+    photoType: string
   ) {
-    let correctPhotoType = photoType.replace(/-/g, '_')
+    let correctPhotoType = photoType.replace(/-/g, '_');
     let photoData: {
-      fileStream: fs.ReadStream | null
-      headers: Record<string, string>
-    }
+      fileStream: fs.ReadStream | null;
+      headers: Record<string, string>;
+    };
     photoData = await this.studentPhotoService.findStudentPhotoByStudentId(
       userId,
-      photoType,
-    )
+      photoType
+    );
     completeStudent.photos[correctPhotoType] = await this.addPhotoToStudent(
-      photoData,
-    )
+      photoData
+    );
   }
 
   async findAllStudents(): Promise<IStudent[]> {
     try {
-      const students = await this.studentsModel.findAllStudents()
-      return students
+      const students = await this.studentsModel.findAllStudents();
+      return students;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   async updateStudentById(input: UpdateStudentDto): Promise<IStudent> {
-    let updatedStudent: IStudent | null = null
-    let sentError: Error | null = null
+    let updatedStudent: IStudent | null = null;
+    let sentError: Error | null = null;
 
-    const birthDate = new Date(input.birth_date)
-    const baptismDate = new Date(input.baptism_date)
+    const birthDate = new Date(input.birth_date);
+    const baptismDate = new Date(input.baptism_date);
 
     const updateData: IUpdateStudent = {
       ...input,
       birth_date: birthDate,
       baptism_date: baptismDate,
       student_approved: null,
-    }
+    };
 
     try {
-      updatedStudent = await this.studentsModel.updateStudentById(updateData)
+      updatedStudent = await this.studentsModel.updateStudentById(updateData);
     } catch (error) {
-      sentError = new Error(error.message)
+      sentError = new Error(error.message);
     }
 
     if (sentError !== null) {
-      throw sentError
+      throw sentError;
     }
 
     if (updatedStudent === null) {
-      throw new Error('Failed to update student')
+      throw new Error('Failed to update student');
     }
     if (updatedStudent) {
-      return updatedStudent
+      return updatedStudent;
     }
-    throw new Error('deu ruim')
+    throw new Error('deu ruim');
   }
 
   async deleteStudentById(id: number): Promise<string> {
     try {
-      const message = await this.studentsModel.deleteStudentById(id)
-      return message
+      const message = await this.studentsModel.deleteStudentById(id);
+      return message;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

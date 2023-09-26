@@ -26,7 +26,34 @@ export class StudentComponent {
   error = false
   errorMessage = ''
 
-  student!: ICompleteStudent
+  student: ICompleteStudent = {
+    student: null,
+    spouse: null,
+    previousMarriage: null,
+    eclExperiences: null,
+    ordinations: null,
+    children: null,
+    academicFormations: null,
+    spAcademicFormations: null,
+    languages: null,
+    spLanguages: null,
+    courses: null,
+    spCourses: null,
+    professionalExperiences: null,
+    spProfessionalExperiences: null,
+    pastEclExps: null,
+    spPastEclExps: null,
+    evangelisticExperiences: null,
+    spEvangelisticExperiences: null,
+    publications: null,
+    spPublications: null,
+    endowments: null,
+    spEndowments: null,
+    relatedMinistries: null,
+    spRelatedMinistries: null,
+    photos: null,
+    user: null,
+  }
 
   alonePhoto: SafeResourceUrl | null = null
   spousePhoto: SafeResourceUrl | null = null
@@ -90,7 +117,6 @@ export class StudentComponent {
         this.studentId = parseInt(studentId)
       }
     })
-
     this.service.findOneRegistry(this.studentId).subscribe({
       next: async (res) => {
         this.student = res
@@ -169,13 +195,15 @@ export class StudentComponent {
   }
 
   ngAfterViewInit() {
-    this.isLoading = true
-    const contentHeight = document.body.scrollHeight - 640
+    if (this.student.student) {
+      this.isLoading = true
+      const contentHeight = document.body.scrollHeight - 640
 
-    const divElement = this.whiteSpaceElement.nativeElement
+      const divElement = this.whiteSpaceElement.nativeElement
 
-    divElement.style.height = contentHeight + 'px'
-    this.isLoading = false
+      divElement.style.height = contentHeight + 'px'
+      this.isLoading = false
+    }
   }
 
   async getFile(data: any, photo: string) {
