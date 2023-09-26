@@ -57,7 +57,16 @@ export class SpAcademicFormmationsComponent {
     this.allRegistries = []
     this.spAllDegrees = []
     this.resetCreationRegistry()
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
   }
 
   getAllRegistries() {
