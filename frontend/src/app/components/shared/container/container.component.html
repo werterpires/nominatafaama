@@ -39,7 +39,7 @@
           <li
             *ngIf="permissions.isApproved"
             class="menuOption"
-            (click)="choseOption('nominata')"
+            (click)="navigate('nominata')"
           >
             <a>Nominata</a>
           </li>
@@ -54,7 +54,7 @@
               permissions.isApproved
             "
             class="menuOption"
-            (click)="choseOption('cadastros')"
+            (click)="navigate('cadastros')"
           >
             <a>Cadastros</a>
           </li>
@@ -133,6 +133,8 @@
     [permissions]="permissions"
   ></app-approvals-menu>
 
+  <ng-content></ng-content>
+
   <app-approves
     *ngIf="
       (permissions.administrador ||
@@ -145,7 +147,7 @@
     [permissions]="permissions"
     [approvalType]="approvalType"
   ></app-approves>
-  <app-records
+  <!-- <app-records
     *ngIf="
       (permissions.administrador ||
         permissions.direcao ||
@@ -157,7 +159,7 @@
       options.cadastros
     "
     [permissions]="permissions"
-  ></app-records>
+  ></app-records> -->
   <app-parameterization
     *ngIf="
       (permissions.administrador ||
@@ -168,15 +170,15 @@
     "
     [permissions]="permissions"
   ></app-parameterization>
-  <app-nominata
+  <!-- <app-nominata
     *ngIf="options.nominata"
     [permissions]="permissions"
     (toStudent)="changeToStudent($event)"
-  ></app-nominata>
-  <app-student
+  ></app-nominata> -->
+  <!-- <app-student
     *ngIf="options.student"
     [permissions]="permissions"
     [studentId]="studentId"
   >
-  </app-student>
+  </app-student> -->
 </div>

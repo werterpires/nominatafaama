@@ -26,7 +26,7 @@ export class ContainerComponent {
   user: IUserApproved | null = null
 
   options: IOptions = {
-    nominata: true,
+    nominata: false,
     cadastros: false,
     aprovacoes: false,
     vagas: false,
@@ -74,5 +74,10 @@ export class ContainerComponent {
   changeToStudent(parameter: { option: string; studentId: string }) {
     this.studentId = parseInt(parameter.studentId)
     this.choseOption(parameter.option)
+  }
+
+  navigate(route: string) {
+    this.choseOption(route)
+    this.router.navigate([route])
   }
 }

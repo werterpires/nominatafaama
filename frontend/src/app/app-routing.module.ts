@@ -4,16 +4,20 @@ import { LoginComponent } from './components/login/login.component'
 import { LogonComponent } from './components/logon/logon.component'
 import { ContainerComponent } from './components/shared/container/container.component'
 import { StudentComponent } from './components/student/student.component'
+import { NominataComponent } from './components/nominata/nominata.component'
+import { RecordsComponent } from './components/records/records.component'
 
 const routes: Routes = [
+  { path: 'student/:studentid', component: StudentComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logon', component: LogonComponent },
-  { path: '', component: ContainerComponent },
-  { path: 'student/:studentid', component: StudentComponent },
+  { path: 'nominata', component: NominataComponent },
+  { path: 'cadastros', component: RecordsComponent },
+  { path: '', component: NominataComponent },
 ]
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
