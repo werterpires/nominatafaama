@@ -22,7 +22,7 @@ export class StudentToApproveComponent {
   allRegistries: ICompleteUser[] = []
   title = 'Aprovações'
 
-  searchString: string = ''
+  searchString = ''
 
   showForm = false
   isLoading = false
@@ -77,7 +77,6 @@ export class StudentToApproveComponent {
 
   searchByNam() {
     this.isLoading = true
-    console.log(this.searchString.length)
     if (this.searchString.length < 1) {
       this.errorMessage = 'Escreva algo para ser pesquisado'
       this.error = true

@@ -92,6 +92,7 @@ export class ContainerComponent {
   // }
 
   changeApprovalType(approvaltype: string) {
+    this.navigate('approve/' + approvaltype)
     this.approvalType = approvaltype
     this.choseOption('aprovacoes')
     this.approvalMenu = false

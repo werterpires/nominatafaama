@@ -1,8 +1,14 @@
 import { Component, Input } from '@angular/core'
-import { IPermissions, IRole } from '../../shared/container/types'
+import {
+  IPermissions,
+  IRole,
+  IUserApproved,
+} from '../../shared/container/types'
 import { UsersServices } from '../../records/users/users.services'
 import { UserApprovesService } from './users-approves.service'
 import { IUser } from '../../records/users/types'
+import { LoginService } from '../../shared/shared.service.ts/login.service'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-users-approves',
@@ -13,6 +19,8 @@ export class UsersApprovesComponent {
   constructor(
     private userServices: UsersServices,
     private usersApprovesServices: UserApprovesService,
+    private loginService: LoginService,
+    private router: Router,
   ) {}
 
   allUsers!: IUser[]
@@ -35,34 +43,77 @@ export class UsersApprovesComponent {
   estUsersTrue: IUser[] = []
   estUsersFalse: IUser[] = []
 
-  viewAdmUsersNull: boolean = true
-  viewAdmUsersTrue: boolean = false
-  viewAdmUsersFalse: boolean = false
-  viewRepUsersNull: boolean = true
-  viewRepUsersTrue: boolean = false
-  viewRepUsersFalse: boolean = false
-  viewDirUsersNull: boolean = true
-  viewDirUsersTrue: boolean = false
-  viewDirUsersFalse: boolean = false
-  viewSecUsersNull: boolean = true
-  viewSecUsersTrue: boolean = false
-  viewSecUsersFalse: boolean = false
-  viewDocUsersNull: boolean = true
-  viewDocUsersTrue: boolean = false
-  viewDocUsersFalse: boolean = false
-  viewEstUsersNull: boolean = true
-  viewEstUsersTrue: boolean = false
-  viewEstUsersFalse: boolean = false
+  viewAdmUsersNull = true
+  viewAdmUsersTrue = false
+  viewAdmUsersFalse = false
+  viewRepUsersNull = true
+  viewRepUsersTrue = false
+  viewRepUsersFalse = false
+  viewDirUsersNull = true
+  viewDirUsersTrue = false
+  viewDirUsersFalse = false
+  viewSecUsersNull = true
+  viewSecUsersTrue = false
+  viewSecUsersFalse = false
+  viewDocUsersNull = true
+  viewDocUsersTrue = false
+  viewDocUsersFalse = false
+  viewEstUsersNull = true
+  viewEstUsersTrue = false
+  viewEstUsersFalse = false
 
-  @Input() permissions!: IPermissions
+  @Input() permissions: IPermissions = {
+    estudante: false,
+    secretaria: false,
+    direcao: false,
+    representacao: false,
+    administrador: false,
+    docente: false,
+    isApproved: false,
+  }
 
-  isLoading: boolean = false
-  done: boolean = false
-  doneMessage: string = ''
-  error: boolean = false
-  errorMessage: string = ''
+  user: IUserApproved | null = null
+
+  isLoading = false
+  done = false
+  doneMessage = ''
+  error = false
+  errorMessage = ''
 
   ngOnInit(): void {
+    this.loginService.user$.subscribe((user) => {
+      if (user === 'wait') {
+        return
+      }
+
+      let roles: Array<string> = []
+
+      if (typeof user !== 'string' && user) {
+        this.user = user
+
+        roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+        if (
+          !roles.includes('secretaria') &&
+          !roles.includes('direcao') &&
+          !roles.includes('administrador')
+        ) {
+          this.router.navigate(['nominata'])
+        }
+
+        this.permissions.isApproved = this.user.user_approved
+      } else {
+        this.user = null
+        this.router.navigate(['nominata'])
+        this.permissions.isApproved = false
+      }
+      this.permissions.estudante = roles.includes('estudante')
+      this.permissions.secretaria = roles.includes('secretaria')
+      this.permissions.direcao = roles.includes('direção')
+      this.permissions.representacao = roles.includes('representacao')
+      this.permissions.administrador = roles.includes('administrador')
+      this.permissions.docente = roles.includes('docente')
+    })
+
     this.userServices.findAllUsers().subscribe({
       next: (res) => {
         this.allUsers = res

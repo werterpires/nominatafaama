@@ -6,9 +6,11 @@ import { ContainerComponent } from './components/shared/container/container.comp
 import { StudentComponent } from './components/student/student.component'
 import { NominataComponent } from './components/nominata/nominata.component'
 import { RecordsComponent } from './components/records/records.component'
+import { UsersApprovesComponent } from './components/approves/users-approves/users-approves.component'
 
 const routes: Routes = [
   { path: 'student/:studentid', component: StudentComponent },
+  { path: 'approve/users', component: UsersApprovesComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logon', component: LogonComponent },
   { path: 'nominata', component: NominataComponent },
