@@ -76,7 +76,6 @@ export class StudentPhotosComponent {
   }
 
   onFileSelected(event: any) {
-    console.log(event)
     const file: File = event.target.files[0]
     const reader = new FileReader()
 
@@ -128,11 +127,9 @@ export class StudentPhotosComponent {
     const data = this.createRegistryData[index]
     const formData = new FormData()
     formData.append('file', data, data.name)
-    console.log(data.name)
 
     this.service.createRegistry(formData).subscribe({
       next: (res) => {
-        console.log(res)
         if (res == 0) {
           this.errPhotos.push(data.name)
         } else if (res == 1) {

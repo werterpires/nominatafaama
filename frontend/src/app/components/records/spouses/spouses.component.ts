@@ -122,7 +122,7 @@ export class SpousesComponent {
         this.allAssociations = res.sort((a, b) => {
           if (a.union_name < b.union_name) {
             return -1
-          } else if (a.union_name < b.union_name) {
+          } else if (a.union_name > b.union_name) {
             return 1
           } else {
             return 0
@@ -505,7 +505,7 @@ export class SpousesComponent {
     let cpf = ''
     if (type === 'create') {
       cpf = this.createRegistryData.cpf
-    } else if ((type = 'update')) {
+    } else if (type == 'update') {
       cpf = this.registry ? this.registry.person_cpf : ''
     }
     cpf = cpf.replace(/\D/g, '')
@@ -536,7 +536,7 @@ export class SpousesComponent {
     let phoneNumber = ''
     if (type === 'create') {
       phoneNumber = this.createRegistryData.phone_number
-    } else if ((type = 'update')) {
+    } else if (type == 'update') {
       phoneNumber = this.registry ? this.registry.phone_number : ''
     }
     phoneNumber = phoneNumber.replace(/\D/g, '')
@@ -592,7 +592,6 @@ export class SpousesComponent {
         this.createRegistryData.civil_marriage_state ||
         ''
     }
-    console.log(sigla)
     const state = this.allStates.find((st) => st.sigla === sigla)
 
     if (state) {

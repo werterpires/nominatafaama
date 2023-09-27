@@ -107,7 +107,6 @@ export class PublicationsComponent {
       )
       return
     }
-    console.log('referencia:', this.createRegistryData.reference.length)
 
     if (this.createRegistryData.reference.length < 5) {
       this.showError('Siga o modelo e escreva a referência da obra.')
@@ -164,7 +163,6 @@ export class PublicationsComponent {
       )
       return
     }
-    console.log('referencia:', this.allRegistries[index].reference.length)
 
     if (this.allRegistries[index].reference.length < 5) {
       this.showError('Siga o modelo e escreva a referência da obra.')

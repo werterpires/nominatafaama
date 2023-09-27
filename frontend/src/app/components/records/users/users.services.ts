@@ -14,12 +14,12 @@ export class UsersServices {
 
   findAllUsers(): Observable<IUser[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IUser[]>(environment.API + '/users/', { headers: head_obj })
       .pipe(
         catchError((error) => {
-          console.log('erro de verdade: ', error)
+          console.log('Veja o erro completo: ', error)
           return throwError(() => new Error('No User'))
         }),
       )
@@ -79,7 +79,7 @@ export class UsersServices {
 
   findallRoles(): Observable<IRole[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<IRole[]>(environment.API + '/roles/', { headers: head_obj })
       .pipe(
