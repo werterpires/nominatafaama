@@ -667,6 +667,7 @@ button:active {
   background: transparent;
   transition: height 5s ease;
   padding-bottom: 15px;
+  margin: auto;
 }
 
 .boxHead {

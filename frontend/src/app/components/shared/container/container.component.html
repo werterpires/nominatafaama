@@ -70,6 +70,11 @@
             class="menuOption"
           >
             <a>Aprovações</a>
+            <app-approvals-menu
+              *ngIf="approvalMenu"
+              (approvalType)="changeApprovalType($event)"
+              [permissions]="permissions"
+            ></app-approvals-menu>
           </li>
           <li
             *ngIf="
@@ -127,11 +132,6 @@
     </div>
   </header>
   <app-login-menu *ngIf="loginMenu"></app-login-menu>
-  <app-approvals-menu
-    *ngIf="approvalMenu"
-    (approvalType)="changeApprovalType($event)"
-    [permissions]="permissions"
-  ></app-approvals-menu>
 
   <ng-content></ng-content>
 
