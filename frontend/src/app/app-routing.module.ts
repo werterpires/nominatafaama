@@ -8,6 +8,7 @@ import { RecordsComponent } from './components/records/records.component'
 import { UsersApprovesComponent } from './components/approves/users-approves/users-approves.component'
 import { StudentToApproveComponent } from './components/approvals/student-to-approve/student-to-approve.component'
 import { OneStudentToApproveComponent } from './components/approvals/one-student-to-approve/one-student-to-approve.component'
+import { ParameterizationComponent } from './components/parameterization/parameterization.component'
 
 const routes: Routes = [
   { path: 'student/:studentid', component: StudentComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'logon', component: LogonComponent },
   { path: 'nominata', component: NominataComponent },
   { path: 'cadastros', component: RecordsComponent },
+  { path: 'parametrizacao', component: ParameterizationComponent },
   { path: '', component: NominataComponent },
 ]
 

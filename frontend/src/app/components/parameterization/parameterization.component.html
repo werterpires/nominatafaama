@@ -1,118 +1,152 @@
-<div class="sectionBoxes">
-  <app-marital-status
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-marital-status>
-  <app-unions
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-unions>
-  <app-associations
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-associations>
-  <app-hiring-status
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-hiring-status>
-  <app-academic-degrees
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-academic-degrees>
-  <app-language-types
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-language-types>
-  <app-evang-exp-types
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-evang-exp-types>
-  <app-ecl-exp-types
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-ecl-exp-types>
-  <app-ministry-types
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-ministry-types>
-  <app-endowment-types
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-endowment-types>
+<app-container>
+  <div class="sectionBoxes">
+    <app-marital-status
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-marital-status>
+    <app-unions
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-unions>
+    <app-associations
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-associations>
+    <app-hiring-status
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-hiring-status>
+    <app-academic-degrees
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-academic-degrees>
+    <app-language-types
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-language-types>
+    <app-evang-exp-types
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-evang-exp-types>
+    <app-ecl-exp-types
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-ecl-exp-types>
+    <app-ministry-types
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-ministry-types>
+    <app-endowment-types
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-endowment-types>
 
-  <app-publication-types
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-publication-types>
+    <app-publication-types
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-publication-types>
 
-  <app-nominatas
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  ></app-nominatas>
+    <app-nominatas
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    ></app-nominatas>
 
-  <app-nominatas-students
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  >
-  </app-nominatas-students>
+    <app-nominatas-students
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    >
+    </app-nominatas-students>
 
-  <app-general-professors>
-    *ngIf=" permissions.secretaria || permissions.administrador ||
-    permissions.direcao " [permissions]="permissions" >
-  </app-general-professors>
+    <app-general-professors>
+      *ngIf=" permissions.secretaria || permissions.administrador ||
+      permissions.direcao " [permissions]="permissions" >
+    </app-general-professors>
 
-  <app-professor-photos>
-    *ngIf=" permissions.secretaria || permissions.administrador ||
-    permissions.direcao " [permissions]="permissions" >
-  </app-professor-photos>
+    <app-professor-photos>
+      *ngIf=" permissions.secretaria || permissions.administrador ||
+      permissions.direcao " [permissions]="permissions" >
+    </app-professor-photos>
 
-  <app-nominatas-professors
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  >
-  </app-nominatas-professors>
+    <app-nominatas-professors
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    >
+    </app-nominatas-professors>
 
-  <app-nominatas-photos
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  >
-  </app-nominatas-photos>
+    <app-nominatas-photos
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    >
+    </app-nominatas-photos>
 
-  <app-events
-    *ngIf="
-      permissions.secretaria || permissions.administrador || permissions.direcao
-    "
-    [permissions]="permissions"
-  >
-  </app-events>
-</div>
+    <app-events
+      *ngIf="
+        permissions.secretaria ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    >
+    </app-events>
+  </div>
+</app-container>

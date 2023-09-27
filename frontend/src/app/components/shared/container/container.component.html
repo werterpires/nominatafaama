@@ -106,7 +106,7 @@
               permissions.isApproved
             "
             class="menuOption"
-            (click)="choseOption('parametrizacao')"
+            (click)="navigate('parametrizacao')"
           >
             <a>Parametrização</a>
           </li>
@@ -135,7 +135,7 @@
 
   <ng-content></ng-content>
 
-  <app-approves
+  <!-- <app-approves
     *ngIf="
       (permissions.administrador ||
         permissions.direcao ||
@@ -146,7 +146,7 @@
     "
     [permissions]="permissions"
     [approvalType]="approvalType"
-  ></app-approves>
+  ></app-approves> -->
   <!-- <app-records
     *ngIf="
       (permissions.administrador ||
@@ -160,7 +160,7 @@
     "
     [permissions]="permissions"
   ></app-records> -->
-  <app-parameterization
+  <!-- <app-parameterization
     *ngIf="
       (permissions.administrador ||
         permissions.direcao ||
@@ -169,7 +169,7 @@
       options.parametrizacao
     "
     [permissions]="permissions"
-  ></app-parameterization>
+  ></app-parameterization> -->
   <!-- <app-nominata
     *ngIf="options.nominata"
     [permissions]="permissions"
