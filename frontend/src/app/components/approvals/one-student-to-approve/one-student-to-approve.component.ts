@@ -1,21 +1,22 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { IPermissions } from '../../shared/container/types'
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core'
+import { IPermissions, IUserApproved } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { ICompleteStudent } from '../student-to-approve/types'
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { OneStudentToApproveService } from './one-student-to-approve.service'
-import { ApproveUserDto } from '../../approves/users-approves/types'
 import { ApproveDto } from './types'
 import { StudentsToApproveService } from '../student-to-approve/student-to-approve.service'
 import { ViewChildren, QueryList, ElementRef } from '@angular/core'
-import { CommonModule, DatePipe } from '@angular/common'
+import { ActivatedRoute, Router } from '@angular/router'
+import { DatePipe } from '@angular/common'
+import { LoginService } from '../../shared/shared.service.ts/login.service'
 
 @Component({
   selector: 'app-one-student-to-approve',
   templateUrl: './one-student-to-approve.component.html',
   styleUrls: ['./one-student-to-approve.component.css'],
 })
-export class OneStudentToApproveComponent {
+export class OneStudentToApproveComponent implements OnInit {
   @Input() permissions!: IPermissions
   @Output() seeAll: EventEmitter<void> = new EventEmitter<void>()
   student: ICompleteStudent = {
@@ -69,17 +70,57 @@ export class OneStudentToApproveComponent {
     private service: OneStudentToApproveService,
     private studentToApproveService: StudentsToApproveService,
     public datePipe: DatePipe,
+    private activatedRoute: ActivatedRoute,
+    private loginService: LoginService,
+    private router: Router,
   ) {}
 
+  userId!: number
+  user: IUserApproved | null = null
+
   async ngOnInit() {
-    this.student = this.dataService.selectedStudent
-    if (this.student.evangelisticExperiences != null) {
-      this.student.evangelisticExperiences.forEach((experience) => {
-        if (!this.evvangExpTypes.includes(experience.evang_exp_type_name)) {
-          this.evvangExpTypes.push(experience.evang_exp_type_name)
+    this.loginService.user$.subscribe((user) => {
+      if (user === 'wait') {
+        return
+      }
+
+      let roles: Array<string> = []
+
+      if (typeof user !== 'string' && user) {
+        this.user = user
+
+        roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+        if (
+          !roles.includes('docente') &&
+          !roles.includes('direcao') &&
+          !roles.includes('administrador')
+        ) {
+          this.router.navigate(['nominata'])
         }
-      })
-    }
+
+        this.permissions.isApproved = this.user.user_approved
+      } else {
+        this.user = null
+        this.router.navigate(['nominata'])
+        this.permissions.isApproved = false
+      }
+      this.permissions.estudante = roles.includes('estudante')
+      this.permissions.secretaria = roles.includes('secretaria')
+      this.permissions.direcao = roles.includes('direção')
+      this.permissions.representacao = roles.includes('representacao')
+      this.permissions.administrador = roles.includes('administrador')
+      this.permissions.docente = roles.includes('docente')
+    })
+
+    this.activatedRoute.paramMap.subscribe((params) => {
+      const userId = params.get('userId')
+
+      if (userId) {
+        this.userId = parseInt(userId)
+        this.getOneStudent(this.userId)
+      }
+    })
+
     if (this.student.spEvangelisticExperiences != null) {
       this.student.spEvangelisticExperiences.forEach((experience) => {
         if (!this.spEvvangExpTypes.includes(experience.evang_exp_type_name)) {
@@ -111,6 +152,21 @@ export class OneStudentToApproveComponent {
     )
   }
 
+  getOneStudent(userId: number) {
+    this.isLoading = true
+    this.service.findOneRegistry(userId).subscribe({
+      next: async (res) => {
+        this.student = res
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
+
   async getFile(data: any, photo: string) {
     const blob1 = new Blob([new Uint8Array(data)], {
       type: 'image/jpeg',
@@ -129,7 +185,6 @@ export class OneStudentToApproveComponent {
         }
       }
       reader.readAsDataURL(blob1)
-    } else {
     }
   }
 
@@ -205,7 +260,6 @@ export class OneStudentToApproveComponent {
       id: id,
     }
     this.service.approveAny(data, table).subscribe({
-      next: (res) => {},
       error: (err) => {
         this.errorMessage = err.message
         this.error = true
@@ -223,6 +277,7 @@ export class OneStudentToApproveComponent {
       if (this.student.user) {
         this.atualizeStudent(this.student.user.user_id)
       }
+      this.getOneStudent(this.userId)
       this.doneMessage = 'Aprovação feita com sucesso.'
       this.done = true
       this.isLoading = false

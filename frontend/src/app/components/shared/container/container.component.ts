@@ -52,7 +52,6 @@ export class ContainerComponent {
       }
 
       let roles: Array<string> = []
-      console.log(user)
       if (typeof user !== 'string' && user) {
         this.user = user
 

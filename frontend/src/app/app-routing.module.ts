@@ -7,9 +7,14 @@ import { NominataComponent } from './components/nominata/nominata.component'
 import { RecordsComponent } from './components/records/records.component'
 import { UsersApprovesComponent } from './components/approves/users-approves/users-approves.component'
 import { StudentToApproveComponent } from './components/approvals/student-to-approve/student-to-approve.component'
+import { OneStudentToApproveComponent } from './components/approvals/one-student-to-approve/one-student-to-approve.component'
 
 const routes: Routes = [
   { path: 'student/:studentid', component: StudentComponent },
+  {
+    path: 'approve/student/:userId',
+    component: OneStudentToApproveComponent,
+  },
   { path: 'approve/students', component: StudentToApproveComponent },
   { path: 'approve/users', component: UsersApprovesComponent },
   { path: 'login', component: LoginComponent },

@@ -21,21 +21,23 @@
     </form>
     <section class="perfilList">
       <div *ngFor="let registry of allRegistries; index as i">
-        <div (click)="getOneStudent(registry.user_id)">
-          <div class="smallAlonePhoto">
-            <div
-              *ngIf="registry.imageUrl"
-              class="imageContainer"
-              [ngStyle]="{
-                'background-image': 'url(' + registry.imageUrl + ')'
-              }"
-            ></div>
+        <a [href]="'approve/student/' + registry.user_id" target="_blank">
+          <div>
+            <div class="smallAlonePhoto">
+              <div
+                *ngIf="registry.imageUrl"
+                class="imageContainer"
+                [ngStyle]="{
+                  'background-image': 'url(' + registry.imageUrl + ')'
+                }"
+              ></div>
+            </div>
+            <div class="studentDatacontainer">
+              <p class="studentName">{{ registry.name }}</p>
+              <p class="studentCompData">{{ registry.principal_email }}</p>
+            </div>
           </div>
-          <div class="studentDatacontainer">
-            <p class="studentName">{{ registry.name }}</p>
-            <p class="studentCompData">{{ registry.principal_email }}</p>
-          </div>
-        </div>
+        </a>
       </div>
     </section>
   </section>

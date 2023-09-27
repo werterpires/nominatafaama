@@ -1,4 +1,10 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core'
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+} from '@angular/core'
 import { IPermissions } from '../shared/container/types'
 import { ActivatedRoute } from '@angular/router'
 import { StudentService } from './student.service'
@@ -120,7 +126,6 @@ export class StudentComponent {
     this.service.findOneRegistry(this.studentId).subscribe({
       next: async (res) => {
         this.student = res
-        console.log(res)
 
         if (this.student.evangelisticExperiences != null) {
           this.student.evangelisticExperiences.forEach((experience) => {
@@ -196,11 +201,12 @@ export class StudentComponent {
 
   ngAfterViewInit() {
     if (this.student.student) {
+      console.log('estou mesmo passando aqui')
       this.isLoading = true
       const contentHeight = document.body.scrollHeight - 640
 
       const divElement = this.whiteSpaceElement.nativeElement
-
+      console.log(contentHeight)
       divElement.style.height = contentHeight + 'px'
       this.isLoading = false
     }
