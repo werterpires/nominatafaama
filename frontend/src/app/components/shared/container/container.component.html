@@ -35,7 +35,6 @@
               >Formatura</a
             >
           </li>
-
           <li
             *ngIf="permissions.isApproved"
             class="menuOption"
@@ -119,6 +118,7 @@
               src="assets/icons/userIcon.svg"
               alt="Ícone de usuário"
             />
+            <app-login-menu *ngIf="loginMenu"></app-login-menu>
           </li>
           <li *ngIf="permissions.isApproved" class="menuOption">
             <img
@@ -131,7 +131,6 @@
       </nav>
     </div>
   </header>
-  <app-login-menu *ngIf="loginMenu"></app-login-menu>
 
   <ng-content></ng-content>
 

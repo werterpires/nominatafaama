@@ -104,6 +104,21 @@ export class NominataComponent {
           this.isLoading = false
         }
 
+        if (this.Registry.students) {
+          this.Registry.students = this.Registry.students.sort((a, b) => {
+            const nameA = a.name.trim().toLowerCase()
+            const nameB = b.name.trim().toLowerCase()
+
+            if (nameA < nameB) {
+              return -1
+            } else if (nameA > nameB) {
+              return 1
+            } else {
+              return 0
+            }
+          })
+        }
+
         this.Registry.students?.forEach((student) => {
           const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
             type: 'image/jpeg',
@@ -124,6 +139,21 @@ export class NominataComponent {
             this.unions.push(union)
           }
         })
+
+        if (this.Registry.professors) {
+          this.Registry.professors = this.Registry.professors.sort((a, b) => {
+            const nameA = a.name.trim().toLowerCase()
+            const nameB = b.name.trim().toLowerCase()
+
+            if (nameA < nameB) {
+              return -1
+            } else if (nameA > nameB) {
+              return 1
+            } else {
+              return 0
+            }
+          })
+        }
 
         this.Registry.professors?.forEach((professor) => {
           const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
@@ -148,7 +178,6 @@ export class NominataComponent {
             const dataA = new Date(a.event_date)
             const dataB = new Date(b.event_date)
 
-            // Primeiro, ordena pelos valores de data
             if (dataA < dataB) {
               return -1
             } else if (dataA > dataB) {
