@@ -656,7 +656,8 @@ button:active {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   padding: 28px;
-  margin-bottom: 12px;
+  margin: 12px auto 9px auto;
+
   transition: height 5s ease;
 }
 
@@ -666,6 +667,7 @@ button:active {
   background: transparent;
   transition: height 5s ease;
   padding-bottom: 15px;
+  margin: auto;
 }
 
 .boxHead {
@@ -1194,6 +1196,7 @@ button:active {
 
 .classPhotoContainer {
   width: 80.04vw;
+  max-width: 1450.71px;
   height: 27.38vw;
   border-radius: 5px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);

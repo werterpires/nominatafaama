@@ -1,825 +1,849 @@
-<section class="studentSectionBox">
-  <div class="headSection">
-    <div
-      class="oneStudentPhoto"
-      [ngStyle]="{ 'background-image': 'url(' + smallAlonePhoto + ')' }"
-    ></div>
-    <div>
-      <div class="nameSpace">
-        <p class="oneStudentName">{{ student.student?.person_name }}</p>
-      </div>
-      <div class="hiringSpace">
-        <div
-          [ngClass]="{
-            dispIndicator: student.student?.hiring_status_name == 'Disponível',
-            contIndicator: student.student?.hiring_status_name == 'Contratado',
-            chamIndicator: student.student?.hiring_status_name == 'Chamado'
-          }"
-        ></div>
-        <span class="hiringStatusName">
-          {{ student.student?.hiring_status_name }}
-        </span>
-        <span
-          *ngIf="
-            student.student?.hiring_status_name == 'Chamado' ||
-            student.student?.hiring_status_name == 'Contratado'
-          "
-          class="hiringfield"
-          >condicional</span
-        >
-      </div>
-    </div>
-  </div>
-  <hr />
-  <section *ngIf="student.student != null && student.student.student_id">
-    <div>
-      <div class="normalSection">
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">Campo de origem</p>
-          <p class="oneStudentFieldContent">
-            {{ student.student.union_acronym }}/{{
-              student.student.association_acronym
-            }}
-          </p>
-        </span>
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">Estado civil</p>
-          <p class="oneStudentFieldContent">
-            {{ student.student.marital_status_type_name }}
-          </p>
-        </span>
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">idade</p>
-          <p class="oneStudentFieldContent">
-            {{ formateAge(student.student.birth_date) }} anos
-          </p>
-        </span>
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">Naturalidade</p>
-          <p class="oneStudentFieldContent">
-            {{ student.student.birth_city }}-{{ student.student.birth_state }}
-          </p>
-        </span>
-      </div>
-      <hr />
-      <div class="normalSection">
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">Batismo</p>
-          <p class="oneStudentFieldContent">
-            {{ formatDate(student.student.baptism_date) }}
-          </p>
-          <p class="oneStudentFieldContent">
-            {{ student.student.baptism_place }}
-          </p>
-        </span>
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">Tempo de batismo</p>
-          <p class="oneStudentFieldContent">
-            {{ formateAge(student.student.baptism_date) }} Anos
-          </p>
-        </span>
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">Telefone</p>
-          <p class="oneStudentFieldContent">
-            {{ formatarTelefone(student.student.phone_number) }}
-          </p>
-        </span>
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">E-mail</p>
-          <p class="oneStudentFieldContent">
-            {{ student.user?.principal_email }}
-          </p>
-          <p class="oneStudentFieldContent">
-            {{ student.student.alternative_email }}
-          </p>
-        </span>
-      </div>
-      <hr />
-      <div *ngIf="student.relatedMinistries != null" class="normalSection">
-        <span class="oneStudentField">
-          <p class="oneStudentFieldTitle">
-            Ministérios com os quais se identifica
-          </p>
-          <div class="oneStudentSubItens">
-            <div
-              *ngFor="let ministry of student.relatedMinistries; let i = index"
-              class="oneStudentField"
-            >
-              <span class="oneStudentFieldContent">
-                {{ ministry.ministry_type_name }}
-              </span>
-            </div>
-          </div>
-        </span>
-
-        <hr />
-      </div>
-      <div class="normalSection">
-        <div class="oneAlonePhoto">
+<app-container>
+  <section class="studentSectionBox">
+    <div class="headSection">
+      <div
+        class="oneStudentPhoto"
+        [ngStyle]="{ 'background-image': 'url(' + smallAlonePhoto + ')' }"
+      ></div>
+      <div>
+        <div class="nameSpace">
+          <p class="oneStudentName">{{ student.student?.person_name }}</p>
+        </div>
+        <div class="hiringSpace">
           <div
-            class="imageContainer"
-            [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
+            [ngClass]="{
+              dispIndicator:
+                student.student?.hiring_status_name === 'Disponível',
+              contIndicator:
+                student.student?.hiring_status_name === 'Contratado',
+              chamIndicator: student.student?.hiring_status_name === 'Chamado'
+            }"
           ></div>
+          <span class="hiringStatusName">
+            {{ student.student?.hiring_status_name }}
+          </span>
+          <span
+            *ngIf="
+              student.student?.hiring_status_name === 'Chamado' ||
+              student.student?.hiring_status_name === 'Contratado'
+            "
+            class="hiringfield"
+            >condicional</span
+          >
         </div>
       </div>
-      <div #whiteSpace class="whiteSpace"></div>
-      <div class="normalSection">
-        <span class="oneStudentField">
-          <div class="oneStudentSpaceHeader">
-            <p class="oneStudentSpaceTitle">Mensagem do Formando</p>
-            <img src="assets/icons/barra.svg" alt="" />
-          </div>
+    </div>
+    <hr />
+    <section *ngIf="student.student !== null && student.student.student_id">
+      <div>
+        <div class="normalSection">
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">Campo de origem</p>
+            <p class="oneStudentFieldContent">
+              {{ student.student.union_acronym }}/{{
+                student.student.association_acronym
+              }}
+            </p>
+          </span>
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">Estado civil</p>
+            <p class="oneStudentFieldContent">
+              {{ student.student.marital_status_type_name }}
+            </p>
+          </span>
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">idade</p>
+            <p class="oneStudentFieldContent">
+              {{ formateAge(student.student.birth_date) }} anos
+            </p>
+          </span>
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">Naturalidade</p>
+            <p class="oneStudentFieldContent">
+              {{ student.student.birth_city }}-{{ student.student.birth_state }}
+            </p>
+          </span>
+        </div>
+        <hr />
+        <div class="normalSection">
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">Batismo</p>
+            <p class="oneStudentFieldContent">
+              {{ formatDate(student.student.baptism_date) }}
+            </p>
+            <p class="oneStudentFieldContent">
+              {{ student.student.baptism_place }}
+            </p>
+          </span>
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">Tempo de batismo</p>
+            <p class="oneStudentFieldContent">
+              {{ formateAge(student.student.baptism_date) }} Anos
+            </p>
+          </span>
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">Telefone</p>
+            <p class="oneStudentFieldContent">
+              {{ formatarTelefone(student.student.phone_number) }}
+            </p>
+          </span>
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">E-mail</p>
+            <p class="oneStudentFieldContent">
+              {{ student.user?.principal_email }}
+            </p>
+            <p class="oneStudentFieldContent">
+              {{ student.student.alternative_email }}
+            </p>
+          </span>
+        </div>
+        <hr />
+        <div *ngIf="student.relatedMinistries !== null" class="normalSection">
+          <span class="oneStudentField">
+            <p class="oneStudentFieldTitle">
+              Ministérios com os quais se identifica
+            </p>
+            <div class="oneStudentSubItens">
+              <div
+                *ngFor="
+                  let ministry of student.relatedMinistries;
+                  let i = index
+                "
+                class="oneStudentField"
+              >
+                <span class="oneStudentFieldContent">
+                  {{ ministry.ministry_type_name }}
+                </span>
+              </div>
+            </div>
+          </span>
 
-          <p class="oneStudentFieldContent">
-            {{ student.student.student_mensage }}
-          </p>
-        </span>
-      </div>
-      <div class="normalSection">
-        <span class="oneStudentField">
-          <div class="oneStudentKnowWhoSpace">
+          <hr />
+        </div>
+        <div class="normalSection">
+          <div class="oneAlonePhoto">
+            <div
+              class="imageContainer"
+              [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
+            ></div>
+          </div>
+        </div>
+        <div #whiteSpace class="whiteSpace"></div>
+        <div class="normalSection">
+          <span class="oneStudentField">
+            <div class="oneStudentSpaceHeader">
+              <p class="oneStudentSpaceTitle">Mensagem do Formando</p>
+              <img src="assets/icons/barra.svg" alt="" />
+            </div>
+
+            <p class="oneStudentFieldContent">
+              {{ student.student.student_mensage }}
+            </p>
+          </span>
+        </div>
+        <div class="normalSection">
+          <span class="oneStudentField">
+            <div class="oneStudentKnowWhoSpace">
+              <div class="oneStudentSpaceHeader">
+                <p class="oneStudentSpaceTitle">
+                  Conheça {{ student.student.person_name }}
+                </p>
+                <img src="assets/icons/barra.svg" alt="" />
+              </div>
+
+              <a
+                class="download"
+                *ngIf="student.user && student.user.cpf"
+                [href]="curriculumLink"
+                ><span>Baixar currículo</span>
+                <img
+                  class="downloadIcon"
+                  src="assets/icons/download.svg"
+                  alt=""
+                />
+              </a>
+            </div>
+
+            <section class="curriculumSpace">
+              <div *ngIf="student.academicFormations" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">Formação acadêmica</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let formation of student.academicFormations"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ formatConclusionYear(formation.conclusion_date) }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ formation.course_area }}, {{ formation.institution }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="student.courses" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">Cursos e capacitações</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let course of student.courses"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ formatConclusionYear(course.conclusion_date) }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ course.course_area }}, {{ course.institution }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="student.languages" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">Idiomas</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let language of student.languages"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ language.language }}
+                    </p>
+                    <p *ngIf="language.fluent" class="oneStudentFieldContent">
+                      Fluente
+                    </p>
+                    <p
+                      *ngIf="!language.fluent && language.read"
+                      class="oneStudentFieldContent"
+                    >
+                      Lê bem
+                    </p>
+                    <p
+                      *ngIf="!language.fluent && language.write"
+                      class="oneStudentFieldContent"
+                    >
+                      Escreve bem
+                    </p>
+                    <p
+                      *ngIf="!language.fluent && language.speak"
+                      class="oneStudentFieldContent"
+                    >
+                      Fala bem
+                    </p>
+                    <p
+                      *ngIf="!language.fluent && language.understand"
+                      class="oneStudentFieldContent"
+                    >
+                      Entende
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div
+                *ngIf="student.professionalExperiences"
+                ngClass="curriculumArea"
+              >
+                <p class="oneStudentFieldTitle">Experiências profissionais</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let experience of student.professionalExperiences"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ formatConclusionYear(experience.job_begin_date) }} -
+                      {{ formatConclusionYear(experience.job_end_date) }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ experience.job }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ experience.job_institution }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="student.pastEclExps" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">
+                  Experiências na igreja de origem
+                </p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let experience of student.pastEclExps"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{
+                        formatConclusionYear(experience.past_exp_begin_date)
+                      }}
+                      -
+                      {{ formatConclusionYear(experience.past_exp_end_date) }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ experience.function }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ experience.place }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p
+                *ngIf="student.evangelisticExperiences"
+                class="oneStudentSubSpaceTitle"
+              >
+                Experiências evangelísticas durante a formação ministerial no
+                Salt
+              </p>
+              <section
+                *ngIf="student.evangelisticExperiences"
+                class="subWhiteSpace"
+              >
+                <div
+                  *ngFor="let type of evvangExpTypes"
+                  ngClass="curriculumArea"
+                >
+                  <p class="oneStudentFieldTitle">
+                    {{ type }}
+                  </p>
+                  <hr />
+                  <div class="dinamicNormalSection">
+                    <div
+                      *ngFor="let experience of student.evangelisticExperiences"
+                    >
+                      <div
+                        *ngIf="experience.evang_exp_type_name === type"
+                        class="oneStudentDinamicField"
+                      >
+                        <p class="oneStudentFieldBoldContent">
+                          {{ formatConclusionYear(experience.exp_end_date) }}
+                        </p>
+                        <p class="oneStudentFieldContent">
+                          {{ experience.project }}
+                        </p>
+                        <p class="oneStudentFieldContent">
+                          {{ experience.place }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <p *ngIf="student.publications" class="oneStudentSubSpaceTitle">
+                Publicações
+              </p>
+              <section *ngIf="student.publications" class="subWhiteSpace">
+                <div
+                  *ngFor="let type of publicationTypes"
+                  ngClass="curriculumArea"
+                >
+                  <p class="oneStudentFieldTitle">
+                    {{ type }}
+                  </p>
+                  <hr />
+                  <div class="dinamicNormalSection">
+                    <div *ngFor="let publication of student.publications">
+                      <div
+                        *ngIf="publication.publication_type === type"
+                        class="reference"
+                      >
+                        <p class="oneStudentFieldContent">
+                          {{ publication.reference }}
+                          <span *ngIf="publication.link">
+                            Disponível em:
+                            <a [href]="publication.link"
+                              >{{ publication.link }} target="_blank"</a
+                            >
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <div *ngIf="student.eclExperiences" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">
+                  Atividades desenvolvidas durante o Salt
+                </p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let experience of student.eclExperiences"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldContent">
+                      {{ experience.ecl_exp_type_name }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="student.ordinations" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">Ordenações</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let ordination of student.ordinations"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ ordination.year }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ ordination.ordination_name }}, {{ ordination.place }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="student.endowments" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">Investiduras</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let endowment of student.endowments"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldContent">
+                      {{ endowment.endowment_type_name }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </span>
+        </div>
+        <div *ngIf="student.children" class="normalSection">
+          <span class="oneStudentField">
+            <div class="oneStudentSpaceHeader">
+              <p class="oneStudentSpaceTitle">Informação dos filhos</p>
+              <img src="assets/icons/barra.svg" alt="" />
+            </div>
+
+            <section class="curriculumSpace">
+              <div *ngIf="student.children" ngClass="curriculumArea">
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let child of student.children"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ child.name }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ formateAge(child.child_birth_date) }} anos,
+                      {{ child.marital_status_type_name }},
+                      {{ child.study_grade }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </span>
+        </div>
+        <div
+          *ngIf="
+            student.student.marital_status_type_name === 'Casado' ||
+            student.student.marital_status_type_name === 'Noivo'
+          "
+          class="normalSection"
+        >
+          <span class="oneStudentField">
             <div class="oneStudentSpaceHeader">
               <p class="oneStudentSpaceTitle">
-                Conheça {{ student.student.person_name }}
+                Informações do
+                <span
+                  *ngIf="student.student.marital_status_type_name === 'Noivo'"
+                  >futuro</span
+                >
+                cônjuge
               </p>
               <img src="assets/icons/barra.svg" alt="" />
             </div>
 
-            <a
-              class="download"
-              *ngIf="student.user && student.user.cpf"
-              [href]="curriculumLink"
-              ><span>Baixar currículo</span>
-              <img
-                class="downloadIcon"
-                src="assets/icons/download.svg"
-                alt=""
-              />
-            </a>
-          </div>
+            <section class="curriculumSpace">
+              <div *ngIf="student.spouse" ngClass="dinamicSpouseSection">
+                <div class="oneSpouseContent">
+                  <p class="oneStudentSpouseTitle">
+                    {{ student.spouse.person_name }}
+                  </p>
+                  <hr />
+                  <div class="dinamicNormalSection">
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Campo de origem</p>
+                      <p class="oneStudentFieldContent">
+                        {{ student.spouse.union_acronym }}/{{
+                          student.spouse.association_acronym
+                        }}
+                      </p>
+                    </span>
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Data de nascimento</p>
+                      <p class="oneStudentFieldContent">
+                        {{ formatDate(student.spouse.birth_date) }}
+                      </p>
+                    </span>
+                  </div>
+                  <hr />
+                  <div class="dinamicNormalSection">
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Idade</p>
+                      <p class="oneStudentFieldContent">
+                        {{ formateAge(student.spouse.birth_date) }} anos.
+                      </p>
+                    </span>
 
-          <section class="curriculumSpace">
-            <div *ngIf="student.academicFormations" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">Formação acadêmica</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let formation of student.academicFormations"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ formatConclusionYear(formation.conclusion_date) }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ formation.course_area }}, {{ formation.institution }}
-                  </p>
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Naturalidade</p>
+                      <p class="oneStudentFieldContent">
+                        {{ student.spouse.birth_city }}-{{
+                          student.spouse.birth_state
+                        }}
+                      </p>
+                    </span>
+                  </div>
+                  <hr />
+                  <div class="dinamicNormalSection">
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Data de batismo</p>
+                      <p class="oneStudentFieldContent">
+                        {{ formatDate(student.spouse.baptism_date) }}
+                      </p>
+                    </span>
+
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Local de batismo</p>
+                      <p class="oneStudentFieldContent">
+                        {{ student.spouse.baptism_place }}
+                      </p>
+                    </span>
+                  </div>
+                  <hr />
+                  <div class="dinamicNormalSection">
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Tempo de batismo</p>
+                      <p class="oneStudentFieldContent">
+                        {{ formateAge(student.spouse.baptism_date) }} anos
+                      </p>
+                    </span>
+                  </div>
+                  <hr />
+                  <div class="dinamicNormalSection">
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Telefone</p>
+                      <p class="oneStudentFieldContent">
+                        {{ formatarTelefone(student.spouse.phone_number) }}
+                      </p>
+                    </span>
+
+                    <span class="oneStudentField">
+                      <p class="oneStudentFieldTitle">Email</p>
+                      <p class="oneStudentFieldContent">
+                        {{ student.spouse.alternative_email }}
+                      </p>
+                    </span>
+                  </div>
+                </div>
+                <div class="familyPhoto">
+                  <div
+                    class="imageContainer"
+                    [ngStyle]="{
+                      'background-image': 'url(' + familyPhoto + ')'
+                    }"
+                  ></div>
                 </div>
               </div>
-            </div>
-            <div *ngIf="student.courses" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">Cursos e capacitações</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let course of student.courses"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ formatConclusionYear(course.conclusion_date) }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ course.course_area }}, {{ course.institution }}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="student.languages" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">Idiomas</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let language of student.languages"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ language.language }}
-                  </p>
-                  <p *ngIf="language.fluent" class="oneStudentFieldContent">
-                    Fluente
-                  </p>
-                  <p
-                    *ngIf="!language.fluent && language.read"
-                    class="oneStudentFieldContent"
+              <div
+                *ngIf="student.spAcademicFormations"
+                ngClass="curriculumArea"
+              >
+                <p class="oneStudentFieldTitle">Formação acadêmica</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let formation of student.spAcademicFormations"
+                    class="oneStudentDinamicField"
                   >
-                    Lê bem
-                  </p>
-                  <p
-                    *ngIf="!language.fluent && language.write"
-                    class="oneStudentFieldContent"
-                  >
-                    Escreve bem
-                  </p>
-                  <p
-                    *ngIf="!language.fluent && language.speak"
-                    class="oneStudentFieldContent"
-                  >
-                    Fala bem
-                  </p>
-                  <p
-                    *ngIf="!language.fluent && language.understand"
-                    class="oneStudentFieldContent"
-                  >
-                    Entende
-                  </p>
+                    <p class="oneStudentFieldBoldContent">
+                      {{ formatConclusionYear(formation.conclusion_date) }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ formation.course_area }}, {{ formation.institution }}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div
-              *ngIf="student.professionalExperiences"
-              ngClass="curriculumArea"
-            >
-              <p class="oneStudentFieldTitle">Experiências profissionais</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let experience of student.professionalExperiences"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ formatConclusionYear(experience.job_begin_date) }} -
-                    {{ formatConclusionYear(experience.job_end_date) }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ experience.job }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ experience.job_institution }}
-                  </p>
+              <div *ngIf="student.spCourses" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">Cursos e capacitações</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let course of student.spCourses"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ formatConclusionYear(course.conclusion_date) }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ course.course_area }}, {{ course.institution }}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div *ngIf="student.pastEclExps" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">
-                Experiências na igreja de origem
-              </p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let experience of student.pastEclExps"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ formatConclusionYear(experience.past_exp_begin_date) }} -
-                    {{ formatConclusionYear(experience.past_exp_end_date) }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ experience.function }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ experience.place }}
-                  </p>
+              <div *ngIf="student.spLanguages" ngClass="curriculumArea">
+                <p class="oneStudentFieldTitle">Idiomas</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let language of student.spLanguages"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ language.language }}
+                    </p>
+                    <p *ngIf="language.fluent" class="oneStudentFieldContent">
+                      Fluente
+                    </p>
+                    <p
+                      *ngIf="!language.fluent && language.read"
+                      class="oneStudentFieldContent"
+                    >
+                      Lê bem
+                    </p>
+                    <p
+                      *ngIf="!language.fluent && language.write"
+                      class="oneStudentFieldContent"
+                    >
+                      Escreve bem
+                    </p>
+                    <p
+                      *ngIf="!language.fluent && language.speak"
+                      class="oneStudentFieldContent"
+                    >
+                      Fala bem
+                    </p>
+                    <p
+                      *ngIf="!language.fluent && language.understand"
+                      class="oneStudentFieldContent"
+                    >
+                      Entende
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <p
-              *ngIf="student.evangelisticExperiences"
-              class="oneStudentSubSpaceTitle"
-            >
-              Experiências evangelísticas durante a formação ministerial no Salt
-            </p>
-            <section
-              *ngIf="student.evangelisticExperiences"
-              class="subWhiteSpace"
-            >
-              <div *ngFor="let type of evvangExpTypes" ngClass="curriculumArea">
+              <div
+                *ngIf="student.spProfessionalExperiences"
+                ngClass="curriculumArea"
+              >
+                <p class="oneStudentFieldTitle">Experiências profissionais</p>
+                <hr />
+                <div class="dinamicNormalSection">
+                  <div
+                    *ngFor="let experience of student.spProfessionalExperiences"
+                    class="oneStudentDinamicField"
+                  >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ formatConclusionYear(experience.job_begin_date) }} -
+                      {{ formatConclusionYear(experience.job_end_date) }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ experience.job }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ experience.job_institution }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="student.spPastEclExps" ngClass="curriculumArea">
                 <p class="oneStudentFieldTitle">
-                  {{ type }}
+                  Experiências na igreja de origem
                 </p>
                 <hr />
                 <div class="dinamicNormalSection">
                   <div
-                    *ngFor="let experience of student.evangelisticExperiences"
+                    *ngFor="let experience of student.spPastEclExps"
+                    class="oneStudentDinamicField"
                   >
-                    <div
-                      *ngIf="experience.evang_exp_type_name == type"
-                      class="oneStudentDinamicField"
-                    >
-                      <p class="oneStudentFieldBoldContent">
-                        {{ formatConclusionYear(experience.exp_end_date) }}
-                      </p>
-                      <p class="oneStudentFieldContent">
-                        {{ experience.project }}
-                      </p>
-                      <p class="oneStudentFieldContent">
-                        {{ experience.place }}
-                      </p>
-                    </div>
+                    <p class="oneStudentFieldBoldContent">
+                      {{
+                        formatConclusionYear(experience.past_exp_begin_date)
+                      }}
+                      -
+                      {{ formatConclusionYear(experience.past_exp_end_date) }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ experience.function }}
+                    </p>
+                    <p class="oneStudentFieldContent">
+                      {{ experience.place }}
+                    </p>
                   </div>
                 </div>
               </div>
-            </section>
-            <p *ngIf="student.publications" class="oneStudentSubSpaceTitle">
-              Publicações
-            </p>
-            <section *ngIf="student.publications" class="subWhiteSpace">
-              <div
-                *ngFor="let type of publicationTypes"
-                ngClass="curriculumArea"
+              <p
+                *ngIf="student.spEvangelisticExperiences"
+                class="oneStudentSubSpaceTitle"
               >
-                <p class="oneStudentFieldTitle">
-                  {{ type }}
-                </p>
-                <hr />
-                <div class="dinamicNormalSection">
-                  <div *ngFor="let publication of student.publications">
+                Experiências evangelísticas durante a formação ministerial no
+                Salt
+              </p>
+              <section
+                *ngIf="student.spEvangelisticExperiences"
+                class="subWhiteSpace"
+              >
+                <div
+                  *ngFor="let type of spEvvangExpTypes"
+                  ngClass="curriculumArea"
+                >
+                  <p class="oneStudentFieldTitle">
+                    {{ type }}
+                  </p>
+                  <hr />
+                  <div class="dinamicNormalSection">
                     <div
-                      *ngIf="publication.publication_type == type"
-                      class="reference"
+                      *ngFor="
+                        let experience of student.spEvangelisticExperiences
+                      "
                     >
-                      <p class="oneStudentFieldContent">
-                        {{ publication.reference }}
-                        <span *ngIf="publication.link">
-                          Disponível em:
-                          <a [href]="publication.link"
-                            >{{ publication.link }} target="_blank"</a
-                          >
-                        </span>
-                      </p>
+                      <div
+                        *ngIf="experience.evang_exp_type_name === type"
+                        class="oneStudentDinamicField"
+                      >
+                        <p class="oneStudentFieldBoldContent">
+                          {{ formatConclusionYear(experience.exp_end_date) }}
+                        </p>
+                        <p class="oneStudentFieldContent">
+                          {{ experience.project }}
+                        </p>
+                        <p class="oneStudentFieldContent">
+                          {{ experience.place }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </section>
-            <div *ngIf="student.eclExperiences" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">
-                Atividades desenvolvidas durante o Salt
+              </section>
+              <p *ngIf="student.spPublications" class="oneStudentSubSpaceTitle">
+                Publicações
               </p>
-              <hr />
-              <div class="dinamicNormalSection">
+              <section *ngIf="student.spPublications" class="subWhiteSpace">
                 <div
-                  *ngFor="let experience of student.eclExperiences"
-                  class="oneStudentDinamicField"
+                  *ngFor="let type of spPublicationTypes"
+                  ngClass="curriculumArea"
                 >
-                  <p class="oneStudentFieldContent">
-                    {{ experience.ecl_exp_type_name }}
+                  <p class="oneStudentFieldTitle">
+                    {{ type }}
                   </p>
+                  <hr />
+                  <div class="dinamicNormalSection">
+                    <div *ngFor="let publication of student.spPublications">
+                      <div *ngIf="publication.publication_type === type">
+                        <p class="oneStudentFieldContent">
+                          {{ publication.reference }}
+                          <span *ngIf="publication.link">
+                            Disponível em:
+                            <a [href]="publication.link"
+                              >{{ publication.link }} target="_blank"</a
+                            >
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div *ngIf="student.ordinations" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">Ordenações</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let ordination of student.ordinations"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ ordination.year }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ ordination.ordination_name }}, {{ ordination.place }}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="student.endowments" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">Investiduras</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let endowment of student.endowments"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldContent">
-                    {{ endowment.endowment_type_name }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        </span>
-      </div>
-      <div *ngIf="student.children" class="normalSection">
-        <span class="oneStudentField">
-          <div class="oneStudentSpaceHeader">
-            <p class="oneStudentSpaceTitle">Informação dos filhos</p>
-            <img src="assets/icons/barra.svg" alt="" />
-          </div>
+              </section>
 
-          <section class="curriculumSpace">
-            <div *ngIf="student.children" ngClass="curriculumArea">
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let child of student.children"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ child.name }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ formateAge(child.child_birth_date) }} anos,
-                    {{ child.marital_status_type_name }},
-                    {{ child.study_grade }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        </span>
-      </div>
-      <div
-        *ngIf="
-          student.student.marital_status_type_name == 'Casado' ||
-          student.student.marital_status_type_name == 'Noivo'
-        "
-        class="normalSection"
-      >
-        <span class="oneStudentField">
-          <div class="oneStudentSpaceHeader">
-            <p class="oneStudentSpaceTitle">
-              Informações do
-              <span *ngIf="student.student.marital_status_type_name == 'Noivo'"
-                >futuro</span
-              >
-              cônjuge
-            </p>
-            <img src="assets/icons/barra.svg" alt="" />
-          </div>
-
-          <section class="curriculumSpace">
-            <div *ngIf="student.spouse" ngClass="dinamicSpouseSection">
-              <div class="oneSpouseContent">
-                <p class="oneStudentSpouseTitle">
-                  {{ student.spouse.person_name }}
-                </p>
-                <hr />
-                <div class="dinamicNormalSection">
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Campo de origem</p>
-                    <p class="oneStudentFieldContent">
-                      {{ student.spouse.union_acronym }}/{{
-                        student.spouse.association_acronym
-                      }}
-                    </p>
-                  </span>
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Data de nascimento</p>
-                    <p class="oneStudentFieldContent">
-                      {{ formatDate(student.spouse.birth_date) }}
-                    </p>
-                  </span>
-                </div>
-                <hr />
-                <div class="dinamicNormalSection">
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Idade</p>
-                    <p class="oneStudentFieldContent">
-                      {{ formateAge(student.spouse.birth_date) }} anos.
-                    </p>
-                  </span>
-
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Naturalidade</p>
-                    <p class="oneStudentFieldContent">
-                      {{ student.spouse.birth_city }}-{{
-                        student.spouse.birth_state
-                      }}
-                    </p>
-                  </span>
-                </div>
-                <hr />
-                <div class="dinamicNormalSection">
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Data de batismo</p>
-                    <p class="oneStudentFieldContent">
-                      {{ formatDate(student.spouse.baptism_date) }}
-                    </p>
-                  </span>
-
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Local de batismo</p>
-                    <p class="oneStudentFieldContent">
-                      {{ student.spouse.baptism_place }}
-                    </p>
-                  </span>
-                </div>
-                <hr />
-                <div class="dinamicNormalSection">
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Tempo de batismo</p>
-                    <p class="oneStudentFieldContent">
-                      {{ formateAge(student.spouse.baptism_date) }} anos
-                    </p>
-                  </span>
-                </div>
-                <hr />
-                <div class="dinamicNormalSection">
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Telefone</p>
-                    <p class="oneStudentFieldContent">
-                      {{ formatarTelefone(student.spouse.phone_number) }}
-                    </p>
-                  </span>
-
-                  <span class="oneStudentField">
-                    <p class="oneStudentFieldTitle">Email</p>
-                    <p class="oneStudentFieldContent">
-                      {{ student.spouse.alternative_email }}
-                    </p>
-                  </span>
-                </div>
-              </div>
-              <div class="familyPhoto">
-                <div
-                  class="imageContainer"
-                  [ngStyle]="{ 'background-image': 'url(' + familyPhoto + ')' }"
-                ></div>
-              </div>
-            </div>
-            <div *ngIf="student.spAcademicFormations" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">Formação acadêmica</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let formation of student.spAcademicFormations"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ formatConclusionYear(formation.conclusion_date) }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ formation.course_area }}, {{ formation.institution }}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="student.spCourses" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">Cursos e capacitações</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let course of student.spCourses"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ formatConclusionYear(course.conclusion_date) }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ course.course_area }}, {{ course.institution }}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="student.spLanguages" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">Idiomas</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let language of student.spLanguages"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ language.language }}
-                  </p>
-                  <p *ngIf="language.fluent" class="oneStudentFieldContent">
-                    Fluente
-                  </p>
-                  <p
-                    *ngIf="!language.fluent && language.read"
-                    class="oneStudentFieldContent"
-                  >
-                    Lê bem
-                  </p>
-                  <p
-                    *ngIf="!language.fluent && language.write"
-                    class="oneStudentFieldContent"
-                  >
-                    Escreve bem
-                  </p>
-                  <p
-                    *ngIf="!language.fluent && language.speak"
-                    class="oneStudentFieldContent"
-                  >
-                    Fala bem
-                  </p>
-                  <p
-                    *ngIf="!language.fluent && language.understand"
-                    class="oneStudentFieldContent"
-                  >
-                    Entende
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div
-              *ngIf="student.spProfessionalExperiences"
-              ngClass="curriculumArea"
-            >
-              <p class="oneStudentFieldTitle">Experiências profissionais</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let experience of student.spProfessionalExperiences"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ formatConclusionYear(experience.job_begin_date) }} -
-                    {{ formatConclusionYear(experience.job_end_date) }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ experience.job }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ experience.job_institution }}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="student.spPastEclExps" ngClass="curriculumArea">
-              <p class="oneStudentFieldTitle">
-                Experiências na igreja de origem
-              </p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let experience of student.spPastEclExps"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldBoldContent">
-                    {{ formatConclusionYear(experience.past_exp_begin_date) }} -
-                    {{ formatConclusionYear(experience.past_exp_end_date) }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ experience.function }}
-                  </p>
-                  <p class="oneStudentFieldContent">
-                    {{ experience.place }}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <p
-              *ngIf="student.spEvangelisticExperiences"
-              class="oneStudentSubSpaceTitle"
-            >
-              Experiências evangelísticas durante a formação ministerial no Salt
-            </p>
-            <section
-              *ngIf="student.spEvangelisticExperiences"
-              class="subWhiteSpace"
-            >
-              <div
-                *ngFor="let type of spEvvangExpTypes"
-                ngClass="curriculumArea"
-              >
-                <p class="oneStudentFieldTitle">
-                  {{ type }}
-                </p>
+              <div *ngIf="student.spEndowments" class="curriculumArea">
+                <p class="oneStudentFieldTitle">Investiduras</p>
                 <hr />
                 <div class="dinamicNormalSection">
                   <div
-                    *ngFor="let experience of student.spEvangelisticExperiences"
+                    *ngFor="let endowment of student.spEndowments"
+                    class="oneStudentDinamicField"
                   >
-                    <div
-                      *ngIf="experience.evang_exp_type_name == type"
-                      class="oneStudentDinamicField"
-                    >
-                      <p class="oneStudentFieldBoldContent">
-                        {{ formatConclusionYear(experience.exp_end_date) }}
-                      </p>
-                      <p class="oneStudentFieldContent">
-                        {{ experience.project }}
-                      </p>
-                      <p class="oneStudentFieldContent">
-                        {{ experience.place }}
-                      </p>
-                    </div>
+                    <p class="oneStudentFieldContent">
+                      {{ endowment.endowment_type_name }}
+                    </p>
                   </div>
                 </div>
               </div>
             </section>
-            <p *ngIf="student.spPublications" class="oneStudentSubSpaceTitle">
-              Publicações
-            </p>
-            <section *ngIf="student.spPublications" class="subWhiteSpace">
-              <div
-                *ngFor="let type of spPublicationTypes"
-                ngClass="curriculumArea"
-              >
-                <p class="oneStudentFieldTitle">
-                  {{ type }}
-                </p>
-                <hr />
-                <div class="dinamicNormalSection">
-                  <div *ngFor="let publication of student.spPublications">
-                    <div *ngIf="publication.publication_type == type">
-                      <p class="oneStudentFieldContent">
-                        {{ publication.reference }}
-                        <span *ngIf="publication.link">
-                          Disponível em:
-                          <a [href]="publication.link"
-                            >{{ publication.link }} target="_blank"</a
-                          >
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <div *ngIf="student.spEndowments" class="curriculumArea">
-              <p class="oneStudentFieldTitle">Investiduras</p>
-              <hr />
-              <div class="dinamicNormalSection">
-                <div
-                  *ngFor="let endowment of student.spEndowments"
-                  class="oneStudentDinamicField"
-                >
-                  <p class="oneStudentFieldContent">
-                    {{ endowment.endowment_type_name }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        </span>
+          </span>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- <div class="pdfContainer" #pdfContainer>
+			<div class="pdfAlonePhotoContainer">
+				<div
+					class="pdfAlonePhoto"
+					[ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
+				></div>
+				<img class="pdfAlonePhoto" [src]="alonePhoto" alt="" />
+			</div>
+	
+			style="background-image: url('assets/img/capturac.png')"
+	
+			<div *ngIf="student.student" class="pdfPage" #pdfPage>
+				<img class="pagecover" src="assets/img/capturac.png" alt="" />
+				<div class="pdfStudentName">
+					<p class="pdfStudentFirstname">{{ firstName }}</p>
+					<p class="pdfStudentSurname">{{ surname }}</p>
+				</div>
+	
+				<p>
+					{{ student.student.association_name }} -
+					{{ student.student.union_acronym }}
+				</p>
+				<p>
+					{{ formatDate(student.student.birth_date) }}
+				</p>
+				<p>{{ formateAge(student.student.birth_date) }} anos</p>
+				<p>{{ student.student.marital_status_type_name }} anos</p>
+				<p>{{ student.student.birth_city }}-{{ student.student.birth_state }}</p>
+				<p>{{ formatarTelefone(student.student.phone_number) }}</p>
+				<p>{{ student.student.alternative_email }}</p>
+			</div>
+			<div class="pdfPage">Essa é a segunda página do pdf</div>
+			<div class="pdfPage">Essa é a segunda página do pdf</div>
+			<div class="pdfPage">Essa é a segunda página do pdf</div>
+			<div class="pdfPage">Essa é a segunda página do pdf</div>
+		</div>
+	
+		<button (click)="printPDF()">Baixar PDF</button> -->
   </section>
 
-  <!-- <div class="pdfContainer" #pdfContainer>
-    <div class="pdfAlonePhotoContainer">
-      <div
-        class="pdfAlonePhoto"
-        [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
-      ></div>
-      <img class="pdfAlonePhoto" [src]="alonePhoto" alt="" />
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
     </div>
-
-    style="background-image: url('assets/img/capturac.png')"
-
-    <div *ngIf="student.student" class="pdfPage" #pdfPage>
-      <img class="pagecover" src="assets/img/capturac.png" alt="" />
-      <div class="pdfStudentName">
-        <p class="pdfStudentFirstname">{{ firstName }}</p>
-        <p class="pdfStudentSurname">{{ surname }}</p>
-      </div>
-
-      <p>
-        {{ student.student.association_name }} -
-        {{ student.student.union_acronym }}
-      </p>
-      <p>
-        {{ formatDate(student.student.birth_date) }}
-      </p>
-      <p>{{ formateAge(student.student.birth_date) }} anos</p>
-      <p>{{ student.student.marital_status_type_name }} anos</p>
-      <p>{{ student.student.birth_city }}-{{ student.student.birth_state }}</p>
-      <p>{{ formatarTelefone(student.student.phone_number) }}</p>
-      <p>{{ student.student.alternative_email }}</p>
+    <div class="errorMessage">
+      <p>{{ errorMessage }}</p>
     </div>
-    <div class="pdfPage">Essa é a segunda página do pdf</div>
-    <div class="pdfPage">Essa é a segunda página do pdf</div>
-    <div class="pdfPage">Essa é a segunda página do pdf</div>
-    <div class="pdfPage">Essa é a segunda página do pdf</div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeError()"
+    />
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{ doneMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeDone()"
+    />
   </div>
 
-  <button (click)="printPDF()">Baixar PDF</button> -->
-</section>
-
-<div *ngIf="error" class="error">
-  <div class="errorTitle">
-    <p>Atenção</p>
-  </div>
-  <div class="errorMessage">
-    <p>{{ errorMessage }}</p>
-  </div>
-  <img
-    class="closeIcon"
-    src="assets/icons/closeIcon.png"
-    alt="Fechar"
-    (click)="closeError()"
-  />
-</div>
-<div *ngIf="done" class="done">
-  <div class="doneTitle">
-    <p>Parabéns</p>
-  </div>
-  <div class="doneMessage">
-    <p>{{ doneMessage }}</p>
-  </div>
-  <img
-    class="closeIcon"
-    src="assets/icons/closeIcon.png"
-    alt="Fechar"
-    (click)="closeDone()"
-  />
-</div>
-
-<div *ngIf="isLoading == true" class="loader1"></div>
-<div *ngIf="isLoading == true" class="loader2"></div>
-
-<app-student-pdf></app-student-pdf>
+  <div *ngIf="isLoading === true" class="loader1"></div>
+  <div *ngIf="isLoading === true" class="loader2"></div>
+</app-container>

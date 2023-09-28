@@ -1,4 +1,10 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core'
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+} from '@angular/core'
 import { IPermissions } from '../shared/container/types'
 import { ActivatedRoute } from '@angular/router'
 import { StudentService } from './student.service'
@@ -6,6 +12,7 @@ import { ICompleteStudent } from '../approvals/student-to-approve/types'
 import { DatePipe } from '@angular/common'
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { DataService } from '../shared/shared.service.ts/data.service'
+
 // import { jsPDF } from 'jspdf'
 
 @Component({
@@ -25,7 +32,34 @@ export class StudentComponent {
   error = false
   errorMessage = ''
 
-  student!: ICompleteStudent
+  student: ICompleteStudent = {
+    student: null,
+    spouse: null,
+    previousMarriage: null,
+    eclExperiences: null,
+    ordinations: null,
+    children: null,
+    academicFormations: null,
+    spAcademicFormations: null,
+    languages: null,
+    spLanguages: null,
+    courses: null,
+    spCourses: null,
+    professionalExperiences: null,
+    spProfessionalExperiences: null,
+    pastEclExps: null,
+    spPastEclExps: null,
+    evangelisticExperiences: null,
+    spEvangelisticExperiences: null,
+    publications: null,
+    spPublications: null,
+    endowments: null,
+    spEndowments: null,
+    relatedMinistries: null,
+    spRelatedMinistries: null,
+    photos: null,
+    user: null,
+  }
 
   alonePhoto: SafeResourceUrl | null = null
   spousePhoto: SafeResourceUrl | null = null
@@ -72,7 +106,7 @@ export class StudentComponent {
   curriculumLink!: string
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private service: StudentService,
     public datePipe: DatePipe,
     private dataService: DataService,
@@ -82,6 +116,13 @@ export class StudentComponent {
 
   ngOnInit(): void {
     this.isLoading = true
+    this.activatedRoute.paramMap.subscribe((params) => {
+      const studentId = params.get('studentid')
+
+      if (studentId) {
+        this.studentId = parseInt(studentId)
+      }
+    })
     this.service.findOneRegistry(this.studentId).subscribe({
       next: async (res) => {
         this.student = res
@@ -139,7 +180,6 @@ export class StudentComponent {
           this.student.photos?.family_photo?.file.data,
           'family',
         )
-        console.log(this.student.user?.cpf)
         const key = 'l' + this.student.student?.person_id
         this.curriculumLink =
           'https://drive.google.com/uc?export=download&id=' + this.links[key]
@@ -160,13 +200,16 @@ export class StudentComponent {
   }
 
   ngAfterViewInit() {
-    this.isLoading = true
-    const contentHeight = document.body.scrollHeight - 640
+    if (this.student.student) {
+      console.log('estou mesmo passando aqui')
+      this.isLoading = true
+      const contentHeight = document.body.scrollHeight - 640
 
-    const divElement = this.whiteSpaceElement.nativeElement
-
-    divElement.style.height = contentHeight + 'px'
-    this.isLoading = false
+      const divElement = this.whiteSpaceElement.nativeElement
+      console.log(contentHeight)
+      divElement.style.height = contentHeight + 'px'
+      this.isLoading = false
+    }
   }
 
   async getFile(data: any, photo: string) {
@@ -187,7 +230,6 @@ export class StudentComponent {
         }
       }
       reader.readAsDataURL(blob1)
-    } else {
     }
   }
 

@@ -102,7 +102,7 @@ export class SpLanguagesComponent {
 
   createRegistry() {
     this.isLoading = true
-    console.log(this.createRegistryData.chosen_language)
+
     if (this.createRegistryData.chosen_language < 1) {
       this.showError('Escolha um idioma antes de prosseguir.')
       return
@@ -166,8 +166,7 @@ export class SpLanguagesComponent {
       )
       return
     }
-    console.log(this.allRegistries[index].chosen_language)
-    console.log(this.allRegistries[index].chosen_language)
+
     const newRegistry: Partial<ILanguage> = {
       ...this.allRegistries[index],
       chosen_language: parseInt(

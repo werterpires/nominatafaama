@@ -13,6 +13,7 @@ import { DomSanitizer } from '@angular/platform-browser'
 import { NominataService } from './nominata.service'
 import { IBasicProfessor, IBasicStudent, ICompleteNominata } from './types'
 import { DatePipe } from '@angular/common'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-nominata',
@@ -40,15 +41,15 @@ export class NominataComponent {
 
   words: string[] = []
 
-  searchString: string = ''
+  searchString = ''
 
   director!: IBasicProfessor | undefined
 
   unions: string[] = []
   associations: string[] = []
-  searchedUnion: string = ''
-  searchedAssociation: string = ''
-  searchedStudent: string = ''
+  searchedUnion = ''
+  searchedAssociation = ''
+  searchedStudent = ''
 
   studentsToList!: IBasicStudent[] | null
 
@@ -64,6 +65,7 @@ export class NominataComponent {
     private dataService: DataService,
     private sanitizer: DomSanitizer,
     public datePipe: DatePipe,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -102,6 +104,21 @@ export class NominataComponent {
           this.isLoading = false
         }
 
+        if (this.Registry.students) {
+          this.Registry.students = this.Registry.students.sort((a, b) => {
+            const nameA = a.name.trim().toLowerCase()
+            const nameB = b.name.trim().toLowerCase()
+
+            if (nameA < nameB) {
+              return -1
+            } else if (nameA > nameB) {
+              return 1
+            } else {
+              return 0
+            }
+          })
+        }
+
         this.Registry.students?.forEach((student) => {
           const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
             type: 'image/jpeg',
@@ -122,6 +139,21 @@ export class NominataComponent {
             this.unions.push(union)
           }
         })
+
+        if (this.Registry.professors) {
+          this.Registry.professors = this.Registry.professors.sort((a, b) => {
+            const nameA = a.name.trim().toLowerCase()
+            const nameB = b.name.trim().toLowerCase()
+
+            if (nameA < nameB) {
+              return -1
+            } else if (nameA > nameB) {
+              return 1
+            } else {
+              return 0
+            }
+          })
+        }
 
         this.Registry.professors?.forEach((professor) => {
           const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
@@ -146,7 +178,6 @@ export class NominataComponent {
             const dataA = new Date(a.event_date)
             const dataB = new Date(b.event_date)
 
-            // Primeiro, ordena pelos valores de data
             if (dataA < dataB) {
               return -1
             } else if (dataA > dataB) {
@@ -258,7 +289,7 @@ export class NominataComponent {
     })
   }
 
-  small: boolean = true
+  small = true
 
   growText() {
     const divElement = this.directorText.nativeElement
@@ -297,7 +328,8 @@ export class NominataComponent {
   // }
 
   selectStudent(studentId: string) {
-    this.toStudent.emit({ option: 'student', studentId: studentId })
+    this.router.navigate(['student/' + studentId])
+    // this.toStudent.emit({ option: 'student', studentId: studentId })
   }
 
   closeError() {

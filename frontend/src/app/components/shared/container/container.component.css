@@ -7,7 +7,7 @@
 
 .header {
   width: 100%;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   padding: 1rem;
   background: linear-gradient(
     180deg,

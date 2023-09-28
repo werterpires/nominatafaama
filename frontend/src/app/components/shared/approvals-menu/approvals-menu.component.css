@@ -1,8 +1,9 @@
 .loginMenu {
+  width: fit-content;
   border-radius: 10px;
-  position: absolute;
-  right: max(1rem, (100% - 600px)/2);
-  top: 70px;
+  position: fixed;
+  /* right: max(1rem, (100% - 600px)/2); */
+  /* top: 64px; */
   padding: 1.5rem;
   background-color: white;
   display: flex;

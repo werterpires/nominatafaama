@@ -26,7 +26,7 @@ export class ContainerComponent {
   user: IUserApproved | null = null
 
   options: IOptions = {
-    nominata: true,
+    nominata: false,
     cadastros: false,
     aprovacoes: false,
     vagas: false,
@@ -47,10 +47,16 @@ export class ContainerComponent {
 
   ngOnInit(): void {
     this.loginService.user$.subscribe((user) => {
+      if (user === 'wait') {
+        return
+      }
+
       let roles: Array<string> = []
-      if (user) {
+      if (typeof user !== 'string' && user) {
         this.user = user
+
         roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+
         this.permissions.isApproved = this.user.user_approved
       } else {
         this.user = null
@@ -64,15 +70,40 @@ export class ContainerComponent {
       this.permissions.docente = roles.includes('docente')
     })
   }
+  // ngOnInit(): void {
+  //   this.loginService.user$.subscribe((user) => {
+  //     let roles: Array<string> = []
+  //     if (user) {
+  //       this.user = user
+  //       roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+  //       this.permissions.isApproved = this.user.user_approved
+  //     } else {
+  //       this.user = null
+  //       this.permissions.isApproved = false
+  //     }
+  //     this.permissions.estudante = roles.includes('estudante')
+  //     this.permissions.secretaria = roles.includes('secretaria')
+  //     this.permissions.direcao = roles.includes('direção')
+  //     this.permissions.representacao = roles.includes('representacao')
+  //     this.permissions.administrador = roles.includes('administrador')
+  //     this.permissions.docente = roles.includes('docente')
+  //   })
+  // }
 
   changeApprovalType(approvaltype: string) {
-    this.approvalType = approvaltype
-    this.choseOption('aprovacoes')
-    this.approvalMenu = false
+    this.navigate('approve/' + approvaltype)
+    // this.approvalType = approvaltype
+    // this.choseOption('aprovacoes')
+    // this.approvalMenu = false
   }
 
   changeToStudent(parameter: { option: string; studentId: string }) {
     this.studentId = parseInt(parameter.studentId)
     this.choseOption(parameter.option)
+  }
+
+  navigate(route: string) {
+    this.choseOption(route)
+    this.router.navigate([route])
   }
 }

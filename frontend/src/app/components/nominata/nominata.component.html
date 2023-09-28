@@ -1,262 +1,271 @@
-<div class="sectionDataList">
-  <section #sectionBox ngClass="sectionBoxAll">
-    <div
-      id="classPhoto"
-      class="classPhotoContainer"
-      *ngIf="Registry && Registry.imgUrl"
-      [ngStyle]="{
-        'background-image': 'url(' + Registry.imgUrl + ')'
-      }"
-    ></div>
-    <div class="boxHead">
-      <div class="oneStudentSpaceHeader">
-        <p class="oneStudentSpaceTitle">{{ title }} {{ Registry?.year }}</p>
+<app-container>
+  <div class="sectionDataList">
+    <section #sectionBox ngClass="sectionBoxAll">
+      <div
+        id="classPhoto"
+        class="classPhotoContainer"
+        *ngIf="Registry && Registry.imgUrl"
+        [ngStyle]="{
+          'background-image': 'url(' + Registry.imgUrl + ')'
+        }"
+      ></div>
+      <div class="boxHead">
+        <div class="oneStudentSpaceHeader">
+          <p class="oneStudentSpaceTitle">{{ title }} {{ Registry?.year }}</p>
+        </div>
       </div>
-    </div>
 
-    <section *ngIf="words && words.length > 10">
+      <section *ngIf="words && words.length > 10">
+        <div class="oneStudentSpaceHeader">
+          <p class="oneStudentSpaceTitle" id="words">Palavras do diretor</p>
+          <img src="assets/icons/barra.svg" alt="" />
+        </div>
+        <div class="directorSpace">
+          <div class="directorTextContainer">
+            <div id="directorText" #directorText>
+              <p
+                *ngFor="let paragraph of words"
+                class="directorWordsParag"
+                [innerHTML]="paragraph"
+              ></p>
+            </div>
+            <button class="readMore" #readMore (click)="growText()">
+              Continue lendo
+            </button>
+
+            <p class="directorWordsName">{{ director?.name }}</p>
+            <p class="directorWordsParag">
+              Diretor da Sede Regional do SALT (FAAMA) - {{ nominataYear }}
+            </p>
+          </div>
+          <div
+            class="directorPhotoContainer"
+            *ngIf="director && Registry?.imgUrl"
+            [ngStyle]="{
+              'background-image': 'url(' + director.imgUrl + ')'
+            }"
+          ></div>
+        </div>
+      </section>
+
       <div class="oneStudentSpaceHeader">
-        <p class="oneStudentSpaceTitle" id="words">Palavras do diretor</p>
+        <p class="oneStudentSpaceTitle" id="students">Formandos</p>
         <img src="assets/icons/barra.svg" alt="" />
       </div>
-      <div class="directorSpace">
-        <div class="directorTextContainer">
-          <div id="directorText" #directorText>
-            <p
-              *ngFor="let paragraph of words"
-              class="directorWordsParag"
-              [innerHTML]="paragraph"
-            ></p>
-          </div>
-          <button class="readMore" #readMore (click)="growText()">
-            Continue lendo
-          </button>
-
-          <p class="directorWordsName">{{ director?.name }}</p>
-          <p class="directorWordsParag">
-            Diretor da Sede Regional do SALT (FAAMA) - {{ nominataYear }}
-          </p>
+      <form action="" id="searchForm">
+        <select
+          name="unionSelect"
+          id=""
+          class="searchConrols"
+          [(ngModel)]="searchedUnion"
+          (change)="filterStudents(true)"
+        >
+          <option value="">Todas as uniões</option>
+          <option *ngFor="let union of unions" [value]="union">
+            {{ union }}
+          </option>
+        </select>
+        <select
+          name="associationSelect"
+          class="searchConrols"
+          id=""
+          [(ngModel)]="searchedAssociation"
+          (change)="filterStudents()"
+        >
+          <option value="">Todas as associações</option>
+          <option
+            *ngFor="let association of associations"
+            [value]="association"
+          >
+            {{ association }}
+          </option>
+        </select>
+        <input
+          type="text"
+          name="searchedStudentInput"
+          class="searchConrols"
+          placeholder="Pesquisar por nome"
+          [(ngModel)]="searchedStudent"
+          (input)="filterStudents()"
+        />
+        <button (click)="cleanFilters()" id="cleanSearchButton">
+          Limpar filtros
+        </button>
+      </form>
+      <section class="perfilList">
+        <div *ngFor="let student of studentsToList; index as i">
+          <a [href]="'/student/' + student.student_id" target="_blank">
+            <div>
+              <div class="smallAlonePhoto">
+                <div
+                  *ngIf="student.imgUrl"
+                  class="imageContainer"
+                  [ngStyle]="{
+                    'background-image': 'url(' + student.imgUrl + ')'
+                  }"
+                ></div>
+              </div>
+              <div class="studentDatacontainer">
+                <div class="hiringStatusSpace">
+                  <div
+                    [ngClass]="{
+                      disponivelIndicator:
+                        student.hiring_status_name === 'Disponível',
+                      contratadoIndicator:
+                        student.hiring_status_name === 'Contratado',
+                      chamadoIndicator: student.hiring_status_name === 'Chamado'
+                    }"
+                  ></div>
+                  <span class="hiringStatusText">{{
+                    student.hiring_status_name
+                  }}</span>
+                </div>
+                <p class="nominataStudentName">{{ student.name }}</p>
+                <p class="studentCompData">
+                  {{ student.union_acronym }}/{{ student.association_acronym }}
+                </p>
+              </div>
+            </div>
+          </a>
         </div>
-        <div
-          class="directorPhotoContainer"
-          *ngIf="director && Registry?.imgUrl"
-          [ngStyle]="{
-            'background-image': 'url(' + director.imgUrl + ')'
-          }"
-        ></div>
-      </div>
-    </section>
+      </section>
 
-    <div class="oneStudentSpaceHeader">
-      <p class="oneStudentSpaceTitle" id="students">Formandos</p>
-      <img src="assets/icons/barra.svg" alt="" />
-    </div>
-    <form action="" id="searchForm">
-      <select
-        name="unionSelect"
-        id=""
-        class="searchConrols"
-        [(ngModel)]="searchedUnion"
-        (change)="filterStudents(true)"
-      >
-        <option value="">Todas as uniões</option>
-        <option *ngFor="let union of unions" [value]="union">
-          {{ union }}
-        </option>
-      </select>
-      <select
-        name="associationSelect"
-        class="searchConrols"
-        id=""
-        [(ngModel)]="searchedAssociation"
-        (change)="filterStudents()"
-      >
-        <option value="">Todas as associações</option>
-        <option *ngFor="let association of associations" [value]="association">
-          {{ association }}
-        </option>
-      </select>
-      <input
-        type="text"
-        name="searchedStudentInput"
-        class="searchConrols"
-        placeholder="Pesquisar por nome"
-        [(ngModel)]="searchedStudent"
-        (input)="filterStudents()"
-      />
-      <button (click)="cleanFilters()" id="cleanSearchButton">
-        Limpar filtros
-      </button>
-    </form>
-    <section class="perfilList">
-      <div *ngFor="let student of studentsToList; index as i">
-        <div (click)="selectStudent(student.student_id.toString())">
-          <div class="smallAlonePhoto">
-            <div
-              *ngIf="student.imgUrl"
-              class="imageContainer"
-              [ngStyle]="{ 'background-image': 'url(' + student.imgUrl + ')' }"
-            ></div>
-          </div>
-          <div class="studentDatacontainer">
-            <div class="hiringStatusSpace">
+      <div class="oneStudentSpaceHeader">
+        <p class="oneStudentSpaceTitle" id="professors">Professores</p>
+        <img src="assets/icons/barra.svg" alt="" />
+      </div>
+
+      <section class="perfilList">
+        <div *ngFor="let professor of Registry?.professors; index as i">
+          <div>
+            <div class="smallAlonePhoto">
               <div
-                [ngClass]="{
-                  disponivelIndicator:
-                    student.hiring_status_name === 'Disponível',
-                  contratadoIndicator:
-                    student.hiring_status_name === 'Contratado',
-                  chamadoIndicator: student.hiring_status_name === 'Chamado'
+                *ngIf="professor.imgUrl"
+                class="imageContainer"
+                [ngStyle]="{
+                  'background-image': 'url(' + professor.imgUrl + ')'
                 }"
               ></div>
-              <span class="hiringStatusText">{{
-                student.hiring_status_name
-              }}</span>
             </div>
-            <p class="nominataStudentName">{{ student.name }}</p>
-            <p class="studentCompData">
-              {{ student.union_acronym }}/{{ student.association_acronym }}
-            </p>
+            <div class="professorDatacontainer">
+              <p class="professorName">{{ professor.name }}</p>
+              <p class="professorCompData">
+                {{ professor.assignments }}
+              </p>
+            </div>
           </div>
         </div>
+      </section>
+      <div *ngIf="Registry?.events" class="oneStudentSpaceHeader">
+        <p class="oneStudentSpaceTitle" id="events">Solenidades da formatura</p>
+        <img src="assets/icons/barra.svg" alt="" />
       </div>
-    </section>
-
-    <div class="oneStudentSpaceHeader">
-      <p class="oneStudentSpaceTitle" id="professors">Professores</p>
-      <img src="assets/icons/barra.svg" alt="" />
-    </div>
-
-    <section class="perfilList">
-      <div *ngFor="let professor of Registry?.professors; index as i">
-        <div>
-          <div class="smallAlonePhoto">
-            <div
-              *ngIf="professor.imgUrl"
-              class="imageContainer"
-              [ngStyle]="{
-                'background-image': 'url(' + professor.imgUrl + ')'
-              }"
-            ></div>
+      <section class="perfilList">
+        <div
+          *ngFor="let event of Registry?.events; index as i"
+          class="eventSpace"
+        >
+          <p class="eventTitle">
+            {{ event.event_title }}
+          </p>
+          <div class="eventSection">
+            <span>
+              <strong> Data:</strong> {{ formatDate(event.event_date) }}
+            </span>
+            <span> <strong> Horário:</strong> {{ event.event_time }} </span>
           </div>
-          <div class="professorDatacontainer">
-            <p class="professorName">{{ professor.name }}</p>
-            <p class="professorCompData">
-              {{ professor.assignments }}
-            </p>
+
+          <div class="eventSection">
+            <span> <strong> Local:</strong> {{ event.event_place }} </span>
+          </div>
+
+          <div class="eventSection">
+            <span> <strong> Endereço:</strong> {{ event.event_address }} </span>
           </div>
         </div>
-      </div>
+      </section>
+      <iframe
+        id="maps"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d361015.0698193393!2d-48.43358455917986!3d-1.3622449870032622!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a4582202b83843%3A0xc676477c454cb1f0!2sFAAMA%20-%20Faculdade%20Adventista%20da%20Amaz%C3%B4nia!5e0!3m2!1spt-BR!2sbr!4v1695132166437!5m2!1spt-BR!2sbr"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
     </section>
-    <div *ngIf="Registry?.events" class="oneStudentSpaceHeader">
-      <p class="oneStudentSpaceTitle" id="events">Solenidades da formatura</p>
-      <img src="assets/icons/barra.svg" alt="" />
-    </div>
-    <section class="perfilList">
-      <div
-        *ngFor="let event of Registry?.events; index as i"
-        class="eventSpace"
-      >
-        <p class="eventTitle">
-          {{ event.event_title }}
-        </p>
-        <div class="eventSection">
-          <span>
-            <strong> Data:</strong> {{ formatDate(event.event_date) }}
-          </span>
-          <span> <strong> Horário:</strong> {{ event.event_time }} </span>
-        </div>
 
-        <div class="eventSection">
-          <span> <strong> Local:</strong> {{ event.event_place }} </span>
-        </div>
-
-        <div class="eventSection">
-          <span> <strong> Endereço:</strong> {{ event.event_address }} </span>
-        </div>
-      </div>
-    </section>
-    <iframe
-      id="maps"
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d361015.0698193393!2d-48.43358455917986!3d-1.3622449870032622!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92a4582202b83843%3A0xc676477c454cb1f0!2sFAAMA%20-%20Faculdade%20Adventista%20da%20Amaz%C3%B4nia!5e0!3m2!1spt-BR!2sbr!4v1695132166437!5m2!1spt-BR!2sbr"
-      style="border: 0"
-      allowfullscreen=""
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-    ></iframe>
-  </section>
-
-  <div *ngIf="isLoading" class="loader1"></div>
-  <div *ngIf="isLoading" class="loader2"></div>
-</div>
-<footer>
-  <div id="footerContent">
-    <div>
-      <div>
-        <img
-          src="assets/img/faamaLogo.png"
-          alt="Logo do Faama"
-          id="faamaLogo"
-        />
-      </div>
-      <div class="socialMediaDiv">
-        <a target="_blank" href="https://www.facebook.com/faamaoficial">
-          <img
-            class="socialMediaIcon"
-            src="assets/icons/facebook.svg"
-            alt="ícone do facebook"
-          /> </a
-        ><a target="_blank" href="https://www.instagram.com/faama_edu/">
-          <img
-            class="socialMediaIcon"
-            src="assets/icons/instagram.svg"
-            alt="ícone do instagram"
-          /> </a
-        ><a
-          target="_blank"
-          href="https://www.youtube.com/channel/UCVxRQB-T1cemFDPnHkCvZ5Q"
-        >
-          <img
-            class="socialMediaIcon"
-            src="assets/icons/youtube.svg"
-            alt="ícone do youtube"
-          /> </a
-        ><a
-          target="_blank"
-          href="https://twitter.com/i/flow/login?redirect_after_login=%2Ffaama_edu"
-        >
-          <img
-            class="socialMediaIcon"
-            src="assets/icons/twitter.svg"
-            alt="ícone do twitter"
-          /> </a
-        ><a
-          target="_blank"
-          href="https://www.linkedin.com/company/faculdadeadventistadaamazonia/?originalSubdomain=br"
-        >
-          <img
-            class="socialMediaIcon"
-            src="assets/icons/linkedin.svg"
-            alt="ícone do linkedin"
-          />
-        </a>
-      </div>
-    </div>
-    <div class="contactDiv">
-      <div class="contact">
-        <p class="contactTitle">Callcenter</p>
-        <p class="contactcContent">(91) 3724-9500</p>
-      </div>
-      <div class="contact">
-        <p class="contactTitle">Whatsapp</p>
-        <p class="contactcContent">
-          <a
-            id="whatsapp"
-            href="https://web.Whatsapp.com/send?phone=5591992416182"
-            >(91) 99241-6182</a
-          >
-        </p>
-      </div>
-    </div>
+    <div *ngIf="isLoading" class="loader1"></div>
+    <div *ngIf="isLoading" class="loader2"></div>
   </div>
-</footer>
+  <footer>
+    <div id="footerContent">
+      <div>
+        <div>
+          <img
+            src="assets/img/faamaLogo.png"
+            alt="Logo do Faama"
+            id="faamaLogo"
+          />
+        </div>
+        <div class="socialMediaDiv">
+          <a target="_blank" href="https://www.facebook.com/faamaoficial">
+            <img
+              class="socialMediaIcon"
+              src="assets/icons/facebook.svg"
+              alt="ícone do facebook"
+            /> </a
+          ><a target="_blank" href="https://www.instagram.com/faama_edu/">
+            <img
+              class="socialMediaIcon"
+              src="assets/icons/instagram.svg"
+              alt="ícone do instagram"
+            /> </a
+          ><a
+            target="_blank"
+            href="https://www.youtube.com/channel/UCVxRQB-T1cemFDPnHkCvZ5Q"
+          >
+            <img
+              class="socialMediaIcon"
+              src="assets/icons/youtube.svg"
+              alt="ícone do youtube"
+            /> </a
+          ><a
+            target="_blank"
+            href="https://twitter.com/i/flow/login?redirect_after_login=%2Ffaama_edu"
+          >
+            <img
+              class="socialMediaIcon"
+              src="assets/icons/twitter.svg"
+              alt="ícone do twitter"
+            /> </a
+          ><a
+            target="_blank"
+            href="https://www.linkedin.com/company/faculdadeadventistadaamazonia/?originalSubdomain=br"
+          >
+            <img
+              class="socialMediaIcon"
+              src="assets/icons/linkedin.svg"
+              alt="ícone do linkedin"
+            />
+          </a>
+        </div>
+      </div>
+      <div class="contactDiv">
+        <div class="contact">
+          <p class="contactTitle">Callcenter</p>
+          <p class="contactcContent">(91) 3724-9500</p>
+        </div>
+        <div class="contact">
+          <p class="contactTitle">Whatsapp</p>
+          <p class="contactcContent">
+            <a
+              id="whatsapp"
+              href="https://web.Whatsapp.com/send?phone=5591992416182"
+              >(91) 99241-6182</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</app-container>

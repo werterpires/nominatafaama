@@ -1,8 +1,11 @@
-<div *ngIf="approvalType == 'users'" class="sectionBoxes">
+<div *ngIf="approvalType === 'users'" class="sectionBoxes">
   <app-users-approves [permissions]="permissions"></app-users-approves>
 </div>
 
-<div *ngIf="approvalType == 'students' && !selectedOne" class="sectionDataList">
+<div
+  *ngIf="approvalType === 'students' && !selectedOne"
+  class="sectionDataList"
+>
   <app-student-to-approve
     *ngIf="permissions.docente || permissions.administrador"
     [permissions]="permissions"
@@ -10,7 +13,7 @@
     (seeAll)="onSeeAllSelected()"
   ></app-student-to-approve>
 </div>
-<div *ngIf="approvalType == 'students' && selectedOne" class="sectionBoxes">
+<div *ngIf="approvalType === 'students' && selectedOne" class="sectionBoxes">
   <app-one-student-to-approve
     *ngIf="permissions.docente || permissions.administrador"
     [permissions]="permissions"

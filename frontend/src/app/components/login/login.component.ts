@@ -135,7 +135,6 @@ export class LoginComponent {
       .comparePassCode(this.principalEmail, this.accessCode)
       .subscribe({
         next: (res) => {
-          console.log(res)
           this.forgot = 3
           this.isLoading = false
         },

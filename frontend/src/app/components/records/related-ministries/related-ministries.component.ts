@@ -176,12 +176,7 @@ export class RelatedMinistriesComponent {
             },
           ]
           this.ngOnInit()
-          console.log(
-            'Lista de Ministérios: ',
-            this.ministryTypeList,
-            'Registros: ',
-            this.allRegistries,
-          )
+
           this.isLoading = false
         },
         error: (err) => {
