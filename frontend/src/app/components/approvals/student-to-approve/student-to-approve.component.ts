@@ -177,6 +177,11 @@ export class StudentToApproveComponent {
     })
   }
 
+  selectStudent(userId: string) {
+    this.router.navigate(['approve/student/' + userId])
+    // this.toStudent.emit({ option: 'student', studentId: studentId })
+  }
+
   getOneStudent(userId: number) {
     this.isLoading = true
     this.service.findOneRegistry(userId).subscribe({
