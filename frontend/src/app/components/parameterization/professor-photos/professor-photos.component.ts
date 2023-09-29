@@ -69,7 +69,6 @@ export class ProfessorPhotosComponent {
 
   getPhoto() {
     this.isLoading = true
-    console.log(this.selectedProfessor)
     this.service.findAllPhotos(this.selectedProfessor).subscribe({
       next: (res) => {
         if (res instanceof Blob) {
@@ -112,8 +111,6 @@ export class ProfessorPhotosComponent {
   createRegistry() {
     this.isLoading = true
 
-    if (this.createRegistryData) {
-    }
     const formData = new FormData()
     formData.append(
       'file',

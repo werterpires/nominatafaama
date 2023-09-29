@@ -22,6 +22,7 @@ export class NominatasService {
     private nominatasModel: NominatasModel,
     private eventsModel: EventsModel
   ) {}
+
   async createNominata(dto: CreateNominataDto): Promise<INominata> {
     try {
       const createNominataData: ICreateNominata = {
@@ -81,8 +82,8 @@ export class NominatasService {
       if (nominata) {
         const { nominata_id } = nominata;
 
-        const photo = await this.findNominaPhoto(nominata.class_photo);
-        nominata.photo = photo;
+        // const photo = await this.findNominaPhoto(nominata.class_photo);
+        // nominata.photo = photo;
 
         const students = await this.findNominataBasicStudents(nominata_id);
         nominata.students = students;
@@ -116,43 +117,43 @@ export class NominatasService {
         return null;
       }
 
-      for (const student of students) {
-        if (student.small_alone_photo == null) {
-          student.photo = null;
-        } else {
-          const filePath = `./src/modules/info/student-photos/files/${student.small_alone_photo}`;
+      // for (const student of students) {
+      //   if (student.small_alone_photo == null) {
+      //     student.photo = null;
+      //   } else {
+      //     const filePath = `./src/modules/info/student-photos/files/${student.small_alone_photo}`;
 
-          if (!fs.existsSync(filePath)) {
-            student.photo = null;
-          } else {
-            const fileStream = fs.createReadStream(filePath);
-            const headers = {
-              'Content-Type': 'image/jpeg',
-              'Content-Disposition': `attachment; filename=${student.small_alone_photo}`,
-            };
+      //     if (!fs.existsSync(filePath)) {
+      //       student.photo = null;
+      //     } else {
+      //       const fileStream = fs.createReadStream(filePath);
+      //       const headers = {
+      //         'Content-Type': 'image/jpeg',
+      //         'Content-Disposition': `attachment; filename=${student.small_alone_photo}`,
+      //       };
 
-            const filePromise = new Promise<Buffer>((resolve, reject) => {
-              const chunks: Buffer[] = [];
-              fileStream.on('data', (chunk: Buffer) => {
-                chunks.push(chunk);
-              });
-              fileStream.on('end', () => {
-                const file = Buffer.concat(chunks);
-                resolve(file);
-              });
-              fileStream.on('error', (error: Error) => {
-                reject(error);
-              });
-            });
+      //       const filePromise = new Promise<Buffer>((resolve, reject) => {
+      //         const chunks: Buffer[] = [];
+      //         fileStream.on('data', (chunk: Buffer) => {
+      //           chunks.push(chunk);
+      //         });
+      //         fileStream.on('end', () => {
+      //           const file = Buffer.concat(chunks);
+      //           resolve(file);
+      //         });
+      //         fileStream.on('error', (error: Error) => {
+      //           reject(error);
+      //         });
+      //       });
 
-            const file = await filePromise;
-            student.photo = {
-              file,
-              headers,
-            };
-          }
-        }
-      }
+      //       const file = await filePromise;
+      //       student.photo = {
+      //         file,
+      //         headers,
+      //       };
+      //     }
+      //   }
+      // }
 
       return students;
     } catch (error) {
@@ -219,43 +220,43 @@ export class NominatasService {
       if (professors == null) {
         return null;
       }
-      for (const professor of professors) {
-        if (professor.professor_photo_address == null) {
-          professor.photo = null;
-        } else {
-          const filePath = `./src/modules/professors/files/${professor.professor_photo_address}`;
+      // for (const professor of professors) {
+      //   if (professor.professor_photo_address == null) {
+      //     professor.photo = null;
+      //   } else {
+      //     const filePath = `./src/modules/professors/files/${professor.professor_photo_address}`;
 
-          if (!fs.existsSync(filePath)) {
-            professor.photo = null;
-          } else {
-            const fileStream = fs.createReadStream(filePath);
-            const headers = {
-              'Content-Type': 'image/jpeg',
-              'Content-Disposition': `attachment; filename=${professor.professor_photo_address}`,
-            };
+      //     if (!fs.existsSync(filePath)) {
+      //       professor.photo = null;
+      //     } else {
+      //       const fileStream = fs.createReadStream(filePath);
+      //       const headers = {
+      //         'Content-Type': 'image/jpeg',
+      //         'Content-Disposition': `attachment; filename=${professor.professor_photo_address}`,
+      //       };
 
-            const filePromise = new Promise<Buffer>((resolve, reject) => {
-              const chunks: Buffer[] = [];
-              fileStream.on('data', (chunk: Buffer) => {
-                chunks.push(chunk);
-              });
-              fileStream.on('end', () => {
-                const file = Buffer.concat(chunks);
-                resolve(file);
-              });
-              fileStream.on('error', (error: Error) => {
-                reject(error);
-              });
-            });
+      //       const filePromise = new Promise<Buffer>((resolve, reject) => {
+      //         const chunks: Buffer[] = [];
+      //         fileStream.on('data', (chunk: Buffer) => {
+      //           chunks.push(chunk);
+      //         });
+      //         fileStream.on('end', () => {
+      //           const file = Buffer.concat(chunks);
+      //           resolve(file);
+      //         });
+      //         fileStream.on('error', (error: Error) => {
+      //           reject(error);
+      //         });
+      //       });
 
-            const file = await filePromise;
-            professor.photo = {
-              file,
-              headers,
-            };
-          }
-        }
-      }
+      //       const file = await filePromise;
+      //       professor.photo = {
+      //         file,
+      //         headers,
+      //       };
+      //     }
+      //   }
+      // }
 
       return professors;
     } catch (error) {

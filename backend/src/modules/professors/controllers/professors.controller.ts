@@ -207,7 +207,8 @@ export class ProfessorsController {
       res.status(500).json({ error: 'Erro ao recuperar a foto.' });
     }
   }
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+
+  @IsPublic()
   @Get('photo/:professorId')
   async getPhotoByprofessorId(
     @Res() res: any,

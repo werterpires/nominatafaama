@@ -14,6 +14,7 @@ import { NominataService } from './nominata.service'
 import { IBasicProfessor, IBasicStudent, ICompleteNominata } from './types'
 import { DatePipe } from '@angular/common'
 import { Router } from '@angular/router'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'app-nominata',
@@ -59,6 +60,8 @@ export class NominataComponent {
   doneMessage = ''
   error = false
   errorMessage = ''
+
+  urlBase = environment.API
 
   constructor(
     private service: NominataService,
@@ -120,18 +123,18 @@ export class NominataComponent {
         }
 
         this.Registry.students?.forEach((student) => {
-          const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
-            type: 'image/jpeg',
-          })
-          if (blob instanceof Blob) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-              student.imgUrl = e.target.result
-            }
-            reader.readAsDataURL(blob)
-          } else {
-            this.showForm = true
-          }
+          // const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
+          //   type: 'image/jpeg',
+          // })
+          // if (blob instanceof Blob) {
+          //   const reader = new FileReader()
+          //   reader.onload = (e: any) => {
+          //     student.imgUrl = e.target.result
+          //   }
+          //   reader.readAsDataURL(blob)
+          // } else {
+          //   this.showForm = true
+          // }
 
           // Separação das uniões e associações
           const union = student.union_acronym
@@ -156,18 +159,18 @@ export class NominataComponent {
         }
 
         this.Registry.professors?.forEach((professor) => {
-          const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
-            type: 'image/jpeg',
-          })
-          if (blob instanceof Blob) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-              professor.imgUrl = e.target.result
-            }
-            reader.readAsDataURL(blob)
-          } else {
-            this.showForm = true
-          }
+          // const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
+          //   type: 'image/jpeg',
+          // })
+          // if (blob instanceof Blob) {
+          //   const reader = new FileReader()
+          //   reader.onload = (e: any) => {
+          //     professor.imgUrl = e.target.result
+          //   }
+          //   reader.readAsDataURL(blob)
+          // } else {
+          //   this.showForm = true
+          // }
           if (this.Registry && this.Registry.professors) {
             this.findDirector(this.Registry.professors, this.Registry?.director)
           }

@@ -71,7 +71,6 @@ export class EventsComponent {
       .subscribe({
         next: (res) => {
           this.allRegistries = res
-          console.log(this.allRegistries)
           this.showForm = false
           this.isLoading = false
         },

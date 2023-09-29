@@ -4,9 +4,10 @@
       <div
         id="classPhoto"
         class="classPhotoContainer"
-        *ngIf="Registry && Registry.imgUrl"
+        *ngIf="Registry"
         [ngStyle]="{
-          'background-image': 'url(' + Registry.imgUrl + ')'
+          'background-image':
+            'url(' + urlBase + '/nominatas/photo/' + Registry.nominata_id + ')'
         }"
       ></div>
       <div class="boxHead">
@@ -97,10 +98,14 @@
           <div (click)="selectStudent(student.student_id.toString())">
             <div class="smallAlonePhoto">
               <div
-                *ngIf="student.imgUrl"
                 class="imageContainer"
                 [ngStyle]="{
-                  'background-image': 'url(' + student.imgUrl + ')'
+                  'background-image':
+                    'url(' +
+                    urlBase +
+                    '/student-photos/student/' +
+                    student.student_id +
+                    '/small_alone_photo)'
                 }"
               ></div>
             </div>
@@ -138,10 +143,14 @@
           <div>
             <div class="smallAlonePhoto">
               <div
-                *ngIf="professor.imgUrl"
                 class="imageContainer"
                 [ngStyle]="{
-                  'background-image': 'url(' + professor.imgUrl + ')'
+                  'background-image':
+                    'url(' +
+                    urlBase +
+                    '/professors/photo/' +
+                    professor.professor_id +
+                    ')'
                 }"
               ></div>
             </div>

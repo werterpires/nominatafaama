@@ -126,7 +126,7 @@ export class NominatasController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE)
+  @IsPublic()
   @Get('photo/:nominataId')
   async getPhoto(@Res() res: any, @Param('nominataId') nominataId: string) {
     try {
