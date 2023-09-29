@@ -159,18 +159,18 @@ export class NominataComponent {
         }
 
         this.Registry.professors?.forEach((professor) => {
-          const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
-            type: 'image/jpeg',
-          })
-          if (blob instanceof Blob) {
-            const reader = new FileReader()
-            reader.onload = (e: any) => {
-              professor.imgUrl = e.target.result
-            }
-            reader.readAsDataURL(blob)
-          } else {
-            this.showForm = true
-          }
+          // const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
+          //   type: 'image/jpeg',
+          // })
+          // if (blob instanceof Blob) {
+          //   const reader = new FileReader()
+          //   reader.onload = (e: any) => {
+          //     professor.imgUrl = e.target.result
+          //   }
+          //   reader.readAsDataURL(blob)
+          // } else {
+          //   this.showForm = true
+          // }
           if (this.Registry && this.Registry.professors) {
             this.findDirector(this.Registry.professors, this.Registry?.director)
           }
