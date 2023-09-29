@@ -209,7 +209,6 @@ export class NominataComponent {
   }
 
   findDirector(professors: IBasicProfessor[], directorId: number) {
-    console.log(directorId)
     this.director = professors.find(
       (professor) => professor.professor_id === directorId,
     )

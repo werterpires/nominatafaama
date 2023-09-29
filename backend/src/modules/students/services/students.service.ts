@@ -357,46 +357,45 @@ export class StudentsService {
         }
       }
 
-      if (user) {
-        await this.createPhotoFile(
-          user.user_id,
-          completeStudent,
-          'small-alone-photo'
-        );
+      // if (user) {
+      //   await this.createPhotoFile(
+      //     user.user_id,
+      //     completeStudent,
+      //     'small-alone-photo'
+      //   );
 
-        await this.createPhotoFile(
-          user.user_id,
-          completeStudent,
-          'alone-photo'
-        );
-        await this.createPhotoFile(
-          user.user_id,
-          completeStudent,
-          'family-photo'
-        );
-        await this.createPhotoFile(
-          user.user_id,
-          completeStudent,
-          'other-family-photo'
-        );
-        await this.createPhotoFile(
-          user.user_id,
-          completeStudent,
-          'spouse-photo'
-        );
-        await this.createPhotoFile(
-          user.user_id,
-          completeStudent,
-          'invite-photo'
-        );
-      }
+      //   await this.createPhotoFile(
+      //     user.user_id,
+      //     completeStudent,
+      //     'alone-photo'
+      //   );
+      //   await this.createPhotoFile(
+      //     user.user_id,
+      //     completeStudent,
+      //     'family-photo'
+      //   );
+      //   await this.createPhotoFile(
+      //     user.user_id,
+      //     completeStudent,
+      //     'other-family-photo'
+      //   );
+      //   await this.createPhotoFile(
+      //     user.user_id,
+      //     completeStudent,
+      //     'spouse-photo'
+      //   );
+      //   await this.createPhotoFile(
+      //     user.user_id,
+      //     completeStudent,
+      //     'invite-photo'
+      //   );
+      // }
     } catch (error) {
       console.error(
         'Erro capturado no ApprovalsService findOneNotApproved:',
         error
       );
     }
-    console.log('completeStudent:', completeStudent);
     return completeStudent;
   }
 

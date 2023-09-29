@@ -41,9 +41,14 @@
           </div>
           <div
             class="directorPhotoContainer"
-            *ngIf="director && Registry?.imgUrl"
+            *ngIf="director"
             [ngStyle]="{
-              'background-image': 'url(' + director.imgUrl + ')'
+              'background-image':
+                'url(' +
+                urlBase +
+                '/professors/photo/' +
+                director.professor_id +
+                ')'
             }"
           ></div>
         </div>

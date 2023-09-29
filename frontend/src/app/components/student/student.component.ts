@@ -12,6 +12,7 @@ import { ICompleteStudent } from '../approvals/student-to-approve/types'
 import { DatePipe } from '@angular/common'
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { DataService } from '../shared/shared.service.ts/data.service'
+import { environment } from 'src/environments/environment'
 
 // import { jsPDF } from 'jspdf'
 
@@ -114,6 +115,8 @@ export class StudentComponent {
 
   @Input() studentId!: number
 
+  urlBase = environment.API
+
   ngOnInit(): void {
     this.isLoading = true
     this.activatedRoute.paramMap.subscribe((params) => {
@@ -167,19 +170,19 @@ export class StudentComponent {
             .join(' ')
         }
 
-        await this.getFile(this.student.photos?.alone_photo?.file.data, 'alone')
-        await this.getFile(
-          this.student.photos?.small_alone_photo?.file.data,
-          'small_alone',
-        )
-        await this.getFile(
-          this.student.photos?.spouse_photo?.file.data,
-          'spouse',
-        )
-        await this.getFile(
-          this.student.photos?.family_photo?.file.data,
-          'family',
-        )
+        // await this.getFile(this.student.photos?.alone_photo?.file.data, 'alone')
+        // await this.getFile(
+        //   this.student.photos?.small_alone_photo?.file.data,
+        //   'small_alone',
+        // )
+        // await this.getFile(
+        //   this.student.photos?.spouse_photo?.file.data,
+        //   'spouse',
+        // )
+        // await this.getFile(
+        //   this.student.photos?.family_photo?.file.data,
+        //   'family',
+        // )
         const key = 'l' + this.student.student?.person_id
         this.curriculumLink =
           'https://drive.google.com/uc?export=download&id=' + this.links[key]

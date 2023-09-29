@@ -3,7 +3,14 @@
     <div class="headSection">
       <div
         class="oneStudentPhoto"
-        [ngStyle]="{ 'background-image': 'url(' + smallAlonePhoto + ')' }"
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            urlBase +
+            '/student-photos/student/' +
+            student.student?.student_id +
+            '/small_alone_photo)'
+        }"
       ></div>
       <div>
         <div class="nameSpace">
@@ -124,7 +131,14 @@
           <div class="oneAlonePhoto">
             <div
               class="imageContainer"
-              [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  urlBase +
+                  '/student-photos/student/' +
+                  student.student.student_id +
+                  '/alone_photo)'
+              }"
             ></div>
           </div>
         </div>
@@ -275,9 +289,7 @@
                     class="oneStudentDinamicField"
                   >
                     <p class="oneStudentFieldBoldContent">
-                      {{
-                        formatConclusionYear(experience.past_exp_begin_date)
-                      }}
+                      {{ formatConclusionYear(experience.past_exp_begin_date) }}
                       -
                       {{ formatConclusionYear(experience.past_exp_end_date) }}
                     </p>
@@ -549,7 +561,12 @@
                   <div
                     class="imageContainer"
                     [ngStyle]="{
-                      'background-image': 'url(' + familyPhoto + ')'
+                      'background-image':
+                        'url(' +
+                        urlBase +
+                        '/student-photos/student/' +
+                        student.student.student_id +
+                        '/family_photo)'
                     }"
                   ></div>
                 </div>
@@ -667,9 +684,7 @@
                     class="oneStudentDinamicField"
                   >
                     <p class="oneStudentFieldBoldContent">
-                      {{
-                        formatConclusionYear(experience.past_exp_begin_date)
-                      }}
+                      {{ formatConclusionYear(experience.past_exp_begin_date) }}
                       -
                       {{ formatConclusionYear(experience.past_exp_end_date) }}
                     </p>
