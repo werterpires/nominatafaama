@@ -97,10 +97,14 @@
           <div (click)="selectStudent(student.student_id.toString())">
             <div class="smallAlonePhoto">
               <div
-                *ngIf="student.imgUrl"
                 class="imageContainer"
                 [ngStyle]="{
-                  'background-image': 'url(' + student.imgUrl + ')'
+                  'background-image':
+                    'url(' +
+                    urlBase +
+                    '/student-photos/student/' +
+                    student.student_id +
+                    '/small_alone_photo)'
                 }"
               ></div>
             </div>
