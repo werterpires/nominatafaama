@@ -8,7 +8,17 @@
           alt="Logo do seminário Latino Americano de Teologia"
         />
       </div>
-      <nav class="navDiv">
+      <img
+        class="menuIcon"
+        id="showMenu"
+        src="assets/icons/menu.svg"
+        alt="Ícone de menu"
+        (click)="menu = !menu"
+      />
+      <nav
+        class="navDiv"
+        [ngClass]="{ hidden: menu === false && isMobile === true }"
+      >
         <ul class="menuOptions">
           <li *ngIf="!permissions.isApproved" class="menuOption">
             <a href="#classPhoto" class="openMenuOption" scrollToAnchor

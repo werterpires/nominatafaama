@@ -1267,3 +1267,7 @@ button:active {
   border-width: 12px 12px 12px 12px;
   border-color: #ffffff;
 }
+
+.hidden {
+  display: none !important;
+}

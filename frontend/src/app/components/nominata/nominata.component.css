@@ -159,7 +159,7 @@ footer {
 .contact {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
 }
 .contactTitle {
   color: white;
@@ -184,4 +184,300 @@ footer {
 #whatsapp {
   text-decoration: none;
   color: white;
+}
+
+@media (max-width: 480px) {
+  .classPhotoContainer {
+    position: relative;
+    right: 10vw;
+    width: 100vw;
+    height: 34.25vw;
+  }
+  .smallAlonePhoto {
+    width: 80vw;
+    height: 82.05vw;
+  }
+  .studentDatacontainer {
+    width: 80vw;
+  }
+
+  .professorDatacontainer {
+    width: 80vw;
+  }
+
+  .directorTextContainer {
+    padding: 24px;
+  }
+
+  .eventSpace {
+    width: 80vw;
+    max-width: unset;
+    min-width: unset;
+  }
+
+  .directorPhotoContainer {
+    width: 80vw;
+    height: 90vw;
+  }
+
+  .searchConrols {
+    max-width: unset;
+    min-width: unset;
+    width: 80vw;
+  }
+
+  footer {
+    overflow: hidden;
+    width: 100vw;
+    height: fit-content;
+    padding-top: 30px;
+  }
+
+  #footerContent {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .contactDiv {
+    gap: 26px;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .contact {
+    flex-direction: row;
+    gap: 5px;
+    justify-content: space-between;
+  }
+
+  .oneStudentSpaceTitle {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  #maps {
+    height: 300px;
+  }
+
+  .oneStudentSpaceHeader {
+    display: block;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .classPhotoContainer {
+    position: relative;
+    right: 10vw;
+    width: 100vw;
+    height: 34.25vw;
+  }
+
+  .smallAlonePhoto {
+    width: 39vw;
+    height: 40vw;
+  }
+  .studentDatacontainer {
+    width: 39vw;
+    height: 175px;
+  }
+
+  .professorDatacontainer {
+    width: 39vw;
+  }
+
+  .directorTextContainer {
+    padding: 24px;
+  }
+
+  .directorSpace {
+    justify-content: flex-end;
+  }
+
+  .eventSpace {
+    width: 80vw;
+    max-width: unset;
+    /* min-width: unset; */
+  }
+
+  .directorPhotoContainer {
+    width: 80vw;
+    height: 90vw;
+  }
+
+  #searchForm {
+    justify-content: space-between;
+  }
+  .searchConrols {
+    max-width: unset;
+    min-width: unset;
+    width: 39vw;
+  }
+
+  #cleanSearchButton {
+    width: 39vw;
+  }
+
+  footer {
+    overflow: hidden;
+    width: 100vw;
+    height: fit-content;
+    padding-top: 30px;
+  }
+
+  #footerContent {
+    /* flex-direction: column; */
+    gap: 30px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .contactDiv {
+    gap: 26px;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .contact {
+    flex-direction: row;
+    gap: 5px;
+    justify-content: space-between;
+    width: 250px;
+  }
+
+  .oneStudentSpaceTitle {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  #maps {
+    height: 300px;
+  }
+
+  .oneStudentSpaceHeader {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .classPhotoContainer {
+    position: relative;
+    right: 10vw;
+    width: 100vw;
+    height: 34.25vw;
+  }
+
+  .smallAlonePhoto {
+    width: 39vw;
+    height: 40vw;
+  }
+  .studentDatacontainer {
+    width: 39vw;
+    height: 175px;
+  }
+
+  .professorDatacontainer {
+    width: 39vw;
+  }
+
+  .directorTextContainer {
+    padding: 24px;
+  }
+
+  .directorSpace {
+    justify-content: flex-end;
+  }
+
+  .eventSpace {
+    width: 80vw;
+    max-width: unset;
+    /* min-width: unset; */
+  }
+
+  .directorPhotoContainer {
+    width: 80vw;
+    height: 90vw;
+  }
+
+  #searchForm {
+    justify-content: space-between;
+  }
+
+  .searchConrols {
+    max-width: unset;
+    min-width: unset;
+    width: 39vw;
+  }
+
+  #cleanSearchButton {
+    width: 39vw;
+  }
+
+  footer {
+    overflow: hidden;
+    width: 100vw;
+    height: fit-content;
+    padding-top: 30px;
+  }
+
+  #footerContent {
+    /* flex-direction: column; */
+    gap: 30px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .contactDiv {
+    gap: 26px;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .contact {
+    flex-direction: row;
+    gap: 5px;
+    justify-content: space-between;
+    width: 250px;
+  }
+
+  .oneStudentSpaceTitle {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  #maps {
+    height: 300px;
+  }
+
+  .oneStudentSpaceHeader {
+    display: block;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .classPhotoContainer {
+    position: relative;
+    right: 10vw;
+    width: 100vw;
+    height: 34.25vw;
+  }
+
+  .eventSpace {
+    width: 80vw;
+    flex: unset;
+    width: 39vw;
+    max-width: unset;
+    min-width: unset;
+  }
+}
+
+@media (min-width: 1201px) {
+  .directorSpace {
+    justify-content: space-between;
+  }
+
+  .directorTextContainer {
+    max-width: unset;
+  }
 }
