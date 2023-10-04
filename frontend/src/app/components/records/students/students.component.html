@@ -236,7 +236,7 @@
       </label>
     </app-creation-form>
   </section>
-  <section class="registriesWrapper">
+  <section *ngIf="showBox" class="registriesWrapper">
     <app-update-form
       (editRegistry)="editRegistry()"
       *ngIf="registry.student_id"

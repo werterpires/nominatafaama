@@ -1,31 +1,56 @@
-<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
   <div class="boxHead">
     <span class="headField" (click)="showBox = !showBox">
-      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
-        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}" (click)="showForm = true" />
+    <img
+      #addIcon
+      class="addIcon"
+      [ngClass]="{ hidden: !showBox }"
+      src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}"
+      (click)="showForm = true"
+    />
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
-        Novo estado civil<input class="mediumInput" type="text" name="maritalStatusInput"
-          [(ngModel)]="createRegistryData.marital_status_type_name">
+        Novo estado civil<input
+          class="mediumInput"
+          type="text"
+          name="maritalStatusInput"
+          [(ngModel)]="createRegistryData.marital_status_type_name"
+        />
       </label>
     </app-creation-form>
   </section>
-  <section class="registriesWrapper">
-    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
+  <section *ngIf="showBox" class="registriesWrapper">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
       (deleteRegistry)="deleteRegistry(registry.marital_status_type_id)"
-      *ngFor="let registry of allRegistries; index as i">
+      *ngFor="let registry of allRegistries; index as i"
+    >
       <span class="field">
         <p class="fieldTitle">Estado civil:</p>
-        <input class="fieldContent" [id]="'maritalStatusInput'+i" name=`maritalStatusInput${i}`
-          [(ngModel)]="registry.marital_status_type_name">
-
+        <input
+          class="fieldContent"
+          [id]="'maritalStatusInput' + i"
+          name="`maritalStatusInput${i}`"
+          [(ngModel)]="registry.marital_status_type_name"
+        />
       </span>
     </app-update-form>
   </section>
@@ -38,7 +63,12 @@
   <div class="errorMessage">
     <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">
@@ -47,7 +77,12 @@
   <div class="doneMessage">
     <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

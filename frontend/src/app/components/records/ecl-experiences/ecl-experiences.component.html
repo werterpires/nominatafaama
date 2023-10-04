@@ -15,7 +15,7 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
   </div>
-  <section class="registriesWrapper">
+  <section *ngIf="showBox" class="registriesWrapper">
     <form
       class="registryWrapper"
       (input)="saveButton.classList.remove('hidden')"

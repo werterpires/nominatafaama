@@ -257,7 +257,7 @@
       </div>
     </app-creation-form>
   </section>
-  <section class="registriesWrapper">
+  <section *ngIf="showBox" class="registriesWrapper">
     <app-update-form
       [registryId]="registry.spouse_id"
       *ngIf="registry"

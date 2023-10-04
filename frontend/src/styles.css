@@ -638,7 +638,7 @@ button:active {
 
 .smallSectionBox {
   width: 80vw;
-  height: calc(36px + 56px);
+  /* height: calc(36px + 56px); */
   max-width: 833.71px;
   background: #ffffff;
   box-shadow: 0px 5px 4px rgba(164, 163, 163, 0.65);
@@ -1272,9 +1272,10 @@ button:active {
   display: none !important;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .smallSectionBox {
     width: 100vw;
+    height: unset;
     border-radius: unset;
   }
 
@@ -1285,5 +1286,24 @@ button:active {
   .sectionTitle1 {
     font-size: 14px;
     line-height: 21px;
+    margin-bottom: unset;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .smallSectionBox {
+    width: 100vw;
+    height: unset;
+    border-radius: unset;
+  }
+
+  .sectionBox {
+    width: 100vw;
+  }
+
+  .sectionTitle1 {
+    font-size: 20px;
+    line-height: 21px;
+    margin-bottom: unset;
   }
 }

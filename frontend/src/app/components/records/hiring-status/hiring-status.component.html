@@ -1,38 +1,73 @@
-<section #sectionBox [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }">
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
   <div class="boxHead">
     <span class="headField" (click)="showBox = !showBox">
-      <img #expandIcon class="seeMoreIcon" [ngClass]="{ rotatedClock: showBox }" id="seeMoreIconFormations"
-        src="assets/icons/seeMoreIcon.png" alt="Expandir" />
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <img #addIcon class="addIcon" [ngClass]="{ hidden: !showBox }" src="assets/icons/addIcon.png"
-      alt="Criar {{ title }}" (click)="showForm = true" />
+    <img
+      #addIcon
+      class="addIcon"
+      [ngClass]="{ hidden: !showBox }"
+      src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}"
+      (click)="showForm = true"
+    />
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
       <label class="inputLabel">
-        Novo Status de contratação<input class="smallInput" type="text" name="hiring_statusNameInput"
-          [(ngModel)]="createRegistryData.hiring_status_name">
+        Novo Status de contratação<input
+          class="smallInput"
+          type="text"
+          name="hiring_statusNameInput"
+          [(ngModel)]="createRegistryData.hiring_status_name"
+        />
       </label>
       <label class="inputLabel">
-        Descrição<input class="largeInput" type="text" name="hiring_statusAcronymInput"
-          [(ngModel)]="createRegistryData.hiring_status_description">
+        Descrição<input
+          class="largeInput"
+          type="text"
+          name="hiring_statusAcronymInput"
+          [(ngModel)]="createRegistryData.hiring_status_description"
+        />
       </label>
     </app-creation-form>
   </section>
-  <section class="registriesWrapper">
-    <app-update-form [registryId]="i" (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.hiring_status_id)" *ngFor="let registry of allRegistries; index as i">
+  <section *ngIf="showBox" class="registriesWrapper">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.hiring_status_id)"
+      *ngFor="let registry of allRegistries; index as i"
+    >
       <span class="field">
         <p class="fieldTitle">União:</p>
-        <input class="fieldContent" [id]="'hiring_statusInput'+i" name=`hiring_statusInput${i}`
-          [(ngModel)]="registry.hiring_status_name">
+        <input
+          class="fieldContent"
+          [id]="'hiring_statusInput' + i"
+          name="`hiring_statusInput${i}`"
+          [(ngModel)]="registry.hiring_status_name"
+        />
       </span>
       <span class="field">
         <p class="fieldTitle">Descrição:</p>
-        <input class="fieldContent" [id]="'hiring_statusAcronymInput'+i" name=`hiring_statusInput${i}`
-          [(ngModel)]="registry.hiring_status_description">
+        <input
+          class="fieldContent"
+          [id]="'hiring_statusAcronymInput' + i"
+          name="`hiring_statusInput${i}`"
+          [(ngModel)]="registry.hiring_status_description"
+        />
       </span>
     </app-update-form>
   </section>
@@ -45,7 +80,12 @@
   <div class="errorMessage">
     <p>{{ errorMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeError()" />
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">
@@ -54,7 +94,12 @@
   <div class="doneMessage">
     <p>{{ doneMessage }}</p>
   </div>
-  <img class="closeIcon" src="assets/icons/closeIcon.png" alt="Fechar" (click)="closeDone()" />
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
 </div>
 
 <div *ngIf="isLoading" class="loader1"></div>

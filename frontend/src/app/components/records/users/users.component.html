@@ -15,7 +15,7 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
   </div>
-  <section class="registriesWrapper">
+  <section *ngIf="showBox" class="registriesWrapper">
     <app-update-form (editRegistry)="editRegistry()" *ngIf="registry.user_id">
       <div class="subSection gap-2">
         <label class="inputLabel">
