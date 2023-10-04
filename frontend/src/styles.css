@@ -1271,3 +1271,19 @@ button:active {
 .hidden {
   display: none !important;
 }
+
+@media (max-width: 480px) {
+  .smallSectionBox {
+    width: 100vw;
+    border-radius: unset;
+  }
+
+  .sectionBox {
+    width: 100vw;
+  }
+
+  .sectionTitle1 {
+    font-size: 14px;
+    line-height: 21px;
+  }
+}

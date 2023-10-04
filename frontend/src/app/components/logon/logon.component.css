@@ -14,7 +14,7 @@
 
 .logonSquare {
   width: 1060px;
-  height: 640.52px;
+  height: fit-content;
   align-self: center;
   display: flex;
   flex-direction: column;
@@ -25,6 +25,8 @@
 
   box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
+
+  padding-bottom: 10px;
 }
 
 .logo {
@@ -92,12 +94,19 @@
 
 .checksSide {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 320px;
 }
 
 .checkOption {
   margin-left: 30px;
+  border: #0d3362 solid 0.4px;
+  border-radius: 5px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
 }
 
 .logonButton {
