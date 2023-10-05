@@ -146,7 +146,7 @@
           <span class="oneStudentField">
             <div class="oneStudentSpaceHeader">
               <p class="oneStudentSpaceTitle">Mensagem do Formando</p>
-              <img src="assets/icons/barra.svg" alt="" />
+              <img class="separatorBar" src="assets/icons/barra.svg" alt="" />
             </div>
 
             <p class="oneStudentFieldContent">
@@ -161,7 +161,7 @@
                 <p class="oneStudentSpaceTitle">
                   Conheça {{ student.student.person_name }}
                 </p>
-                <img src="assets/icons/barra.svg" alt="" />
+                <img class="separatorBar" src="assets/icons/barra.svg" alt="" />
               </div>
 
               <a
@@ -355,7 +355,10 @@
                   </p>
                   <hr />
                   <div class="dinamicNormalSection">
-                    <div *ngFor="let publication of student.publications">
+                    <div
+                      *ngFor="let publication of student.publications"
+                      class="macroReference"
+                    >
                       <div
                         *ngIf="publication.publication_type === type"
                         class="reference"
@@ -428,7 +431,7 @@
           <span class="oneStudentField">
             <div class="oneStudentSpaceHeader">
               <p class="oneStudentSpaceTitle">Informação dos filhos</p>
-              <img src="assets/icons/barra.svg" alt="" />
+              <img class="separatorBar" src="assets/icons/barra.svg" alt="" />
             </div>
 
             <section class="curriculumSpace">
@@ -470,7 +473,7 @@
                 >
                 cônjuge
               </p>
-              <img src="assets/icons/barra.svg" alt="" />
+              <img class="separatorBar" src="assets/icons/barra.svg" alt="" />
             </div>
 
             <section class="curriculumSpace">
@@ -496,7 +499,7 @@
                       </p>
                     </span>
                   </div>
-                  <hr />
+                  <hr class="separatorHr" />
                   <div class="dinamicNormalSection">
                     <span class="oneStudentField">
                       <p class="oneStudentFieldTitle">Idade</p>
@@ -514,7 +517,7 @@
                       </p>
                     </span>
                   </div>
-                  <hr />
+                  <hr class="separatorHr" />
                   <div class="dinamicNormalSection">
                     <span class="oneStudentField">
                       <p class="oneStudentFieldTitle">Data de batismo</p>
@@ -530,7 +533,7 @@
                       </p>
                     </span>
                   </div>
-                  <hr />
+                  <hr class="separatorHr" />
                   <div class="dinamicNormalSection">
                     <span class="oneStudentField">
                       <p class="oneStudentFieldTitle">Tempo de batismo</p>
@@ -539,7 +542,7 @@
                       </p>
                     </span>
                   </div>
-                  <hr />
+                  <hr class="separatorHr" />
                   <div class="dinamicNormalSection">
                     <span class="oneStudentField">
                       <p class="oneStudentFieldTitle">Telefone</p>
@@ -752,7 +755,10 @@
                   </p>
                   <hr />
                   <div class="dinamicNormalSection">
-                    <div *ngFor="let publication of student.spPublications">
+                    <div
+                      *ngFor="let publication of student.spPublications"
+                      class="macroReference"
+                    >
                       <div *ngIf="publication.publication_type === type">
                         <p class="oneStudentFieldContent">
                           {{ publication.reference }}
