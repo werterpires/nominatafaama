@@ -732,6 +732,7 @@ button:active {
   align-items: flex-end;
   margin-top: 35px;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .registryStartButtons {
@@ -1277,16 +1278,22 @@ button:active {
     width: 100vw;
     height: unset;
     border-radius: unset;
+    padding: unset;
   }
 
   .sectionBox {
     width: 100vw;
+    padding: unset;
   }
 
   .sectionTitle1 {
     font-size: 14px;
     line-height: 21px;
     margin-bottom: unset;
+  }
+
+  .formCreationWrapper {
+    padding-left: 10px;
   }
 }
 
