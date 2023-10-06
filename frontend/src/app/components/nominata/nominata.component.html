@@ -128,6 +128,17 @@
                 <span class="hiringStatusText">{{
                   student.hiring_status_name
                 }}</span>
+                <span *ngIf="student.hiringField" class="hiringStatusText">
+                  -
+                </span>
+                <span class="hiringStatusText">{{
+                  student.hiringField?.union_acronym
+                }}</span>
+                <span *ngIf="student.hiringField" class="hiringStatusText"
+                  >/</span
+                ><span class="hiringStatusText">{{
+                  student.hiringField?.association_acronym
+                }}</span>
               </div>
               <p class="nominataStudentName">{{ student.name }}</p>
               <p class="studentCompData">

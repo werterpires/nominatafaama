@@ -17,25 +17,37 @@
           <p class="oneStudentName">{{ student.student?.person_name }}</p>
         </div>
         <div class="hiringSpace">
-          <div
-            [ngClass]="{
-              dispIndicator:
-                student.student?.hiring_status_name === 'Disponível',
-              contIndicator:
-                student.student?.hiring_status_name === 'Contratado',
-              chamIndicator: student.student?.hiring_status_name === 'Chamado'
-            }"
-          ></div>
-          <span class="hiringStatusName">
-            {{ student.student?.hiring_status_name }}
-          </span>
-          <span
-            *ngIf="
-              student.student?.hiring_status_name === 'Chamado' ||
-              student.student?.hiring_status_name === 'Contratado'
-            "
-            class="hiringfield"
-          ></span>
+          <div class="hiringFieldSide">
+            <div
+              [ngClass]="{
+                dispIndicator:
+                  student.student?.hiring_status_name === 'Disponível',
+                contIndicator:
+                  student.student?.hiring_status_name === 'Contratado',
+                chamIndicator: student.student?.hiring_status_name === 'Chamado'
+              }"
+            ></div>
+            <div></div>
+            <span
+              class="hiringStatusName"
+              [ngClass]="{
+                dispText: student.student?.hiring_status_name === 'Disponível',
+                contText: student.student?.hiring_status_name === 'Contratado',
+                chamText: student.student?.hiring_status_name === 'Chamado'
+              }"
+            >
+              {{ student.student?.hiring_status_name }}
+            </span>
+          </div>
+          <div class="hiringFieldSide">
+            <span class="hiringField">{{
+              student.hiringField?.association_acronym
+            }}</span>
+            <span *ngIf="student.hiringField" class="hiringField">/</span>
+            <span class="hiringField">{{
+              student.hiringField?.union_acronym
+            }}</span>
+          </div>
         </div>
       </div>
     </div>

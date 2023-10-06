@@ -1237,18 +1237,19 @@ button:active {
 
 .hiringStatusText {
   margin-left: 4px;
-
   color: #fff;
   text-align: center;
   font-family: Poppins;
-  font-size: 10px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  text-transform: uppercase;
 }
 
 .hiringStatusSpace {
   display: flex;
+  align-items: center;
 }
 
 .directorPhotoContainer {

@@ -148,6 +148,7 @@ export class StudentsService {
         small_alone_photo: null,
         spouse_photo: null,
       },
+      hiringField: null,
     };
 
     try {
@@ -357,6 +358,11 @@ export class StudentsService {
         }
       }
 
+      const hiringField = await this.studentsModel.findHiringField(studentId);
+      if (hiringField !== null) {
+        completeStudent.hiringField = hiringField;
+      }
+      console.log(hiringField);
       // if (user) {
       //   await this.createPhotoFile(
       //     user.user_id,

@@ -44,16 +44,47 @@
   height: 16px;
 }
 
-.hiringSpace {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
 .chamIndicator {
   border-radius: 100%;
   background-color: #ff7f00;
   width: 16px;
   height: 16px;
+}
+
+.dispText {
+  color: #4edf72 !important;
+  font-weight: bold !important;
+}
+
+.contText {
+  color: #f60e0e !important;
+  font-weight: bold !important;
+}
+
+.chamText {
+  color: #ff7f00 !important;
+  font-weight: bold !important;
+}
+
+.hiringSpace {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 30px;
+}
+
+.hiringFieldSide {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.hiringField {
+  font-family: 'Roboto', Sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: none;
+  line-height: 14px;
+  color: #454654;
 }
 
 .hiringStatusName {

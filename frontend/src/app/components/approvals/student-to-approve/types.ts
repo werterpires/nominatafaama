@@ -15,6 +15,7 @@ import { ICourse } from '../../records/st-courses/types'
 import { IStudent } from '../../records/students/types'
 import { IStAcademicFormation } from '../../records/student-academic-formations/types'
 import { IUser } from '../../records/users/types'
+import { IHiringField } from '../../nominata/types'
 
 export interface ICompleteUser extends IUser {
   photo: { file: any; headers: Record<string, string> } | null
@@ -48,6 +49,7 @@ export interface ICompleteStudent {
   spRelatedMinistries: IRelatedMinistry[] | null
   photos: IPhotoFile | null
   user: IUser | null
+  hiringField?: IHiringField
 }
 
 export interface IPhotoFile {
