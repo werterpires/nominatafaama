@@ -124,7 +124,6 @@ export class StudentPhotosController {
     @Param('studentid') studentId: string
   ) {
     try {
-      console.log(phototype, studentId);
       const result =
         await this.studentPhotosService.findStudentPublicPhotoByStudentId(
           parseInt(studentId),

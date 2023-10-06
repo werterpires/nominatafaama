@@ -85,7 +85,6 @@ export class ChildrenController {
   @Put()
   async updateChildById(@Body() input: UpdateChildDto): Promise<IChild> {
     try {
-      console.log('aqui no controller');
       const updatedChild = await this.childrenService.updateChildById(input);
       return updatedChild;
     } catch (error) {
