@@ -163,3 +163,10 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 768px) {
+  .loginSquare {
+    width: 100%;
+    border-radius: 0%;
+  }
+}

@@ -638,7 +638,7 @@ button:active {
 
 .smallSectionBox {
   width: 80vw;
-  height: calc(36px + 56px);
+  /* height: calc(36px + 56px); */
   max-width: 833.71px;
   background: #ffffff;
   box-shadow: 0px 5px 4px rgba(164, 163, 163, 0.65);
@@ -732,6 +732,7 @@ button:active {
   align-items: flex-end;
   margin-top: 35px;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .registryStartButtons {
@@ -1236,18 +1237,19 @@ button:active {
 
 .hiringStatusText {
   margin-left: 4px;
-
   color: #fff;
   text-align: center;
   font-family: Poppins;
-  font-size: 10px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  text-transform: uppercase;
 }
 
 .hiringStatusSpace {
   display: flex;
+  align-items: center;
 }
 
 .directorPhotoContainer {
@@ -1266,4 +1268,50 @@ button:active {
   border-style: solid;
   border-width: 12px 12px 12px 12px;
   border-color: #ffffff;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .smallSectionBox {
+    width: 100vw;
+    height: unset;
+    border-radius: unset;
+    padding: unset;
+  }
+
+  .sectionBox {
+    width: 100vw;
+    padding: unset;
+  }
+
+  .sectionTitle1 {
+    font-size: 14px;
+    line-height: 21px;
+    margin-bottom: unset;
+  }
+
+  .formCreationWrapper {
+    padding-left: 10px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .smallSectionBox {
+    width: 100vw;
+    height: unset;
+    border-radius: unset;
+  }
+
+  .sectionBox {
+    width: 100vw;
+  }
+
+  .sectionTitle1 {
+    font-size: 20px;
+    line-height: 21px;
+    margin-bottom: unset;
+  }
 }

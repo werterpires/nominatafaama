@@ -28,6 +28,13 @@ export interface IBasicStudent {
   small_alone_photo: string
   photo?: { file: any; headers: Record<string, string> } | null
   imgUrl?: SafeResourceUrl
+  hiringField?: IHiringField
+}
+
+export interface IHiringField {
+  student_id: number
+  association_acronym: string
+  union_acronym: string
 }
 
 export interface IBasicProfessor {

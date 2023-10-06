@@ -37,6 +37,9 @@ export class ContainerComponent {
 
   @Input() approvalType = 'students'
 
+  menu = false
+  isMobile = false
+
   choseOption(chosenOption: string): void {
     Object.keys(this.options).forEach((option: string) => {
       this.options[option as keyof IOptions] = false
@@ -47,6 +50,9 @@ export class ContainerComponent {
 
   ngOnInit(): void {
     this.loginService.user$.subscribe((user) => {
+      this.isMobile = window.innerWidth <= 1024
+      console.log(window.innerWidth)
+
       if (user === 'wait') {
         return
       }

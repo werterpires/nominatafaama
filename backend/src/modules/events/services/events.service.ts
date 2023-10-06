@@ -50,7 +50,7 @@ export class EventsService {
       }
 
       await this.eventsModel.updateEventById(updateEventData)
-      console.log('no fim do service')
+   
     } catch (error) {
       sentError = new Error(error.message)
     }

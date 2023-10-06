@@ -41,9 +41,14 @@
           </div>
           <div
             class="directorPhotoContainer"
-            *ngIf="director && Registry?.imgUrl"
+            *ngIf="director"
             [ngStyle]="{
-              'background-image': 'url(' + director.imgUrl + ')'
+              'background-image':
+                'url(' +
+                urlBase +
+                '/professors/photo/' +
+                director.professor_id +
+                ')'
             }"
           ></div>
         </div>
@@ -122,6 +127,17 @@
                 ></div>
                 <span class="hiringStatusText">{{
                   student.hiring_status_name
+                }}</span>
+                <span *ngIf="student.hiringField" class="hiringStatusText">
+                  -
+                </span>
+                <span class="hiringStatusText">{{
+                  student.hiringField?.union_acronym
+                }}</span>
+                <span *ngIf="student.hiringField" class="hiringStatusText"
+                  >/</span
+                ><span class="hiringStatusText">{{
+                  student.hiringField?.association_acronym
                 }}</span>
               </div>
               <p class="nominataStudentName">{{ student.name }}</p>

@@ -322,8 +322,6 @@ export class ChildrenModel {
           .first('child_approved')
           .where('child_id', child_id);
 
-        console.log(approved.child_approved);
-
         if (approved.child_approved == true) {
           throw new Error('Registro já aprovado');
         }
