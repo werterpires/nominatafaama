@@ -129,7 +129,6 @@ export class StudentPhotosModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        console.log(studentId);
         const result = await trx
           .table('student_photos')
           .where('student_id', '=', studentId)

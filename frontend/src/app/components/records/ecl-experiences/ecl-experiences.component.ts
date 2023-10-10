@@ -60,7 +60,6 @@ export class EclExperiencesComponent {
                   ) {
                     return false
                   } else {
-                    console.log('esse seria null')
                     return null
                   }
                 }),

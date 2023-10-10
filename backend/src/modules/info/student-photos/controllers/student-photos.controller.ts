@@ -124,6 +124,9 @@ export class StudentPhotosController {
     @Param('studentid') studentId: string
   ) {
     try {
+      if (studentId == 'null') {
+        throw new Error('Id inálido');
+      }
       const result =
         await this.studentPhotosService.findStudentPublicPhotoByStudentId(
           parseInt(studentId),
