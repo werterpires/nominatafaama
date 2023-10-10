@@ -5,6 +5,7 @@ import { HiringStatusService } from '../records/hiring-status/hiring_status.serv
 import { IHiringStatus } from '../records/hiring-status/types'
 import { ICreateDirectVacancy } from './types'
 import { ModalVacancyService } from './modal-vacancy.service'
+import { IHiringField } from '../nominata/types'
 
 @Component({
   selector: 'app-modal-vacancy',
@@ -13,6 +14,7 @@ import { ModalVacancyService } from './modal-vacancy.service'
 })
 export class ModalVacancyComponent {
   show = false
+  gotten = false
   isLoading = false
   error = false
   errorMessage = ''
@@ -22,8 +24,10 @@ export class ModalVacancyComponent {
   associations: IAssociation[] = []
   hiringStatus: IHiringStatus[] = []
 
+  @Input() hiringField!: IHiringField | null
+
   association = ''
-  status = ''
+  @Input() status = ''
 
   constructor(
     private associationsService: AssociationService,
@@ -31,26 +35,22 @@ export class ModalVacancyComponent {
     private service: ModalVacancyService,
   ) {}
 
-  getAllAssociations() {
+  getAllAssociations(): Promise<void> {
     this.isLoading = true
-    this.associationsService.findAllRegistries().subscribe({
-      next: (res) => {
-        this.associations = res.sort((a, b) => {
-          if (a.union_name < b.union_name) {
-            return -1
-          } else if (a.union_name > b.union_name) {
-            return 1
-          } else {
-            return 0
-          }
-        })
-        this.isLoading = false
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
+    return new Promise<void>((resolve, reject) => {
+      this.associationsService.findAllRegistries().subscribe({
+        next: (res) => {
+          this.associations = res
+          this.isLoading = false
+          resolve()
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+          reject(err)
+        },
+      })
     })
   }
 
@@ -113,9 +113,27 @@ export class ModalVacancyComponent {
   }
 
   showForm() {
-    if (this.show === false) {
-      this.getAllAssociations()
+    if (!this.show && !this.gotten) {
+      this.getAllAssociations().then(() => {
+        if (this.hiringField) {
+          const matchingAssociation = this.associations.find((association) => {
+            return (
+              association.association_acronym ===
+              this.hiringField?.association_acronym
+            )
+          })
+
+          if (matchingAssociation) {
+            this.association = matchingAssociation.association_id.toString()
+          } else {
+            this.association = '0'
+          }
+        } else {
+          this.association = '0' // Defina o valor padrão '0' se hiringField for nulo.
+        }
+      })
       this.getAllHiringStatus()
+      this.gotten = !this.gotten
     }
 
     this.show = !this.show

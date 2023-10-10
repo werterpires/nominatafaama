@@ -56,6 +56,10 @@
                 permissions.secretaria)
             "
             [studentId]="student.student ? student.student.student_id : 0"
+            [hiringField]="student.hiringField ? student.hiringField : null"
+            [status]="
+              student.student ? student.student.hiring_status_id.toString() : ''
+            "
           ></app-modal-vacancy>
         </div>
       </div>

@@ -51,7 +51,6 @@ export class ContainerComponent {
   ngOnInit(): void {
     this.loginService.user$.subscribe((user) => {
       this.isMobile = window.innerWidth <= 1024
-      console.log(window.innerWidth)
 
       if (user === 'wait') {
         return

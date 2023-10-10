@@ -134,7 +134,6 @@ export class StudentComponent {
     this.isLoading = true
 
     this.loginService.user$.subscribe((user) => {
-      console.log('usuário que está sendo recebido:', user)
       if (user === 'wait') {
         return
       }
@@ -145,7 +144,7 @@ export class StudentComponent {
         this.user = user
 
         roles = this.user.roles.map((role) => role.role_name.toLowerCase())
-        console.log('permissões:', this.permissions)
+
         this.permissions.isApproved = this.user.user_approved
       } else {
         this.user = null
@@ -245,12 +244,11 @@ export class StudentComponent {
 
   ngAfterViewInit() {
     if (this.student.student) {
-      console.log('estou mesmo passando aqui')
       this.isLoading = true
       const contentHeight = document.body.scrollHeight - 640
 
       const divElement = this.whiteSpaceElement.nativeElement
-      console.log(contentHeight)
+
       divElement.style.height = contentHeight + 'px'
       this.isLoading = false
     }
