@@ -28,26 +28,57 @@ export class VacanciesModel {
           hiring_status_id,
         } = createDirectVacancy;
 
-        const [vacancy_id] = await trx('vacancies')
-          .insert({
-            title,
-            description,
-            field_id,
-          })
-          .returning('vacancy_id');
+        const acceptedInviteWhithoutRepId = await trx('vacancies')
+          .first('*')
+          .leftJoin(
+            'vacancies_students',
+            'vacancies.vacancy_id',
+            'vacancies_students.vacancy_id'
+          )
+          .leftJoin(
+            'invites',
+            'vacancies_students.vacancy_student_id',
+            'invites.vacancy_student_id'
+          )
+          .where('vacancies_students.student_id', student_id);
 
-        const [vacancy_student_id] = await trx('vacancies_students')
-          .insert({ vacancy_id, student_id })
-          .returning('vacancy_student_id');
+        if (acceptedInviteWhithoutRepId) {
+          await trx('vacancies')
+            .update({
+              field_id,
+            })
+            .where('vacancy_id', acceptedInviteWhithoutRepId.vacancy_id)
+            .returning('vacancy_id');
 
-        const [invite_id] = await trx('invites').insert({
-          vacancy_student_id,
-          accept,
-          approved,
-          deadline,
-        });
+          if (acceptedInviteWhithoutRepId.invite_id) {
+            await trx('invites')
+              .update({
+                accept,
+                approved,
+                deadline,
+              })
+              .where('invite_id', acceptedInviteWhithoutRepId.invite_id);
+          }
+        } else {
+          const [vacancy_id] = await trx('vacancies')
+            .insert({
+              title,
+              description,
+              field_id,
+            })
+            .returning('vacancy_id');
 
-        console.log(hiring_status_id, student_id);
+          const [vacancy_student_id] = await trx('vacancies_students')
+            .insert({ vacancy_id, student_id })
+            .returning('vacancy_student_id');
+
+          const [invite_id] = await trx('invites').insert({
+            vacancy_student_id,
+            accept,
+            approved,
+            deadline,
+          });
+        }
 
         await trx('students')
           .update({
@@ -57,8 +88,6 @@ export class VacanciesModel {
 
         await trx.commit();
       } catch (error) {
-        console.log('aaaaaa:', error);
-
         await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Vaga já existe');
