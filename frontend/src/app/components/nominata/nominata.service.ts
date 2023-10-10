@@ -14,7 +14,7 @@ export class NominataService {
 
   findAllRegistries(nominata_year: string): Observable<ICompleteNominata> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<ICompleteNominata>(environment.API + `/nominatas/${nominata_year}`, {
         headers: head_obj,

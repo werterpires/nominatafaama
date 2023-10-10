@@ -165,6 +165,7 @@ export class StudentsService {
       let user: IUser | null = await this.usersModel.findApprovedUserByPersonId(
         student.person_id
       );
+
       if (user) {
         user.cpf = '00000000000';
       }
@@ -362,7 +363,7 @@ export class StudentsService {
       if (hiringField !== null) {
         completeStudent.hiringField = hiringField;
       }
-      console.log(hiringField);
+
       // if (user) {
       //   await this.createPhotoFile(
       //     user.user_id,

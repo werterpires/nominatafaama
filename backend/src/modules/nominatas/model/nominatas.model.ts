@@ -433,8 +433,6 @@ export class NominatasModel {
           }
         });
 
-        console.log('students:', students);
-
         await trx.commit();
       } catch (error) {
         console.error(error);
