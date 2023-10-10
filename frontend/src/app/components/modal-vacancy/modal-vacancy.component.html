@@ -1,0 +1,33 @@
+<img src="assets/icons/change.svg" alt="" (click)="showForm()" />
+<div *ngIf="show" class="modalVancancy subSection">
+  <form action="" class="changeHiringForm">
+    <label
+      >Novo Status de contratação
+      <select name="statusSelect" id="statusSelect" [(ngModel)]="status">
+        <option
+          *ngFor="let stat of hiringStatus"
+          [value]="stat.hiring_status_id"
+        >
+          {{ stat.hiring_status_name }}
+        </option>
+      </select>
+    </label>
+    <label for=""
+      >Associação
+      <select
+        name="associationSelect"
+        id="associationSelect"
+        [(ngModel)]="association"
+      >
+        <option
+          *ngFor="let assoc of associations"
+          [value]="assoc.association_id"
+        >
+          {{ assoc.association_name }}
+        </option>
+      </select></label
+    >
+
+    <button type="button" (click)="createDirectVacancy()">Salvar</button>
+  </form>
+</div>

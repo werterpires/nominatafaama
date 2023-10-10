@@ -15,6 +15,7 @@ export interface ICreateDirectVacancy {
   accept: boolean | null;
   approved: boolean | null;
   deadline: Date;
+  hiring_status_id: number;
 }
 
 // export interface IUpdateStudent {

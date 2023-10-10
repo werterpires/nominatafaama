@@ -48,6 +48,15 @@
               student.hiringField?.union_acronym
             }}</span>
           </div>
+          <app-modal-vacancy
+            *ngIf="
+              permissions &&
+              (permissions.administrador ||
+                permissions.direcao ||
+                permissions.secretaria)
+            "
+            [studentId]="student.student ? student.student.student_id : 0"
+          ></app-modal-vacancy>
         </div>
       </div>
     </div>

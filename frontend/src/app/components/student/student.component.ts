@@ -5,7 +5,7 @@ import {
   Input,
   ViewChild,
 } from '@angular/core'
-import { IPermissions } from '../shared/container/types'
+import { IPermissions, IUserApproved } from '../shared/container/types'
 import { ActivatedRoute } from '@angular/router'
 import { StudentService } from './student.service'
 import { ICompleteStudent } from '../approvals/student-to-approve/types'
@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common'
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { DataService } from '../shared/shared.service.ts/data.service'
 import { environment } from 'src/environments/environment'
+import { LoginService } from '../shared/shared.service.ts/login.service'
 
 // import { jsPDF } from 'jspdf'
 
@@ -22,7 +23,15 @@ import { environment } from 'src/environments/environment'
   styleUrls: ['./student.component.css'],
 })
 export class StudentComponent {
-  @Input() permissions!: IPermissions
+  @Input() permissions: IPermissions = {
+    estudante: false,
+    secretaria: false,
+    direcao: false,
+    representacao: false,
+    administrador: false,
+    docente: false,
+    isApproved: false,
+  }
   @ViewChild('whiteSpace') whiteSpaceElement!: ElementRef
   @ViewChild('pdfPage') pdfPage!: ElementRef
   @ViewChild('pdfContainer') pdfContainer!: ElementRef
@@ -105,20 +114,52 @@ export class StudentComponent {
   }
 
   curriculumLink!: string
+  router: any
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private service: StudentService,
     public datePipe: DatePipe,
     private dataService: DataService,
+    private loginService: LoginService,
   ) {}
 
   @Input() studentId!: number
 
   urlBase = environment.API
 
+  user: IUserApproved | null = null
+
   ngOnInit(): void {
     this.isLoading = true
+
+    this.loginService.user$.subscribe((user) => {
+      console.log('usuário que está sendo recebido:', user)
+      if (user === 'wait') {
+        return
+      }
+
+      let roles: Array<string> = []
+
+      if (typeof user !== 'string' && user) {
+        this.user = user
+
+        roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+        console.log('permissões:', this.permissions)
+        this.permissions.isApproved = this.user.user_approved
+      } else {
+        this.user = null
+        this.router.navigate(['nominata'])
+        this.permissions.isApproved = false
+      }
+      this.permissions.estudante = roles.includes('estudante')
+      this.permissions.secretaria = roles.includes('secretaria')
+      this.permissions.direcao = roles.includes('direção')
+      this.permissions.representacao = roles.includes('representacao')
+      this.permissions.administrador = roles.includes('administrador')
+      this.permissions.docente = roles.includes('docente')
+    })
+
     this.activatedRoute.paramMap.subscribe((params) => {
       const studentId = params.get('studentid')
 

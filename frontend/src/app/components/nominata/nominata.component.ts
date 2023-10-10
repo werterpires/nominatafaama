@@ -24,7 +24,6 @@ import { environment } from 'src/environments/environment'
 export class NominataComponent {
   @Input() permissions!: IPermissions
   @Output() selectOne: EventEmitter<void> = new EventEmitter<void>()
-  @Output() seeAll: EventEmitter<void> = new EventEmitter<void>()
   @Output() toStudent = new EventEmitter<{
     option: string
     studentId: string
@@ -73,7 +72,6 @@ export class NominataComponent {
 
   ngOnInit() {
     this.getAllRegistries()
-    this.seeAll.emit()
   }
 
   getAllRegistries() {

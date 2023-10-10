@@ -25,6 +25,7 @@ export class VacanciesModel {
           accept,
           approved,
           deadline,
+          hiring_status_id,
         } = createDirectVacancy;
 
         const [vacancy_id] = await trx('vacancies')
@@ -46,10 +47,18 @@ export class VacanciesModel {
           deadline,
         });
 
+        console.log(hiring_status_id, student_id);
+
+        await trx('students')
+          .update({
+            hiring_status_id,
+          })
+          .where('student_id', student_id);
+
         await trx.commit();
       } catch (error) {
-        console.error(error);
-        console.error(error);
+        console.log('aaaaaa:', error);
+
         await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {
           sentError = new Error('Vaga já existe');
@@ -62,7 +71,7 @@ export class VacanciesModel {
     if (sentError) {
       console.error(
         'Erro capturado na createDirectVacancy na VacanciesModel:',
-        error
+        sentError
       );
       throw sentError;
     }

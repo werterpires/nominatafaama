@@ -22,7 +22,7 @@ export class VacanciesController {
   constructor(private readonly vacanciesService: VacanciesService) {}
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
-  @Post()
+  @Post('direct')
   async createDirectVacancy(@Body() createVacancyDto: CreateDirectVacancyDto) {
     try {
       const newVacancy = await this.vacanciesService.createDirectVacancy(

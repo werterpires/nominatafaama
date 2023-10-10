@@ -75,6 +75,8 @@ import { StudentPdfComponent } from './components/student/student-pdf/student-pd
 import { GeneralProfessorsComponent } from './components/parameterization/general-professors/general-professors.component'
 import { EventsComponent } from './components/parameterization/events/events.component'
 import { ScrollToAnchorDirective } from './components/nominata/scroll-to-anchor.directive'
+import { VacanciesComponent } from './components/vacancies/vacancies.component';
+import { ModalVacancyComponent } from './components/modal-vacancy/modal-vacancy.component'
 
 @NgModule({
   declarations: [
@@ -147,6 +149,8 @@ import { ScrollToAnchorDirective } from './components/nominata/scroll-to-anchor.
     GeneralProfessorsComponent,
     EventsComponent,
     ScrollToAnchorDirective,
+    VacanciesComponent,
+    ModalVacancyComponent,
   ],
   imports: [
     BrowserModule,
