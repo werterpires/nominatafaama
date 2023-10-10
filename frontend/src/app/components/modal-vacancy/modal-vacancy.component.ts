@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { AssociationService } from '../parameterization/associations/associations.service'
 import { IAssociation } from '../parameterization/associations/types'
 import { HiringStatusService } from '../records/hiring-status/hiring_status.service'
@@ -18,8 +18,11 @@ export class ModalVacancyComponent {
   isLoading = false
   error = false
   errorMessage = ''
+  done = false
+  doneMessage = ''
 
   @Input() studentId!: number
+  @Output() changeHiring = new EventEmitter<void>()
 
   associations: IAssociation[] = []
   hiringStatus: IHiringStatus[] = []
@@ -96,13 +99,11 @@ export class ModalVacancyComponent {
     this.isLoading = true
     this.service.createRegistry(createDirectVacancyData).subscribe({
       next: (res) => {
-        console.log(res)
-        // this.doneMessage = 'Registro criado com sucesso.'
-        // this.done = true
-        // this.ngOnInit()
-        // this.showForm = false
-        // this.resetCreationRegistry()
-        // this.isLoading = false
+        this.changeHiring.emit()
+        this.doneMessage = 'Registro criado com sucesso.'
+        this.done = true
+        this.show = false
+        this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -110,6 +111,8 @@ export class ModalVacancyComponent {
         this.isLoading = false
       },
     })
+
+    console.log('chegou aqui')
   }
 
   showForm() {
@@ -137,5 +140,13 @@ export class ModalVacancyComponent {
     }
 
     this.show = !this.show
+  }
+
+  closeDone() {
+    this.done = false
+  }
+
+  closeError() {
+    this.error = false
   }
 }

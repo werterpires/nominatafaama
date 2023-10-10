@@ -1,3 +1,7 @@
+.changIcon {
+  width: 14px;
+}
+
 .modalVancancy {
   position: absolute;
   z-index: 15;

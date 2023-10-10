@@ -60,6 +60,7 @@
             [status]="
               student.student ? student.student.hiring_status_id.toString() : ''
             "
+            (changeHiring)="ngOnInit()"
           ></app-modal-vacancy>
         </div>
       </div>

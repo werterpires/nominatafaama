@@ -531,7 +531,7 @@ button:active {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2;
+  z-index: 20;
   background: #f4f4f4;
   box-shadow: 0px 9.06876px 9.06876px rgba(0, 0, 0, 0.25);
   border: 0.236385px solid #696d7b;
