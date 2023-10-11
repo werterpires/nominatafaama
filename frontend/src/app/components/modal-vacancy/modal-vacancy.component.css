@@ -1,0 +1,17 @@
+.changIcon {
+  width: 14px;
+}
+
+.modalVancancy {
+  position: absolute;
+  z-index: 15;
+  background-color: white;
+  width: fit-content;
+  padding: 8px;
+}
+
+.changeHiringForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

@@ -186,6 +186,11 @@ footer {
   color: white;
 }
 
+.iconeContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
 @media (max-width: 480px) {
   .classPhotoContainer {
     position: relative;
