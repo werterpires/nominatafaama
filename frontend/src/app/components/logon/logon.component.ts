@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core'
 import { ValidateService } from '../shared/shared.service.ts/validate.services'
 import { Router } from '@angular/router'
-import { ILogon, ILogonDto } from './logon.Dto'
+import { ILogon, ILogonDto, ItermUser } from './logon.Dto'
 import { LogonService } from './logon.service'
 
 @Component({
@@ -19,7 +19,7 @@ export class LogonComponent {
   @Output() mailChange = new EventEmitter<string>()
   @Output() passwordChange = new EventEmitter<string>()
 
-  errorMessage: string = ''
+  errorMessage = ''
   error!: boolean
 
   logonData: ILogon = {
@@ -30,11 +30,11 @@ export class LogonComponent {
     rolesId: [false, false, false, false, false, false],
   }
 
-  confirmPassword: string = ''
-  confirmEmail: string = ''
+  confirmPassword = ''
+  confirmEmail = ''
 
-  seePassword: boolean = false
-  isLoading: boolean = false
+  seePassword = false
+  isLoading = false
 
   validateEmailData() {
     const emailInput = document.getElementById('emailInput') as HTMLInputElement
@@ -123,11 +123,11 @@ export class LogonComponent {
       this.isLoading = false
       return
     }
-    const roles: number[] = []
+    const roles: ItermUser[] = []
 
     for (let i = 0; i < this.logonData.rolesId.length; i++) {
       if (this.logonData.rolesId[i]) {
-        roles.push(i + 1)
+        roles.push({ role_id: i + 1, sign: true })
       }
     }
 
@@ -145,7 +145,7 @@ export class LogonComponent {
       cpf: this.logonData.cpf,
       principalEmail: this.logonData.principalEmail,
       passwordHash: this.logonData.passwordHash,
-      rolesId: roles,
+      roles: roles,
     }
 
     this.logonService.logon(logonDataDto).subscribe({

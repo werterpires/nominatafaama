@@ -17,6 +17,7 @@ export class UsersModel {
 
   async createUser({
     name,
+    roles,
     cpf,
     password_hash,
     principal_email,
@@ -27,6 +28,38 @@ export class UsersModel {
 
     await this.knex.transaction(async (trx) => {
       try {
+        const activeTerms = await trx('terms')
+          .select('term_id', 'role_id')
+          .where('active', true)
+          .andWhere('end_date', null);
+
+        const acceptedTerms: number[] = [];
+
+        // Crie um mapa para mapear role_id para term_id
+        const roleToTermMap = new Map();
+
+        // Preencha o mapa com os termos ativos
+        activeTerms.forEach((activeTerm) => {
+          roleToTermMap.set(activeTerm.role_id, activeTerm.term_id);
+        });
+
+        // Verifique se cada role tem um termo correspondente
+        roles.forEach((role) => {
+          const termId: number = roleToTermMap.get(role.role_id);
+
+          if (termId !== undefined) {
+            // Role tem um termo correspondente, adicione-o a acceptedTerms
+            acceptedTerms.push(termId);
+          } else {
+            // Role não tem um termo correspondente, lançar um erro
+            throw new Error(
+              `Role com role_id ${role.role_id} não possui um termo correspondente.`
+            );
+          }
+        });
+
+        // Se todos os roles tiverem termos correspondentes, acceptedTerms conterá os term_id aceitos
+
         const person = await trx('people').where('cpf', cpf);
 
         let person_id: number;
@@ -48,12 +81,22 @@ export class UsersModel {
           })
           .returning('user_id');
 
-        const roles = role_id.map((role) => ({
+        const rolesUsers = role_id.map((role) => ({
           user_id: user_id,
           role_id: role,
         }));
 
-        await trx('users_roles').insert(roles);
+        await trx('users_roles').insert(rolesUsers);
+
+        const termUsers = acceptedTerms.map((term) => ({
+          term_id: term,
+          user_id: user_id,
+          sign_date: new Date(),
+        }));
+
+        await trx('terms_users').insert(termUsers);
+
+        console.log(termUsers);
 
         await trx.commit();
       } catch (error) {

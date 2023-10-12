@@ -1,4 +1,12 @@
-import { IsBoolean, IsNotEmpty, IsString, Length, MinLength, isNotEmpty } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  Length,
+  MinLength,
+  isNotEmpty,
+} from 'class-validator';
+import { ItermUser } from '../bz_types/types';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -18,7 +26,5 @@ export class CreateUserDto {
   cpf: string;
 
   @IsNotEmpty()
-  rolesId: number[]
-
+  roles: ItermUser[];
 }
-
