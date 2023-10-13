@@ -1,3 +1,5 @@
+import { ITerm } from '../../logon/types/logon.types'
+
 export interface IRole {
   role_id: number
   role_name: string
@@ -5,6 +7,7 @@ export interface IRole {
 }
 
 export interface IUserApproved {
+  terms?: ITerm[] | null
   roles: IRole[]
   user_approved: boolean
 }

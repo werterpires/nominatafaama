@@ -12,6 +12,7 @@ import {
 } from '../bz_types/types';
 import { UpdateUserDto } from '../az_dto/updateUserDto';
 import * as Nodemailer from 'nodemailer';
+import { ITerm } from 'src/shared/terms/types/types';
 
 @Injectable()
 export class UsersService {
@@ -37,6 +38,7 @@ export class UsersService {
     try {
       user = await this.usersModel.createUser(createUser);
     } catch (error) {
+      console.log('error no service:', error);
       throw error;
     }
 
@@ -50,6 +52,22 @@ export class UsersService {
     } catch (error) {
       throw new Error(
         `Não foi possível encontrar o usuário com id ${id}: ${error.message}`
+      );
+    }
+  }
+
+  async findNotSignedTerms(currentUser: IUser): Promise<ITerm[] | null> {
+    try {
+      let rolesIds = currentUser.roles.map((role) => role.role_id);
+
+      const terms = await this.usersModel.findNotSignedTerms(
+        rolesIds,
+        currentUser.user_id
+      );
+      return terms;
+    } catch (error) {
+      throw new Error(
+        `Não foi possível encontrar termos não assinados para os papeis com id ${currentUser.roles}: ${error.message}`
       );
     }
   }

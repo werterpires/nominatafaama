@@ -1,4 +1,5 @@
 import { IRole } from 'src/shared/roles/bz_types/types';
+import { ITerm } from 'src/shared/terms/types/types';
 
 export interface IUser {
   user_approved?: boolean;

@@ -201,7 +201,7 @@
         <button class="logonButton" type="submit" (click)="cancel()">
           Cancelar
         </button>
-        <button class="logonButton" type="submit" (click)="logon()">
+        <button class="logonButton" type="submit" (click)="testToLogon()">
           Cadastrar-se
         </button>
       </div>
@@ -223,4 +223,9 @@
   </div>
   <div *ngIf="isLoading" class="loader1"></div>
   <div *ngIf="isLoading" class="loader2"></div>
+  <app-modal-term
+    *ngIf="showTerm"
+    (confirm)="confirmLogon($event)"
+    [userTerms]="allUserTerms"
+  ></app-modal-term>
 </div>

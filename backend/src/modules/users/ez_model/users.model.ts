@@ -10,6 +10,8 @@ import {
   IValidateUser,
 } from '../bz_types/types';
 import { IRole } from 'src/shared/roles/bz_types/types';
+import { ITerm } from 'src/shared/terms/types/types';
+import { Term } from 'src/shared/terms/entities/term.entity';
 
 @Injectable()
 export class UsersModel {
@@ -105,7 +107,7 @@ export class UsersModel {
         if (error.code == 'ER_DUP_ENTRY') {
           sentError = new Error('CPF ou Email já cadastrado');
         } else {
-          sentError = new Error(error.sqlMessage);
+          sentError = new Error(error.message);
         }
       }
     });
@@ -276,6 +278,64 @@ export class UsersModel {
     }
 
     return user;
+  }
+
+  async findNotSignedTerms(
+    roles: number[],
+    userId: number
+  ): Promise<ITerm[] | null> {
+    let terms: ITerm[] | null = null;
+    let sentError: Error | null = null;
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const activeTerms = await trx
+          .table('terms')
+          .select('term_id')
+          .where('terms.active', '=', true)
+          .whereIn('terms.role_id', roles);
+
+        if (activeTerms.length < 1) {
+          terms = null;
+        }
+
+        const signatures = await trx
+          .table('terms_users')
+          .select('term_id')
+          .where('user_id', userId)
+          .andWhere('unsign_date', null);
+
+        const signedTermIds = signatures.map((signature) => signature.term_id);
+        const unsignedActiveTerms = activeTerms.filter(
+          (activeTerm) => !signedTermIds.includes(activeTerm.term_id)
+        );
+        const unsignedActiveTermsIds = unsignedActiveTerms.map(
+          (term) => term.term_id
+        );
+
+        if (unsignedActiveTermsIds.length < 1) {
+          return;
+        }
+
+        const termsToSign = await trx
+          .table('terms')
+          .select('*')
+          .whereIn('terms.term_id', unsignedActiveTermsIds);
+        terms = termsToSign;
+        await trx.commit();
+      } catch (error) {
+        console.error(error);
+        sentError = new Error(error.message);
+        await trx.rollback();
+        throw error;
+      }
+    });
+
+    if (sentError) {
+      throw sentError;
+    }
+
+    return terms;
   }
 
   async findApprovedUserByPersonId(id: number): Promise<IUser | null> {
