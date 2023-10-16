@@ -81,7 +81,16 @@
           />
         </label>
       </div>
-      <div class="subSection">
+      <div class="checkSide">
+        <label class="label checkOption">
+          Administrador do sistema
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[5]"
+          />
+        </label>
         <label class="label checkOption">
           Estudante
           <input
@@ -101,6 +110,24 @@
           />
         </label>
         <label class="label checkOption">
+          Ministerial
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[6]"
+          />
+        </label>
+        <label class="label checkOption">
+          Design
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[7]"
+          />
+        </label>
+        <label class="label checkOption">
           Secretaria
           <input
             class="smallInput"
@@ -109,8 +136,6 @@
             [(ngModel)]="roles[2]"
           />
         </label>
-      </div>
-      <div class="subSection">
         <label class="label checkOption">
           Direção/Coordenação
           <input
@@ -127,15 +152,6 @@
             type="checkbox"
             name="checkRole"
             [(ngModel)]="roles[4]"
-          />
-        </label>
-        <label class="label checkOption">
-          Administrador do sistema
-          <input
-            class="smallInput"
-            type="checkbox"
-            name="checkRole"
-            [(ngModel)]="roles[5]"
           />
         </label>
       </div>

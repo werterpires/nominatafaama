@@ -1,0 +1,26 @@
+.checkOption {
+  margin-left: 30px;
+  border: #0d3362 solid 0.4px;
+  border-radius: 5px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.label {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  color: #333333;
+  margin-top: 5px;
+}
+
+.checkSide {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+}

@@ -29,7 +29,7 @@ export class UsersComponent {
   currentPassword = ''
   newPassword = ''
   passwordConfirmation = ''
-  roles: boolean[] = [false, false, false, false, false, false]
+  roles: boolean[] = [false, false, false, false, false, false, false, false]
   constructor(
     private service: UsersServices,
     private validateService: ValidateService,
@@ -183,7 +183,7 @@ export class UsersComponent {
       }
     }
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 9; i++) {
       if (this.roles[i]) {
         editRegistryData.roles_id?.push(i + 1)
       }

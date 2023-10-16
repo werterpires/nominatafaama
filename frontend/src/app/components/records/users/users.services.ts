@@ -30,7 +30,7 @@ export class UsersServices {
     allUsers: IUser[],
     maxId: number,
   ): IUser[] {
-    const rolesOrder = [7, 1, 2, 3, 5, 8, 4, 6]
+    const rolesOrder = [8, 1, 2, 3, 5, 7, 4, 6]
     const filteredUsers = allUsers.filter((user) => {
       return (
         user.user_approved === isApproved &&

@@ -56,9 +56,11 @@
             *ngIf="
               (permissions.administrador ||
                 permissions.direcao ||
+                permissions.ministerial ||
                 permissions.estudante ||
                 permissions.representacao ||
                 permissions.secretaria ||
+                permissions.design ||
                 permissions.docente) &&
               permissions.isApproved
             "
@@ -71,6 +73,7 @@
             *ngIf="
               (permissions.administrador ||
                 permissions.direcao ||
+                permissions.ministerial ||
                 permissions.secretaria ||
                 permissions.docente) &&
               permissions.isApproved
@@ -99,7 +102,8 @@
             *ngIf="
               (permissions.administrador ||
                 permissions.representacao ||
-                permissions.direcao) &&
+                permissions.direcao ||
+                permissions.ministerial) &&
               permissions.isApproved
             "
             class="menuOption"
@@ -111,7 +115,9 @@
             *ngIf="
               (permissions.administrador ||
                 permissions.secretaria ||
-                permissions.direcao) &&
+                permissions.design ||
+                permissions.direcao ||
+                permissions.ministerial) &&
               permissions.isApproved
             "
             class="menuOption"
