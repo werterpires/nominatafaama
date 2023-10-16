@@ -66,7 +66,15 @@ export class UsersModel {
             .insert({ name, cpf })
             .returning('person_id');
         } else {
-          person_id = person[0].person_id;
+          const alredyUser = await trx('users')
+            .first('*')
+            .where('person_id', person[0].person_id);
+
+          if (alredyUser) {
+            throw new Error('Já existe usuário para esse CPF');
+          } else {
+            person_id = person[0].person_id;
+          }
         }
 
         const [user_id] = await trx('users')
