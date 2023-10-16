@@ -524,6 +524,66 @@ button:active {
   padding: 10px;
 }
 
+.alert {
+  box-sizing: border-box;
+  position: fixed;
+  width: 395.63px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  background: #ffffff;
+  border: 0.936385px solid #53555f;
+  border-radius: 6.66045px;
+}
+
+.alertTitle {
+  width: 395.59px;
+  height: 46.48px;
+  background: #b3b02c;
+  border-radius: 6.66045px 6.66045px 0px 0px;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 27px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.118192px;
+  text-transform: uppercase;
+  color: #ffffff;
+  border: none;
+}
+
+.alertMessage {
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 6.66045px;
+  border: none;
+
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 27px;
+
+  text-align: center;
+  letter-spacing: 0.118192px;
+
+  color: #35353f;
+
+  padding: 10px;
+}
+
+.alertButtons {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
 .done {
   box-sizing: border-box;
   position: fixed;

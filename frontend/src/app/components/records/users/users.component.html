@@ -16,7 +16,7 @@
     </span>
   </div>
   <section *ngIf="showBox" class="registriesWrapper">
-    <app-update-form (editRegistry)="editRegistry()" *ngIf="registry.user_id">
+    <app-update-form (editRegistry)="showAlert()" *ngIf="registry.user_id">
       <div class="subSection gap-2">
         <label class="inputLabel">
           Nome<input
@@ -156,6 +156,18 @@
     alt="Fechar"
     (click)="closeError()"
   />
+</div>
+<div *ngIf="alert" class="alert">
+  <div class="alertTitle">
+    <p>Alerta</p>
+  </div>
+  <div class="alertMessage">
+    <p>{{ alertMessage }}</p>
+  </div>
+  <div class="alertButtons">
+    <button (click)="editRegistry()">Continuar</button>
+    <button (click)="closeAlert()">Cancelar</button>
+  </div>
 </div>
 <div *ngIf="done" class="done">
   <div class="doneTitle">

@@ -4,6 +4,7 @@ import { IUser, UpdateUserDto } from './types'
 import { UsersServices } from './users.services'
 import { LogonService } from '../../logon/logon.service'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
+import { LoginService } from '../../shared/shared.service.ts/login.service'
 
 @Component({
   selector: 'app-users',
@@ -25,14 +26,14 @@ export class UsersComponent {
     user_id: 0,
     user_approved: null,
   }
-  currentPassword: string = ''
-  newPassword: string = ''
-  passwordConfirmation: string = ''
+  currentPassword = ''
+  newPassword = ''
+  passwordConfirmation = ''
   roles: boolean[] = [false, false, false, false, false, false]
   constructor(
     private service: UsersServices,
-    private logonService: LogonService,
     private validateService: ValidateService,
+    private loginService: LoginService,
   ) {}
 
   title = 'Dados de Usuário'
@@ -45,6 +46,8 @@ export class UsersComponent {
   doneMessage = ''
   error = false
   errorMessage = ''
+  alert = false
+  alertMessage = ''
 
   ngOnInit() {
     this.getRegistry()
@@ -199,11 +202,12 @@ export class UsersComponent {
       next: (res) => {
         this.doneMessage = 'Usuário editado com sucesso.'
         this.done = true
-        this.ngOnInit()
+
         this.passwordConfirmation = ''
         this.newPassword = ''
         this.currentPassword = ''
         this.isLoading = false
+        this.loginService.logout()
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível atualizar o usuário.'
@@ -213,11 +217,21 @@ export class UsersComponent {
     })
   }
 
+  showAlert() {
+    this.alertMessage =
+      'Ao confirmar, você será automaticamente deslogado e só poderá fazer login novamente após ser aprovado pela equipe da coordenação.'
+    this.alert = true
+  }
+
   closeError() {
     this.error = false
   }
 
   closeDone() {
     this.done = false
+  }
+
+  closeAlert() {
+    this.alert = false
   }
 }

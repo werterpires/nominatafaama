@@ -77,8 +77,6 @@ export class TermsModel {
           });
 
           await trx.table('terms_users').insert(inserts);
-
-          console.log(termsToSign, inserts);
         }
 
         await trx.commit();

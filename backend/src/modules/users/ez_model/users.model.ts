@@ -52,11 +52,6 @@ export class UsersModel {
           if (termId !== undefined) {
             // Role tem um termo correspondente, adicione-o a acceptedTerms
             acceptedTerms.push(termId);
-          } else {
-            // Role não tem um termo correspondente, lançar um erro
-            throw new Error(
-              `Role com role_id ${role.role_id} não possui um termo correspondente.`
-            );
           }
         });
 
@@ -90,13 +85,15 @@ export class UsersModel {
 
         await trx('users_roles').insert(rolesUsers);
 
-        const termUsers = acceptedTerms.map((term) => ({
-          term_id: term,
-          user_id: user_id,
-          sign_date: new Date(),
-        }));
+        if (acceptedTerms.length > 0) {
+          const termUsers = acceptedTerms.map((term) => ({
+            term_id: term,
+            user_id: user_id,
+            sign_date: new Date(),
+          }));
 
-        await trx('terms_users').insert(termUsers);
+          await trx('terms_users').insert(termUsers);
+        }
 
         await trx.commit();
       } catch (error) {

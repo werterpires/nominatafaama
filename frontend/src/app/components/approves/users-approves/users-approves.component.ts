@@ -231,7 +231,7 @@ export class UsersApprovesComponent {
       approveRadio,
     ) as HTMLInputElement
     const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
-
+    console.log(approveRadio, rejectRadio)
     const approveValue = approveInput.checked
     const rejectValue = rejectInput.checked
 
