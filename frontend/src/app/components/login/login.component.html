@@ -1,5 +1,5 @@
 <div class="loginContainer">
-  <div class="loginSquare" *ngIf="forgot == 0">
+  <div class="loginSquare" *ngIf="forgot === 0">
     <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA" />
     <p class="loginInstruction">Nominata Salt</p>
     <form class="loginForm">
@@ -59,7 +59,7 @@
     </form>
     <p class="recover" (click)="showRecover()">Esqueci minha senha</p>
   </div>
-  <div class="loginSquare" *ngIf="forgot == 1">
+  <div class="loginSquare" *ngIf="forgot === 1">
     <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA" />
     <p class="loginInstruction">Nominata Salt</p>
     <div class="loginInstructions">
@@ -112,7 +112,7 @@
       </div>
     </form>
   </div>
-  <div class="loginSquare" *ngIf="forgot == 2">
+  <div class="loginSquare" *ngIf="forgot === 2">
     <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA" />
     <p class="loginInstruction">Nominata Salt</p>
     <div class="loginInstructions">
@@ -168,7 +168,7 @@
       </div>
     </form>
   </div>
-  <div class="loginSquare" *ngIf="forgot == 3">
+  <div class="loginSquare" *ngIf="forgot === 3">
     <img class="logo" src="assets/img/logoFaamaAzul.png" alt="Logo FAAMA" />
     <p class="loginInstruction">Nominata Salt</p>
     <div class="loginInstructions">
@@ -264,4 +264,9 @@
   </div>
   <div *ngIf="isLoading" class="loader1"></div>
   <div *ngIf="isLoading" class="loader2"></div>
+  <app-modal-term
+    *ngIf="showTerm"
+    (confirm)="confirmLogin($event)"
+    [userTerms]="allUserTerms"
+  ></app-modal-term>
 </div>

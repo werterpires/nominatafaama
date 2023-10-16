@@ -1,0 +1,34 @@
+<div class="whiteShadow">
+  <div class="termModal">
+    <div class="termArea">
+      <section class="termTextSection">
+        <div class="termText">
+          <div *ngFor="let term of userTerms">
+            <p
+              *ngFor="let paragraph of term.dividedText"
+              [innerHTML]="paragraph"
+              class="termParagraph"
+            ></p>
+            <br />
+            <hr />
+            <br />
+            <br />
+          </div>
+        </div>
+      </section>
+      <label for=""
+        >Aceito os termos<input
+          name="acceptCheck"
+          [(ngModel)]="accept"
+          type="checkbox"
+      /></label>
+    </div>
+
+    <form action="" class="termForm">
+      <button [ngClass]="{ hidden: !accept }" (click)="confirmLogon(true)">
+        Continuar
+      </button>
+      <button (click)="confirmLogon(false)">Cancelar</button>
+    </form>
+  </div>
+</div>

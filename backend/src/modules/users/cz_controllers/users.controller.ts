@@ -13,21 +13,21 @@ import {
   Req,
   Request,
   UseGuards,
-} from '@nestjs/common'
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
-import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator'
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
-import { ERoles } from 'src/shared/auth/types/roles.enum'
-import { CreateUserDto } from '../az_dto/createUserDto'
-import { UsersService } from '../dz_services/users.service'
-import { IAproveUser, IUpdateUser, IUser } from '../bz_types/types'
-import { AuthRequest, UserFromJwt } from 'src/shared/auth/types/types'
-import { RestrictRoles } from 'src/shared/roles/fz_decorators/restrictRoles.decorator'
-import { UsersGuard } from '../gz_guards/users.guard'
-import { AproveUserDto } from '../az_dto/aproveUserDto'
-import { UpdateUserDto } from '../az_dto/updateUserDto'
-import { CreateRecoverPassDto } from '../az_dto/createRecoverPassDto'
-import { CompareRecoverPassDto } from '../az_dto/compareRecoverPassDto'
+} from '@nestjs/common';
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
+import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator';
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
+import { ERoles } from 'src/shared/auth/types/roles.enum';
+import { CreateUserDto } from '../az_dto/createUserDto';
+import { UsersService } from '../dz_services/users.service';
+import { IAproveUser, IUpdateUser, IUser } from '../bz_types/types';
+import { AuthRequest, UserFromJwt } from 'src/shared/auth/types/types';
+import { RestrictRoles } from 'src/shared/roles/fz_decorators/restrictRoles.decorator';
+import { UsersGuard } from '../gz_guards/users.guard';
+import { AproveUserDto } from '../az_dto/aproveUserDto';
+import { UpdateUserDto } from '../az_dto/updateUserDto';
+import { CreateRecoverPassDto } from '../az_dto/createRecoverPassDto';
+import { CompareRecoverPassDto } from '../az_dto/compareRecoverPassDto';
 
 @Controller('users')
 export class UsersController {
@@ -37,10 +37,11 @@ export class UsersController {
   @Post()
   async createUser(@Body() input: CreateUserDto) {
     try {
-      const user = await this.usersService.createUser(input)
-      return user
+      const user = await this.usersService.createUser(input);
+      return user;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      console.log('erro no controller', error);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -49,11 +50,11 @@ export class UsersController {
   @Get('find/:id')
   async getUserById(@Param('id') id: number) {
     try {
-      const user = await this.usersService.findUserById(id)
+      const user = await this.usersService.findUserById(id);
 
-      return user
+      return user;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -63,18 +64,18 @@ export class UsersController {
     ERoles.DOCENTE,
     ERoles.ESTUDANTE,
     ERoles.REPRESENTACAO,
-    ERoles.SECRETARIA,
+    ERoles.SECRETARIA
   )
   @Get('edit')
   async getOwnUserById(@CurrentUser() currentUser: UserFromJwt) {
     try {
-      const { user_id } = currentUser
+      const { user_id } = currentUser;
 
-      const user = await this.usersService.findUserById(user_id)
+      const user = await this.usersService.findUserById(user_id);
 
-      return user
+      return user;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -82,12 +83,12 @@ export class UsersController {
   @Post('recover')
   async recoverPass(@Body() userEmail: CreateRecoverPassDto) {
     try {
-      const email = userEmail.principalEmail
-      const code = await this.usersService.recoverPass(email)
+      const email = userEmail.principalEmail;
+      const code = await this.usersService.recoverPass(email);
 
-      return code
+      return code;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -95,13 +96,13 @@ export class UsersController {
   @Post('pass')
   async comparePasscode(@Body() data: CompareRecoverPassDto) {
     try {
-      const email = data.principalEmail
-      const pass = data.passCode
-      const isValid = await this.usersService.comparePassCode(email, pass)
+      const email = data.principalEmail;
+      const pass = data.passCode;
+      const isValid = await this.usersService.comparePassCode(email, pass);
 
-      return isValid
+      return isValid;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -109,13 +110,13 @@ export class UsersController {
   @Post('change')
   async changePassword(@Body() data: CompareRecoverPassDto) {
     try {
-      const email = data.principalEmail
-      const password = data.passCode
-      const isValid = await this.usersService.changewPassword(email, password)
+      const email = data.principalEmail;
+      const password = data.passCode;
+      const isValid = await this.usersService.changewPassword(email, password);
 
-      return isValid
+      return isValid;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -123,22 +124,24 @@ export class UsersController {
   async getUserRoles(@CurrentUser() currentUser: IUser) {
     try {
       if (!currentUser) {
-        throw new Error('No user')
+        throw new Error('No user');
       }
+      let terms = await this.usersService.findNotSignedTerms(currentUser);
       const user = {
         roles: currentUser.roles,
         user_approved: currentUser.user_approved,
-      }
-      return user
+        terms: terms,
+      };
+      return user;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.SECRETARIA)
   @Get()
   async findAllUsers() {
-    return await this.usersService.findAllUsers()
+    return await this.usersService.findAllUsers();
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
@@ -146,10 +149,10 @@ export class UsersController {
   @Put('approve')
   async aproveUserById(@Body() input: AproveUserDto) {
     try {
-      const approvedUser = await this.usersService.approveUserById(input)
-      return approvedUser
+      const approvedUser = await this.usersService.approveUserById(input);
+      return approvedUser;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -159,19 +162,19 @@ export class UsersController {
     ERoles.DOCENTE,
     ERoles.ESTUDANTE,
     ERoles.REPRESENTACAO,
-    ERoles.SECRETARIA,
+    ERoles.SECRETARIA
   )
   @Put('update')
   async updateUserById(
     @Body() input: UpdateUserDto,
-    @CurrentUser() user: IUser,
+    @CurrentUser() user: IUser
   ) {
     try {
-      const id = user.user_id
-      const updatedUser = await this.usersService.updateUserById(id, input)
-      return updatedUser
+      const id = user.user_id;
+      const updatedUser = await this.usersService.updateUserById(id, input);
+      return updatedUser;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -181,16 +184,16 @@ export class UsersController {
     ERoles.DOCENTE,
     ERoles.ESTUDANTE,
     ERoles.REPRESENTACAO,
-    ERoles.SECRETARIA,
+    ERoles.SECRETARIA
   )
   @Delete()
   async deleteUserById(@CurrentUser() user: IUser) {
     try {
-      const id = user.user_id
-      const message = await this.usersService.deleteUserById(id)
-      return { message }
+      const id = user.user_id;
+      const message = await this.usersService.deleteUserById(id);
+      return { message };
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

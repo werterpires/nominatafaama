@@ -17,6 +17,7 @@ import { ApprovalsModule } from './modules/approvals/approvals.module'
 import { NominatasModule } from './modules/nominatas/nominatas.module';
 import { EventsModule } from './modules/events/events.module';
 import { VacanciesModule } from './modules/vacancies/vacancies.module';
+import { TermsModule } from './shared/terms/terms.module';
 import * as fs from 'fs'
 import * as path from 'path'
 import * as Nodemailer from 'nodemailer'
@@ -94,6 +95,7 @@ const mssqlConfig: KnexModuleOptions = {
     NominatasModule,
     EventsModule,
     VacanciesModule,
+    TermsModule,
   ],
   providers: [
     {
