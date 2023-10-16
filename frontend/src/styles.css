@@ -478,7 +478,7 @@ button:active {
   left: 50%;
   transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  z-index: 2;
+  z-index: 6;
   background: #ffffff;
   border: 0.936385px solid #53555f;
   border-radius: 6.66045px;

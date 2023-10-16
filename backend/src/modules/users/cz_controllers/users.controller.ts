@@ -127,7 +127,6 @@ export class UsersController {
         throw new Error('No user');
       }
       let terms = await this.usersService.findNotSignedTerms(currentUser);
-      console.log(terms);
       const user = {
         roles: currentUser.roles,
         user_approved: currentUser.user_approved,

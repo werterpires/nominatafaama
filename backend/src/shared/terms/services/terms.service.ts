@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTermDto } from '../dto/create-term.dto';
+import { CreateSignatureDto, CreateTermDto } from '../dto/create-term.dto';
 import { UpdateTermDto } from '../dto/update-term.dto';
 import { ITerm } from '../types/types';
 import { TermsModel } from '../model/terms.model';
@@ -7,8 +7,14 @@ import { TermsModel } from '../model/terms.model';
 @Injectable()
 export class TermsService {
   constructor(private termsModel: TermsModel) {}
-  create(createTermDto: CreateTermDto) {
-    return 'This action adds a new term';
+  create(createSignatureDto: CreateSignatureDto, userId: number) {
+    try {
+      const roles = createSignatureDto.termsUser.map((role) => role.role_id);
+      return this.termsModel.signTerms(roles, userId);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   async findAllActiveTerms(): Promise<ITerm[]> {

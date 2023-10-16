@@ -171,7 +171,7 @@ export class LogonComponent {
         this.allUserTerms = this.allActiveTerms.filter((term) =>
           rolesId.includes(term.role_id),
         )
-        this.allActiveTerms.forEach((term) => {
+        this.allUserTerms.forEach((term) => {
           term.dividedText = term.text.split('\n')
         })
         console.log('termos ativos que serão mostrados:', this.allUserTerms)

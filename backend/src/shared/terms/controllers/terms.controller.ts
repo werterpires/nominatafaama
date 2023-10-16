@@ -9,17 +9,28 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { TermsService } from '../services/terms.service';
-import { CreateTermDto } from '../dto/create-term.dto';
+import { CreateSignatureDto, CreateTermDto } from '../dto/create-term.dto';
 import { UpdateTermDto } from '../dto/update-term.dto';
 import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator';
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
+import { IUser } from 'src/modules/users/bz_types/types';
 
 @Controller('terms')
 export class TermsController {
   constructor(private readonly termsService: TermsService) {}
 
-  @Post()
-  create(@Body() createTermDto: CreateTermDto) {
-    return this.termsService.create(createTermDto);
+  @Post('sign')
+  create(
+    @Body() signatureDto: CreateSignatureDto,
+    @CurrentUser() currentUser: IUser
+  ) {
+    try {
+      const { user_id } = currentUser;
+      return this.termsService.create(signatureDto, user_id);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   @IsPublic()

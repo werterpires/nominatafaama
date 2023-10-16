@@ -3,6 +3,9 @@ import { Router } from '@angular/router'
 import { LoginService } from '../shared/shared.service.ts/login.service'
 import { ValidateService } from '../shared/shared.service.ts/validate.services'
 import { ILoginDto } from './login.Dto'
+import { ITerm } from '../logon/types/logon.types'
+import { IUserApproved } from '../shared/container/types'
+import { ItermUser } from '../logon/logon.Dto'
 
 @Component({
   selector: 'app-login',
@@ -27,6 +30,11 @@ export class LoginComponent {
   confirmPassword = ''
   done = false
   doneMessage = ''
+
+  showTerm = false
+  allUserTerms: ITerm[] = []
+  userToken = ''
+  userApproved!: IUserApproved | null
 
   loginData: ILoginDto = {
     email: '',
@@ -75,7 +83,37 @@ export class LoginComponent {
 
     this.loginService.login(this.loginData).subscribe({
       next: (res) => {
-        this.isLoading = false
+        // console.log('primeira res:', res)
+        localStorage.setItem('access_token', res.access_token)
+
+        this.loginService.findApprovedUser(res.access_token).subscribe({
+          next: (userApproved) => {
+            if (userApproved && userApproved.user_approved) {
+              if (
+                userApproved.terms &&
+                userApproved.terms != null &&
+                userApproved.terms.length > 0
+              ) {
+                this.allUserTerms = userApproved.terms
+                this.allUserTerms.forEach((term) => {
+                  term.dividedText = term.text.split('\n')
+                })
+                this.userToken = res.access_token
+                this.userApproved = userApproved
+                this.showTerm = true
+                this.isLoading = false
+              } else {
+                this.loginService.userToken = res.access_token
+                this.loginService.addApprovedUser(userApproved)
+                this.router.navigateByUrl('/')
+              }
+            } else {
+              throw Error(
+                'Seu usuário ainda não foi aprovado pela equipe da coordenação.',
+              )
+            }
+          },
+        })
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -83,6 +121,29 @@ export class LoginComponent {
         this.isLoading = false
       },
     })
+  }
+
+  confirmLogin(confirm: boolean) {
+    if (confirm) {
+      this.loginService.userToken = this.userToken
+      if (this.userApproved) {
+        this.loginService.addApprovedUser(this.userApproved)
+        const termsUser: ItermUser[] = this.userApproved?.roles.map((role) => {
+          return { role_id: role.role_id, sign: true }
+        })
+        this.loginService
+          .signTerms({ termsUser: termsUser }, this.userToken)
+          .subscribe((res) => {
+            console.log(res)
+          })
+      }
+      this.showTerm = false
+      this.router.navigateByUrl('/')
+    } else {
+      this.userToken = ''
+      this.userApproved = null
+      this.showTerm = false
+    }
   }
 
   getPassCode() {

@@ -98,8 +98,6 @@ export class UsersModel {
 
         await trx('terms_users').insert(termUsers);
 
-        console.log(termUsers);
-
         await trx.commit();
       } catch (error) {
         console.error(error);
