@@ -42,6 +42,12 @@ export class UsersApprovesComponent {
   estUsersNull: IUser[] = []
   estUsersTrue: IUser[] = []
   estUsersFalse: IUser[] = []
+  desUsersNull: IUser[] = []
+  desUsersTrue: IUser[] = []
+  desUsersFalse: IUser[] = []
+  minUsersNull: IUser[] = []
+  minUsersTrue: IUser[] = []
+  minUsersFalse: IUser[] = []
 
   viewAdmUsersNull = true
   viewAdmUsersTrue = false
@@ -61,6 +67,12 @@ export class UsersApprovesComponent {
   viewEstUsersNull = true
   viewEstUsersTrue = false
   viewEstUsersFalse = false
+  viewDesUsersNull = true
+  viewDesUsersTrue = false
+  viewDesUsersFalse = false
+  viewMinUsersNull = true
+  viewMinUsersTrue = false
+  viewMinUsersFalse = false
 
   @Input() permissions: IPermissions = {
     estudante: false,
@@ -69,6 +81,8 @@ export class UsersApprovesComponent {
     representacao: false,
     administrador: false,
     docente: false,
+    ministerial: false,
+    design: false,
     isApproved: false,
   }
 
@@ -112,56 +126,88 @@ export class UsersApprovesComponent {
       this.permissions.representacao = roles.includes('representacao')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
     })
 
     this.userServices.findAllUsers().subscribe({
       next: (res) => {
         this.allUsers = res
 
+        this.desUsersNull = this.userServices.filterUsers(
+          null,
+          this.allUsers,
+          0,
+        )
+        this.desUsersFalse = this.userServices.filterUsers(
+          false,
+          this.allUsers,
+          0,
+        )
+        this.desUsersTrue = this.userServices.filterUsers(
+          true,
+          this.allUsers,
+          0,
+        )
+        this.minUsersNull = this.userServices.filterUsers(
+          null,
+          this.allUsers,
+          5,
+        )
+        this.minUsersFalse = this.userServices.filterUsers(
+          false,
+          this.allUsers,
+          5,
+        )
+        this.minUsersTrue = this.userServices.filterUsers(
+          true,
+          this.allUsers,
+          5,
+        )
         this.admUsersNull = this.userServices.filterUsers(
           null,
           this.allUsers,
-          6,
+          7,
         )
         this.admUsersFalse = this.userServices.filterUsers(
           false,
           this.allUsers,
-          6,
+          7,
         )
         this.admUsersTrue = this.userServices.filterUsers(
           true,
           this.allUsers,
-          6,
+          7,
         )
         this.repUsersNull = this.userServices.filterUsers(
           null,
           this.allUsers,
-          5,
+          4,
         )
         this.repUsersFalse = this.userServices.filterUsers(
           false,
           this.allUsers,
-          5,
+          4,
         )
         this.repUsersTrue = this.userServices.filterUsers(
           true,
           this.allUsers,
-          5,
+          4,
         )
         this.dirUsersNull = this.userServices.filterUsers(
           null,
           this.allUsers,
-          4,
+          6,
         )
         this.dirUsersFalse = this.userServices.filterUsers(
           false,
           this.allUsers,
-          4,
+          6,
         )
         this.dirUsersTrue = this.userServices.filterUsers(
           true,
           this.allUsers,
-          4,
+          6,
         )
         this.secUsersNull = this.userServices.filterUsers(
           null,

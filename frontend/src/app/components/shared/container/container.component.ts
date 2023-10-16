@@ -21,6 +21,8 @@ export class ContainerComponent {
     representacao: false,
     administrador: false,
     docente: false,
+    ministerial: false,
+    design: false,
     isApproved: false,
   }
   user: IUserApproved | null = null

@@ -489,6 +489,250 @@
       class="sectionBox"
     >
       <div class="boxHead">
+        <p class="sectionTitle1">Ministeriais</p>
+        <form class="sectionForm">
+          <label class="labelRadio">
+            <input
+              type="checkbox"
+              [(ngModel)]="viewMinUsersTrue"
+              [value]="1"
+              name="viewMinUsersTrue"
+            />
+            Aprovados
+          </label>
+          <label class="labelRadio">
+            <input
+              type="checkbox"
+              [(ngModel)]="viewMinUsersFalse"
+              [value]="0"
+              name="viewMinUsersFalse"
+            />
+            Reprovados
+          </label>
+          <label class="labelRadio">
+            <input
+              type="checkbox"
+              [(ngModel)]="viewMinUsersNull"
+              [value]="null"
+              name="viewMinUsersNull"
+            />
+            Não avaliados
+          </label>
+        </form>
+      </div>
+
+      <section *ngIf="viewMinUsersTrue && minUsersTrue.length > 0">
+        <div *ngFor="let min of minUsersTrue; let i = index">
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Nome:</p>
+              <p class="fieldContent">{{ min.name }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">CPF:</p>
+              <p class="fieldContent">
+                {{ min.cpf.slice(0, 3) }}.{{ min.cpf.slice(3, 6) }}.{{
+                  min.cpf.slice(6, 9)
+                }}-{{ min.cpf.slice(9) }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">email:</p>
+              <p class="fieldContent">{{ min.principal_email }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Papéis:</p>
+              <p *ngFor="let role of min.roles" class="fieldContent">
+                {{ role.role_name }}
+              </p>
+            </span>
+          </div>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveMinTrue' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectMinTrue' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approveUser(
+                  'approveMinTrue' + i,
+                  'rejectMinTrue' + i,
+                  min.user_id,
+                  min.roles
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+
+          <hr class="sectionDivisiion" />
+        </div>
+      </section>
+
+      <section *ngIf="viewMinUsersFalse && minUsersFalse.length > 0">
+        <div *ngFor="let min of minUsersFalse; let i = index">
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Nome:</p>
+              <p class="fieldContent">{{ min.name }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">CPF:</p>
+              <p class="fieldContent">
+                {{ min.cpf.slice(0, 3) }}.{{ min.cpf.slice(3, 6) }}.{{
+                  min.cpf.slice(6, 9)
+                }}-{{ min.cpf.slice(9) }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">email:</p>
+              <p class="fieldContent">{{ min.principal_email }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Papéis:</p>
+              <p *ngFor="let role of min.roles" class="fieldContent">
+                {{ role.role_name }}
+              </p>
+            </span>
+          </div>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveMinFalse' + i"
+                type="radio"
+                name="status"
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectMinFalse' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approveUser(
+                  'approveMinFalse' + i,
+                  'rejectMinFalse' + i,
+                  min.user_id,
+                  min.roles
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+
+          <hr class="sectionDivisiion" />
+        </div>
+      </section>
+
+      <section *ngIf="viewMinUsersNull && minUsersNull.length > 0">
+        <div *ngFor="let min of minUsersNull; let i = index">
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Nome:</p>
+              <p class="fieldContent">{{ min.name }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">CPF:</p>
+              <p class="fieldContent">
+                {{ min.cpf.slice(0, 3) }}.{{ min.cpf.slice(3, 6) }}.{{
+                  min.cpf.slice(6, 9)
+                }}-{{ min.cpf.slice(9) }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">email:</p>
+              <p class="fieldContent">{{ min.principal_email }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Papéis:</p>
+              <p *ngFor="let role of min.roles" class="fieldContent">
+                {{ role.role_name }}
+              </p>
+            </span>
+          </div>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveMinNull' + i"
+                type="radio"
+                name="status"
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectMinNull' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approveUser(
+                  'approveMinNull' + i,
+                  'rejectMinNull' + i,
+                  min.user_id,
+                  min.roles
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+
+          <hr class="sectionDivisiion" />
+        </div>
+      </section>
+    </section>
+
+    <section
+      *ngIf="permissions.administrador || permissions.direcao"
+      class="sectionBox"
+    >
+      <div class="boxHead">
         <p class="sectionTitle1">Representantes de campo a serem aprovados</p>
         <form class="sectionForm">
           <label class="labelRadio">
@@ -1450,6 +1694,251 @@
                   'rejectEstNull' + i,
                   est.user_id,
                   est.roles
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+
+          <hr class="sectionDivisiion" />
+        </div>
+      </section>
+    </section>
+
+    <section
+      *ngIf="
+        permissions.administrador ||
+        permissions.direcao ||
+        permissions.ministerial
+      "
+      class="sectionBox"
+    >
+      <div class="boxHead">
+        <p class="sectionTitle1">Designs</p>
+        <form class="sectionForm">
+          <label class="labelRadio">
+            <input
+              type="checkbox"
+              [(ngModel)]="viewDesUsersTrue"
+              [value]="1"
+              name="viewDesUsersTrue"
+            />
+            Aprovados
+          </label>
+          <label class="labelRadio">
+            <input
+              type="checkbox"
+              [(ngModel)]="viewDesUsersFalse"
+              [value]="0"
+              name="viewDesUsersFalse"
+            />
+            Reprovados
+          </label>
+          <label class="labelRadio">
+            <input
+              type="checkbox"
+              [(ngModel)]="viewDesUsersNull"
+              [value]="null"
+              name="viewDesUsersNull"
+            />
+            Não avaliados
+          </label>
+        </form>
+      </div>
+      <section *ngIf="viewDesUsersTrue && desUsersTrue.length > 0">
+        <div *ngFor="let des of desUsersTrue; let i = index">
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Nome:</p>
+              <p class="fieldContent">{{ des.name }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">CPF:</p>
+              <p class="fieldContent">
+                {{ des.cpf.slice(0, 3) }}.{{ des.cpf.slice(3, 6) }}.{{
+                  des.cpf.slice(6, 9)
+                }}-{{ des.cpf.slice(9) }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">email:</p>
+              <p class="fieldContent">{{ des.principal_email }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Papéis:</p>
+              <p *ngFor="let role of des.roles" class="fieldContent">
+                {{ role.role_name }}
+              </p>
+            </span>
+          </div>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveDesTrue' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectDesTrue' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approveUser(
+                  'approveDesTrue' + i,
+                  'rejectDesTrue' + i,
+                  des.user_id,
+                  des.roles
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+
+          <hr class="sectionDivisiion" />
+        </div>
+      </section>
+      <section *ngIf="viewDesUsersFalse && desUsersFalse.length > 0">
+        <div *ngFor="let des of desUsersFalse; let i = index">
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Nome:</p>
+              <p class="fieldContent">{{ des.name }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">CPF:</p>
+              <p class="fieldContent">
+                {{ des.cpf.slice(0, 3) }}.{{ des.cpf.slice(3, 6) }}.{{
+                  des.cpf.slice(6, 9)
+                }}-{{ des.cpf.slice(9) }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">email:</p>
+              <p class="fieldContent">{{ des.principal_email }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Papéis:</p>
+              <p *ngFor="let role of des.roles" class="fieldContent">
+                {{ role.role_name }}
+              </p>
+            </span>
+          </div>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveDesfalse' + i"
+                type="radio"
+                name="status"
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectDesfalse' + i"
+                type="radio"
+                name="status"
+                checked
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approveUser(
+                  'approveDesfalse' + i,
+                  'rejectDesfalse' + i,
+                  des.user_id,
+                  des.roles
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+
+          <hr class="sectionDivisiion" />
+        </div>
+      </section>
+      <section *ngIf="viewDesUsersNull && desUsersNull.length > 0">
+        <div *ngFor="let des of desUsersNull; let i = index">
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">Nome:</p>
+              <p class="fieldContent">{{ des.name }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">CPF:</p>
+              <p class="fieldContent">
+                {{ des.cpf.slice(0, 3) }}.{{ des.cpf.slice(3, 6) }}.{{
+                  des.cpf.slice(6, 9)
+                }}-{{ des.cpf.slice(9) }}
+              </p>
+            </span>
+          </div>
+          <div class="subSection">
+            <span class="field">
+              <p class="fieldTitle">email:</p>
+              <p class="fieldContent">{{ des.principal_email }}</p>
+            </span>
+            <span class="field">
+              <p class="fieldTitle">Papéis:</p>
+              <p *ngFor="let role of des.roles" class="fieldContent">
+                {{ role.role_name }}
+              </p>
+            </span>
+          </div>
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveDesNull' + i"
+                type="radio"
+                name="status"
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectDesNull' + i"
+                type="radio"
+                name="status"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                approveUser(
+                  'approveDesNull' + i,
+                  'rejectDesNull' + i,
+                  des.user_id,
+                  des.roles
                 )
               "
             >

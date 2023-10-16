@@ -30,6 +30,8 @@ export class StudentComponent {
     representacao: false,
     administrador: false,
     docente: false,
+    ministerial: false,
+    design: false,
     isApproved: false,
   }
   @ViewChild('whiteSpace') whiteSpaceElement!: ElementRef

@@ -1,8 +1,10 @@
 export enum ERoles {
   ESTUDANTE = 'estudante',
   DOCENTE = 'docente',
-  SECRETARIA= 'secretaria',
+  SECRETARIA = 'secretaria',
   DIRECAO = 'direção',
   REPRESENTACAO = 'representante de campo',
-  ADMINISTRACAO = 'administrador'
+  ADMINISTRACAO = 'administrador',
+  MINISTERIAL = 'ministerial',
+  DESIGN = 'design',
 }

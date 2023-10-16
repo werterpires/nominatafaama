@@ -17,6 +17,8 @@ export class RecordsComponent {
     representacao: false,
     administrador: false,
     docente: false,
+    ministerial: false,
+    design: false,
     isApproved: false,
   }
 

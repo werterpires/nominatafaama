@@ -24,6 +24,8 @@ export class StudentToApproveComponent {
     representacao: false,
     administrador: false,
     docente: false,
+    ministerial: false,
+    design: false,
     isApproved: false,
   }
   @Output() selectOne: EventEmitter<void> = new EventEmitter<void>()
