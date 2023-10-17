@@ -65,7 +65,7 @@ export class NominatasController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
   @Post('photo/:nominataId')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -116,7 +116,7 @@ export class NominatasController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
   @Get('professors/')
   async findAllProfessors(): Promise<ISinteticProfessor[]> {
     try {
@@ -166,7 +166,7 @@ export class NominatasController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
   @Get()
   async findAllNominataes() {
     try {

@@ -41,6 +41,7 @@
             type="cpf"
             name="nominataInviteBeginInput"
             [(ngModel)]="createRegistryData.cpf"
+            (input)="formatarCPF()"
           />
         </label>
       </div>
@@ -78,11 +79,12 @@
             type="text"
             name="professor"
             [(ngModel)]="registry.cpf"
+            (input)="formatarCPF()"
           />
         </label>
       </div>
       <label class="inputLabel">
-        Palavras do diretor<input
+        Titulação<input
           type="text"
           class="mediumInput"
           name="professorAssignment"

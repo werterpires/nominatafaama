@@ -729,11 +729,15 @@
     </section>
 
     <section
-      *ngIf="permissions.administrador || permissions.direcao"
+      *ngIf="
+        permissions.administrador ||
+        permissions.direcao ||
+        permissions.secretaria
+      "
       class="sectionBox"
     >
       <div class="boxHead">
-        <p class="sectionTitle1">Representantes de campo a serem aprovados</p>
+        <p class="sectionTitle1">Representantes de campo</p>
         <form class="sectionForm">
           <label class="labelRadio">
             <input

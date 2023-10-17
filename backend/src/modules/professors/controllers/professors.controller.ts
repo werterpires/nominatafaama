@@ -90,7 +90,8 @@ export class ProfessorsController {
     ERoles.ADMINISTRACAO,
     ERoles.DOCENTE,
     ERoles.SECRETARIA,
-    ERoles.DIRECAO
+    ERoles.DIRECAO,
+    ERoles.DESIGN
   )
   @Post('photo')
   @UseInterceptors(
@@ -137,7 +138,8 @@ export class ProfessorsController {
     ERoles.ADMINISTRACAO,
     ERoles.DOCENTE,
     ERoles.DIRECAO,
-    ERoles.SECRETARIA
+    ERoles.SECRETARIA,
+    ERoles.DESIGN
   )
   @Post('photo/:professorId')
   @UseInterceptors(

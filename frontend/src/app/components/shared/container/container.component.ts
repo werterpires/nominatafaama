@@ -75,6 +75,8 @@ export class ContainerComponent {
       this.permissions.representacao = roles.includes('representacao')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
     })
   }
   // ngOnInit(): void {

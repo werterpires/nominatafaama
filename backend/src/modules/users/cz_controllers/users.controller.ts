@@ -64,7 +64,9 @@ export class UsersController {
     ERoles.DOCENTE,
     ERoles.ESTUDANTE,
     ERoles.REPRESENTACAO,
-    ERoles.SECRETARIA
+    ERoles.SECRETARIA,
+    ERoles.MINISTERIAL,
+    ERoles.DESIGN
   )
   @Get('edit')
   async getOwnUserById(@CurrentUser() currentUser: UserFromJwt) {

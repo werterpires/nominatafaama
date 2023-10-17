@@ -128,6 +128,8 @@ export class UsersApprovesComponent {
       this.permissions.docente = roles.includes('docente')
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
     })
 
     this.userServices.findAllUsers().subscribe({
