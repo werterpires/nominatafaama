@@ -35,7 +35,16 @@ export class StCoursesComponent {
   ) {}
 
   ngOnInit() {
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
   }
 
   getAllRegistries() {

@@ -50,9 +50,19 @@ export class UsersComponent {
   alertMessage = ''
 
   ngOnInit() {
-    this.getRegistry()
+    if (this.showBox) {
+      this.getRegistry()
+    }
+
     if (this.registry.person_id == null) {
       this.showForm = false
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getRegistry()
     }
   }
 

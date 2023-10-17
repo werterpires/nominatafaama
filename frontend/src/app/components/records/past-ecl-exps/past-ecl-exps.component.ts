@@ -36,7 +36,16 @@ export class PastEclExpsComponent {
 
   ngOnInit() {
     this.allRegistries = []
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
   }
 
   getAllRegistries() {

@@ -47,7 +47,16 @@ export class PublicationsComponent {
   ngOnInit() {
     this.allRegistries = []
     this.publicationTypeList = []
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
   }
 
   getAllRegistries() {
