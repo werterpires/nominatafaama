@@ -78,6 +78,7 @@ import { ScrollToAnchorDirective } from './components/nominata/scroll-to-anchor.
 import { VacanciesComponent } from './components/vacancies/vacancies.component'
 import { ModalVacancyComponent } from './components/modal-vacancy/modal-vacancy.component'
 import { ModalTermComponent } from './components/modal-term/modal-term.component'
+import { UnactiveComponent } from './components/parameterization/unactive/unactive.component'
 
 @NgModule({
   declarations: [
@@ -153,6 +154,7 @@ import { ModalTermComponent } from './components/modal-term/modal-term.component
     VacanciesComponent,
     ModalVacancyComponent,
     ModalTermComponent,
+    UnactiveComponent,
   ],
   imports: [
     BrowserModule,

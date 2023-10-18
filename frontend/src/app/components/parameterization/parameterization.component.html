@@ -116,5 +116,16 @@
       [permissions]="permissions"
     >
     </app-events>
+
+    <app-unactive
+      *ngIf="
+        permissions.secretaria ||
+        permissions.design ||
+        permissions.administrador ||
+        permissions.direcao
+      "
+      [permissions]="permissions"
+    >
+    </app-unactive>
   </div>
 </app-container>
