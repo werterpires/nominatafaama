@@ -155,6 +155,30 @@ export class StudentsModel {
     return student;
   }
 
+  async findActiveByUserId(userId: number): Promise<boolean | null> {
+    let acctive: boolean | null = null;
+    let sentError: Error | null = null;
+    try {
+      const result = await this.knex
+        .table('students')
+        .first('students.student_active')
+        .leftJoin('users', 'students.person_id', 'users.person_id')
+        .where('users.user_id', userId);
+      if (result) {
+        acctive = result.student_active;
+      }
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error);
+      sentError = new Error(error.message);
+    }
+
+    if (sentError) {
+      throw sentError;
+    }
+
+    return acctive;
+  }
+
   async findHiringField(studentId: number) {
     let hiringField: IHiringField | null = null;
     let sentError: Error | null = null;

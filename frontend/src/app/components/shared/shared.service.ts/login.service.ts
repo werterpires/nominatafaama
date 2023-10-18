@@ -100,6 +100,15 @@ export class LoginService {
 
         // }),
         catchError((error) => {
+          console.log('O erro que chegou foi:', error)
+          if (error.error.message === 'Estudante inativo') {
+            return throwError(
+              () =>
+                new Error(
+                  'Apenas estudantes com matrícula ativa podem fazer login. Entre em contato com a coordenação para mais informações.',
+                ),
+            )
+          }
           if (error.statusText === 'Unauthorized') {
             return throwError(
               () => new Error('Senha ou email não localizados.'),
