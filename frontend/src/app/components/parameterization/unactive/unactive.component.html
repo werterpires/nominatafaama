@@ -29,23 +29,20 @@
           />
         </label>
       </div>
-      <!-- <div class="subSection">
-        <div class="alonePhoto">
-          <div
-            class="imageContainer"
-            [ngStyle]="{ 'background-image': 'url(' + imageUrl + ')' }"
-            *ngIf="imageUrl"
-          ></div>
-          <div
-            class="imageContainer imageModel"
-            [ngStyle]="{
-              'background-image': 'url(assets/img/smallAlone.png)'
-            }"
-            *ngIf="!imageUrl"
-          ></div>
-        </div>
-      </div> -->
     </app-creation-form>
+    <div>
+      <h4 class="h4Title">Estudantes ativos</h4>
+      <div class="activeStudentsList">
+        <span class="studentNameAndCpf" *ngFor="let student of activeStudents">
+          <div class="dataContent">
+            <p>{{ student?.name }}</p>
+          </div>
+          <div class="dataContent">
+            <p>{{ formatarCPF(student?.cpf) }}</p>
+          </div>
+        </span>
+      </div>
+    </div>
   </section>
 
   <div *ngIf="error" class="error">
@@ -77,6 +74,8 @@
     />
   </div>
 
-  <div *ngIf="isLoading" class="loader1"></div>
-  <div *ngIf="isLoading" class="loader2"></div>
+  <div *ngIf="isLoading">
+    <div class="loader1"></div>
+    <div class="loader2"></div>
+  </div>
 </section>

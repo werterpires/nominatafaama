@@ -38,6 +38,17 @@ export class StudentsController {
     }
   }
 
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.SECRETARIA)
+  @Get('active')
+  async findActiveStudents() {
+    try {
+      return await this.studentsService.findAllActivStudents();
+    } catch (error) {
+      console.error(error.message);
+      throw error;
+    }
+  }
+
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('edit')
   async getStudentByIdToEdit(@CurrentUser() user: UserFromJwt) {

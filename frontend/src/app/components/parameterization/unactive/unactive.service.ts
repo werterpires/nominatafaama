@@ -27,4 +27,24 @@ export class UnactiveService {
         }),
       )
   }
+
+  getActiveStudents(): Observable<{ cpf: string; name: string }[]> {
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .get<{ cpf: string; name: string }[]>(
+        environment.API + '/students/active',
+        {
+          headers: head_obj,
+        },
+      )
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          return throwError(
+            () => new Error('Não foi possível obter os estudantes ativos.'),
+          )
+        }),
+      )
+  }
 }

@@ -512,6 +512,15 @@ export class StudentsService {
     }
   }
 
+  async findAllActivStudents(): Promise<{ cpf: string; name: string }[]> {
+    try {
+      const students = await this.studentsModel.findActiveStudents();
+      return students;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async updateStudentById(input: UpdateStudentDto): Promise<IStudent> {
     let updatedStudent: IStudent | null = null;
     let sentError: Error | null = null;

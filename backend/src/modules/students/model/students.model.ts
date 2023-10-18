@@ -234,6 +234,30 @@ export class StudentsModel {
     return hiringField;
   }
 
+  async findActiveStudents(): Promise<{ cpf: string; name: string }[]> {
+    let activeStudents: { cpf: string; name: string }[] = [];
+    let sentError: Error | null = null;
+    try {
+      const result = await this.knex
+        .table('students')
+        .select('people.cpf', 'people.name')
+        .leftJoin('people', 'students.person_id', 'people.person_id')
+        .where('students.student_active', true);
+      if (result) {
+        activeStudents = result;
+      }
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error);
+      sentError = new Error(error.message);
+    }
+
+    if (sentError) {
+      throw sentError;
+    }
+
+    return activeStudents;
+  }
+
   async findApprovedStudentByUserId(
     studentId: number
   ): Promise<IStudent | null> {

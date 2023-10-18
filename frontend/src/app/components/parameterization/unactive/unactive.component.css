@@ -1,0 +1,27 @@
+/* Define a altura máxima da lista de alunos ativos */
+.activeStudentsList {
+  max-height: 123px;
+  overflow: scroll;
+  padding: 10px;
+}
+
+.h4Title {
+  font-family: 'Poppins';
+  text-transform: uppercase;
+}
+
+/* Define o estilo do nome do aluno e do CPF */
+.studentNameAndCpf {
+  font-family: 'Poppins'; /* Define a fonte */
+  font-style: normal; /* Define o estilo da fonte */
+  font-weight: 400; /* Define o peso da fonte */
+  font-size: 12px; /* Define o tamanho da fonte */
+  line-height: 18px; /* Define a altura da linha da fonte */
+  color: #23435f; /* Define a cor da fonte */
+  display: flex; /* Define o layout como flexível */
+  justify-content: space-between; /* Alinha os elementos com espaço entre eles */
+}
+
+.dataContent {
+  width: 50%;
+}
