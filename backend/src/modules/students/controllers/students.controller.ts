@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { StudentsService } from '../services/students.service';
 import { CreateStudentDto } from '../dto/create-student.dto';
-import { UpdateStudentDto } from '../dto/update-student.dto';
+import { StringArray, UpdateStudentDto } from '../dto/update-student.dto';
 import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator';
 import { ERoles } from 'src/shared/auth/types/roles.enum';
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
@@ -78,6 +78,17 @@ export class StudentsController {
         input
       );
       return updatedStudent;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Put('active')
+  async turnActiveStudentsFalse(@Body() activeCpfs: StringArray) {
+    try {
+      await this.studentsService.turnStudentsActiveToFalse(activeCpfs);
+      return true;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

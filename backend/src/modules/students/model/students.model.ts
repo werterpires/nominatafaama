@@ -483,6 +483,33 @@ export class StudentsModel {
     return updatedStudent;
   }
 
+  async turnStudentActiveToFalse(activeCpfs: string[]): Promise<boolean> {
+    let sentError: Error | null = null;
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        await trx('students')
+          .leftJoin('people', 'students.person_id', 'people.person_id')
+          .update({
+            student_active: false,
+          })
+          .whereNotIn('people.cpf', activeCpfs);
+
+        await trx.commit();
+      } catch (error) {
+        console.error('Erro capturado na Model:', error);
+        await trx.rollback();
+        sentError = new Error(error.message);
+      }
+    });
+
+    if (sentError) {
+      throw sentError;
+    }
+
+    return true;
+  }
+
   async deleteStudentById(id: number): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';

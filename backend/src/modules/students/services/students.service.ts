@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PeopleServices } from 'src/modules/people/dz_services/people.service';
 import { UsersService } from 'src/modules/users/dz_services/users.service';
 import { CreateStudentDto } from '../dto/create-student.dto';
-import { UpdateStudentDto } from '../dto/update-student.dto';
+import { StringArray, UpdateStudentDto } from '../dto/update-student.dto';
 import { StudentsModel } from '../model/students.model';
 import { ICreateStudent, IStudent, IUpdateStudent } from '../types/types';
 import {
@@ -543,6 +543,23 @@ export class StudentsService {
       return updatedStudent;
     }
     throw new Error('deu ruim');
+  }
+
+  async turnStudentsActiveToFalse(activeCpfDto: StringArray): Promise<boolean> {
+    let sentError: Error | null = null;
+
+    try {
+      const cpfAtctives = activeCpfDto.strings;
+      await this.studentsModel.turnStudentActiveToFalse(cpfAtctives);
+    } catch (error) {
+      sentError = new Error(error.message);
+    }
+
+    if (sentError !== null) {
+      throw sentError;
+    }
+
+    return true;
   }
 
   async deleteStudentById(id: number): Promise<string> {
