@@ -13,11 +13,13 @@
         alt="Expandir"
       />
       <p class="sectionTitle1">{{ title }}</p>
-      {{ this.registry.origin_field_id }}
     </span>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form *ngIf="!registry?.student_id" (save)="createRegistry()">
+    <app-creation-form
+      (save)="showAlert('create', 'Confirmar a criação deste item?')"
+      *ngIf="!registry?.student_id"
+    >
       <div class="subSection gap-2">
         <label class="inputLabel">
           Número de telefonse
@@ -239,7 +241,7 @@
   </section>
   <section *ngIf="showBox" class="registriesWrapper">
     <app-update-form
-      (editRegistry)="editRegistry()"
+      (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
       *ngIf="registry.student_id"
     >
       <div class="subSection gap-2">
@@ -471,6 +473,13 @@
     (click)="closeDone()"
   />
 </div>
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
 
 <div *ngIf="isLoading" class="loader1"></div>
 <div *ngIf="isLoading" class="loader2"></div>

@@ -88,6 +88,10 @@ export class StudentsComponent implements OnInit {
 
   phoneNumber = ''
 
+  alert = false
+  alertMessage = ''
+  func = ''
+
   ngOnInit() {
     console.log(this.registry)
     if (this.showBox) {
@@ -96,6 +100,25 @@ export class StudentsComponent implements OnInit {
 
     if (this.registry.person_id == null) {
       this.showForm = false
+    }
+  }
+
+  showAlert(func: string, message: string) {
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.alert = false
+    } else if (func == 'edit') {
+      this.editRegistry()
+      this.alert = false
+    } else if (func == 'create') {
+      this.createRegistry()
     }
   }
 
