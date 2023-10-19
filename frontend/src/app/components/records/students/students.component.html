@@ -13,6 +13,7 @@
         alt="Expandir"
       />
       <p class="sectionTitle1">{{ title }}</p>
+      {{ this.registry.origin_field_id }}
     </span>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
@@ -89,7 +90,7 @@
               *ngFor="let association of possibleAssociantions"
               [value]="association.association_id"
               [selected]="
-                association.association_id == registry.origin_field_id
+                association.association_id === registry.origin_field_id
               "
             >
               {{ association.association_acronym }} -{{
@@ -276,7 +277,7 @@
             class="smallInput"
             name="unionSelect"
             [(ngModel)]="registry.union_acronym"
-            (change)="filterAssociation()"
+            (change)="filterAssociation(true)"
           >
             <option
               *ngFor="let union of allUnions"
@@ -299,7 +300,7 @@
               *ngFor="let association of possibleAssociantions"
               [value]="association.association_id"
               [selected]="
-                association.association_acronym == registry.association_acronym
+                association.association_id === registry.origin_field_id
               "
             >
               {{ association.association_acronym }} -

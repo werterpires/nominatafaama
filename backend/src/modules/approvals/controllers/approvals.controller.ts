@@ -82,7 +82,6 @@ export class ApprovalsController {
       const completeStudent = await this.approvalsService.findOneNotApproved(
         userId
       );
-      console.log(completeStudent);
       return completeStudent;
     } catch (error) {
       console.error(
