@@ -115,6 +115,8 @@ export class StudentAcademicFormationsComponent implements OnInit {
     this.showBox = !this.showBox
     if (this.showBox) {
       this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.allRegistries = []
     }
   }
 
