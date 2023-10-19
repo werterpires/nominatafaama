@@ -164,7 +164,9 @@ export class UsersController {
     ERoles.DOCENTE,
     ERoles.ESTUDANTE,
     ERoles.REPRESENTACAO,
-    ERoles.SECRETARIA
+    ERoles.SECRETARIA,
+    ERoles.DESIGN,
+    ERoles.MINISTERIAL
   )
   @Put('update')
   async updateUserById(
