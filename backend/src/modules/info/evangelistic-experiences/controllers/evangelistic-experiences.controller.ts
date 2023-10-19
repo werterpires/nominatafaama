@@ -9,21 +9,21 @@ import {
   UseGuards,
   InternalServerErrorException,
   NotFoundException,
-} from '@nestjs/common'
-import { JwtAuthGuard } from 'src/shared/auth/guards/jwt-auth.guard'
-import { ERoles } from 'src/shared/auth/types/roles.enum'
-import { UserFromJwt } from 'src/shared/auth/types/types'
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
-import { CreateEvangelisticExperienceDto } from '../dto/create-evangelistic-experience.dto'
-import { UpdateEvangelisticExperienceDto } from '../dto/update-evangelistic-experience.dto'
-import { EvangelisticExperiencesService } from '../services/evangelistic-experiences.service'
-import { IEvangelisticExperience } from '../types/types'
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/shared/auth/guards/jwt-auth.guard';
+import { ERoles } from 'src/shared/auth/types/roles.enum';
+import { UserFromJwt } from 'src/shared/auth/types/types';
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
+import { CreateEvangelisticExperienceDto } from '../dto/create-evangelistic-experience.dto';
+import { UpdateEvangelisticExperienceDto } from '../dto/update-evangelistic-experience.dto';
+import { EvangelisticExperiencesService } from '../services/evangelistic-experiences.service';
+import { IEvangelisticExperience } from '../types/types';
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
 
 @Controller('evangelistic-experiences')
 export class EvangelisticExperiencesController {
   constructor(
-    private readonly evangelisticExperiencesService: EvangelisticExperiencesService,
+    private readonly evangelisticExperiencesService: EvangelisticExperiencesService
   ) {}
 
   @Post(':personType')
@@ -32,68 +32,68 @@ export class EvangelisticExperiencesController {
   async createEvangelisticExperience(
     @Body() dto: CreateEvangelisticExperienceDto,
     @CurrentUser() user: UserFromJwt,
-    @Param('personType') personType: string,
+    @Param('personType') personType: string
   ): Promise<IEvangelisticExperience> {
     try {
-      const user_id = user.user_id
+      const user_id = user.user_id;
       if (personType !== 'student' && personType !== 'spouse') {
-        throw new Error('End point inválido.')
+        throw new Error('End point inválido.');
       }
       const newEvangelisticExperience =
         await this.evangelisticExperiencesService.createEclExperience(
           dto,
           user_id,
-          personType,
-        )
-      return newEvangelisticExperience
+          personType
+        );
+      return newEvangelisticExperience;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Get('person/:personType')
   async findEvangelisticExperiencesByPersonId(
     @CurrentUser() user: UserFromJwt,
-    @Param('personType') personType: string,
+    @Param('personType') personType: string
   ): Promise<IEvangelisticExperience[] | null> {
     try {
-      const user_id = user.user_id
+      const user_id = user.user_id;
       if (personType !== 'student' && personType !== 'spouse') {
-        throw new Error('End point inválido.')
+        throw new Error('End point inválido.');
       }
       const evangelisticExperiences =
         await this.evangelisticExperiencesService.findEvangelisticExperiencesByPersonId(
           user_id,
-          personType,
-        )
+          personType
+        );
       if (!evangelisticExperiences) {
         throw new NotFoundException(
-          `No evangelistic experiences found for person with user_id ${user_id}.`,
-        )
+          `No evangelistic experiences found for person with user_id ${user_id}.`
+        );
       }
-      return evangelisticExperiences
+      return evangelisticExperiences;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Get(':id')
   async findEvangelisticExperienceById(
-    @Param('id') id: number,
+    @Param('id') id: number
   ): Promise<IEvangelisticExperience | null> {
     try {
       const evangelisticExperience =
         await this.evangelisticExperiencesService.findEvangelisticExperienceById(
-          id,
-        )
+          id
+        );
       if (!evangelisticExperience) {
         throw new NotFoundException(
-          `No evangelistic experience found with id ${id}.`,
-        )
+          `No evangelistic experience found with id ${id}.`
+        );
       }
-      return evangelisticExperience
+      return evangelisticExperience;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -101,10 +101,10 @@ export class EvangelisticExperiencesController {
   async findAllEvangelisticExperiences(): Promise<IEvangelisticExperience[]> {
     try {
       const allEvangelisticExperiences =
-        await this.evangelisticExperiencesService.findAllEvangelisticExperiences()
-      return allEvangelisticExperiences
+        await this.evangelisticExperiencesService.findAllEvangelisticExperiences();
+      return allEvangelisticExperiences;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -112,32 +112,33 @@ export class EvangelisticExperiencesController {
   @UseGuards(JwtAuthGuard)
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   async updateEvangelisticExperienceById(
-    @Body() dto: UpdateEvangelisticExperienceDto,
+    @Body() dto: UpdateEvangelisticExperienceDto
   ): Promise<IEvangelisticExperience> {
     try {
       const updatedEvangelisticExperience =
         await this.evangelisticExperiencesService.updateEvangelisticExperienceById(
-          dto,
-        )
-      return updatedEvangelisticExperience
+          dto
+        );
+      return updatedEvangelisticExperience;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  async deleteEvangelisticExperienceById(
-    @Param('id') id: number,
-  ): Promise<string> {
+  async deleteEvangelisticExperienceById(@Param('id') id: number) {
     try {
-      await this.evangelisticExperiencesService.deleteEvangelisticExperienceById(
-        id,
-      )
-      return 'Evangelistic experience deleted successfully.'
+      const message = {
+        text: await this.evangelisticExperiencesService.deleteEvangelisticExperienceById(
+          id
+        ),
+      };
+
+      return message;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
