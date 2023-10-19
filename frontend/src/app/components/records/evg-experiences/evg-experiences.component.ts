@@ -112,6 +112,7 @@ export class EvgExperiencesComponent implements OnInit {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.allTypes = []
         this.getEvgExpTypes()
         this.isLoading = false
       },

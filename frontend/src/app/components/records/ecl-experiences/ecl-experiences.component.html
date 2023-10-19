@@ -3,7 +3,7 @@
   [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
 >
   <div class="boxHead">
-    <span class="headField" (click)="showBox = !showBox">
+    <span class="headField" (click)="toShowBox()">
       <img
         #expandIcon
         class="seeMoreIcon"
@@ -19,7 +19,7 @@
     <form
       class="registryWrapper"
       (input)="saveButton.classList.remove('hidden')"
-      (submit)="editRegistry()"
+      (submit)="showAlert('edit', 'Confirmar a edição este item?')"
       *ngIf="allRegistriesWithChecks.length > 0"
     >
       <section class="formCreation">
@@ -82,6 +82,13 @@
     (click)="closeDone()"
   />
 </div>
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
 
 <div *ngIf="isLoading" class="loader1"></div>
 <div *ngIf="isLoading" class="loader2"></div>

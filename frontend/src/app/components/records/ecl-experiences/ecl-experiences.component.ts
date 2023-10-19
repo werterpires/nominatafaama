@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { EclExpTypesService } from '../../parameterization/ecl-exp-types/ecl-exp-types.service'
 import { IEclExperienceList } from '../../parameterization/ecl-exp-types/types'
@@ -10,7 +10,7 @@ import { IEclExperience, UpdateEclExperiencesDto } from './types'
   templateUrl: './ecl-experiences.component.html',
   styleUrls: ['./ecl-experiences.component.css'],
 })
-export class EclExperiencesComponent {
+export class EclExperiencesComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   allRegistries: IEclExperience[] = []
@@ -29,14 +29,60 @@ export class EclExperiencesComponent {
     private eclExptypesService: EclExpTypesService,
   ) {}
 
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    if (idx) {
+      this.index = idx
+    }
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'edit') {
+      this.editRegistry()
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
+
   ngOnInit() {
     this.allRegistries = []
     this.allRegistriesWithChecks = []
-    this.getAllEclExpTypes()
+    if (this.showBox) {
+      this.getAllEclExpTypes()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      console.log('entrou')
+      this.getAllEclExpTypes()
+    } else if (!this.showBox) {
+      this.allRegistries = []
+      this.allRegistriesWithChecks = []
+    }
   }
 
   getAllEclExpTypes() {
     this.isLoading = true
+    this.allRegistries = []
+    this.allRegistriesWithChecks = []
     this.eclExptypesService.findAllRegistries().subscribe({
       next: (res) => {
         this.service.findAllRegistries().subscribe({
