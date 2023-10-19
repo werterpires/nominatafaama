@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { LanguageTypesService } from '../language-types/language-types.service'
 import { ILanguageType } from '../language-types/types'
@@ -10,7 +10,7 @@ import { ICreateLanguageDto, ILanguage, IUpdateLanguageDto } from './types'
   templateUrl: './languages.component.html',
   styleUrls: ['./languages.component.css'],
 })
-export class LanguagesComponent {
+export class LanguagesComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   allRegistries: ILanguage[] = []
@@ -39,7 +39,59 @@ export class LanguagesComponent {
     private languageTypeService: LanguageTypesService,
   ) {}
 
-  ngOnInit() {
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    if (idx) {
+      this.index = idx
+    }
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    switch (func) {
+      case 'edit':
+        if (this.index == null) {
+          this.errorMessage = 'Index não localizado. Impossível editar.'
+          this.error = true
+          break
+        }
+        this.editRegistry(this.index)
+        break
+      case 'delete':
+        if (this.index == null) {
+          this.errorMessage = 'Index não localizado. Impossível deletar.'
+          this.error = true
+          break
+        }
+        this.deleteRegistry(this.index)
+        break
+      case 'create':
+        this.createRegistry()
+        break
+    }
+
+    if (!confirm) {
+      this.resetAlert()
+    } else {
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
+
+  ngOnInit(): void {
     this.allRegistries = []
     this.languageTypeList = []
     if (this.showBox) {
@@ -51,6 +103,8 @@ export class LanguagesComponent {
     this.showBox = !this.showBox
     if (this.showBox) {
       this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.allRegistries = []
     }
   }
 
@@ -59,12 +113,14 @@ export class LanguagesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.languageTypeList = []
         this.getAllLanguageTypes()
         this.isLoading = false
       },
       error: (err) => {
         this.errorMessage = err.message
         this.error = true
+        this.languageTypeList = []
         this.getAllLanguageTypes()
         this.isLoading = false
       },
@@ -134,7 +190,7 @@ export class LanguagesComponent {
         ),
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
 
@@ -151,7 +207,7 @@ export class LanguagesComponent {
       })
   }
 
-  editRegistry(index: number, buttonId: string) {
+  editRegistry(index: number) {
     this.isLoading = true
 
     if (this.allRegistries[index].chosen_language < 1) {
@@ -185,7 +241,7 @@ export class LanguagesComponent {
     delete newRegistry.language
 
     this.service.updateRegistry(newRegistry as IUpdateLanguageDto).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
         this.ngOnInit()
@@ -202,7 +258,7 @@ export class LanguagesComponent {
   deleteRegistry(id: number) {
     this.isLoading = true
     this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.ngOnInit()
