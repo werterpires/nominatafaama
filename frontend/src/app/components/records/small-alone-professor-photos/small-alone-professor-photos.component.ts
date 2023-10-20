@@ -1,10 +1,5 @@
-import { Component, Input } from '@angular/core'
-import {
-  CreateStudentPhotoDto,
-  IStudentPhoto,
-  UpdateStudentPhotoDto,
-  receiveStudentPhoto,
-} from './types'
+import { Component, Input, OnInit } from '@angular/core'
+import { IStudentPhoto, UpdateStudentPhotoDto } from './types'
 import { ProfessorPhotosService } from './small-alone-professor-photos.service'
 import { IPermissions } from '../../shared/container/types'
 
@@ -13,12 +8,12 @@ import { IPermissions } from '../../shared/container/types'
   templateUrl: './small-alone-professor-photos.component.html',
   styleUrls: ['./small-alone-professor-photos.component.css'],
 })
-export class SmallAloneProfessorPhotosComponent {
+export class SmallAloneProfessorPhotosComponent implements OnInit {
   @Input() permissions!: IPermissions
   allRegistries: IStudentPhoto[] = []
   title = 'Pequena foto do professor'
   createRegistryData!: File
-  showBox = true
+  showBox = false
   showForm = false
   isLoading = false
   done = false
@@ -29,7 +24,45 @@ export class SmallAloneProfessorPhotosComponent {
   ngOnInit() {
     this.allRegistries = []
     this.imageUrl = null
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.allRegistries = []
+    }
+  }
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    this.index = idx ?? this.index
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'create') {
+      this.createRegistry()
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
   }
 
   resetCreationRegistry() {
@@ -51,6 +84,8 @@ export class SmallAloneProfessorPhotosComponent {
 
   getAllRegistries() {
     this.isLoading = true
+    this.allRegistries = []
+    this.imageUrl = null
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         if (res instanceof Blob) {
@@ -93,8 +128,6 @@ export class SmallAloneProfessorPhotosComponent {
   createRegistry() {
     this.isLoading = true
 
-    if (this.createRegistryData) {
-    }
     const formData = new FormData()
     formData.append(
       'file',
@@ -103,7 +136,7 @@ export class SmallAloneProfessorPhotosComponent {
     )
 
     this.service.createRegistry(formData).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro criado com sucesso.'
         this.done = true
         // this.ngOnInit()
@@ -116,45 +149,45 @@ export class SmallAloneProfessorPhotosComponent {
       },
     })
   }
-  editRegistry(index: number, buttonId: string) {
-    this.isLoading = true
-    const newRegistry: Partial<IStudentPhoto> = {
-      ...this.allRegistries[index],
-    }
-    delete newRegistry.created_at
-    delete newRegistry.updated_at
-    this.service
-      .updateRegistry(newRegistry as UpdateStudentPhotoDto)
-      .subscribe({
-        next: (res) => {
-          this.doneMessage = 'Registro editado com sucesso.'
-          this.done = true
-          document.getElementById(buttonId)?.classList.add('hidden')
-          this.isLoading = false
-        },
-        error: (err) => {
-          this.errorMessage = err.message
-          this.error = true
-          this.isLoading = false
-        },
-      })
-  }
-  deleteRegistry(id: number) {
-    this.isLoading = true
-    this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Registro removido com sucesso.'
-        this.done = true
-        this.isLoading = false
-        this.ngOnInit()
-      },
-      error: (err) => {
-        this.errorMessage = 'Não foi possível remover o registro.'
-        this.error = true
-        this.isLoading = false
-      },
-    })
-  }
+  // editRegistry(index: number, buttonId: string) {
+  //   this.isLoading = true
+  //   const newRegistry: Partial<IStudentPhoto> = {
+  //     ...this.allRegistries[index],
+  //   }
+  //   delete newRegistry.created_at
+  //   delete newRegistry.updated_at
+  //   this.service
+  //     .updateRegistry(newRegistry as UpdateStudentPhotoDto)
+  //     .subscribe({
+  //       next: () => {
+  //         this.doneMessage = 'Registro editado com sucesso.'
+  //         this.done = true
+  //         document.getElementById(buttonId)?.classList.add('hidden')
+  //         this.isLoading = false
+  //       },
+  //       error: (err) => {
+  //         this.errorMessage = err.message
+  //         this.error = true
+  //         this.isLoading = false
+  //       },
+  //     })
+  // }
+  // deleteRegistry(id: number) {
+  //   this.isLoading = true
+  //   this.service.deleteRegistry(id).subscribe({
+  //     next: () => {
+  //       this.doneMessage = 'Registro removido com sucesso.'
+  //       this.done = true
+  //       this.isLoading = false
+  //       this.ngOnInit()
+  //     },
+  //     error: () => {
+  //       this.errorMessage = 'Não foi possível remover o registro.'
+  //       this.error = true
+  //       this.isLoading = false
+  //     },
+  //   })
+  // }
   closeError() {
     this.error = false
   }

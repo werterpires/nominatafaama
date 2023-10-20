@@ -3,7 +3,7 @@
   [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
 >
   <div class="boxHead">
-    <span class="headField" (click)="showBox = !showBox">
+    <span class="headField" (click)="toShowBox()">
       <img
         #expandIcon
         class="seeMoreIcon"
@@ -16,7 +16,9 @@
     </span>
   </div>
   <section class="formCreationWrapper">
-    <app-creation-form (save)="createRegistry()">
+    <app-creation-form
+      (save)="showAlert('create', 'Confirmar a criação deste item?')"
+    >
       <div class="subSection">
         <label>
           Pequena foto do estudante sozinho
@@ -46,52 +48,6 @@
       </div>
     </app-creation-form>
   </section>
-  <!-- <section *ngIf="showBox" class="registriesWrapper">
-    <app-update-form
-      [registryId]="i"
-      (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.course_id)"
-      *ngFor="let registry of allRegistries; index as i"
-    >
-      <div class="subSection">
-        <label>
-          Área do curso
-          <input
-            type="text"
-            name="courseArea"
-            [(ngModel)]="registry.course_area"
-          />
-        </label>
-        <label>
-          Instituição
-          <input
-            type="text"
-            name="institution"
-            [(ngModel)]="registry.institution"
-          />
-        </label>
-      </div>
-      <div class="subSection">
-        <label>
-          Data de início
-          <input
-            type="date"
-            name="begin_date"
-            [(ngModel)]="registry.begin_date"
-          />
-        </label>
-        <label>
-          Data de fim
-          <input
-            type="date"
-            name="conclusion_date"
-            [(ngModel)]="registry.conclusion_date"
-          />
-        </label>
-      </div>
-    </app-update-form>
-  </section>
-</section> -->
 
   <div *ngIf="error" class="error">
     <div class="errorTitle">
@@ -121,6 +77,13 @@
       (click)="closeDone()"
     />
   </div>
+  <app-alert-modal
+    *ngIf="alert"
+    class="alert"
+    [alertMessage]="this.alertMessage"
+    [func]="this.func"
+    (continue)="confirm($event)"
+  ></app-alert-modal>
 
   <div *ngIf="isLoading" class="loader1"></div>
   <div *ngIf="isLoading" class="loader2"></div>
