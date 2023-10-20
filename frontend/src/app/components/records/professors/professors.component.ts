@@ -1,14 +1,9 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { OthersServices } from '../../shared/shared.service.ts/others.service'
-import { ICity, IUF } from '../../shared/types'
-import { HiringStatusService } from '../hiring-status/hiring_status.service'
-import { IHiringStatus } from '../hiring-status/types'
-import { MaritalStatusService } from '../marital-status/marital-status.service'
-import { IMaritalStatus } from '../marital-status/types'
 import { ProfessorsService } from './professors.service'
-import { OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core'
+import { ElementRef, ViewChild } from '@angular/core'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 import {
   ICreateProfessorAssignment,
@@ -21,7 +16,7 @@ import {
   templateUrl: './professors.component.html',
   styleUrls: ['./professors.component.css'],
 })
-export class ProfessorsComponent {
+export class ProfessorsComponent implements OnInit {
   constructor(
     private professorsService: ProfessorsService,
     private othersService: OthersServices,
@@ -52,10 +47,63 @@ export class ProfessorsComponent {
   error = false
   errorMessage = ''
 
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    this.index = idx ?? this.index
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'edit') {
+      this.editRegistry()
+      this.resetAlert()
+    } else if (func == 'create') {
+      this.createRegistry()
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
+
   ngOnInit() {
-    this.getRegistry()
+    if (this.showBox) {
+      this.getRegistry()
+    }
     if (this.registry.person_id == null) {
       this.showForm = false
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getRegistry()
+    } else if (!this.showBox) {
+      this.registry = {
+        approved: null,
+        assignments: '',
+        created_at: '',
+        person_id: 0,
+        person_name: '',
+        professor_id: 0,
+        professor_photo_address: '',
+        updated_at: '',
+      }
     }
   }
 
@@ -94,14 +142,14 @@ export class ProfessorsComponent {
     }
 
     this.professorsService.createProfessorAssignment(newProfessor).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Dados gravados com sucesso.'
         this.done = true
         this.isLoading = false
         this.getRegistry()
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível gravar dos dados.'
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },
@@ -122,13 +170,13 @@ export class ProfessorsComponent {
     }
 
     this.professorsService.updateProfessor(editProfessorData).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Dados editados com sucesso.'
         this.done = true
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível atualizar os dados.'
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },
