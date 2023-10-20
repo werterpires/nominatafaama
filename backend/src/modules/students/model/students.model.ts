@@ -155,6 +155,29 @@ export class StudentsModel {
     return student;
   }
 
+  async findStudentMaritalStatusByUserId(
+    userId: number
+  ): Promise<{ marital_status_type_name: string } | null> {
+    try {
+      const result = await this.knex
+        .select('marital_status_types.marital_status_type_name')
+        .from('students')
+        .leftJoin('users', 'students.person_id', 'users.person_id')
+        .leftJoin(
+          'marital_status_types',
+          'students.marital_status_id',
+          'marital_status_types.marital_status_type_id'
+        )
+        .where('users.user_id', userId)
+        .first();
+
+      return result || null;
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error);
+      throw new Error(error.message);
+    }
+  }
+
   async findActiveByUserId(userId: number): Promise<boolean | null> {
     let acctive: boolean | null = null;
     let sentError: Error | null = null;

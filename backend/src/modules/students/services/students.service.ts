@@ -521,6 +521,19 @@ export class StudentsService {
     }
   }
 
+  async findStudentMaritalStatusById(
+    userId: number
+  ): Promise<{ marital_status_type_name: string } | null> {
+    try {
+      const maritalStatus =
+        await this.studentsModel.findStudentMaritalStatusByUserId(userId);
+      return maritalStatus;
+    } catch (error) {
+      console.log('erro capturado no service:', error);
+      throw error;
+    }
+  }
+
   async updateStudentById(input: UpdateStudentDto): Promise<IStudent> {
     let updatedStudent: IStudent | null = null;
     let sentError: Error | null = null;
