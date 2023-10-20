@@ -3,7 +3,7 @@
   [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
 >
   <div class="boxHead">
-    <span class="headField" (click)="showBox = !showBox">
+    <span class="headField" (click)="toShowBox()">
       <img
         #expandIcon
         class="seeMoreIcon"
@@ -16,7 +16,10 @@
     </span>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form *ngIf="!registry?.spouse_id" (save)="createRegistry()">
+    <app-creation-form
+      *ngIf="!registry?.spouse_id"
+      (save)="showAlert('create', 'Confirmar a criação deste item?')"
+    >
       <div class="subSection">
         <label class="inputLabel">
           Nome<input
@@ -73,7 +76,7 @@
             class="smallInput"
             name="unionSelect"
             [(ngModel)]="selectedUnion"
-            (change)="filterAssociation()"
+            (change)="filterAssociation(true)"
           >
             <option *ngFor="let union of allUnions" [value]="union">
               {{ union }}
@@ -261,7 +264,7 @@
     <app-update-form
       [registryId]="registry.spouse_id"
       *ngIf="registry"
-      (editRegistry)="editRegistry()"
+      (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
     >
       <div class="subSection">
         <label class="inputLabel">
@@ -317,7 +320,7 @@
             class="smallInput"
             name="unionSelect"
             [(ngModel)]="selectedUnion"
-            (change)="filterAssociation()"
+            (change)="filterAssociation(true)"
           >
             <option *ngFor="let union of allUnions" [value]="union">
               {{ union }}
@@ -335,7 +338,9 @@
             <option
               *ngFor="let association of possibleAssociantions"
               [value]="association.association_id"
-              [selected]="association.association_id == registry.association_id"
+              [selected]="
+                association.association_id === registry.association_id
+              "
             >
               {{ association.association_acronym }} -
               {{ association.association_name }}
@@ -540,6 +545,13 @@
     (click)="closeDone()"
   />
 </div>
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
 
 <div *ngIf="isLoading" class="loader1"></div>
 <div *ngIf="isLoading" class="loader2"></div>

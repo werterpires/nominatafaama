@@ -93,7 +93,6 @@ export class StudentsComponent implements OnInit {
   func = ''
 
   ngOnInit() {
-    console.log(this.registry)
     if (this.showBox) {
       this.getRegistry()
     }
@@ -531,6 +530,7 @@ export class StudentsComponent implements OnInit {
     this.studentServices.updateStudent(editStudentData).subscribe({
       next: () => {
         this.doneMessage = 'Estudante editado com sucesso.'
+        this.ngOnInit()
         this.done = true
         this.isLoading = false
       },
