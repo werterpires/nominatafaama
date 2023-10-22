@@ -3,7 +3,7 @@
   [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
 >
   <div class="boxHead">
-    <span class="headField" (click)="showBox = !showBox">
+    <span class="headField" (click)="toShowBox()">
       <img
         #expandIcon
         class="seeMoreIcon"
@@ -16,7 +16,10 @@
     </span>
   </div>
   <section *ngIf="showBox" class="registriesWrapper">
-    <app-update-form (editRegistry)="showAlert()" *ngIf="registry.user_id">
+    <app-update-form
+      (editRegistry)="showAlert('edit')"
+      *ngIf="registry.user_id"
+    >
       <div class="subSection gap-2">
         <label class="inputLabel">
           Nome<input
@@ -81,7 +84,16 @@
           />
         </label>
       </div>
-      <div class="subSection">
+      <div class="checkSide">
+        <label class="label checkOption">
+          Administrador do sistema
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[5]"
+          />
+        </label>
         <label class="label checkOption">
           Estudante
           <input
@@ -101,6 +113,24 @@
           />
         </label>
         <label class="label checkOption">
+          Ministerial
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[6]"
+          />
+        </label>
+        <label class="label checkOption">
+          Design
+          <input
+            class="smallInput"
+            type="checkbox"
+            name="checkRole"
+            [(ngModel)]="roles[7]"
+          />
+        </label>
+        <label class="label checkOption">
           Secretaria
           <input
             class="smallInput"
@@ -109,8 +139,6 @@
             [(ngModel)]="roles[2]"
           />
         </label>
-      </div>
-      <div class="subSection">
         <label class="label checkOption">
           Direção/Coordenação
           <input
@@ -127,15 +155,6 @@
             type="checkbox"
             name="checkRole"
             [(ngModel)]="roles[4]"
-          />
-        </label>
-        <label class="label checkOption">
-          Administrador do sistema
-          <input
-            class="smallInput"
-            type="checkbox"
-            name="checkRole"
-            [(ngModel)]="roles[5]"
           />
         </label>
       </div>
@@ -157,7 +176,14 @@
     (click)="closeError()"
   />
 </div>
-<div *ngIf="alert" class="alert">
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
+<!-- <div *ngIf="alert" class="alert">
   <div class="alertTitle">
     <p>Alerta</p>
   </div>
@@ -168,7 +194,7 @@
     <button (click)="editRegistry()">Continuar</button>
     <button (click)="closeAlert()">Cancelar</button>
   </div>
-</div>
+</div> -->
 <div *ngIf="done" class="done">
   <div class="doneTitle">
     <p>Parabéns</p>

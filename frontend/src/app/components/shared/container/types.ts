@@ -29,5 +29,7 @@ export interface IPermissions {
   representacao: boolean
   administrador: boolean
   docente: boolean
+  ministerial: boolean
+  design: boolean
   isApproved: boolean
 }

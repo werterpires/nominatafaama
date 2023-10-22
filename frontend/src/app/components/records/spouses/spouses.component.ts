@@ -1,11 +1,8 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core'
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { OthersServices } from '../../shared/shared.service.ts/others.service'
 import { ICity, IUF } from '../../shared/types'
-
-import { IHiringStatus } from '../hiring-status/types'
-import { IMaritalStatus } from '../marital-status/types'
 import { SpouseService } from './spouses.service'
 import { ICreateSpouse, ISpouse, IUpdateSpouse } from './types'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
@@ -17,7 +14,7 @@ import { IAssociation } from '../../parameterization/associations/types'
   templateUrl: './spouses.component.html',
   styleUrls: ['./spouses.component.css'],
 })
-export class SpousesComponent {
+export class SpousesComponent implements OnInit {
   constructor(
     private service: SpouseService,
     private associationService: AssociationService,
@@ -69,6 +66,38 @@ export class SpousesComponent {
   error = false
   errorMessage = ''
 
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    this.index = idx ?? this.index
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'edit') {
+      this.editRegistry()
+      this.resetAlert()
+    } else if (func == 'create') {
+      this.createRegistry()
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
+
   ngOnInit() {
     this.possibleAssociantions = []
     this.allAssociations = []
@@ -81,9 +110,53 @@ export class SpousesComponent {
     this.selectedUnion = ''
     this.registry = null
 
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+
     if (this.registry != null) {
       this.showForm = false
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.registry = {
+        alternative_email: '',
+        baptism_date: '',
+        baptism_place: '',
+        birth_city: '',
+        birth_date: '',
+        birth_state: '',
+        civil_marriage_city: '',
+        civil_marriage_date: '',
+        civil_marriage_state: '',
+        is_whatsapp: false,
+        justification: '',
+        origin_field_id: 0,
+        phone_number: '',
+        primary_school_city: '',
+        primary_school_state: '',
+        registry: '',
+        registry_number: '',
+        association_acronym: '',
+        association_id: 0,
+        association_name: '',
+        created_at: '',
+        person_cpf: '',
+        person_id: 0,
+        person_name: '',
+        updated_at: '',
+        spouse_approved: null,
+        spouse_id: 0,
+        student_id: 0,
+        union_acronym: '',
+        union_id: 0,
+        union_name: '',
+      }
     }
   }
 
@@ -100,6 +173,13 @@ export class SpousesComponent {
           this.showBox = true
           this.showForm = true
         }
+        this.possibleAssociantions = []
+        this.allBirthCities = []
+        this.allMerryCities = []
+        this.allSchoolCities = []
+        this.allAssociations = []
+        this.allStates = []
+
         this.getOtherData()
 
         this.isLoading = false
@@ -320,7 +400,7 @@ export class SpousesComponent {
         cpf: this.createRegistryData.cpf.replace(/\D/g, ''),
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.ngOnInit()
@@ -486,7 +566,7 @@ export class SpousesComponent {
     }
 
     this.service.updateRegistry(newRegistry as IUpdateSpouse).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.ngOnInit()
         this.done = true
@@ -572,10 +652,15 @@ export class SpousesComponent {
     this.isLoading = false
   }
 
-  filterAssociation() {
+  filterAssociation(change?: boolean) {
     this.possibleAssociantions = this.allAssociations.filter((association) => {
       return association.union_acronym == this.selectedUnion
     })
+
+    if (change && this.registry) {
+      this.registry.origin_field_id =
+        this.possibleAssociantions[0].association_id
+    }
   }
 
   findCities(cityType: string) {

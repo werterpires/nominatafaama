@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { StudentsService } from '../services/students.service';
 import { CreateStudentDto } from '../dto/create-student.dto';
-import { UpdateStudentDto } from '../dto/update-student.dto';
+import { StringArray, UpdateStudentDto } from '../dto/update-student.dto';
 import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator';
 import { ERoles } from 'src/shared/auth/types/roles.enum';
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
@@ -38,6 +38,17 @@ export class StudentsController {
     }
   }
 
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.SECRETARIA)
+  @Get('active')
+  async findActiveStudents() {
+    try {
+      return await this.studentsService.findAllActivStudents();
+    } catch (error) {
+      console.error(error.message);
+      throw error;
+    }
+  }
+
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('edit')
   async getStudentByIdToEdit(@CurrentUser() user: UserFromJwt) {
@@ -46,6 +57,20 @@ export class StudentsController {
     try {
       const student = await this.studentsService.findStudentByIdToEdit(id);
       return student;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Get('marital-status')
+  async getStudentMaritalStatus(@CurrentUser() user: UserFromJwt) {
+    const userId = user.user_id;
+
+    try {
+      const maritalStatus =
+        await this.studentsService.findStudentMaritalStatusById(userId);
+      return maritalStatus;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -78,6 +103,17 @@ export class StudentsController {
         input
       );
       return updatedStudent;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Put('active')
+  async turnActiveStudentsFalse(@Body() activeCpfs: StringArray) {
+    try {
+      await this.studentsService.turnStudentsActiveToFalse(activeCpfs);
+      return true;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

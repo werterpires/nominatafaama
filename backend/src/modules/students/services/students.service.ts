@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PeopleServices } from 'src/modules/people/dz_services/people.service';
 import { UsersService } from 'src/modules/users/dz_services/users.service';
 import { CreateStudentDto } from '../dto/create-student.dto';
-import { UpdateStudentDto } from '../dto/update-student.dto';
+import { StringArray, UpdateStudentDto } from '../dto/update-student.dto';
 import { StudentsModel } from '../model/students.model';
 import { ICreateStudent, IStudent, IUpdateStudent } from '../types/types';
 import {
@@ -512,6 +512,28 @@ export class StudentsService {
     }
   }
 
+  async findAllActivStudents(): Promise<{ cpf: string; name: string }[]> {
+    try {
+      const students = await this.studentsModel.findActiveStudents();
+      return students;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findStudentMaritalStatusById(
+    userId: number
+  ): Promise<{ marital_status_type_name: string } | null> {
+    try {
+      const maritalStatus =
+        await this.studentsModel.findStudentMaritalStatusByUserId(userId);
+      return maritalStatus;
+    } catch (error) {
+      console.log('erro capturado no service:', error);
+      throw error;
+    }
+  }
+
   async updateStudentById(input: UpdateStudentDto): Promise<IStudent> {
     let updatedStudent: IStudent | null = null;
     let sentError: Error | null = null;
@@ -543,6 +565,23 @@ export class StudentsService {
       return updatedStudent;
     }
     throw new Error('deu ruim');
+  }
+
+  async turnStudentsActiveToFalse(activeCpfDto: StringArray): Promise<boolean> {
+    let sentError: Error | null = null;
+
+    try {
+      const cpfAtctives = activeCpfDto.strings;
+      await this.studentsModel.turnStudentActiveToFalse(cpfAtctives);
+    } catch (error) {
+      sentError = new Error(error.message);
+    }
+
+    if (sentError !== null) {
+      throw sentError;
+    }
+
+    return true;
   }
 
   async deleteStudentById(id: number): Promise<string> {

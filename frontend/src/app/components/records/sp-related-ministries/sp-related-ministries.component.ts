@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { MinistryTypesService } from '../../parameterization/minstry-types/ministry-types.service'
 import { IMinistryType } from '../../parameterization/minstry-types/types'
@@ -14,7 +14,7 @@ import { SpRelatedMinistriesService } from './sp-related-ministries.service'
   templateUrl: './sp-related-ministries.component.html',
   styleUrls: ['./sp-related-ministries.component.css'],
 })
-export class SpRelatedMinistriesComponent {
+export class SpRelatedMinistriesComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   allRegistries: IRelatedMinistry[] = []
@@ -48,8 +48,63 @@ export class SpRelatedMinistriesComponent {
     private ministryTypesService: MinistryTypesService,
   ) {}
 
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    this.index = idx ?? this.index
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'edit') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível editar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.editRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'create') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível criar o registro.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.createRegistry(this.index)
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
+
   ngOnInit() {
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.allRegistries = []
+    }
   }
 
   getAllRegistries() {
@@ -57,6 +112,7 @@ export class SpRelatedMinistriesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.ministryTypeList = []
         this.getAllTypes()
 
         this.isLoading = false
@@ -107,7 +163,7 @@ export class SpRelatedMinistriesComponent {
         priority: priority + 1,
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
@@ -139,7 +195,7 @@ export class SpRelatedMinistriesComponent {
       })
   }
 
-  editRegistry(index: number, buttonId: string) {
+  editRegistry(index: number) {
     this.isLoading = true
 
     const newRegistry: Partial<IRelatedMinistry> = {
@@ -157,10 +213,10 @@ export class SpRelatedMinistriesComponent {
     this.service
       .updateRegistry(newRegistry as UpdateRelatedMinistryDto)
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro editado com sucesso.'
           this.done = true
-          document.getElementById(buttonId)?.classList.add('hidden')
+
           this.ministryTypeList = []
           this.createRegistryData = [
             {
@@ -186,23 +242,6 @@ export class SpRelatedMinistriesComponent {
           this.isLoading = false
         },
       })
-  }
-
-  deleteRegistry(id: number) {
-    this.isLoading = true
-    this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
-        this.doneMessage = 'Registro removido com sucesso.'
-        this.done = true
-        this.isLoading = false
-        this.ngOnInit()
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
   }
 
   closeError() {

@@ -30,6 +30,8 @@ export class StudentComponent {
     representacao: false,
     administrador: false,
     docente: false,
+    ministerial: false,
+    design: false,
     isApproved: false,
   }
   @ViewChild('whiteSpace') whiteSpaceElement!: ElementRef
@@ -157,6 +159,8 @@ export class StudentComponent {
       this.permissions.representacao = roles.includes('representacao')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
     })
 
     this.activatedRoute.paramMap.subscribe((params) => {

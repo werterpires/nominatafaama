@@ -29,7 +29,7 @@ export class UsersComponent {
   currentPassword = ''
   newPassword = ''
   passwordConfirmation = ''
-  roles: boolean[] = [false, false, false, false, false, false]
+  roles: boolean[] = [false, false, false, false, false, false, false, false]
   constructor(
     private service: UsersServices,
     private validateService: ValidateService,
@@ -48,11 +48,34 @@ export class UsersComponent {
   errorMessage = ''
   alert = false
   alertMessage = ''
+  func = ''
 
   ngOnInit() {
-    this.getRegistry()
+    if (this.showBox) {
+      this.getRegistry()
+    }
+
     if (this.registry.person_id == null) {
       this.showForm = false
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getRegistry()
+    } else if (!this.showBox) {
+      this.registry = {
+        cpf: '',
+        created_at: '',
+        name: '',
+        person_id: 0,
+        principal_email: '',
+        roles: [],
+        updated_at: '',
+        user_id: 0,
+        user_approved: null,
+      }
     }
   }
 
@@ -103,6 +126,17 @@ export class UsersComponent {
       /(\d{3})(\d{3})(\d{3})(\d{2})/,
       '$1.$2.$3-$4',
     )
+  }
+
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.alert = false
+    } else if (func == 'edit') {
+      this.editRegistry()
+      this.alert = false
+    }
   }
 
   editRegistry() {
@@ -183,7 +217,7 @@ export class UsersComponent {
       }
     }
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 9; i++) {
       if (this.roles[i]) {
         editRegistryData.roles_id?.push(i + 1)
       }
@@ -217,7 +251,8 @@ export class UsersComponent {
     })
   }
 
-  showAlert() {
+  showAlert(func: string) {
+    this.func = func
     this.alertMessage =
       'Ao confirmar, você será automaticamente deslogado e só poderá fazer login novamente após ser aprovado pela equipe da coordenação.'
     this.alert = true
@@ -231,7 +266,7 @@ export class UsersComponent {
     this.done = false
   }
 
-  closeAlert() {
-    this.alert = false
-  }
+  // closeAlert() {
+  //   this.alert = false
+  // }
 }

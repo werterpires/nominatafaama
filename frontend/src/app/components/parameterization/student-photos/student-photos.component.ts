@@ -3,7 +3,7 @@ import { IPermissions } from '../../shared/container/types'
 import {
   IStudentPhoto,
   UpdateStudentPhotoDto,
-} from '../small-alone-professor-photos/types'
+} from '../../records/small-alone-professor-photos/types'
 import { StudentPhotosService } from './student-photos.service'
 
 @Component({
@@ -24,9 +24,9 @@ export class StudentPhotosComponent {
   error = false
   errorMessage = ''
   constructor(private service: StudentPhotosService) {}
-  ngOnInit() {
-    this.getAllRegistries()
-  }
+  // ngOnInit() {
+  //   this.getAllRegistries()
+  // }
 
   resetCreationRegistry() {
     Object.keys(this.createRegistryData).forEach((key) => {
@@ -199,7 +199,6 @@ export class StudentPhotosComponent {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.isLoading = false
-        this.ngOnInit()
       },
       error: (err) => {
         this.errorMessage = 'Não foi possível remover o registro.'

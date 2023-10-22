@@ -3,7 +3,7 @@
   [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
 >
   <div class="boxHead">
-    <span class="headField" (click)="showBox = !showBox">
+    <span class="headField" (click)="toShowBox()">
       <img
         #expandIcon
         class="seeMoreIcon"
@@ -20,7 +20,9 @@
     </button>
   </div>
   <section class="formCreationWrapper" *ngIf="showForm">
-    <app-creation-form (save)="createRegistry()">
+    <app-creation-form
+      (save)="showAlert('create', 'Confirmar a criação deste item?')"
+    >
       <div class="subSection">
         <label class="w-full">
           Tipo de publicação:
@@ -66,9 +68,15 @@
   </section>
   <section *ngIf="showBox" class="registriesWrapper">
     <app-update-form
+      (editRegistry)="showAlert('edit', 'Confirmar a edição este item?', i)"
+      (deleteRegistry)="
+        showAlert(
+          'delete',
+          'Confirmar a exclusão deste item?',
+          registry.publication_id
+        )
+      "
       [registryId]="i"
-      (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.publication_id)"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{
         approved: registry.publication_approved,
@@ -139,6 +147,13 @@
     (click)="closeDone()"
   />
 </div>
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
 
 <div *ngIf="isLoading" class="loader1"></div>
 <div *ngIf="isLoading" class="loader2"></div>

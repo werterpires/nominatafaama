@@ -138,31 +138,31 @@
             <label class="label checkOption">
               <input
                 type="checkbox"
+                [(ngModel)]="logonData.rolesId[5]"
+                [value]="5"
+                name="admOption"
+              />
+              Administrador do sistema
+            </label>
+
+            <label class="label checkOption">
+              <input
+                type="checkbox"
+                [(ngModel)]="logonData.rolesId[7]"
+                [value]="7"
+                name="dirOption"
+              />
+              Design
+            </label>
+
+            <label class="label checkOption">
+              <input
+                type="checkbox"
                 [(ngModel)]="logonData.rolesId[3]"
                 [value]="3"
                 name="dirOption"
               />
               Diretor
-            </label>
-
-            <label class="label checkOption">
-              <input
-                type="checkbox"
-                [(ngModel)]="logonData.rolesId[2]"
-                [value]="2"
-                name="secOption"
-              />
-              Secretária/o
-            </label>
-
-            <label class="label checkOption">
-              <input
-                type="checkbox"
-                [(ngModel)]="logonData.rolesId[1]"
-                [value]="1"
-                name="profOption"
-              />
-              Professor
             </label>
 
             <label class="label checkOption">
@@ -178,6 +178,26 @@
             <label class="label checkOption">
               <input
                 type="checkbox"
+                [(ngModel)]="logonData.rolesId[6]"
+                [value]="6"
+                name="dirOption"
+              />
+              Ministerial
+            </label>
+
+            <label class="label checkOption">
+              <input
+                type="checkbox"
+                [(ngModel)]="logonData.rolesId[1]"
+                [value]="1"
+                name="profOption"
+              />
+              Professor
+            </label>
+
+            <label class="label checkOption">
+              <input
+                type="checkbox"
                 [(ngModel)]="logonData.rolesId[4]"
                 [value]="4"
                 name="repOption"
@@ -188,11 +208,11 @@
             <label class="label checkOption">
               <input
                 type="checkbox"
-                [(ngModel)]="logonData.rolesId[5]"
-                [value]="5"
-                name="admOption"
+                [(ngModel)]="logonData.rolesId[2]"
+                [value]="2"
+                name="secOption"
               />
-              Administrador do sistema
+              Secretária/o
             </label>
           </div>
         </div>

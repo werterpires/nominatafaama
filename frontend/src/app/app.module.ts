@@ -56,7 +56,7 @@ import { SpRelatedMinistriesComponent } from './components/records/sp-related-mi
 import { PreviousMarriageComponent } from './components/records/previous-marriage/previous-marriage.component'
 import { SmallAloneProfessorPhotosComponent } from './components/records/small-alone-professor-photos/small-alone-professor-photos.component'
 import { ProfessorPhotosComponent } from './components/parameterization/professor-photos/professor-photos.component'
-import { StudentPhotosComponent } from './components/records/student-photos/student-photos.component'
+import { StudentPhotosComponent } from './components/parameterization/student-photos/student-photos.component'
 import { FamilyStudentPhotoComponent } from './components/records/family-student-photo/family-student-photo.component'
 import { SpouseStudentPhotoComponent } from './components/records/spouse-student-photo/spouse-student-photo.component'
 import { ChildrenComponent } from './components/records/children/children.component'
@@ -75,9 +75,11 @@ import { StudentPdfComponent } from './components/student/student-pdf/student-pd
 import { GeneralProfessorsComponent } from './components/parameterization/general-professors/general-professors.component'
 import { EventsComponent } from './components/parameterization/events/events.component'
 import { ScrollToAnchorDirective } from './components/nominata/scroll-to-anchor.directive'
-import { VacanciesComponent } from './components/vacancies/vacancies.component';
-import { ModalVacancyComponent } from './components/modal-vacancy/modal-vacancy.component';
+import { VacanciesComponent } from './components/vacancies/vacancies.component'
+import { ModalVacancyComponent } from './components/modal-vacancy/modal-vacancy.component'
 import { ModalTermComponent } from './components/modal-term/modal-term.component'
+import { UnactiveComponent } from './components/parameterization/unactive/unactive.component';
+import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component'
 
 @NgModule({
   declarations: [
@@ -153,6 +155,8 @@ import { ModalTermComponent } from './components/modal-term/modal-term.component
     VacanciesComponent,
     ModalVacancyComponent,
     ModalTermComponent,
+    UnactiveComponent,
+    AlertModalComponent,
   ],
   imports: [
     BrowserModule,

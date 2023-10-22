@@ -32,7 +32,7 @@ import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator';
 export class StudentPhotosController {
   constructor(private studentPhotosService: StudentPhotosService) {}
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
   @Post(':photoType')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -42,9 +42,7 @@ export class StudentPhotosController {
           // Salvar o nome original do arquivo em uma variável antes de modificar o nome
           const originalFileName = file.originalname;
 
-          const uniqueName = `${originalFileName.slice(0, -4)}${extname(
-            originalFileName
-          )}`;
+          const uniqueName = originalFileName;
           cb(null, uniqueName);
         },
       }),

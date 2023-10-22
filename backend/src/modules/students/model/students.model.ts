@@ -155,6 +155,53 @@ export class StudentsModel {
     return student;
   }
 
+  async findStudentMaritalStatusByUserId(
+    userId: number
+  ): Promise<{ marital_status_type_name: string } | null> {
+    try {
+      const result = await this.knex
+        .select('marital_status_types.marital_status_type_name')
+        .from('students')
+        .leftJoin('users', 'students.person_id', 'users.person_id')
+        .leftJoin(
+          'marital_status_types',
+          'students.marital_status_id',
+          'marital_status_types.marital_status_type_id'
+        )
+        .where('users.user_id', userId)
+        .first();
+
+      return result || null;
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error);
+      throw new Error(error.message);
+    }
+  }
+
+  async findActiveByUserId(userId: number): Promise<boolean | null> {
+    let acctive: boolean | null = null;
+    let sentError: Error | null = null;
+    try {
+      const result = await this.knex
+        .table('students')
+        .first('students.student_active')
+        .leftJoin('users', 'students.person_id', 'users.person_id')
+        .where('users.user_id', userId);
+      if (result) {
+        acctive = result.student_active;
+      }
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error);
+      sentError = new Error(error.message);
+    }
+
+    if (sentError) {
+      throw sentError;
+    }
+
+    return acctive;
+  }
+
   async findHiringField(studentId: number) {
     let hiringField: IHiringField | null = null;
     let sentError: Error | null = null;
@@ -208,6 +255,30 @@ export class StudentsModel {
     }
 
     return hiringField;
+  }
+
+  async findActiveStudents(): Promise<{ cpf: string; name: string }[]> {
+    let activeStudents: { cpf: string; name: string }[] = [];
+    let sentError: Error | null = null;
+    try {
+      const result = await this.knex
+        .table('students')
+        .select('people.cpf', 'people.name')
+        .leftJoin('people', 'students.person_id', 'people.person_id')
+        .where('students.student_active', true);
+      if (result) {
+        activeStudents = result;
+      }
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error);
+      sentError = new Error(error.message);
+    }
+
+    if (sentError) {
+      throw sentError;
+    }
+
+    return activeStudents;
   }
 
   async findApprovedStudentByUserId(
@@ -457,6 +528,33 @@ export class StudentsModel {
     }
 
     return updatedStudent;
+  }
+
+  async turnStudentActiveToFalse(activeCpfs: string[]): Promise<boolean> {
+    let sentError: Error | null = null;
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        await trx('students')
+          .leftJoin('people', 'students.person_id', 'people.person_id')
+          .update({
+            student_active: false,
+          })
+          .whereNotIn('people.cpf', activeCpfs);
+
+        await trx.commit();
+      } catch (error) {
+        console.error('Erro capturado na Model:', error);
+        await trx.rollback();
+        sentError = new Error(error.message);
+      }
+    });
+
+    if (sentError) {
+      throw sentError;
+    }
+
+    return true;
   }
 
   async deleteStudentById(id: number): Promise<string> {

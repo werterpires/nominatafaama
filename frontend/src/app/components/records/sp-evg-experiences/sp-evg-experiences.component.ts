@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { EvangExpTypesService } from '../../parameterization/evang-exp-types/evang-exp-types.service'
@@ -15,7 +15,7 @@ import { SpEvgExperiencesService } from './sp-evg-experiences.service'
   templateUrl: './sp-evg-experiences.component.html',
   styleUrls: ['./sp-evg-experiences.component.css'],
 })
-export class SpEvgExperiencesComponent {
+export class SpEvgExperiencesComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   allRegistries: IEvangelisticExperience[] = []
@@ -43,10 +43,68 @@ export class SpEvgExperiencesComponent {
     private dataService: DataService,
   ) {}
 
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    this.index = idx ?? this.index
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'edit') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível editar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.editRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'delete') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível deletar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.deleteRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'create') {
+      this.createRegistry()
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
+
   ngOnInit() {
     this.allRegistries = []
     this.allTypes = []
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.allRegistries = []
+    }
   }
 
   getAllRegistries() {
@@ -54,6 +112,7 @@ export class SpEvgExperiencesComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.allTypes = []
         this.getEvgExpTypes()
         this.isLoading = false
       },
@@ -137,7 +196,7 @@ export class SpEvgExperiencesComponent {
         ),
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.ngOnInit()
@@ -153,7 +212,7 @@ export class SpEvgExperiencesComponent {
       })
   }
 
-  editRegistry(index: number, buttonId: string) {
+  editRegistry(index: number) {
     this.isLoading = true
 
     if (this.allRegistries[index].evang_exp_type_id < 1) {
@@ -203,7 +262,7 @@ export class SpEvgExperiencesComponent {
     this.service
       .updateRegistry(updateRegistry as UpdateEvangelisticExperienceDto)
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro editado com sucesso.'
           this.done = true
           this.ngOnInit()
@@ -226,7 +285,7 @@ export class SpEvgExperiencesComponent {
   deleteRegistry(id: number) {
     this.isLoading = true
     this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.isLoading = false

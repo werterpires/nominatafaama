@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { ICourse, ICreateCourse, IUpdateCourse } from './types'
 import { StCoursesService } from './st-courses.service'
 import { DataService } from '../../shared/shared.service.ts/data.service'
@@ -9,7 +9,7 @@ import { IPermissions } from '../../shared/container/types'
   templateUrl: './st-courses.component.html',
   styleUrls: ['./st-courses.component.css'],
 })
-export class StCoursesComponent {
+export class StCoursesComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   allRegistries: ICourse[] = []
@@ -33,9 +33,68 @@ export class StCoursesComponent {
     private service: StCoursesService,
     private dataService: DataService,
   ) {}
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
 
+  showAlert(func: string, message: string, idx?: number) {
+    if (idx) {
+      this.index = idx
+    }
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'edit') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível editar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.editRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'delete') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível deletar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.deleteRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'create') {
+      this.createRegistry()
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
   ngOnInit() {
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.allRegistries = []
+    }
   }
 
   getAllRegistries() {
@@ -102,7 +161,7 @@ export class StCoursesComponent {
           : null,
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
@@ -118,7 +177,7 @@ export class StCoursesComponent {
       })
   }
 
-  editRegistry(index: number, buttonId: string) {
+  editRegistry(index: number) {
     this.isLoading = true
 
     if (this.allRegistries[index].course_area.length < 2) {
@@ -153,10 +212,10 @@ export class StCoursesComponent {
     delete newRegistry.updated_at
     delete newRegistry.course_approved
     this.service.updateRegistry(newRegistry as IUpdateCourse).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
+        this.ngOnInit()
         this.isLoading = false
       },
       error: (err) => {
@@ -170,7 +229,7 @@ export class StCoursesComponent {
   deleteRegistry(id: number) {
     this.isLoading = true
     this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.isLoading = false

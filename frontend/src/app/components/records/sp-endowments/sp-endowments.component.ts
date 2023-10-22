@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { EndowmentTypesService } from '../../parameterization/endowment-types/endowment-types.service'
 import { IEndowmentType } from '../../parameterization/endowment-types/types'
@@ -14,7 +14,7 @@ import { SpEndowmentsService } from './sp-endowments.service'
   templateUrl: './sp-endowments.component.html',
   styleUrls: ['./sp-endowments.component.css'],
 })
-export class SpEndowmentsComponent {
+export class SpEndowmentsComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   allRegistries: IEndowment[] = []
@@ -37,10 +37,69 @@ export class SpEndowmentsComponent {
     private endowmentsServices: EndowmentTypesService,
   ) {}
 
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    this.index = idx ?? this.index
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'edit') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível editar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.editRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'delete') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível deletar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.deleteRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'create') {
+      this.createRegistry()
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
+
   ngOnInit() {
     this.allRegistries = []
     this.endowmentTypeList = []
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.allRegistries = []
+    }
   }
 
   getAllRegistries() {
@@ -48,6 +107,7 @@ export class SpEndowmentsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.endowmentTypeList = []
         this.getAllEndowmentTypes()
         this.isLoading = false
       },
@@ -110,7 +170,7 @@ export class SpEndowmentsComponent {
         ),
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.ngOnInit()
@@ -126,7 +186,7 @@ export class SpEndowmentsComponent {
       })
   }
 
-  editRegistry(index: number, buttonId: string) {
+  editRegistry(index: number) {
     this.isLoading = true
     const newRegistry: Partial<IEndowment> = {
       ...this.allRegistries[index],
@@ -141,11 +201,10 @@ export class SpEndowmentsComponent {
     delete newRegistry.endowment_type_name
 
     this.service.updateRegistry(newRegistry as UpdateEndowmentDto).subscribe({
-      next: (res) => {
+      next: () => {
         this.ngOnInit()
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
-        document.getElementById(buttonId)?.classList.add('hidden')
         this.resetCreationRegistry()
         this.isLoading = false
       },
@@ -161,7 +220,7 @@ export class SpEndowmentsComponent {
   deleteRegistry(id: number) {
     this.isLoading = true
     this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.isLoading = false

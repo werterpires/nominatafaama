@@ -3,7 +3,7 @@
   [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
 >
   <div class="boxHead">
-    <span class="headField" (click)="showBox = !showBox">
+    <span class="headField" (click)="toShowBox()">
       <img
         #expandIcon
         class="seeMoreIcon"
@@ -16,7 +16,9 @@
     </span>
   </div>
   <section class="formCreationWrapper" *ngIf="allRegistries.length < 1">
-    <app-creation-form (save)="createRegistry(0)">
+    <app-creation-form
+      (save)="showAlert('create', 'Confirmar a criação deste item?', 0)"
+    >
       <div class="subSection">
         <label class="w-full">
           Ministério da Iasd com o qual se identifica (maior prioridade)
@@ -28,8 +30,8 @@
             <option
               *ngFor="let ministrytype of ministryTypeList"
               [value]="ministrytype.ministry_type_id"
-              [disabled]="ministrytype.used == true"
-              [disabled]="ministrytype.used == true"
+              [disabled]="ministrytype.used === true"
+              [disabled]="ministrytype.used === true"
             >
               {{ ministrytype.ministry_type_name }}
             </option>
@@ -38,8 +40,10 @@
       </div>
     </app-creation-form>
   </section>
-  <section class="formCreationWrapper" *ngIf="allRegistries.length == 1">
-    <app-creation-form (save)="createRegistry(1)">
+  <section class="formCreationWrapper" *ngIf="allRegistries.length === 1">
+    <app-creation-form
+      (save)="showAlert('create', 'Confirmar a criação deste item?', 1)"
+    >
       <div class="subSection">
         <label class="w-full">
           Ministério da Iasd com o qual se identifica (segunda prioridade)
@@ -50,7 +54,7 @@
           >
             <option
               *ngFor="let ministrytype of ministryTypeList"
-              [disabled]="ministrytype.used == true"
+              [disabled]="ministrytype.used === true"
               [value]="ministrytype.ministry_type_id"
             >
               {{ ministrytype.ministry_type_name }}
@@ -60,8 +64,10 @@
       </div>
     </app-creation-form>
   </section>
-  <section class="formCreationWrapper" *ngIf="allRegistries.length == 2">
-    <app-creation-form (save)="createRegistry(2)">
+  <section class="formCreationWrapper" *ngIf="allRegistries.length === 2">
+    <app-creation-form
+      (save)="showAlert('create', 'Confirmar a criação deste item?', 2)"
+    >
       <div class="subSection">
         <label class="w-full">
           Ministério da Iasd com o qual se identifica (segunda prioridade)
@@ -72,7 +78,7 @@
           >
             <option
               *ngFor="let ministrytype of ministryTypeList"
-              [disabled]="ministrytype.used == true"
+              [disabled]="ministrytype.used === true"
               [value]="ministrytype.ministry_type_id"
             >
               {{ ministrytype.ministry_type_name }}
@@ -84,8 +90,8 @@
   </section>
   <section *ngIf="showBox" class="registriesWrapper">
     <app-update-form
+      (editRegistry)="showAlert('edit', 'Confirmar a edição este item?', i)"
       [registryId]="i"
-      (editRegistry)="editRegistry(i, $event.saveButtonId)"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{
         approved: registry.related_ministry_approved,
@@ -95,9 +101,9 @@
       <div class="subSection">
         <label class="w-full">
           Ministérios da Iasd com os quais se identifica
-          <span *ngIf="i == 0">Prioridade alta</span>
-          <span *ngIf="i == 1">Segunda prioridade</span>
-          <span *ngIf="i == 2">Terceira prioridade</span>
+          <span *ngIf="i === 0">Prioridade alta</span>
+          <span *ngIf="i === 1">Segunda prioridade</span>
+          <span *ngIf="i === 2">Terceira prioridade</span>
           <select
             class="smallInput"
             name="degreeSelect"
@@ -107,8 +113,8 @@
               *ngFor="let ministrytype of ministryTypeList"
               [value]="ministrytype.ministry_type_id"
               [disabled]="
-                ministrytype.used == true &&
-                registry.ministry_type_id != ministrytype.ministry_type_id
+                ministrytype.used === true &&
+                registry.ministry_type_id !== ministrytype.ministry_type_id
               "
             >
               {{ ministrytype.ministry_type_name }}
@@ -148,6 +154,13 @@
     (click)="closeDone()"
   />
 </div>
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
 
 <div *ngIf="isLoading" class="loader1"></div>
 <div *ngIf="isLoading" class="loader2"></div>

@@ -23,9 +23,12 @@ export class StudentPhotosService {
   ): Promise<null | number> {
     try {
       const cpf = data.slice(0, 11);
-      const photoType = data.slice(11, -4);
+      const remaining = data.slice(11);
+      const parts = remaining.split('.');
+      const photoType = parts[0];
 
       const student = await this.studentModel.findStudentByUserCpf(cpf);
+
       if (student == null) {
         const filePath = `./src/modules/info/student-photos/files/${filename}`;
         fs.unlinkSync(filePath);

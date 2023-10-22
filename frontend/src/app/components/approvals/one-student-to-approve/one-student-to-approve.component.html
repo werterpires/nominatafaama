@@ -10,7 +10,7 @@
     <div class="boxHead">
       <p class="sectionTitle1">Perfil do fomando</p>
     </div>
-    <section *ngIf="student.student != null && student.student.student_id">
+    <section *ngIf="student.student !== null && student.student.student_id">
       <div>
         <div class="subSection">
           <span class="field">
@@ -69,7 +69,8 @@
         <hr class="sectionDivisiion" />
         <div
           *ngIf="
-            student.relatedMinistries != undefined &&
+            student.relatedMinistries !== undefined &&
+            student.relatedMinistries !== null &&
             student.relatedMinistries.length > 0
           "
           class="subSection"
@@ -103,7 +104,7 @@
           <label class="labelRadio">
             <input
               class="rejectedRadio"
-              [checked]="student.student.student_approved == false"
+              [checked]="student.student.student_approved === false"
               #rejectItem
               [id]="'rejectStudent'"
               type="radio"
@@ -150,7 +151,7 @@
       <p class="sectionTitle1">Conheça {{ student.student?.person_name }}</p>
     </div>
     <section>
-      <div *ngIf="student.relatedMinistries != null">
+      <div *ngIf="student.relatedMinistries !== null">
         <p class="fieldTitle">Ministérios de interesse</p>
         <div
           class="subSection"
@@ -185,7 +186,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="ministry.related_ministry_approved == false"
+                  [checked]="ministry.related_ministry_approved === false"
                   [id]="'rejectFormation' + i"
                   type="radio"
                   name="status"
@@ -228,7 +229,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.academicFormations != null">
+      <div *ngIf="student.academicFormations !== null">
         <p class="fieldTitle">Formações acadêmicas</p>
         <div
           class="subSection"
@@ -272,7 +273,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="formation.academic_formation_approved == false"
+                  [checked]="formation.academic_formation_approved === false"
                   [id]="'rejectFormation' + i"
                   type="radio"
                   name="status"
@@ -315,7 +316,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.courses != null">
+      <div *ngIf="student.courses !== null">
         <p class="fieldTitle">Cursos e capacitações</p>
         <div
           class="subSection"
@@ -356,7 +357,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="course.course_approved == false"
+                  [checked]="course.course_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -394,7 +395,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.languages != null">
+      <div *ngIf="student.languages !== null">
         <p class="fieldTitle">Idiomas</p>
         <div
           class="subSection"
@@ -445,7 +446,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="language.language_approved == false"
+                  [checked]="language.language_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -488,7 +489,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.professionalExperiences != null">
+      <div *ngIf="student.professionalExperiences !== null">
         <p class="fieldTitle">Experiências profissionais</p>
         <div
           class="subSection"
@@ -529,7 +530,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="experience.experience_approved == false"
+                  [checked]="experience.experience_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -572,7 +573,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.pastEclExps != null">
+      <div *ngIf="student.pastEclExps !== null">
         <p class="fieldTitle">
           Experiências eclesiásticas e evangelísticas anteriores ao SALT
         </p>
@@ -616,7 +617,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="experience.past_ecl_approved == false"
+                  [checked]="experience.past_ecl_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -659,7 +660,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.eclExperiences != null">
+      <div *ngIf="student.eclExperiences !== null">
         <p class="fieldTitle">
           Experiências eclesiásticas Desenvolvidas Durante a Formação
           Ministerial no SALT
@@ -697,7 +698,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="experience.ecl_exp_approved == false"
+                  [checked]="experience.ecl_exp_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -740,7 +741,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.endowments != null">
+      <div *ngIf="student.endowments !== null">
         <p class="fieldTitle">Investiduras</p>
         <div
           class="subSection"
@@ -775,7 +776,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="endowment.endowment_approved == false"
+                  [checked]="endowment.endowment_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -818,7 +819,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.ordinations != null">
+      <div *ngIf="student.ordinations !== null">
         <p class="fieldTitle">Ordenações</p>
         <div
           class="subSection"
@@ -854,7 +855,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="ordination.ordination_approved == false"
+                  [checked]="ordination.ordination_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -897,14 +898,14 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.evangelisticExperiences != null">
+      <div *ngIf="student.evangelisticExperiences !== null">
         <p class="weightFieldTitle">
           Experiências Evangelísticas Durante a Formação Ministerial no SALT
         </p>
         <div *ngFor="let experienceType of evvangExpTypes">
           <p class="fieldTitle">{{ experienceType }}</p>
           <div *ngFor="let experience of student.evangelisticExperiences">
-            <div *ngIf="experience.evang_exp_type_name == experienceType">
+            <div *ngIf="experience.evang_exp_type_name === experienceType">
               <div
                 class="subSection"
                 class="field"
@@ -944,7 +945,7 @@
                         #rejectItem
                         class="rejectedRadio"
                         #rejectFormation{{i}}
-                        [checked]="experience.evang_exp_approved == false"
+                        [checked]="experience.evang_exp_approved === false"
                         [id]="'rejectFormation'"
                         type="radio"
                         name="status"
@@ -990,12 +991,12 @@
           <hr class="sectionDivisiion" />
         </div>
       </div>
-      <div *ngIf="student.publications != null">
+      <div *ngIf="student.publications !== null">
         <p class="weightFieldTitle">Publicações</p>
         <div *ngFor="let publicationType of publicationTypes">
           <p class="fieldTitle">{{ publicationType }}</p>
           <div *ngFor="let publication of student.publications">
-            <div *ngIf="publication.publication_type == publicationType">
+            <div *ngIf="publication.publication_type === publicationType">
               <div
                 class="subSection"
                 class="field"
@@ -1034,7 +1035,7 @@
                         #rejectItem
                         class="rejectedRadio"
                         #rejectFormation{{i}}
-                        [checked]="publication.publication_approved == false"
+                        [checked]="publication.publication_approved === false"
                         [id]="'rejectFormation'"
                         type="radio"
                         name="status"
@@ -1084,9 +1085,8 @@
   </section>
   <section
     *ngIf="
-      student.student?.marital_status_type_name ==
-        'Cas======================ado' ||
-      student.student?.marital_status_type_name == 'Noi======================vo'
+      student.student?.marital_status_type_name === 'Casado' ||
+      student.student?.marital_status_type_name === 'Noivo'
     "
     class="sectionBox"
   >
@@ -1095,7 +1095,7 @@
     </div>
     <section>
       <div
-        *ngIf="student.spouse != null"
+        *ngIf="student.spouse !== null"
         [ngClass]="{
           approved: student.spouse.spouse_approved === true,
           unapproved: student.spouse.spouse_approved === false,
@@ -1213,7 +1213,8 @@
             </div>
             <div
               *ngIf="
-                student.relatedMinistries != undefined &&
+                student.relatedMinistries !== undefined &&
+                student.relatedMinistries !== null &&
                 student.relatedMinistries.length > 0
               "
               class="subSection"
@@ -1243,7 +1244,7 @@
           <label class="labelRadio">
             <input
               class="rejectedRadio"
-              [checked]="student.spouse.spouse_approved == false"
+              [checked]="student.spouse.spouse_approved === false"
               #rejectItem
               [id]="'rejectStudent'"
               type="radio"
@@ -1285,7 +1286,7 @@
       </div>
 
       <hr class="sectionDivisiion" />
-      <div *ngIf="student.spRelatedMinistries != null">
+      <div *ngIf="student.spRelatedMinistries !== null">
         <p class="fieldTitle">Ministérios de interesse</p>
         <div
           class="subSection"
@@ -1320,7 +1321,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="ministry.related_ministry_approved == false"
+                  [checked]="ministry.related_ministry_approved === false"
                   [id]="'rejectFormation' + i"
                   type="radio"
                   name="status"
@@ -1363,7 +1364,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.spAcademicFormations != null">
+      <div *ngIf="student.spAcademicFormations !== null">
         <p class="fieldTitle">Formações acadêmicas</p>
         <div
           class="subSection"
@@ -1407,7 +1408,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="formation.academic_formation_approved == false"
+                  [checked]="formation.academic_formation_approved === false"
                   [id]="'rejectFormation' + i"
                   type="radio"
                   name="status"
@@ -1450,7 +1451,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.spCourses != null">
+      <div *ngIf="student.spCourses !== null">
         <p class="fieldTitle">Cursos e capacitações</p>
         <div
           class="subSection"
@@ -1491,7 +1492,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="course.course_approved == false"
+                  [checked]="course.course_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -1529,7 +1530,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.spLanguages != null">
+      <div *ngIf="student.spLanguages !== null">
         <p class="fieldTitle">Idiomas</p>
         <div
           class="subSection"
@@ -1580,7 +1581,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="language.language_approved == false"
+                  [checked]="language.language_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -1623,7 +1624,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.spProfessionalExperiences != null">
+      <div *ngIf="student.spProfessionalExperiences !== null">
         <p class="fieldTitle">Experiências profissionais</p>
         <div
           class="subSection"
@@ -1664,7 +1665,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="experience.experience_approved == false"
+                  [checked]="experience.experience_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -1707,7 +1708,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.spPastEclExps != null">
+      <div *ngIf="student.spPastEclExps !== null">
         <p class="fieldTitle">
           Experiências eclesiásticas e evangelísticas anteriores ao SALT
         </p>
@@ -1751,7 +1752,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="experience.past_ecl_approved == false"
+                  [checked]="experience.past_ecl_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -1794,7 +1795,7 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.spEndowments != null">
+      <div *ngIf="student.spEndowments !== null">
         <p class="fieldTitle">Investiduras</p>
         <div
           class="subSection"
@@ -1829,7 +1830,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="endowment.endowment_approved == false"
+                  [checked]="endowment.endowment_approved === false"
                   [id]="'rejectFormation'"
                   type="radio"
                   name="status"
@@ -1872,14 +1873,14 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div *ngIf="student.spEvangelisticExperiences != null">
+      <div *ngIf="student.spEvangelisticExperiences !== null">
         <p class="weightFieldTitle">
           Experiências Evangelísticas Durante a Formação Ministerial no SALT
         </p>
         <div *ngFor="let experienceType of spEvvangExpTypes">
           <p class="fieldTitle">{{ experienceType }}</p>
           <div *ngFor="let experience of student.spEvangelisticExperiences">
-            <div *ngIf="experience.evang_exp_type_name == experienceType">
+            <div *ngIf="experience.evang_exp_type_name === experienceType">
               <div
                 class="subSection"
                 class="field"
@@ -1919,7 +1920,7 @@
                         #rejectItem
                         class="rejectedRadio"
                         #rejectFormation{{i}}
-                        [checked]="experience.evang_exp_approved == false"
+                        [checked]="experience.evang_exp_approved === false"
                         [id]="'rejectFormation'"
                         type="radio"
                         name="status"
@@ -1965,12 +1966,12 @@
           <hr class="sectionDivisiion" />
         </div>
       </div>
-      <div *ngIf="student.spPublications != null">
+      <div *ngIf="student.spPublications !== null">
         <p class="weightFieldTitle">Publicações</p>
         <div *ngFor="let publicationType of spPublicationTypes">
           <p class="fieldTitle">{{ publicationType }}</p>
           <div *ngFor="let publication of student.spPublications">
-            <div *ngIf="publication.publication_type == publicationType">
+            <div *ngIf="publication.publication_type === publicationType">
               <div
                 class="subSection"
                 class="field"
@@ -2009,7 +2010,7 @@
                         #rejectItem
                         class="rejectedRadio"
                         #rejectFormation{{i}}
-                        [checked]="publication.publication_approved == false"
+                        [checked]="publication.publication_approved === false"
                         [id]="'rejectFormation'"
                         type="radio"
                         name="status"
@@ -2078,7 +2079,7 @@
               {{ child.name }}
             </p>
             <p class="fieldContent">
-              <span *ngIf="formateAge(child.child_birth_date) == 1">
+              <span *ngIf="formateAge(child.child_birth_date) === 1">
                 {{ formateAge(child.child_birth_date) }} ano,
               </span>
               <span *ngIf="formateAge(child.child_birth_date) > 1">
@@ -2108,7 +2109,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="child.child_approved == false"
+                  [checked]="child.child_approved === false"
                   [id]="'rejectFormation' + i"
                   type="radio"
                   name="status"
@@ -2159,11 +2160,9 @@
   <section
     *ngIf="
       student.student &&
-      (student.student.marital_status_type_name ==
-        'Div======================orciado' ||
-        student.student.marital_status_type_name ==
-          'Viú======================vo') &&
-      student.previousMarriage != null
+      (student.student.marital_status_type_name === 'Divorciado' ||
+        student.student.marital_status_type_name === 'Viúvo') &&
+      student.previousMarriage !== null
     "
     class="sectionBox"
   >
@@ -2204,7 +2203,7 @@
                   #rejectItem
                   class="rejectedRadio"
                   #rejectFormation{{i}}
-                  [checked]="marriage.previous_marriage_approved == false"
+                  [checked]="marriage.previous_marriage_approved === false"
                   [id]="'rejectFormation' + i"
                   type="radio"
                   name="status"

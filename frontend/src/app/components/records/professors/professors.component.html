@@ -3,7 +3,7 @@
   [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
 >
   <div class="boxHead">
-    <span class="headField" (click)="showBox = !showBox">
+    <span class="headField" (click)="toShowBox()">
       <img
         #expandIcon
         class="seeMoreIcon"
@@ -18,7 +18,7 @@
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form
       *ngIf="!registry?.professor_id"
-      (save)="createRegistry()"
+      (save)="showAlert('create', 'Confirmar a criação deste item?')"
     >
       <label class="inputLabel w-full">
         Titulação:
@@ -33,7 +33,7 @@
   </section>
   <section *ngIf="showBox" class="registriesWrapper">
     <app-update-form
-      (editRegistry)="editRegistry()"
+      (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
       *ngIf="registry.professor_id"
     >
       <label class="inputLabel w-full">
@@ -76,6 +76,13 @@
     (click)="closeDone()"
   />
 </div>
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
 
 <div *ngIf="isLoading" class="loader1"></div>
 <div *ngIf="isLoading" class="loader2"></div>

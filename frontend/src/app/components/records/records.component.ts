@@ -3,6 +3,7 @@ import { IPermissions, IUserApproved } from '../shared/container/types'
 import { DataService } from '../shared/shared.service.ts/data.service'
 import { LoginService } from '../shared/shared.service.ts/login.service'
 import { Router } from '@angular/router'
+import { RecordsService } from './records.service'
 
 @Component({
   selector: 'app-records',
@@ -17,6 +18,8 @@ export class RecordsComponent {
     representacao: false,
     administrador: false,
     docente: false,
+    ministerial: false,
+    design: false,
     isApproved: false,
   }
 
@@ -47,12 +50,31 @@ export class RecordsComponent {
       this.permissions.representacao = roles.includes('representacao')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
     })
+    this.getMaritalStatus()
   }
 
+  getMaritalStatus() {
+    // this.isLoading = true;
+    this.service.getStudentMaritalStatus().subscribe({
+      next: (res) => {
+        if (res) {
+          this.dataService.maritalStatusName = res.marital_status_type_name
+        }
+      },
+      error: (err) => {
+        // this.errorMessage = err.message;
+        // this.error = true;
+        // this.isLoading = false;
+      },
+    })
+  }
   constructor(
     public dataService: DataService,
     private loginService: LoginService,
     private router: Router,
+    private service: RecordsService,
   ) {}
 }

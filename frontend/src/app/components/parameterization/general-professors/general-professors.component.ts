@@ -62,6 +62,15 @@ export class GeneralProfessorsComponent {
     })
   }
 
+  formatarCPF() {
+    if (this.createRegistryData.cpf)
+      this.createRegistryData.cpf = this.createRegistryData.cpf.replace(
+        /(\d{3})(\d{3})(\d{3})(\d{2})/,
+        '$1.$2.$3-$4',
+      )
+    console.log('estou funcionando')
+  }
+
   resetCreationRegistry() {
     Object.keys(this.createRegistryData).forEach((key) => {
       switch (typeof key) {
@@ -83,6 +92,7 @@ export class GeneralProfessorsComponent {
     this.service
       .createRegistry({
         ...this.createRegistryData,
+        cpf: this.createRegistryData.cpf?.replace(/[^\d]/g, ''),
       })
       .subscribe({
         next: (res) => {

@@ -21,9 +21,7 @@ export class LogonService {
           console.log(`O erro verdadeiro foi esse:`, error)
           return throwError(() => new Error('Senha ou email não localizados.'))
         } else if (error.name == 'HttpErrorResponse') {
-          return throwError(
-            () => new Error('Não foi possível fazer contato com o servidor.'),
-          )
+          return throwError(() => new Error(error.error.message))
         } else {
           return throwError(
             () => new Error('Aconteceu um problema com o seu login'),

@@ -16,6 +16,8 @@ export class ParameterizationComponent {
     representacao: false,
     administrador: false,
     docente: false,
+    ministerial: false,
+    design: false,
     isApproved: false,
   }
 
@@ -38,7 +40,8 @@ export class ParameterizationComponent {
         if (
           !roles.includes('secretaria') &&
           !roles.includes('direcao') &&
-          !roles.includes('administrador')
+          !roles.includes('administrador') &&
+          !roles.includes('design')
         ) {
           this.router.navigate(['nominata'])
         }
@@ -55,6 +58,8 @@ export class ParameterizationComponent {
       this.permissions.representacao = roles.includes('representacao')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
     })
   }
 }

@@ -8,10 +8,17 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { config } from 'dotenv';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
+import { StudentsModel } from 'src/modules/students/model/students.model';
 
 config();
 
-const services = [AuthService, LocalStrategy, UsersService, JwtStrategy];
+const services = [
+  AuthService,
+  LocalStrategy,
+  UsersService,
+  JwtStrategy,
+  StudentsModel,
+];
 
 @Module({
   imports: [

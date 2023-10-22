@@ -9,7 +9,7 @@ import { MaritalStatusService } from '../marital-status/marital-status.service'
 import { IMaritalStatus } from '../marital-status/types'
 import { StudentService } from './students.service'
 import { ICreateStudent, IStudent, IUpdateStudent } from './types'
-import { OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core'
+import { OnInit, ElementRef, ViewChild } from '@angular/core'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 import { AssociationService } from '../../parameterization/associations/associations.service'
 import { IAssociation } from '../../parameterization/associations/types'
@@ -19,7 +19,7 @@ import { IAssociation } from '../../parameterization/associations/types'
   templateUrl: './students.component.html',
   styleUrls: ['./students.component.css'],
 })
-export class StudentsComponent {
+export class StudentsComponent implements OnInit {
   constructor(
     private studentServices: StudentService,
     private associationService: AssociationService,
@@ -86,17 +86,111 @@ export class StudentsComponent {
   error = false
   errorMessage = ''
 
-  phoneNumber: string = ''
+  phoneNumber = ''
+
+  alert = false
+  alertMessage = ''
+  func = ''
 
   ngOnInit() {
-    this.getRegistry()
+    if (this.showBox) {
+      this.getRegistry()
+    }
+
     if (this.registry.person_id == null) {
       this.showForm = false
     }
   }
 
+  showAlert(func: string, message: string) {
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.alert = false
+    } else if (func == 'edit') {
+      this.editRegistry()
+      this.alert = false
+    } else if (func == 'create') {
+      this.createRegistry()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getRegistry()
+    } else {
+      this.registry = {
+        person_name: '',
+        phone_number: '',
+        is_whatsapp: false,
+        alternative_email: '',
+        student_mensage: '',
+        person_id: 0,
+        origin_field_id: 0,
+        justification: '',
+        birth_city: '',
+        birth_state: '',
+        primary_school_city: '',
+        birth_date: '',
+        baptism_date: '',
+        baptism_place: '',
+        marital_status_id: 0,
+        hiring_status_id: 0,
+        student_approved: null,
+        student_active: false,
+        student_id: 0,
+        association_name: '',
+        association_acronym: '',
+        union_name: '',
+        union_acronym: '',
+        union_id: 0,
+        marital_status_type_name: '',
+        hiring_status_name: '',
+        hiring_status_description: '',
+        primary_school_state: '',
+      }
+    }
+  }
+
   getRegistry() {
     this.isLoading = true
+    this.registry = {
+      person_name: '',
+      phone_number: '',
+      is_whatsapp: false,
+      alternative_email: '',
+      student_mensage: '',
+      person_id: 0,
+      origin_field_id: 0,
+      justification: '',
+      birth_city: '',
+      birth_state: '',
+      primary_school_city: '',
+      birth_date: '',
+      baptism_date: '',
+      baptism_place: '',
+      marital_status_id: 0,
+      hiring_status_id: 0,
+      student_approved: null,
+      student_active: false,
+      student_id: 0,
+      association_name: '',
+      association_acronym: '',
+      union_name: '',
+      union_acronym: '',
+      union_id: 0,
+      marital_status_type_name: '',
+      hiring_status_name: '',
+      hiring_status_description: '',
+      primary_school_state: '',
+    }
     this.studentServices.findRegistry().subscribe({
       next: (res) => {
         if (res && res.student_id) {
@@ -109,6 +203,11 @@ export class StudentsComponent {
           this.showBox = true
           this.showForm = true
         }
+
+        this.allStates = []
+        this.allMaritalStatus = []
+        this.allAssociations = []
+        this.possibleAssociantions = []
         this.getAllOtherData()
         this.isLoading = false
       },
@@ -130,7 +229,7 @@ export class StudentsComponent {
         this.allAssociations = res.sort((a, b) => {
           if (a.union_name < b.union_name) {
             return -1
-          } else if (a.union_name < b.union_name) {
+          } else if (a.union_name > b.union_name) {
             return 1
           } else {
             return 0
@@ -157,7 +256,7 @@ export class StudentsComponent {
         this.allHiringStatus = res.sort((a, b) => {
           if (a.hiring_status_name < b.hiring_status_name) {
             return -1
-          } else if (a.hiring_status_name < b.hiring_status_name) {
+          } else if (a.hiring_status_name > b.hiring_status_name) {
             return 1
           } else {
             return 0
@@ -176,7 +275,7 @@ export class StudentsComponent {
         this.allMaritalStatus = res.sort((a, b) => {
           if (a.marital_status_type_name < b.marital_status_type_name) {
             return -1
-          } else if (a.marital_status_type_name < b.marital_status_type_name) {
+          } else if (a.marital_status_type_name > b.marital_status_type_name) {
             return 1
           } else {
             return 0
@@ -308,14 +407,14 @@ export class StudentsComponent {
     }
 
     this.studentServices.createStudent(newStudent).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Estudante criado com sucesso.'
         this.done = true
         this.isLoading = false
         this.getRegistry()
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível criar o estudante.'
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },
@@ -429,23 +528,29 @@ export class StudentsComponent {
     }
 
     this.studentServices.updateStudent(editStudentData).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Estudante editado com sucesso.'
+        this.ngOnInit()
         this.done = true
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = 'Não foi possível atualizar o estudante.'
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },
     })
   }
 
-  filterAssociation() {
+  filterAssociation(change?: boolean) {
     this.possibleAssociantions = this.allAssociations.filter((association) => {
       return association.union_acronym == this.registry.union_acronym
     })
+
+    if (change) {
+      this.registry.origin_field_id =
+        this.possibleAssociantions[0].association_id
+    }
   }
 
   findCities(cityType: 'birth' | 'school', specificSigla?: string) {

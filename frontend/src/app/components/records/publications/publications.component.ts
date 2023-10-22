@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import {
   CreatePublicationDto,
@@ -8,7 +8,6 @@ import {
 import { IPublicationType } from '../../parameterization/publication-types/types'
 import { PublicationsService } from './publications.service'
 import { PublicationTypeService } from '../../parameterization/publication-types/publication-types.service'
-import { parse } from 'uuid'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 
 @Component({
@@ -16,7 +15,7 @@ import { ValidateService } from '../../shared/shared.service.ts/validate.service
   templateUrl: './publications.component.html',
   styleUrls: ['./publications.component.css'],
 })
-export class PublicationsComponent {
+export class PublicationsComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   allRegistries: IPublication[] = []
@@ -43,11 +42,71 @@ export class PublicationsComponent {
     private publicationTypeService: PublicationTypeService,
     private validateService: ValidateService,
   ) {}
+  alert = false
+  alertMessage = ''
+  func = ''
+  index: number | null = null
+
+  showAlert(func: string, message: string, idx?: number) {
+    if (idx) {
+      this.index = idx
+    }
+    this.func = func
+    this.alertMessage = message
+    this.alert = true
+  }
+
+  confirm(response: { confirm: boolean; func: string }) {
+    const { confirm, func } = response
+
+    if (!confirm) {
+      this.resetAlert()
+    } else if (func == 'edit') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível editar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.editRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'delete') {
+      if (this.index == null) {
+        this.errorMessage = 'Index não localizado. Impossível deletar.'
+        this.error = true
+        this.resetAlert()
+        return
+      }
+      this.deleteRegistry(this.index)
+      this.resetAlert()
+    } else if (func == 'create') {
+      this.createRegistry()
+      this.resetAlert()
+    }
+  }
+
+  resetAlert() {
+    this.index = null
+    this.func = ''
+    this.alertMessage = ''
+    this.alert = false
+  }
 
   ngOnInit() {
     this.allRegistries = []
     this.publicationTypeList = []
-    this.getAllRegistries()
+    if (this.showBox) {
+      this.getAllRegistries()
+    }
+  }
+
+  toShowBox() {
+    this.showBox = !this.showBox
+    if (this.showBox) {
+      this.getAllRegistries()
+    } else if (!this.showBox) {
+      this.allRegistries = []
+    }
   }
 
   getAllRegistries() {
@@ -55,6 +114,7 @@ export class PublicationsComponent {
     this.service.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
+        this.publicationTypeList = []
         this.getAllTypes()
         this.isLoading = false
       },
@@ -138,7 +198,7 @@ export class PublicationsComponent {
         ),
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
@@ -154,7 +214,7 @@ export class PublicationsComponent {
       })
   }
 
-  editRegistry(index: number, buttonId: string) {
+  editRegistry(index: number) {
     this.isLoading = true
 
     if (this.allRegistries[index].publication_type_id < 1) {
@@ -202,7 +262,7 @@ export class PublicationsComponent {
     delete newRegistry.publication_type
 
     this.service.updateRegistry(newRegistry as UpdatePublicationDto).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
         this.ngOnInit()
@@ -219,7 +279,7 @@ export class PublicationsComponent {
   deleteRegistry(id: number) {
     this.isLoading = true
     this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.ngOnInit()

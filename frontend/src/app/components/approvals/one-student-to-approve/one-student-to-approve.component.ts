@@ -17,7 +17,17 @@ import { LoginService } from '../../shared/shared.service.ts/login.service'
   styleUrls: ['./one-student-to-approve.component.css'],
 })
 export class OneStudentToApproveComponent implements OnInit {
-  @Input() permissions!: IPermissions
+  @Input() permissions: IPermissions = {
+    estudante: false,
+    secretaria: false,
+    direcao: false,
+    representacao: false,
+    administrador: false,
+    docente: false,
+    ministerial: false,
+    design: false,
+    isApproved: false,
+  }
   @Output() seeAll: EventEmitter<void> = new EventEmitter<void>()
   student: ICompleteStudent = {
     academicFormations: null,
@@ -93,6 +103,7 @@ export class OneStudentToApproveComponent implements OnInit {
         if (
           !roles.includes('docente') &&
           !roles.includes('direcao') &&
+          !roles.includes('ministerial') &&
           !roles.includes('administrador')
         ) {
           this.router.navigate(['nominata'])
@@ -110,6 +121,8 @@ export class OneStudentToApproveComponent implements OnInit {
       this.permissions.representacao = roles.includes('representacao')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
     })
 
     this.activatedRoute.paramMap.subscribe((params) => {
@@ -117,31 +130,12 @@ export class OneStudentToApproveComponent implements OnInit {
 
       if (userId) {
         this.userId = parseInt(userId)
-        this.getOneStudent(this.userId)
       }
     })
+    this.getOneStudent(this.userId)
 
-    if (this.student.spEvangelisticExperiences != null) {
-      this.student.spEvangelisticExperiences.forEach((experience) => {
-        if (!this.spEvvangExpTypes.includes(experience.evang_exp_type_name)) {
-          this.spEvvangExpTypes.push(experience.evang_exp_type_name)
-        }
-      })
-    }
-    if (this.student.publications != null) {
-      this.student.publications.forEach((publication) => {
-        if (!this.publicationTypes.includes(publication.publication_type)) {
-          this.publicationTypes.push(publication.publication_type)
-        }
-      })
-    }
-    if (this.student.spPublications != null) {
-      this.student.spPublications.forEach((publication) => {
-        if (!this.spPublicationTypes.includes(publication.publication_type)) {
-          this.spPublicationTypes.push(publication.publication_type)
-        }
-      })
-    }
+    console.log(this.student)
+    console.log(this.evvangExpTypes, this.spEvvangExpTypes)
 
     await this.getFile(this.student.photos?.alone_photo?.file.data, 'alone')
     await this.getFile(this.student.photos?.spouse_photo?.file.data, 'spouse')
@@ -152,11 +146,44 @@ export class OneStudentToApproveComponent implements OnInit {
     )
   }
 
-  getOneStudent(userId: number) {
+  async getOneStudent(userId: number) {
     this.isLoading = true
     this.service.findOneRegistry(userId).subscribe({
       next: async (res) => {
         this.student = res
+        if (this.student.evangelisticExperiences != null) {
+          this.student.evangelisticExperiences.forEach((experience) => {
+            if (!this.evvangExpTypes.includes(experience.evang_exp_type_name)) {
+              this.evvangExpTypes.push(experience.evang_exp_type_name)
+            }
+          })
+        }
+        if (this.student.spEvangelisticExperiences != null) {
+          this.student.spEvangelisticExperiences.forEach((experience) => {
+            if (
+              !this.spEvvangExpTypes.includes(experience.evang_exp_type_name)
+            ) {
+              this.spEvvangExpTypes.push(experience.evang_exp_type_name)
+            }
+          })
+        }
+        if (this.student.publications != null) {
+          this.student.publications.forEach((publication) => {
+            if (!this.publicationTypes.includes(publication.publication_type)) {
+              this.publicationTypes.push(publication.publication_type)
+            }
+          })
+        }
+        if (this.student.spPublications != null) {
+          this.student.spPublications.forEach((publication) => {
+            if (
+              !this.spPublicationTypes.includes(publication.publication_type)
+            ) {
+              this.spPublicationTypes.push(publication.publication_type)
+            }
+          })
+        }
+        console.log(this.student, this.evvangExpTypes)
         this.isLoading = false
       },
       error: (err) => {

@@ -8,7 +8,7 @@ import {
   AddressNull,
   IStudentPhoto,
   UpdateStudentPhotoDto,
-} from '../small-alone-professor-photos/types'
+} from '../../records/small-alone-professor-photos/types'
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ export class StudentPhotosService {
 
   findAllRegistries(): Observable<Blob | AddressNull> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get(environment.API + '/student-photos/student/alone-photo', {
         headers: head_obj,
@@ -34,7 +34,7 @@ export class StudentPhotosService {
 
   createRegistry(formData: FormData): Observable<number> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<number>(environment.API + '/student-photos/alone-photo', formData, {
         headers: head_obj,
@@ -50,7 +50,7 @@ export class StudentPhotosService {
     updatedRegistry: UpdateStudentPhotoDto,
   ): Observable<UpdateStudentPhotoDto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<UpdateStudentPhotoDto>(
         environment.API + '/student-photos',

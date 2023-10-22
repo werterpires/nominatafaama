@@ -163,15 +163,6 @@
       [permissions]="permissions"
     ></app-previous-marriage>
 
-    <app-student-photos
-      *ngIf="
-        permissions.secretaria ||
-        permissions.administrador ||
-        permissions.direcao
-      "
-      [permissions]="permissions"
-    ></app-student-photos>
-
     <app-professors
       *ngIf="permissions.docente || permissions.administrador"
       [permissions]="permissions"
