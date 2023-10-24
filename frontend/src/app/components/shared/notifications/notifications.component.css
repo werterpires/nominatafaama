@@ -1,6 +1,6 @@
 .notificationsModal {
   width: 30vw;
-  height: 100vh;
+  height: calc(100vh - 84px);
   position: fixed;
   padding: 3px;
 
@@ -14,6 +14,7 @@
 
 .notifications {
   background-color: #e1e1e3;
+  height: 100%;
   /* padding: 5px; */
 }
 
@@ -21,6 +22,8 @@
   list-style-type: none;
   padding: 0px;
   margin: 0px;
+  height: 100%;
+  overflow: auto;
 }
 
 .notificationListItem {

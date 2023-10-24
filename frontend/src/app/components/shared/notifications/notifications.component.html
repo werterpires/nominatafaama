@@ -1,58 +1,23 @@
 <div class="notificationsModal">
   <div class="notifications">
     <ul class="notificationsList">
-      <li class="notificationListItem">
+      <li
+        *ngFor="let notification of allNotifications"
+        class="notificationListItem"
+      >
         <div class="notification">
           <label class="notificationClick" for="">
             <img
               class="notificationIcon"
-              src="assets/icons/user.svg"
-              alt="Símbolo de usuário" /><input
-              class="notificationCheck"
-              type="checkbox"
-          /></label>
-          <p class="notificationText">
-            O usuário Manoel Coelho se cadastrou no sistema usando os seguintes
-            dados: name: Manoel Coelho, cpf: 62641006090, role_id: 4,8, papeis:
-            [object Object],[object Object]
-          </p>
-        </div>
+              [src]="
+                'assets/icons/notif' + notification.notification_type + '.svg'
+              "
+              alt="Símbolo de usuário" />
 
-        <!-- <hr class="notificationsDivision" /> -->
-      </li>
-      <li class="notificationListItem">
-        <div class="notification">
-          <label class="notificationClick" for="">
-            <img
-              class="notificationIcon"
-              src="assets/icons/user.svg"
-              alt="Símbolo de usuário" /><input
-              class="notificationCheck"
-              type="checkbox"
+            <input class="notificationCheck" type="checkbox"
           /></label>
           <p class="notificationText">
-            O usuário Manoel Coelho se cadastrou no sistema usando os seguintes
-            dados: name: Manoel Coelho, cpf: 62641006090, role_id: 4,8, papeis:
-            [object Object],[object Object]
-          </p>
-        </div>
-
-        <!-- <hr class="notificationsDivision" /> -->
-      </li>
-      <li class="notificationListItem">
-        <div class="notification">
-          <label class="notificationClick" for="">
-            <img
-              class="notificationIcon"
-              src="assets/icons/user.svg"
-              alt="Símbolo de usuário" /><input
-              class="notificationCheck"
-              type="checkbox"
-          /></label>
-          <p class="notificationText">
-            O usuário Manoel Coelho se cadastrou no sistema usando os seguintes
-            dados: name: Manoel Coelho, cpf: 62641006090, role_id: 4,8, papeis:
-            [object Object],[object Object]
+            {{ notification.notification_text }}
           </p>
         </div>
 
