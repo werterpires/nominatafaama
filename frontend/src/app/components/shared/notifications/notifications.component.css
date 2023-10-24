@@ -63,6 +63,12 @@
   margin: 0px;
   height: 91%;
   overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.notificationsList::-webkit-scrollbar {
+  display: none;
 }
 
 .notificationListItem {

@@ -36,7 +36,7 @@ export class NotificationsComponent implements OnInit {
     this.read = read
     this.service.findAllRegistries(read).subscribe({
       next: (res) => {
-        this.allNotifications = res
+        this.allNotifications = res.reverse()
         console.log(this.allNotifications)
         this.isLoading = false
       },

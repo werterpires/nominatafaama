@@ -130,6 +130,10 @@ export class NotificationsService {
       );
 
       notifiedUsersIds.push(notificationData.objectUserId);
+      notifiedUsersIds.splice(
+        notifiedUsersIds.indexOf(notificationData.agentUserId),
+        1
+      );
 
       const textOne =
         notificationData.action === 'aprovou'
