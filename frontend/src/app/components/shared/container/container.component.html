@@ -141,13 +141,14 @@
               class="menuIcon"
               src="assets/icons/notificationIcon.png"
               alt="Ícone de notificação"
+              (click)="notifications = !notifications"
             />
           </li>
         </ul>
       </nav>
     </div>
   </header>
-  <app-notifications></app-notifications>
+  <app-notifications *ngIf="notifications"></app-notifications>
   <ng-content></ng-content>
 
   <!-- <app-approves

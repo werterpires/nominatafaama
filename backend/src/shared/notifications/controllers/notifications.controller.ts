@@ -57,7 +57,7 @@ export class NotificationsController {
   }
 
   @Put('read')
-  async setRead(@Body('id') notificationId: { notificationId: number }) {
+  async setRead(@Body() notificationId: { notificationId: number }) {
     try {
       return await this.notificationsService.setRead(notificationId);
     } catch (error) {

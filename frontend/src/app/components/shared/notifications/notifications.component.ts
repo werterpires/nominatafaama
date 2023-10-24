@@ -46,54 +46,25 @@ export class NotificationsComponent implements OnInit {
     })
   }
 
-  // editRegistry(index: number) {
-  //   this.isLoading = true
+  setRead(index: number) {
+    this.isLoading = true
 
-  //   if (this.allRegistries[index].course_area.length < 2) {
-  //     this.showError('Insira a área do curso para prosseguir com o registro')
-  //     return
-  //   }
+    const notificationId = { notificationId: index }
 
-  //   if (this.allRegistries[index].institution.length < 2) {
-  //     this.showError('Insira a instituição para prosseguir com o registro')
-  //     return
-  //   }
-
-  //   if (this.allRegistries[index].begin_date.length < 2) {
-  //     this.showError(
-  //       'Informe a data de início do curso para prosseguir com o registro',
-  //     )
-  //     return
-  //   }
-
-  //   const newRegistry: Partial<ICourse> = {
-  //     ...this.allRegistries[index],
-  //     begin_date: this.dataService.dateFormatter(
-  //       this.allRegistries[index].begin_date,
-  //     ),
-  //     conclusion_date: this.allRegistries[index].conclusion_date
-  //       ? this.dataService.dateFormatter(
-  //           this.allRegistries[index].conclusion_date || '',
-  //         )
-  //       : null,
-  //   }
-  //   delete newRegistry.created_at
-  //   delete newRegistry.updated_at
-  //   delete newRegistry.course_approved
-  //   this.service.updateRegistry(newRegistry as IUpdateCourse).subscribe({
-  //     next: () => {
-  //       this.doneMessage = 'Registro editado com sucesso.'
-  //       this.done = true
-  //       this.ngOnInit()
-  //       this.isLoading = false
-  //     },
-  //     error: (err) => {
-  //       this.errorMessage = err.message
-  //       this.error = true
-  //       this.isLoading = false
-  //     },
-  //   })
-  // }
+    this.service.setRead(notificationId).subscribe({
+      next: () => {
+        this.allNotifications = this.allNotifications.filter(
+          (notification) => notification.user_notification_id !== index,
+        )
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
 
   // deleteRegistry(id: number) {
   //   this.isLoading = true

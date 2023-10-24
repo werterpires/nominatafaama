@@ -1,5 +1,6 @@
 <div class="notificationsModal">
   <div class="notifications">
+    <div><span>Não lidas</span><span>Lidas</span></div>
     <ul class="notificationsList">
       <li
         *ngFor="let notification of allNotifications"
@@ -14,7 +15,10 @@
               "
               alt="Símbolo de usuário" />
 
-            <input class="notificationCheck" type="checkbox"
+            <input
+              class="notificationCheck"
+              type="checkbox"
+              (input)="setRead(notification.user_notification_id)"
           /></label>
           <p class="notificationText">
             {{ notification.notification_text }}

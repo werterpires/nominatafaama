@@ -50,30 +50,20 @@ export class notificationsService {
   //     )
   // }
 
-  // updateRegistry(updatedRegistry: IUpdateCourse): Observable<IUpdateCourse> {
-  //   const token = localStorage.getItem('access_token')
-  //   const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-  //   return this.http
-  //     .put<IUpdateCourse>(environment.API + '/courses', updatedRegistry, {
-  //       headers: head_obj,
-  //     })
-  //     .pipe(
-  //       catchError((error) => {
-  //         console.log('Veja o erro completo', error)
-  //         if (error.error.message == 'Registro já aprovado') {
-  //           return throwError(
-  //             () =>
-  //               new Error(
-  //                 'Não é possível atualizar ou deletar um item ja aprovado (com coloração verde).',
-  //               ),
-  //           )
-  //         }
-  //         return throwError(
-  //           () => new Error('Não foi possível atualizar o curso.'),
-  //         )
-  //       }),
-  //     )
-  // }
+  setRead(notificationId: { notificationId: number }) {
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .put(environment.API + '/notifications/read', notificationId, {
+        headers: head_obj,
+      })
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          return throwError(() => new Error(error.message))
+        }),
+      )
+  }
 
   // deleteRegistry(registryId: number): Observable<string> {
   //   const token = localStorage.getItem('access_token')
