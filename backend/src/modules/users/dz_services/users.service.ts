@@ -98,15 +98,18 @@ export class UsersService {
     }
   }
 
-  async approveUserById({
-    user_id,
-    user_approved,
-  }: IAproveUser): Promise<IAproveUser> {
+  async approveUserById(
+    { user_id, user_approved }: IAproveUser,
+    currentUser: UserFromJwt
+  ): Promise<IAproveUser> {
     try {
-      const updatedUser = await this.usersModel.aproveUserById({
-        user_id,
-        user_approved,
-      });
+      const updatedUser = await this.usersModel.aproveUserById(
+        {
+          user_id,
+          user_approved,
+        },
+        currentUser
+      );
       return updatedUser;
     } catch (error) {
       throw error;

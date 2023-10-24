@@ -24,7 +24,14 @@ export class NotificationsService {
         );
         createdNotification = await this.notificationsModel.createNotification(
           createNotification
-        ); // Correção aqui
+        );
+      } else if (notificationData.notificationType === 2) {
+        const createNotification = await this.createNotificationTypeTwo(
+          notificationData
+        );
+        createdNotification = await this.notificationsModel.createNotification(
+          createNotification
+        );
       }
 
       return createdNotification;
@@ -82,7 +89,67 @@ export class NotificationsService {
         objectUserId: notificationData.objectUserId,
         sent: false,
         read: false,
-        notificationText: `O usuário ${notificationData.agent_name} se cadastrou no sistema usando os seguintes dados: ${newDataToText}`,
+        notificationText: [
+          `O usuário ${notificationData.agent_name} se cadastrou no sistema usando os seguintes dados: ${newDataToText}`,
+        ],
+        notifiedUserIds: notifiedUsersIds,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  async createNotificationTypeTwo(
+    notificationData: INotificationData
+  ): Promise<ICreateNotification> {
+    try {
+      if (
+        notificationData.newData === null ||
+        notificationData.objectUserId === null
+      ) {
+        throw new Error('newData is null');
+      }
+
+      const supRoles: string[] = [];
+
+      const rolesArrays: string[][] = notificationData.newData['papeis'].map(
+        (role) => ApprovedBy.get(role) ?? []
+      );
+
+      if (rolesArrays.length > 0) {
+        supRoles.push(
+          ...rolesArrays.reduce((commonRoles, currentRoles) =>
+            commonRoles.filter((role) => currentRoles.includes(role))
+          )
+        );
+      }
+
+      let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles(
+        supRoles
+      );
+
+      notifiedUsersIds.push(notificationData.objectUserId);
+
+      const textOne =
+        notificationData.action === 'aprovou'
+          ? `O usuário ${notificationData.agent_name} aprovou o usuário ${notificationData.newData['nome']}.`
+          : `O usuário ${notificationData.agent_name} rejeitou ${notificationData.newData['nome']} como usuário do sistema.`;
+      const textTwo =
+        notificationData.action === 'aprovou'
+          ? `O usuário ${notificationData.agent_name} te aprovou como usuário do sistema.`
+          : `Você não foi aceito como usuário do sistema.`;
+      return {
+        agentUserId: notificationData.agentUserId,
+        notificationType: notificationData.notificationType,
+        action: notificationData.action,
+        table: notificationData.table,
+        oldData: notificationData.oldData,
+        newData: notificationData.newData,
+        objectUserId: notificationData.objectUserId,
+        sent: false,
+        read: false,
+        notificationText: [textOne, textTwo],
         notifiedUserIds: notifiedUsersIds,
       };
     } catch (error) {

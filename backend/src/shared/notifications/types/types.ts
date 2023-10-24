@@ -27,7 +27,7 @@ export interface IUserNotification {
 
 export interface ICreateNotification
   extends Omit<INotificationData, 'agent_name'> {
-  notificationText: string;
+  notificationText: string | string[];
   sent: boolean;
   read: boolean;
   notifiedUserIds: number[];

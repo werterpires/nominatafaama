@@ -744,10 +744,10 @@ export class UsersModel {
     return users;
   }
 
-  async aproveUserById({
-    user_id,
-    user_approved,
-  }: IAproveUser): Promise<IAproveUser> {
+  async aproveUserById(
+    { user_id, user_approved }: IAproveUser,
+    currentUser: UserFromJwt
+  ): Promise<IAproveUser> {
     let sentError: Error | null = null;
     let user: IAproveUser | null = null;
     const result = await this.knex.transaction(async (trx) => {
@@ -767,17 +767,36 @@ export class UsersModel {
         }
 
         // Realiza a consulta do usuário atualizado
-        const [result] = await trx
+        const result = await trx
           .table('users')
-          .select('user_id', 'user_approved')
-          .where('user_id', '=', user_id);
+          .select(
+            'users.user_id',
+            'user_approved',
+            'roles.role_name',
+            'people.name'
+          )
+          .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
+          .leftJoin('roles', 'users_roles.role_id', 'roles.role_id')
+          .leftJoin('people', 'users.person_id', 'people.person_id')
+          .where('users.user_id', '=', user_id);
 
         user = {
-          user_id: result.user_id,
-          user_approved: result.user_approved,
+          user_id: result[0].user_id,
+          user_approved: result[0].user_approved,
         };
 
         await trx.commit();
+        const roles = result.map((role) => role.role_name);
+        this.notificationsService.createNotification({
+          notificationType: 2,
+          action: user_approved ? 'aprovou' : 'rejeitou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { papeis: roles, nome: result[0].name },
+          oldData: null,
+          objectUserId: user_id,
+          table: null,
+        });
         return user;
       } catch (error) {
         console.error(error);

@@ -44,14 +44,34 @@ export class NotificationsModel {
           'notification_id'
         );
 
-        for (let notifiedUserId of notifiedUserIds) {
+        if (Array.isArray(notificationText)) {
+          for (let i = 0; i < notifiedUserIds.length - 1; i++) {
+            await trx('users_notifications').insert({
+              sent,
+              read,
+              notification_text: notificationText[0],
+              notified_user_id: notifiedUserIds[i],
+              notification_id: notificationId,
+            });
+          }
+
           await trx('users_notifications').insert({
             sent,
             read,
-            notification_text: notificationText,
-            notified_user_id: notifiedUserId,
+            notification_text: notificationText[1],
+            notified_user_id: notifiedUserIds[notifiedUserIds.length - 1],
             notification_id: notificationId,
           });
+        } else {
+          for (let notifiedUserId of notifiedUserIds) {
+            await trx('users_notifications').insert({
+              sent,
+              read,
+              notification_text: notificationText,
+              notified_user_id: notifiedUserId,
+              notification_id: notificationId,
+            });
+          }
         }
 
         await trx.commit();
