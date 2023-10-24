@@ -13,6 +13,14 @@
         >Lidas</span
       >
     </div>
+    <label *ngIf="!read" class="notificationAllreadClick" for="">
+      <input
+        class="notificationCheck"
+        type="checkbox"
+        (input)="setReadToAll()"
+      />
+      Marcar todas como lidas</label
+    >
     <ul class="notificationsList">
       <li
         *ngFor="let notification of allNotifications"

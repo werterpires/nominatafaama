@@ -47,6 +47,11 @@ export class NotificationsComponent implements OnInit {
       },
     })
   }
+  setReadToAll() {
+    this.allNotifications.forEach((notification) => {
+      this.setRead(notification.user_notification_id)
+    })
+  }
 
   setRead(index: number) {
     this.isLoading = true
