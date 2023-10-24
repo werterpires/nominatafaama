@@ -19,6 +19,7 @@ export class NotificationsComponent implements OnInit {
   doneMessage = ''
   error = false
   errorMessage = ''
+  read = false
 
   constructor(private service: notificationsService) {}
   alert = false
@@ -27,12 +28,13 @@ export class NotificationsComponent implements OnInit {
   index: number | null = null
 
   ngOnInit() {
-    this.getAllRegistries()
+    this.getAllRegistries(false)
   }
 
-  getAllRegistries() {
+  getAllRegistries(read: boolean) {
     this.isLoading = true
-    this.service.findAllRegistries().subscribe({
+    this.read = read
+    this.service.findAllRegistries(read).subscribe({
       next: (res) => {
         this.allNotifications = res
         console.log(this.allNotifications)

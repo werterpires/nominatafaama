@@ -12,11 +12,11 @@ import { IUserNotification } from './types'
 export class notificationsService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IUserNotification[]> {
+  findAllRegistries(read: boolean): Observable<IUserNotification[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IUserNotification[]>(environment.API + '/notifications', {
+      .get<IUserNotification[]>(environment.API + '/notifications/' + read, {
         headers: head_obj,
       })
       .pipe(

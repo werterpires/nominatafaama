@@ -110,14 +110,17 @@ export class NotificationsModel {
     }
   }
 
-  async findUserNotifications(userId: number): Promise<IUserNotification[]> {
+  async findUserNotifications(
+    userId: number,
+    read: boolean
+  ): Promise<IUserNotification[]> {
     try {
       const trx = await this.knex.transaction();
 
       const notifications = await trx
         .table('users_notifications')
         .where('notified_user_id', '=', userId)
-        .andWhere('read', '=', false)
+        .andWhere('read', '=', read)
         .leftJoin(
           'notifications',
           'users_notifications.notification_id',

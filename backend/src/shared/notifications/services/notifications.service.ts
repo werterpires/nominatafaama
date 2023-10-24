@@ -97,15 +97,23 @@ export class NotificationsService {
   }
 
   async getUserNotifications(
-    currentUser: UserFromJwt
+    currentUser: UserFromJwt,
+    read: string | undefined
   ): Promise<IUserNotification[]> {
     let notifications: IUserNotification[] = [];
+    console.log(read);
     try {
-      const { user_id } = currentUser;
-
-      notifications = await this.notificationsModel.findUserNotifications(
-        user_id
-      );
+      if (read == undefined || read == 'false') {
+        notifications = await this.notificationsModel.findUserNotifications(
+          currentUser.user_id,
+          false
+        );
+      } else if (read == 'true') {
+        notifications = await this.notificationsModel.findUserNotifications(
+          currentUser.user_id,
+          true
+        );
+      }
     } catch (error) {
       console.error(error.message);
       throw new Error(error.message);

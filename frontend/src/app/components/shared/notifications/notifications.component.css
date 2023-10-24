@@ -18,6 +18,31 @@
   /* padding: 5px; */
 }
 
+.choseReadDiv {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.readOption {
+  cursor: pointer;
+  color: #0d3362;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 100;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  border: #0d3362 1px solid;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.selectedReadOption {
+  background-color: #0d3362;
+  color: white;
+}
+
 .notificationsList {
   list-style-type: none;
   padding: 0px;

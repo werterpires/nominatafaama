@@ -8,6 +8,7 @@ import {
   Delete,
   InternalServerErrorException,
   Put,
+  Query,
 } from '@nestjs/common';
 import { NotificationsService } from '../services/notifications.service';
 import { CreateNotificationDto } from '../dto/create-notification.dto';
@@ -38,13 +39,14 @@ export class NotificationsController {
     ERoles.DOCENTE,
     ERoles.SECRETARIA
   )
-  @Get()
+  @Get(':read')
   async findUserNotification(
-    @CurrentUser() currentUser: UserFromJwt
+    @CurrentUser() currentUser: UserFromJwt,
+    @Param('read') read: string
   ): Promise<IUserNotification[]> {
     try {
       const notifications =
-        await this.notificationsService.getUserNotifications(currentUser);
+        await this.notificationsService.getUserNotifications(currentUser, read);
 
       return notifications;
     } catch (error) {
@@ -56,6 +58,16 @@ export class NotificationsController {
     return this.notificationsService.findOne(+id);
   }
 
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.DESIGN,
+    ERoles.REPRESENTACAO,
+    ERoles.MINISTERIAL,
+    ERoles.DOCENTE,
+    ERoles.SECRETARIA
+  )
   @Put('read')
   async setRead(@Body() notificationId: { notificationId: number }) {
     try {
