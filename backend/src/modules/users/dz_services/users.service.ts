@@ -13,6 +13,7 @@ import {
 import { UpdateUserDto } from '../az_dto/updateUserDto';
 import * as Nodemailer from 'nodemailer';
 import { ITerm } from 'src/shared/terms/types/types';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class UsersService {

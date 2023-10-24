@@ -11,11 +11,15 @@ import {
 } from '../bz_types/types';
 import { IRole } from 'src/shared/roles/bz_types/types';
 import { ITerm } from 'src/shared/terms/types/types';
-import { Term } from 'src/shared/terms/entities/term.entity';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class UsersModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  constructor(
+    @InjectModel() private readonly knex: Knex,
+    private notificationsService: NotificationsService
+  ) {}
 
   async createUser({
     name,
@@ -103,7 +107,31 @@ export class UsersModel {
           await trx('terms_users').insert(termUsers);
         }
 
+        const papeis = await trx('roles')
+          .select('role_name')
+          .whereIn('role_id', role_id);
+
         await trx.commit();
+
+        const ok = await this.notificationsService.createNotification({
+          action: 'se cadastrou',
+          agent_name: name,
+          agentUserId: user_id,
+          newData: {
+            name,
+            cpf: cpf,
+            role_id,
+            papeis: papeis,
+          },
+          objectUserId: null,
+          table: null,
+          notificationType: 1,
+          oldData: null,
+        });
+
+        if (!ok) {
+          throw new Error('Erro ao criar notificação');
+        }
       } catch (error) {
         console.error(error);
         await trx.rollback();
