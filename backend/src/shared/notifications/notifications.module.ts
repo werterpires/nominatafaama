@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { NotificationsService } from './services/notifications.service';
-import { NotificationsController } from './notifications.controller';
+import { NotificationsController } from './controllers/notifications.controller';
 import { NotificationsModel } from './model/notifications.model';
 
 const services = [NotificationsService, NotificationsModel];

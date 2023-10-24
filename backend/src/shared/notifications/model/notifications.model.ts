@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
-import { ICreateNotification, INotification } from '../types/types';
+import {
+  ICreateNotification,
+  INotification,
+  IUserNotification,
+} from '../types/types';
 
 @Injectable()
 export class NotificationsModel {
@@ -46,6 +50,7 @@ export class NotificationsModel {
             read,
             notification_text: notificationText,
             notified_user_id: notifiedUserId,
+            notification_id: notificationId,
           });
         }
 
@@ -105,16 +110,44 @@ export class NotificationsModel {
     }
   }
 
-  // async findCoursesByPersonId(personId: number): Promise<ICourse[]> {
-  //   let courseList: ICourse[] = [];
+  async findUserNotifications(userId: number): Promise<IUserNotification[]> {
+    try {
+      const trx = await this.knex.transaction();
+
+      const notifications = await trx
+        .table('users_notifications')
+        .where('notified_user_id', '=', userId)
+        .leftJoin(
+          'notifications',
+          'users_notifications.notification_id',
+          'notifications.notification_id'
+        )
+        .select('users_notifications.*', 'notifications.notification_type');
+
+      await trx.commit();
+
+      return notifications;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.sqlMessage);
+    }
+  }
+
+  // async findUserNotifications(userId: number): Promise<IUserNotification[]> {
+  //   let notifications: IUserNotification[] = [];
   //   let sentError: Error | null = null;
 
   //   await this.knex.transaction(async (trx) => {
   //     try {
-  //       courseList = await trx
-  //         .table('courses')
-  //         .where('person_id', '=', personId)
-  //         .select('*');
+  //       notifications = await trx
+  //         .table('users_notifications')
+  //         .where('notified_user_id', '=', userId)
+  //         .leftJoin(
+  //           'notifications',
+  //           'users_notifications.notification_id',
+  //           'notifications.notification_id'
+  //         )
+  //         .select('users_notifications.*', 'notifications.notification_type');
 
   //       await trx.commit();
   //     } catch (error) {
@@ -128,7 +161,7 @@ export class NotificationsModel {
   //     throw sentError;
   //   }
 
-  //   return courseList;
+  //   return notifications;
   // }
 
   // async findApprovedCoursesByPersonId(personId: number): Promise<ICourse[]> {

@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreateNotificationDto } from '../dto/create-notification.dto';
 import { UpdateNotificationDto } from '../dto/update-notification.dto';
-import { ICreateNotification, INotificationData } from '../types/types';
+import {
+  ICreateNotification,
+  INotificationData,
+  IUserNotification,
+} from '../types/types';
 import { ApprovedBy } from 'src/modules/users/hz_maps/users.maps';
 import { NotificationsModel } from '../model/notifications.model';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private notificationModel: NotificationsModel) {}
+  constructor(private notificationsModel: NotificationsModel) {}
   async createNotification(
     notificationData: INotificationData
   ): Promise<boolean> {
@@ -17,7 +22,7 @@ export class NotificationsService {
         const createNotification = await this.createNotificationTypeOne(
           notificationData
         );
-        createdNotification = await this.notificationModel.createNotification(
+        createdNotification = await this.notificationsModel.createNotification(
           createNotification
         ); // Correção aqui
       }
@@ -51,7 +56,7 @@ export class NotificationsService {
         );
       }
 
-      const notifiedUsersIds = await this.notificationModel.findUserIdsByRoles(
+      const notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles(
         supRoles
       );
 
@@ -89,6 +94,23 @@ export class NotificationsService {
   getUserNameByUserId(userId: number) {
     try {
     } catch (error) {}
+  }
+
+  async getUserNotifications(
+    currentUser: UserFromJwt
+  ): Promise<IUserNotification[]> {
+    let notifications: IUserNotification[] = [];
+    try {
+      const { user_id } = currentUser;
+
+      notifications = await this.notificationsModel.findUserNotifications(
+        user_id
+      );
+    } catch (error) {
+      console.error(error.message);
+      throw new Error(error.message);
+    }
+    return notifications;
   }
 
   findAll() {
