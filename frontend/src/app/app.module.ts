@@ -79,7 +79,8 @@ import { VacanciesComponent } from './components/vacancies/vacancies.component'
 import { ModalVacancyComponent } from './components/modal-vacancy/modal-vacancy.component'
 import { ModalTermComponent } from './components/modal-term/modal-term.component'
 import { UnactiveComponent } from './components/parameterization/unactive/unactive.component';
-import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component'
+import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component';
+import { NotificationsComponent } from './components/shared/notifications/notifications.component'
 
 @NgModule({
   declarations: [
@@ -157,6 +158,7 @@ import { AlertModalComponent } from './components/shared/alert-modal/alert-modal
     ModalTermComponent,
     UnactiveComponent,
     AlertModalComponent,
+    NotificationsComponent,
   ],
   imports: [
     BrowserModule,
