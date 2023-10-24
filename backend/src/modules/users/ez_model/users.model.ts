@@ -118,9 +118,7 @@ export class UsersModel {
           agent_name: name,
           agentUserId: user_id,
           newData: {
-            name,
-            cpf: cpf,
-            role_id,
+            nome: name,
             papeis: papeis,
           },
           objectUserId: null,

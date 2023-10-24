@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   InternalServerErrorException,
+  Put,
 } from '@nestjs/common';
 import { NotificationsService } from '../services/notifications.service';
 import { CreateNotificationDto } from '../dto/create-notification.dto';
@@ -53,6 +54,16 @@ export class NotificationsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.notificationsService.findOne(+id);
+  }
+
+  @Put('read')
+  async setRead(@Body('id') notificationId: { notificationId: number }) {
+    try {
+      return await this.notificationsService.setRead(notificationId);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   @Patch(':id')

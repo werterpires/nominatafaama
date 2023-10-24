@@ -113,6 +113,15 @@ export class NotificationsService {
     return notifications;
   }
 
+  async setRead(notificationId: { notificationId: number }) {
+    try {
+      await this.notificationsModel.setRead(notificationId.notificationId);
+    } catch (error) {
+      console.error(error.message);
+      throw new Error(error.message);
+    }
+  }
+
   findAll() {
     return `This action returns all notifications`;
   }

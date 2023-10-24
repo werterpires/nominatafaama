@@ -117,6 +117,7 @@ export class NotificationsModel {
       const notifications = await trx
         .table('users_notifications')
         .where('notified_user_id', '=', userId)
+        .andWhere('read', '=', false)
         .leftJoin(
           'notifications',
           'users_notifications.notification_id',
@@ -131,6 +132,35 @@ export class NotificationsModel {
       console.error(error);
       throw new Error(error.sqlMessage);
     }
+  }
+  async setRead(userNotificationId: number): Promise<boolean> {
+    let sentError: Error | null = null;
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const read = await trx('users_notifications')
+          .where('user_notification_id', userNotificationId)
+          .first('read');
+
+        await trx('users_notifications')
+          .where('user_notification_id', userNotificationId)
+          .update({
+            read: !read.read,
+          });
+
+        await trx.commit();
+      } catch (error) {
+        console.error(error);
+        await trx.rollback();
+        sentError = new Error(error.message);
+      }
+    });
+
+    if (sentError) {
+      throw sentError;
+    }
+
+    return true!;
   }
 
   // async findUserNotifications(userId: number): Promise<IUserNotification[]> {
