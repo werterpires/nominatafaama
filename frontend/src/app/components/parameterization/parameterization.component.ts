@@ -39,7 +39,7 @@ export class ParameterizationComponent {
         roles = this.user.roles.map((role) => role.role_name.toLowerCase())
         if (
           !roles.includes('secretaria') &&
-          !roles.includes('direcao') &&
+          !roles.includes('direção') &&
           !roles.includes('administrador') &&
           !roles.includes('design')
         ) {

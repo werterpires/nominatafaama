@@ -2,7 +2,8 @@
   width: 30vw;
   height: calc(100vh - 84px);
   position: fixed;
-  padding: 3px;
+  padding-left: 8px;
+  padding-right: 4px;
 
   background-color: #0d3362;
   display: flex;
@@ -67,9 +68,14 @@
   scrollbar-color: transparent transparent;
 }
 
-.notificationsList::-webkit-scrollbar {
-  display: none;
+/* .notificationsList::-webkit-scrollbar {
+  background-color: unset;
+  background-color: #0d3362;
+  width: 10px;
 }
+.notificationsList::-webkit-scrollbar-thumb {
+  background-color: white;
+} */
 
 .notificationListItem {
   padding: 5px;
@@ -111,7 +117,6 @@
   border: 5px solid #0d3362;
   transition: transform 0.3s ease;
   margin: 0;
-  margin-right: 5px;
   cursor: pointer;
 }
 

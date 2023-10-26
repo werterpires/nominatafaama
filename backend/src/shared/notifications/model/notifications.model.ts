@@ -146,7 +146,8 @@ export class NotificationsModel {
           'users_notifications.notification_id',
           'notifications.notification_id'
         )
-        .select('users_notifications.*', 'notifications.notification_type');
+        .select('users_notifications.*', 'notifications.notification_type')
+        .orderBy('users_notifications.created_at', 'desc');
 
       await trx.commit();
 

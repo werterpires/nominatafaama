@@ -7,13 +7,19 @@ import {
   IProfessor,
   IUpdateProfessor,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class ProfessorsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  constructor(
+    @InjectModel() private readonly knex: Knex,
+    private notificationsService: NotificationsService
+  ) {}
 
   async createProfessor(
-    createProfessor: ICreateProfessorAssgnment
+    createProfessor: ICreateProfessorAssgnment,
+    currentUser: UserFromJwt
   ): Promise<IProfessor> {
     let professor: IProfessor | null = null;
     let sentError: Error | null = null;
@@ -46,8 +52,23 @@ export class ProfessorsModel {
           .returning('professor_id');
 
         await trx.commit();
-
+        const userId = await this.knex('users')
+          .first('user_id')
+          .where('person_id', createProfessor.person_id);
         professor = await this.findProfessorById(professor_id);
+        this.notificationsService.createNotification({
+          notificationType: 3,
+          action: 'inseriu',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            nome: professor?.person_name,
+            titulacao: professor?.assignments,
+          },
+          oldData: null,
+          objectUserId: userId ? userId.user_id : null,
+          table: null,
+        });
       } catch (error) {
         console.error(error);
         await trx.rollback();

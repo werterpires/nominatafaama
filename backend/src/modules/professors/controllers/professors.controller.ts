@@ -39,6 +39,7 @@ export class ProfessorsController {
       const userId = user.user_id;
       const professor = await this.professorsService.createProfessor(
         input,
+        user,
         userId
       );
       return professor;
@@ -49,9 +50,15 @@ export class ProfessorsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.SECRETARIA)
   @Post('notuser')
-  async createPersonAndProfessor(@Body() input: CreateProfessorAssignmentDto) {
+  async createPersonAndProfessor(
+    @Body() input: CreateProfessorAssignmentDto,
+    @CurrentUser() user: UserFromJwt
+  ) {
     try {
-      const professor = await this.professorsService.createProfessor(input);
+      const professor = await this.professorsService.createProfessor(
+        input,
+        user
+      );
       return professor;
     } catch (error) {
       throw new InternalServerErrorException(error.message);

@@ -32,6 +32,13 @@ export class NotificationsService {
         createdNotification = await this.notificationsModel.createNotification(
           createNotification
         );
+      } else if (notificationData.notificationType === 3) {
+        const createNotification = await this.createNotificationTypeThree(
+          notificationData
+        );
+        createdNotification = await this.notificationsModel.createNotification(
+          createNotification
+        );
       }
 
       return createdNotification;
@@ -162,9 +169,99 @@ export class NotificationsService {
     }
   }
 
-  getUserNameByUserId(userId: number) {
+  async createNotificationTypeThree(
+    notificationData: INotificationData
+  ): Promise<ICreateNotification> {
     try {
-    } catch (error) {}
+      if (notificationData.newData === null) {
+        throw new Error('newData is null');
+      }
+
+      let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
+        'direcao',
+        'ministerial',
+      ]);
+
+      const index = notifiedUsersIds.indexOf(notificationData.agentUserId);
+      let objectName = '';
+
+      if (index !== -1) {
+        notifiedUsersIds.splice(index, 1);
+      }
+      if (
+        notificationData.objectUserId &&
+        notificationData.objectUserId !== notificationData.agentUserId
+      ) {
+        notifiedUsersIds.push(notificationData.objectUserId);
+        objectName = await this.getUserNameByUserId(
+          notificationData.objectUserId
+        );
+      }
+
+      const newDataToText: string = Object.entries(notificationData.newData)
+        .map(([prop, value]) => {
+          return `${prop}: ${value}`;
+        })
+        .join(', ');
+
+      let textOne = '';
+      let textTwo = '';
+      if (
+        notificationData.objectUserId &&
+        notificationData.objectUserId !== notificationData.agentUserId
+      ) {
+        if (notificationData.action === 'inseriu') {
+          textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para o professor ${objectName}: ${newDataToText}`;
+          textTwo = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para você como professor: ${newDataToText}`;
+        }
+      } else {
+        if (notificationData.action === 'inseriu') {
+          textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para si mesmo como professor: ${newDataToText}`;
+        }
+      }
+
+      let notificationText: string | string[];
+
+      if (textTwo.length > 0) {
+        notificationText = [textOne, textTwo];
+      } else {
+        notificationText = textOne;
+      }
+
+      return {
+        agentUserId: notificationData.agentUserId,
+        notificationType: notificationData.notificationType,
+        action: notificationData.action,
+        table: notificationData.table,
+        oldData: notificationData.oldData,
+        newData: notificationData.newData,
+        objectUserId: notificationData.objectUserId,
+        sent: false,
+        read: false,
+        notificationText: notificationText,
+        notifiedUserIds: notifiedUsersIds,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  async getUserNameByUserId(userId: number): Promise<string> {
+    let userName: {
+      name: string;
+    } | null = null;
+    try {
+      userName = await this.notificationsModel.findNameByUserId(userId);
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+    if (userName) {
+      return userName.name;
+    } else {
+      return '';
+    }
   }
 
   async getUserNotifications(

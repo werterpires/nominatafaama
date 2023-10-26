@@ -1100,19 +1100,19 @@ button:active {
 }
 
 .approved {
-  background-color: #a9d1a6;
+  border-left: solid 8px #a9d1a6;
   padding: 5px;
   border-radius: 10px;
 }
 
 .unapproved {
-  background-color: #d5adad;
+  border-left: solid 8px #d5adad;
   padding: 5px;
   border-radius: 10px;
 }
 
 .notRated {
-  background-color: #d5d2ad;
+  border-left: solid 8px #d5d2ad;
   padding: 5px;
   border-radius: 10px;
 }
