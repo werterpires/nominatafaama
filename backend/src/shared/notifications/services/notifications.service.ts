@@ -173,7 +173,10 @@ export class NotificationsService {
     notificationData: INotificationData
   ): Promise<ICreateNotification> {
     try {
-      if (notificationData.newData === null) {
+      if (
+        notificationData.newData === null &&
+        notificationData.action !== 'apagou'
+      ) {
         throw new Error('newData is null');
       }
 
@@ -198,17 +201,33 @@ export class NotificationsService {
         );
       }
 
-      const newDataToText: string = Object.entries(notificationData.newData)
-        .map(([prop, value]) => {
-          return `${prop}: ${value}`;
-        })
-        .join(', ');
+      const newDataToText: string = '';
+      if (notificationData.newData) {
+        Object.entries(notificationData.newData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`;
+          })
+          .join(', ');
+      }
+
+      let oldDataToText: string = '';
+      if (notificationData.oldData) {
+        oldDataToText = Object.entries(notificationData.oldData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`;
+          })
+          .join(', ');
+      }
 
       let textOne = '';
       let textTwo = '';
       if (!notificationData.objectUserId) {
         if (notificationData.action === 'inseriu') {
           textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados de professor: ${newDataToText}`;
+        } else if (notificationData.action === 'editou') {
+          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados de professor: de ${oldDataToText} passou a ser ${newDataToText}`;
+        } else if (notificationData.action === 'apagou') {
+          textOne = `O usuário ${notificationData.agent_name} excluiu os seguintes dados de professor: ${oldDataToText}`;
         }
       } else if (
         notificationData.objectUserId &&
@@ -217,10 +236,20 @@ export class NotificationsService {
         if (notificationData.action === 'inseriu') {
           textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para o professor ${objectName}: ${newDataToText}`;
           textTwo = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para você como professor: ${newDataToText}`;
+        } else if (notificationData.action === 'editou') {
+          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados para o professor ${objectName}: de ${oldDataToText} passou a ser ${newDataToText}`;
+          textTwo = `O usuário ${notificationData.agent_name} editou seus dados como professor: de ${oldDataToText} passou a ser ${newDataToText}`;
+        } else if (notificationData.action === 'apagou') {
+          textOne = `O usuário ${notificationData.agent_name} excluiu os seguintes dados de professor: ${oldDataToText}`;
+          textTwo = `O usuário ${notificationData.agent_name} excluiu seus dados como professor: ${oldDataToText}`;
         }
       } else {
         if (notificationData.action === 'inseriu') {
           textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para si mesmo como professor: ${newDataToText}`;
+        } else if (notificationData.action === 'editou') {
+          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados para si mesmo como professor: de ${oldDataToText} passou a ser ${newDataToText}`;
+        } else if (notificationData.action === 'apagou') {
+          textOne = `O usuário ${notificationData.agent_name} excluiu seus próprios dados de professor: ${oldDataToText}`;
         }
       }
 

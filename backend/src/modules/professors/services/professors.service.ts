@@ -77,7 +77,8 @@ export class ProfessorsService {
   }
 
   async updateProfessorById(
-    input: UpdateProfessorAssgnmentDto
+    input: UpdateProfessorAssgnmentDto,
+    currentUser: UserFromJwt
   ): Promise<IProfessor> {
     let updatedProfessor: IProfessor | null = null;
     let sentError: Error | null = null;
@@ -89,7 +90,8 @@ export class ProfessorsService {
 
     try {
       updatedProfessor = await this.professorsModel.updateProfessorById(
-        updateData
+        updateData,
+        currentUser
       );
     } catch (error) {
       sentError = new Error(error.message);
@@ -260,9 +262,15 @@ export class ProfessorsService {
     }
   }
 
-  async deleteProfessorById(id: number): Promise<string> {
+  async deleteProfessorById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      const message = await this.professorsModel.deleteProfessorById(id);
+      const message = await this.professorsModel.deleteProfessorById(
+        id,
+        currentUser
+      );
       return message;
     } catch (error) {
       throw error;

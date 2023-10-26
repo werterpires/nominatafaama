@@ -137,7 +137,8 @@ export class ProfessorsModel {
   }
 
   async updateProfessorById(
-    updateProfessor: IUpdateProfessor
+    updateProfessor: IUpdateProfessor,
+    currentUser: UserFromJwt
   ): Promise<IProfessor> {
     let updatedProfessor: IProfessor | null = null;
     let sentError: Error | null = null;
@@ -146,12 +147,47 @@ export class ProfessorsModel {
       try {
         const { assignments, approved, professor_id } = updateProfessor;
 
-        await trx('professors').where('professor_id', professor_id).update({
-          assignments,
-          approved,
-        });
+        const oldProfessor = await this.findProfessorById(professor_id);
+
+        await trx('professors')
+          .where('professor_id', professor_id)
+          .limit(1)
+          .update({
+            assignments,
+            approved,
+          });
+
+        if (updateProfessor.name && updateProfessor.cpf) {
+          const person = await trx('people')
+            .where('person_id', oldProfessor?.person_id)
+            .update({
+              name: updateProfessor.name,
+              cpf: updateProfessor.cpf,
+            });
+        }
 
         await trx.commit();
+        const userId = await this.knex('users')
+          .first('user_id')
+          .where('person_id', oldProfessor?.person_id);
+        this.notificationsService.createNotification({
+          notificationType: 3,
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            nome: updateProfessor.name
+              ? updateProfessor.name
+              : oldProfessor?.person_name,
+            titulacao: updateProfessor.assignments,
+          },
+          oldData: {
+            nome: oldProfessor?.person_name,
+            titulacao: oldProfessor?.assignments,
+          },
+          objectUserId: userId ? userId.user_id : null,
+          table: null,
+        });
       } catch (error) {
         console.error(error);
         console.error(error);
@@ -242,15 +278,37 @@ export class ProfessorsModel {
     return professorPhoto;
   }
 
-  async deleteProfessorById(id: number): Promise<string> {
+  async deleteProfessorById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
+        const oldProfessor = await this.findProfessorById(id);
         await trx('professors').where('professor_id', id).del();
 
         await trx.commit();
+
+        const userId = await this.knex('users')
+          .first('user_id')
+          .where('person_id', oldProfessor?.person_id);
+
+        this.notificationsService.createNotification({
+          notificationType: 3,
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          oldData: {
+            titulacao: oldProfessor?.assignments,
+            nome: oldProfessor?.person_name,
+          },
+          objectUserId: userId ? userId.user_id : null,
+          table: null,
+        });
       } catch (error) {
         console.error(error);
         sentError = new Error(error.message);
