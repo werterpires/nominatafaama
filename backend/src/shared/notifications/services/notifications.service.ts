@@ -206,7 +206,11 @@ export class NotificationsService {
 
       let textOne = '';
       let textTwo = '';
-      if (
+      if (!notificationData.objectUserId) {
+        if (notificationData.action === 'inseriu') {
+          textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados de professor: ${newDataToText}`;
+        }
+      } else if (
         notificationData.objectUserId &&
         notificationData.objectUserId !== notificationData.agentUserId
       ) {
