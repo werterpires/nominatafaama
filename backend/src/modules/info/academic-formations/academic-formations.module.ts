@@ -10,8 +10,8 @@ import { UsersModule } from 'src/modules/users/users.module';
 const services = [
   AcademicFormationsService,
   AcademicFormationsModel,
-  UsersService,
-  UsersModel,
+  // UsersService,
+  // UsersModel,
   SpousesModel,
 ];
 

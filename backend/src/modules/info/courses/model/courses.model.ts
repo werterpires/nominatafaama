@@ -2,12 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { ICreateCourse, ICourse, IUpdateCourse } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class CoursesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
-  async createCourse(createCourseData: ICreateCourse): Promise<ICourse> {
+  async createCourse(
+    createCourseData: ICreateCourse,
+    currentUser: UserFromJwt
+  ): Promise<ICourse> {
     let course: ICourse | null = null;
     let sentError: Error | null = null;
 
@@ -34,6 +40,30 @@ export class CoursesModel {
           .returning('course_id');
 
         await trx.commit();
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', person_id)
+          .select('people.name')
+          .first();
+        await this.notificationsService.createNotification({
+          action: 'inseriu',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            curso: createCourseData.course_area,
+            instituição: createCourseData.institution,
+            data_inicio: await this.notificationsService.formatDate(
+              createCourseData.begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              createCourseData.conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: null,
+          table: 'Cursos',
+        });
 
         course = await this.findCourseById(course_id);
       } catch (error) {
