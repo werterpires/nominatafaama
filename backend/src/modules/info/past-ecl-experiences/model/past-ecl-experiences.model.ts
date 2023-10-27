@@ -6,29 +6,30 @@ import {
   IPastEclExp,
   IUpdatePastEclExp,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class PastEclExpsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createPastEclExp(
-    createPastEclExpData: ICreatePastEclExp
-  ): Promise<IPastEclExp> {
-    let pastEclExp: IPastEclExp | null = null;
-    let sentError: Error | null = null;
+    createPastEclExpData: ICreatePastEclExp,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const {
+        function: expFunction,
+        place,
+        past_exp_begin_date,
+        past_exp_end_date,
+        person_id,
+        past_ecl_approved,
+      } = createPastEclExpData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
-          function: expFunction,
-          place,
-          past_exp_begin_date,
-          past_exp_end_date,
-          person_id,
-          past_ecl_approved,
-        } = createPastEclExpData;
-
-        const [past_ecl_id] = await trx('past_ecl_exps')
+      await this.knex.transaction(async (trx) => {
+        await trx('past_ecl_exps')
           .insert({
             function: expFunction,
             place,
@@ -40,24 +41,44 @@ export class PastEclExpsModel {
           .returning('past_ecl_id');
 
         await trx.commit();
+      });
 
-        pastEclExp = await this.findPastEclExpById(past_ecl_id);
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('PastEclExp already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      const personUndOthers = await this.knex('people')
+        .where('people.person_id', person_id)
+        .select('people.name')
+        .first();
+
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          funcao: expFunction,
+          local: place,
+          data_inicio: await this.notificationsService.formatDate(
+            past_exp_begin_date
+          ),
+          data_conclusao: await this.notificationsService.formatDate(
+            past_exp_end_date
+          ),
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Experiências eclesiásticas anteriores',
+      });
+    } catch (error) {
+      console.error(error);
+
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('PastEclExp already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
 
-    return pastEclExp!;
+    return true;
   }
 
   async findPastEclExpById(id: number): Promise<IPastEclExp | null> {
