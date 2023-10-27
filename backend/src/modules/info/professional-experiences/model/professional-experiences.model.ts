@@ -18,74 +18,62 @@ export class ProfessionalExperiencesModel {
     createExperienceData: ICreateProfessionalExperience,
     currentUser: UserFromJwt
   ): Promise<boolean> {
-    let experience: IProfessionalExperience | null = null;
-    let sentError: Error | null = null;
+    try {
+      const {
+        job,
+        job_institution,
+        job_begin_date,
+        job_end_date,
+        person_id,
+        experience_approved,
+      } = createExperienceData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
+      await this.knex('professional_experiences')
+        .insert({
           job,
           job_institution,
           job_begin_date,
           job_end_date,
           person_id,
           experience_approved,
-        } = createExperienceData;
+        })
+        .returning('experience_id');
 
-        const [experience_id] = await trx('professional_experiences')
-          .insert({
-            job,
-            job_institution,
-            job_begin_date,
-            job_end_date,
-            person_id,
-            experience_approved,
-          })
-          .returning('experience_id');
+      const person = await this.knex('people')
+        .where('people.person_id', person_id)
+        .select('people.name')
+        .first();
 
-        await trx.commit();
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          trabalho: createExperienceData.job,
+          instituicao: createExperienceData.job_institution,
+          data_inicio: await this.notificationsService.formatDate(
+            createExperienceData.job_begin_date
+          ),
+          data_conclusao: await this.notificationsService.formatDate(
+            createExperienceData.job_end_date
+          ),
+          pessoa: person?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Experiências profissionais',
+      });
 
-        const personUndOthers = await this.knex('people')
-          .where('people.person_id', person_id)
-          .select('people.name')
-          .first();
-
-        await this.notificationsService.createNotification({
-          action: 'inseriu',
-          agent_name: currentUser.name,
-          agentUserId: currentUser.user_id,
-          newData: {
-            trabalho: createExperienceData.job,
-            instituicao: createExperienceData.job_institution,
-            data_inicio: await this.notificationsService.formatDate(
-              createExperienceData.job_begin_date
-            ),
-            data_conclusao: await this.notificationsService.formatDate(
-              createExperienceData.job_end_date
-            ),
-            pessoa: personUndOthers?.name,
-          },
-          notificationType: 4,
-          objectUserId: currentUser.user_id,
-          oldData: null,
-          table: 'Experiências profissionais',
-        });
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Professional experience already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      return true;
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Professional experience already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
-
-    return true!;
   }
 
   async findProfessionalExperienceById(
