@@ -31,11 +31,11 @@ export class EvangelisticExperiencesController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   async createEvangelisticExperience(
     @Body() dto: CreateEvangelisticExperienceDto,
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() currentUser: UserFromJwt,
     @Param('personType') personType: string
-  ): Promise<IEvangelisticExperience> {
+  ) {
     try {
-      const user_id = user.user_id;
+      const user_id = currentUser.user_id;
       if (personType !== 'student' && personType !== 'spouse') {
         throw new Error('End point inválido.');
       }
@@ -43,7 +43,8 @@ export class EvangelisticExperiencesController {
         await this.evangelisticExperiencesService.createEclExperience(
           dto,
           user_id,
-          personType
+          personType,
+          currentUser
         );
       return newEvangelisticExperience;
     } catch (error) {
