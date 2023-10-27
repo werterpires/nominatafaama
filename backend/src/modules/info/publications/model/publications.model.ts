@@ -18,84 +18,62 @@ export class PublicationsModel {
     createPublicationData: ICreatePublication,
     currentUser: UserFromJwt
   ): Promise<boolean> {
-    let publication: IPublication | null = null;
-    let sentError: Error | null = null;
+    try {
+      const {
+        publication_type_id,
+        reference,
+        link,
+        publication_approved,
+        person_id,
+      } = createPublicationData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
+      const [publication_id] = await this.knex('publications')
+        .insert({
           publication_type_id,
           reference,
           link,
           publication_approved,
           person_id,
-        } = createPublicationData;
+        })
+        .returning('publication_id');
 
-        const [publication_id] = await trx('publications')
-          .insert({
-            publication_type_id,
-            reference,
-            link,
-            publication_approved,
-            person_id,
-          })
-          .returning('publication_id');
+      const personAndType = await this.knex('people')
+        .leftJoin('publications', 'people.person_id', 'publications.person_id')
+        .leftJoin(
+          'publication_types',
+          'publication_types.publication_type_id',
+          'publications.publication_type_id'
+        )
+        .where('people.person_id', person_id)
+        .andWhere('publication_types.publication_type_id', publication_type_id)
+        .select('people.name', 'publication_types.publication_type')
+        .first();
 
-        await trx.commit();
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          tipo: personAndType.publication_type,
+          referencia: reference,
+          link: link ?? 'link não informado',
+          pessoa: personAndType?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Publicações',
+      });
 
-        const personUndOthers = await this.knex('people')
-          .leftJoin(
-            'publications',
-            'people.person_id',
-            'publications.person_id'
-          )
-          .leftJoin(
-            'publication_types',
-            'publication_types.publication_type_id',
-            'publications.publication_type_id'
-          )
-          .where('people.person_id', person_id)
-          .andWhere(
-            'publication_types.publication_type_id',
-            publication_type_id
-          )
-          .select('people.name', 'publication_types.publication_type')
-          .first();
-        console.log(personUndOthers);
-
-        await this.notificationsService.createNotification({
-          action: 'inseriu',
-          agent_name: currentUser.name,
-          agentUserId: currentUser.user_id,
-          newData: {
-            tipo: personUndOthers.publication_type,
-            referencia: reference,
-            link: link ?? 'link não informado',
-            pessoa: personUndOthers?.name,
-          },
-          notificationType: 4,
-          objectUserId: currentUser.user_id,
-          oldData: null,
-          table: 'Publicações',
-        });
-
-        publication = await this.findPublicationById(publication_id);
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Publication already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      return true;
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Publication already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
-
-    return true;
   }
 
   async findPublicationById(id: number): Promise<IPublication> {
