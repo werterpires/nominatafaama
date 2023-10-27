@@ -7,16 +7,19 @@ import {
   Post,
   Put,
   UseGuards,
-} from '@nestjs/common'
-import { LanguagesService } from '../services/languages.service'
-import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
-import { ERoles } from 'src/shared/auth/types/roles.enum'
-import { UserFromJwt } from 'src/shared/auth/types/types'
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
-import { CreateLanguageDto } from '../dto/create-language.dto'
-import { UpdateLanguageDto } from '../dto/update-language.dto'
-import { ILanguage } from '../types/types'
+} from '@nestjs/common';
+import { LanguagesService } from '../services/languages.service';
+import {
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
+import { ERoles } from 'src/shared/auth/types/roles.enum';
+import { UserFromJwt } from 'src/shared/auth/types/types';
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
+import { CreateLanguageDto } from '../dto/create-language.dto';
+import { UpdateLanguageDto } from '../dto/update-language.dto';
+import { ILanguage } from '../types/types';
 
 @Controller('languages')
 export class LanguagesController {
@@ -26,22 +29,23 @@ export class LanguagesController {
   @Post(':personType')
   async createLanguage(
     @Body() input: CreateLanguageDto,
-    @CurrentUser() user: UserFromJwt,
-    @Param('personType') personType: string,
+    @CurrentUser() currentUser: UserFromJwt,
+    @Param('personType') personType: string
   ) {
     try {
-      const user_id = user.user_id
+      const user_id = currentUser.user_id;
       if (personType !== 'student' && personType !== 'spouse') {
-        throw new Error('End point inválido.')
+        throw new Error('End point inválido.');
       }
       const language = await this.languagesService.createLanguage(
         input,
         user_id,
         personType,
-      )
-      return language
+        currentUser
+      );
+      return language;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -49,26 +53,26 @@ export class LanguagesController {
   @Get('person/:personType')
   async findLanguagesByPersonId(
     @CurrentUser() user: UserFromJwt,
-    @Param('personType') personType: string,
+    @Param('personType') personType: string
   ): Promise<ILanguage[]> {
     try {
-      const user_id = user.user_id
+      const user_id = user.user_id;
       if (personType !== 'student' && personType !== 'spouse') {
-        throw new Error('End point inválido.')
+        throw new Error('End point inválido.');
       }
       const languages = await this.languagesService.findLanguagesByPersonId(
         user_id,
-        personType,
-      )
+        personType
+      );
 
       if (!languages) {
         throw new NotFoundException(
-          `No languages found for person with id fornecido.`,
-        )
+          `No languages found for person with id fornecido.`
+        );
       }
-      return languages
+      return languages;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -76,13 +80,13 @@ export class LanguagesController {
   @Get(':id')
   async findLanguageById(@Param('id') id: number): Promise<ILanguage> {
     try {
-      const language = await this.languagesService.findLanguageById(id)
+      const language = await this.languagesService.findLanguageById(id);
       if (!language) {
-        throw new NotFoundException(`No language found with id ${id}.`)
+        throw new NotFoundException(`No language found with id ${id}.`);
       }
-      return language
+      return language;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -90,25 +94,25 @@ export class LanguagesController {
   @Get()
   async findAllLanguages(): Promise<ILanguage[]> {
     try {
-      const languages = await this.languagesService.findAllLanguages()
-      return languages
+      const languages = await this.languagesService.findAllLanguages();
+      return languages;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updateLanguageById(
-    @Body() input: UpdateLanguageDto,
+    @Body() input: UpdateLanguageDto
   ): Promise<ILanguage> {
     try {
       const updatedLanguage = await this.languagesService.updateLanguageById(
-        input,
-      )
-      return updatedLanguage
+        input
+      );
+      return updatedLanguage;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -116,10 +120,10 @@ export class LanguagesController {
   @Delete(':id')
   async deleteLanguageById(@Param('id') id: number) {
     try {
-      const message = await this.languagesService.deleteLanguageById(id)
-      return { message }
+      const message = await this.languagesService.deleteLanguageById(id);
+      return { message };
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

@@ -9,7 +9,8 @@ import {
 
 @Injectable()
 export class NotificationsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor() {}
 
   async createNotification(
     createNotificationData: ICreateNotification

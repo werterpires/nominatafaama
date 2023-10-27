@@ -2,20 +2,33 @@ import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { ICreateLanguage, ILanguage, IUpdateLanguage } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class LanguagesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createLanguage(
-    createLanguageData: ICreateLanguage
-  ): Promise<ILanguage> {
-    let language: ILanguage | null = null;
-    let sentError: Error | null = null;
+    createLanguageData: ICreateLanguage,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const {
+        chosen_language,
+        read,
+        understand,
+        speak,
+        write,
+        fluent,
+        unknown,
+        person_id,
+        language_approved,
+      } = createLanguageData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
+      const [language_id] = await this.knex('languages')
+        .insert({
           chosen_language,
           read,
           understand,
@@ -25,41 +38,53 @@ export class LanguagesModel {
           unknown,
           person_id,
           language_approved,
-        } = createLanguageData;
+        })
+        .returning('language_id');
 
-        const [language_id] = await trx('languages')
-          .insert({
-            chosen_language,
-            read,
-            understand,
-            speak,
-            write,
-            fluent,
-            unknown,
-            person_id,
-            language_approved,
-          })
-          .returning('language_id');
+      const personUndOthers = await this.knex('people')
+        .leftJoin('languages', 'people.person_id', 'languages.person_id')
+        .leftJoin(
+          'language_types',
+          'languages.chosen_language',
+          'language_types.language_id'
+        )
+        .where('people.person_id', person_id)
+        .andWhere('language_types.language_id', chosen_language)
+        .select('people.name', 'language_types.language')
+        .first();
 
-        await trx.commit();
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          linguagem: personUndOthers.language,
+          leitura: await this.notificationsService.formateBoolean(read),
+          compreensao: await this.notificationsService.formateBoolean(
+            understand
+          ),
+          fala: await this.notificationsService.formateBoolean(speak),
+          escreve: await this.notificationsService.formateBoolean(write),
+          fluencia: await this.notificationsService.formateBoolean(fluent),
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Idiomas',
+      });
 
-        language = await this.findLanguageById(language_id);
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Language already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      const language = await this.findLanguageById(language_id);
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Language already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
-
-    return language!;
   }
 
   async findLanguageById(id: number): Promise<ILanguage | null> {

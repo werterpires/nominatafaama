@@ -407,6 +407,14 @@ export class NotificationsService {
     }
   }
 
+  async formateBoolean(boolean: boolean) {
+    if (boolean) {
+      return 'Sim';
+    } else {
+      return 'Não';
+    }
+  }
+
   async getUserNotifications(
     currentUser: UserFromJwt,
     read: string | undefined
