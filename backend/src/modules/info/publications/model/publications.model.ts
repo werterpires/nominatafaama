@@ -6,14 +6,18 @@ import {
   IPublication,
   IUpdatePublication,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class PublicationsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createPublication(
-    createPublicationData: ICreatePublication
-  ): Promise<IPublication> {
+    createPublicationData: ICreatePublication,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
     let publication: IPublication | null = null;
     let sentError: Error | null = null;
 
@@ -39,6 +43,42 @@ export class PublicationsModel {
 
         await trx.commit();
 
+        const personUndOthers = await this.knex('people')
+          .leftJoin(
+            'publications',
+            'people.person_id',
+            'publications.person_id'
+          )
+          .leftJoin(
+            'publication_types',
+            'publication_types.publication_type_id',
+            'publications.publication_type_id'
+          )
+          .where('people.person_id', person_id)
+          .andWhere(
+            'publication_types.publication_type_id',
+            publication_type_id
+          )
+          .select('people.name', 'publication_types.publication_type')
+          .first();
+        console.log(personUndOthers);
+
+        await this.notificationsService.createNotification({
+          action: 'inseriu',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            tipo: personUndOthers.publication_type,
+            referencia: reference,
+            link: link ?? 'link não informado',
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: null,
+          table: 'Publicações',
+        });
+
         publication = await this.findPublicationById(publication_id);
       } catch (error) {
         console.error(error);
@@ -55,7 +95,7 @@ export class PublicationsModel {
       throw sentError;
     }
 
-    return publication!;
+    return true;
   }
 
   async findPublicationById(id: number): Promise<IPublication> {
