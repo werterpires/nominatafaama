@@ -6,14 +6,18 @@ import {
   IProfessionalExperience,
   IUpdateProfessionalExperience,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class ProfessionalExperiencesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createProfessionalExperience(
-    createExperienceData: ICreateProfessionalExperience
-  ): Promise<IProfessionalExperience> {
+    createExperienceData: ICreateProfessionalExperience,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
     let experience: IProfessionalExperience | null = null;
     let sentError: Error | null = null;
 
@@ -41,7 +45,31 @@ export class ProfessionalExperiencesModel {
 
         await trx.commit();
 
-        experience = await this.findProfessionalExperienceById(experience_id);
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', person_id)
+          .select('people.name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'inseriu',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            trabalho: createExperienceData.job,
+            instituicao: createExperienceData.job_institution,
+            data_inicio: await this.notificationsService.formatDate(
+              createExperienceData.job_begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              createExperienceData.job_end_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: null,
+          table: 'Experiências profissionais',
+        });
       } catch (error) {
         console.error(error);
         await trx.rollback();
@@ -57,7 +85,7 @@ export class ProfessionalExperiencesModel {
       throw sentError;
     }
 
-    return experience!;
+    return true!;
   }
 
   async findProfessionalExperienceById(
