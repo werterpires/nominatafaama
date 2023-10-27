@@ -13,75 +13,63 @@ export class CoursesModel {
   async createCourse(
     createCourseData: ICreateCourse,
     currentUser: UserFromJwt
-  ): Promise<ICourse> {
-    let course: ICourse | null = null;
-    let sentError: Error | null = null;
+  ): Promise<boolean> {
+    try {
+      const {
+        course_area,
+        institution,
+        begin_date,
+        conclusion_date,
+        person_id,
+        course_approved,
+      } = createCourseData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
+      await this.knex('courses')
+        .insert({
           course_area,
           institution,
           begin_date,
           conclusion_date,
           person_id,
           course_approved,
-        } = createCourseData;
+        })
+        .returning('course_id');
 
-        const [course_id] = await trx('courses')
-          .insert({
-            course_area,
-            institution,
-            begin_date,
-            conclusion_date,
-            person_id,
-            course_approved,
-          })
-          .returning('course_id');
+      const personUndOthers = await this.knex('people')
+        .where('people.person_id', person_id)
+        .select('people.name')
+        .first();
 
-        await trx.commit();
-        const personUndOthers = await this.knex('people')
-          .where('people.person_id', person_id)
-          .select('people.name')
-          .first();
-        await this.notificationsService.createNotification({
-          action: 'inseriu',
-          agent_name: currentUser.name,
-          agentUserId: currentUser.user_id,
-          newData: {
-            curso: createCourseData.course_area,
-            instituição: createCourseData.institution,
-            data_inicio: await this.notificationsService.formatDate(
-              createCourseData.begin_date
-            ),
-            data_conclusao: await this.notificationsService.formatDate(
-              createCourseData.conclusion_date
-            ),
-            pessoa: personUndOthers?.name,
-          },
-          notificationType: 4,
-          objectUserId: currentUser.user_id,
-          oldData: null,
-          table: 'Cursos',
-        });
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          curso: createCourseData.course_area,
+          instituição: createCourseData.institution,
+          data_inicio: await this.notificationsService.formatDate(
+            createCourseData.begin_date
+          ),
+          data_conclusao: await this.notificationsService.formatDate(
+            createCourseData.conclusion_date
+          ),
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Cursos',
+      });
 
-        course = await this.findCourseById(course_id);
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Course already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      return true;
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Course already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
-
-    return course!;
   }
 
   async findCourseById(id: number): Promise<ICourse | null> {
