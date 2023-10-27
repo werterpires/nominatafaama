@@ -9,58 +9,8 @@ import {
 
 @Injectable()
 export class EclExperiencesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
-
-  async createEclExperience(
-    createEclExperienceData: ICreateEclExperience
-  ): Promise<IEclExperience> {
-    let eclExperiences: IEclExperience[] | null = null;
-    let sentError: Error | null = null;
-
-    await this.knex.transaction(async (trx) => {
-      try {
-        const { person_id, ecl_exp_type_id, ecl_exp_approved } =
-          createEclExperienceData;
-
-        const experiences: {
-          person_id: number;
-          ecl_exp_type_id: number;
-          ecl_exp_approved: boolean | null;
-        }[] = [];
-
-        ecl_exp_type_id.forEach((exp) => {
-          experiences.push({
-            ecl_exp_approved: ecl_exp_approved,
-            person_id: person_id,
-            ecl_exp_type_id: exp,
-          });
-        });
-
-        await trx('ecl_experiences').insert(experiences);
-
-        await trx.commit();
-
-        eclExperiences = await this.findEclExperiencesByPersonId(person_id);
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Eclesiastic Experience already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
-      }
-    });
-
-    if (sentError) {
-      throw sentError;
-    }
-
-    if (eclExperiences == null) {
-      throw new Error('Experiências eclesiásticas não encontradas.');
-    }
-    return eclExperiences;
-  }
+  @InjectModel() private readonly knex: Knex;
+  constructor() {}
 
   async findEclExperienceById(id: number): Promise<IEclExperience | null> {
     let eclExperience: IEclExperience | null = null;
@@ -294,50 +244,6 @@ export class EclExperiencesModel {
       throw sentError;
     }
   }
-
-  // async updateEclExperiences(input: IUpdateEclExperiences): Promise<void> {
-  //   let sentError: Error | null = null
-
-  //   await this.knex.transaction(async (trx) => {
-  //     try {
-  //       const { person_id, ecl_exp_type_ids } = input
-
-  //       await trx('ecl_experiences')
-  //         .where('person_id', person_id)
-  //         .whereNotIn('ecl_exp_type_id', ecl_exp_type_ids)
-  //         .del()
-
-  //       const existingEclExpTypeIds = await trx('ecl_experiences')
-  //         .where('person_id', person_id)
-  //         .pluck('ecl_exp_type_id')
-
-  //       const newEclExpTypeIds = ecl_exp_type_ids.filter(
-  //         (id) => !existingEclExpTypeIds.includes(id),
-  //       )
-
-  //       const newEclExperiences = newEclExpTypeIds.map((ecl_exp_type_id) => ({
-  //         person_id: person_id,
-  //         ecl_exp_type_id: ecl_exp_type_id,
-  //         ecl_exp_approved: false,
-  //         created_at: new Date(),
-  //         updated_at: new Date(),
-  //       }))
-  //       if (newEclExperiences.length > 0) {
-  //         await trx('ecl_experiences').insert(newEclExperiences)
-  //       }
-
-  //       await trx.commit()
-  //     } catch (error) {
-  //       console.error(error)
-  //       await trx.rollback()
-  //       sentError = new Error(error.message)
-  //     }
-  //   })
-
-  //   if (sentError) {
-  //     throw sentError
-  //   }
-  // }
 
   async deleteEclExperienceById(id: number): Promise<string> {
     let sentError: Error | null = null;

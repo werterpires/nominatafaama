@@ -20,33 +20,6 @@ export class EclExperiencesService {
     private eclExperiencesModel: EclExperiencesModel
   ) {}
 
-  async createEclExperience(
-    dto: CreateEclExperienceDto,
-    id: number
-  ): Promise<IEclExperience> {
-    try {
-      const user = await this.usersService.findUserById(id);
-      let person_id: number;
-      if (user != null) {
-        person_id = user.person_id;
-      } else {
-        throw new Error(`Não foi possível encontrar um usuário válido.`);
-      }
-
-      const createEclExperience: ICreateEclExperience = {
-        person_id: person_id,
-        ecl_exp_type_id: dto.ecl_exp_type_ids,
-        ecl_exp_approved: null,
-      };
-
-      const newEclExperience =
-        await this.eclExperiencesModel.createEclExperience(createEclExperience);
-      return newEclExperience;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async findEclExperienceById(id: number): Promise<IEclExperience | null> {
     try {
       const eclExperience =
