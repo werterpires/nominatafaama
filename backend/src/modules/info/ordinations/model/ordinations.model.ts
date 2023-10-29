@@ -6,51 +6,58 @@ import {
   IOrdination,
   IUpdateOrdination,
 } from '../types/types';
+import { UserFromJwt } from 'src/shared/auth/types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
 
 @Injectable()
 export class OrdinationsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createOrdination(
-    createOrdinationData: ICreateOrdination
-  ): Promise<number> {
-    let ordinationId!: number;
-    let sentError: Error | null = null;
+    createOrdinationData: ICreateOrdination,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const { ordination_name, place, year, person_id, ordination_approved } =
+        createOrdinationData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const { ordination_name, place, year, person_id, ordination_approved } =
-          createOrdinationData;
+      const [ordination_id] = await this.knex('ordinations')
+        .insert({
+          ordination_name,
+          place,
+          year,
+          person_id,
+          ordination_approved,
+        })
+        .returning('ordination_id');
 
-        const [ordination_id] = await trx('ordinations')
-          .insert({
-            ordination_name,
-            place,
-            year,
-            person_id,
-            ordination_approved,
-          })
-          .returning('ordination_id');
+      const personUndOthers = await this.knex('people')
+        .where('people.person_id', person_id)
+        .select('people.name')
+        .first();
 
-        ordinationId = ordination_id;
-
-        await trx.commit();
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.sqlMessage);
-      }
-    });
-
-    if (sentError) {
-      throw sentError;
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          ordenacao: createOrdinationData.ordination_name,
+          local: createOrdinationData.place,
+          ano: createOrdinationData.year,
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Ordenações',
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
 
-    if (!ordinationId) {
-      throw new Error('Não foi possível criar ordenação.');
-    }
-
-    return ordinationId;
+    return true;
   }
 
   async findOrdinationById(id: number): Promise<IOrdination> {
