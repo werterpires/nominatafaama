@@ -29,11 +29,15 @@ export class ChildrenController {
   @Post()
   async createChild(
     @Body() input: CreateChildDto,
-    @CurrentUser() user: UserFromJwt
+    @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const { user_id } = user;
-      const newChild = await this.childrenService.createChild(input, user_id);
+      const { user_id } = currentUser;
+      const newChild = await this.childrenService.createChild(
+        input,
+        user_id,
+        currentUser
+      );
       return newChild;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
