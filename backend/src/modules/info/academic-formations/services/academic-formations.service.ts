@@ -161,7 +161,8 @@ export class AcademicFormationsService {
   }
 
   async updateAcademicFormationById(
-    dto: UpdateAcademicFormationDto
+    dto: UpdateAcademicFormationDto,
+    currentUser: UserFromJwt
   ): Promise<IAcademicFormation> {
     try {
       const updatedAcademicFormation: IUpdateAcademicFormation = {
@@ -178,7 +179,8 @@ export class AcademicFormationsService {
 
       const updatedFormation =
         await this.academicFormationsModel.updateAcademicFormationById(
-          updatedAcademicFormation
+          updatedAcademicFormation,
+          currentUser
         );
       return updatedFormation;
     } catch (error) {
@@ -186,10 +188,15 @@ export class AcademicFormationsService {
     }
   }
 
-  async deleteAcademicFormationById(id: number): Promise<string> {
+  async deleteAcademicFormationById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.academicFormationsModel.deleteAcademicFormationById(id);
-
+      await this.academicFormationsModel.deleteAcademicFormationById(
+        id,
+        currentUser
+      );
       return 'Formação acadêmica deletada com sucesso.';
     } catch (error) {
       throw error;

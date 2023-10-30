@@ -9,6 +9,7 @@ import {
 import { ApprovedBy } from 'src/modules/users/hz_maps/users.maps';
 import { NotificationsModel } from '../model/notifications.model';
 import { UserFromJwt } from 'src/shared/auth/types/types';
+import { log } from 'console';
 
 @Injectable()
 export class NotificationsService {
@@ -311,6 +312,15 @@ export class NotificationsService {
         notificationData.objectUserId
       );
 
+      if (notificationData.oldData && notificationData.newData) {
+        const data = this.compareAndRemoveEqualProperties(
+          notificationData.oldData,
+          notificationData.newData
+        );
+        notificationData.oldData = data.oldData;
+        notificationData.newData = data.newData;
+      }
+
       if (index !== -1) {
         notifiedUsersIds.splice(index, 1);
       }
@@ -348,9 +358,9 @@ export class NotificationsService {
       if (notificationData.action === 'inseriu') {
         textOne = `O usuário ${notificationData.agent_name} inseriu dados em ${notificationData.table}: ${newDataToText}`;
       } else if (notificationData.action === 'editou') {
-        textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados para si mesmo como professor: de ${oldDataToText} passou a ser ${newDataToText}`;
+        textOne = `O usuário ${notificationData.agent_name} editou dados em ${notificationData.table}: de ${oldDataToText} passou a ser ${newDataToText}`;
       } else if (notificationData.action === 'apagou') {
-        textOne = `O usuário ${notificationData.agent_name} excluiu seus próprios dados de professor: ${oldDataToText}`;
+        textOne = `O usuário ${notificationData.agent_name} excluiu dados em ${notificationData.table}: ${oldDataToText}`;
       }
 
       let notificationText: string;
@@ -394,7 +404,10 @@ export class NotificationsService {
   }
 
   async formatDate(date: Date | any) {
-    if (date === null || isNaN(Date.parse(date.toDateString()))) {
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      const [year, month, day] = date.split('-');
+      return `${day}/${month}/${year}`;
+    } else if (date === null || isNaN(Date.parse(date.toDateString()))) {
       return 'Data não informada';
     } else {
       return date.toLocaleDateString('pt-BR', {
@@ -403,6 +416,28 @@ export class NotificationsService {
         year: 'numeric',
       });
     }
+  }
+
+  compareAndRemoveEqualProperties(oldData: any, newData: any) {
+    const propertiesToRemove: string[] = [];
+
+    for (const property in oldData) {
+      if (
+        oldData.hasOwnProperty(property) &&
+        newData.hasOwnProperty(property)
+      ) {
+        if (oldData[property] === newData[property]) {
+          propertiesToRemove.push(property);
+        }
+      }
+    }
+
+    propertiesToRemove.forEach((property) => {
+      delete oldData[property];
+      delete newData[property];
+    });
+
+    return { oldData, newData };
   }
 
   async formateBoolean(boolean: boolean) {

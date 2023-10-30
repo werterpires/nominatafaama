@@ -110,6 +110,8 @@ input:focus {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-height: 50vh;
+  overflow: auto;
 }
 
 .registryWrapper {

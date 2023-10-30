@@ -126,11 +126,15 @@ export class AcademicFormationsController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updateAcademicFormationById(
-    @Body() input: UpdateAcademicFormationDto
+    @Body() input: UpdateAcademicFormationDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IAcademicFormation> {
     try {
       const updatedAcademicFormation =
-        await this.academicFormationsService.updateAcademicFormationById(input);
+        await this.academicFormationsService.updateAcademicFormationById(
+          input,
+          currentUser
+        );
       return updatedAcademicFormation;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -139,10 +143,16 @@ export class AcademicFormationsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteAcademicFormationById(@Param('id') id: number) {
+  async deleteAcademicFormationById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const message =
-        await this.academicFormationsService.deleteAcademicFormationById(id);
+        await this.academicFormationsService.deleteAcademicFormationById(
+          id,
+          currentUser
+        );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
