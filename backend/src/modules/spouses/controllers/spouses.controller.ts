@@ -6,7 +6,7 @@ import {
   InternalServerErrorException,
   Param,
   Post,
-  Put
+  Put,
 } from '@nestjs/common';
 import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
 import { ERoles } from 'src/shared/auth/types/roles.enum';
@@ -25,11 +25,15 @@ export class SpousesController {
   @Post()
   async createSpouse(
     @Body() input: CreateSpouseDto,
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() currentUser: UserFromJwt
   ) {
-    const id = user.user_id;
+    const id = currentUser.user_id;
     try {
-      const spouse = await this.spousesService.createSpouse(input, id);
+      const spouse = await this.spousesService.createSpouse(
+        input,
+        id,
+        currentUser
+      );
       return spouse;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -52,13 +56,13 @@ export class SpousesController {
   @Put()
   async updateSpouse(
     @Body() input: UpdateSpouseDto,
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() user: UserFromJwt
   ) {
     try {
       const id = user.user_id;
       const updatedSpouse = await this.spousesService.updateSpouseById(
         input,
-        id,
+        id
       );
       return updatedSpouse;
     } catch (error) {
@@ -71,7 +75,7 @@ export class SpousesController {
   async deleteSpouseById(@Param('id') id: number) {
     try {
       const message = await this.spousesService.deleteSpouseById(id);
-      return {message};
+      return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
