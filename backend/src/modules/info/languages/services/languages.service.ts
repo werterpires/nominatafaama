@@ -117,7 +117,10 @@ export class LanguagesService {
     }
   }
 
-  async updateLanguageById(dto: UpdateLanguageDto): Promise<ILanguage> {
+  async updateLanguageById(
+    dto: UpdateLanguageDto,
+    currentUser: UserFromJwt
+  ): Promise<ILanguage> {
     try {
       const updateLanguageData: IUpdateLanguage = {
         ...dto,
@@ -125,7 +128,8 @@ export class LanguagesService {
       };
 
       const updatedLanguage = await this.languagesModel.updateLanguageById(
-        updateLanguageData
+        updateLanguageData,
+        currentUser
       );
       return updatedLanguage;
     } catch (error) {
@@ -133,9 +137,12 @@ export class LanguagesService {
     }
   }
 
-  async deleteLanguageById(id: number): Promise<string> {
+  async deleteLanguageById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.languagesModel.deleteLanguageById(id);
+      await this.languagesModel.deleteLanguageById(id, currentUser);
       return 'Idioma deletado com sucesso.';
     } catch (error) {
       throw error;

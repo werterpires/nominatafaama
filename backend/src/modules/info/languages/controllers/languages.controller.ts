@@ -104,11 +104,13 @@ export class LanguagesController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updateLanguageById(
-    @Body() input: UpdateLanguageDto
+    @Body() input: UpdateLanguageDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<ILanguage> {
     try {
       const updatedLanguage = await this.languagesService.updateLanguageById(
-        input
+        input,
+        currentUser
       );
       return updatedLanguage;
     } catch (error) {
@@ -118,9 +120,15 @@ export class LanguagesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteLanguageById(@Param('id') id: number) {
+  async deleteLanguageById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.languagesService.deleteLanguageById(id);
+      const message = await this.languagesService.deleteLanguageById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
