@@ -112,11 +112,15 @@ export class ProfessionalExperiencesController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updateProfessionalExperienceById(
-    @Body() input: UpdateProfessionalExperienceDto
+    @Body() input: UpdateProfessionalExperienceDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IProfessionalExperience> {
     try {
       const updatedExperience =
-        await this.experiencesService.updateProfessionalExperienceById(input);
+        await this.experiencesService.updateProfessionalExperienceById(
+          input,
+          currentUser
+        );
       return updatedExperience;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -125,10 +129,16 @@ export class ProfessionalExperiencesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteProfessionalExperienceById(@Param('id') id: number) {
+  async deleteProfessionalExperienceById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const message =
-        await this.experiencesService.deleteProfessionalExperienceById(id);
+        await this.experiencesService.deleteProfessionalExperienceById(
+          id,
+          currentUser
+        );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);

@@ -133,7 +133,8 @@ export class ProfessionalExperiencesService {
   }
 
   async updateProfessionalExperienceById(
-    dto: UpdateProfessionalExperienceDto
+    dto: UpdateProfessionalExperienceDto,
+    currentUser: UserFromJwt
   ): Promise<IProfessionalExperience> {
     try {
       const updateExperienceData: IUpdateProfessionalExperience = {
@@ -145,7 +146,8 @@ export class ProfessionalExperiencesService {
 
       const updatedExperience =
         await this.experiencesModel.updateProfessionalExperienceById(
-          updateExperienceData
+          updateExperienceData,
+          currentUser
         );
       return updatedExperience;
     } catch (error) {
@@ -153,9 +155,15 @@ export class ProfessionalExperiencesService {
     }
   }
 
-  async deleteProfessionalExperienceById(id: number): Promise<string> {
+  async deleteProfessionalExperienceById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.experiencesModel.deleteProfessionalExperienceById(id);
+      await this.experiencesModel.deleteProfessionalExperienceById(
+        id,
+        currentUser
+      );
       return 'Experiência profissional deletada com sucesso.';
     } catch (error) {
       throw error;
