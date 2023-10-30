@@ -103,9 +103,15 @@ export class CoursesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
-  async updateCourseById(@Body() input: UpdateCourseDto): Promise<ICourse> {
+  async updateCourseById(
+    @Body() input: UpdateCourseDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ): Promise<ICourse> {
     try {
-      const updatedCourse = await this.coursesService.updateCourseById(input);
+      const updatedCourse = await this.coursesService.updateCourseById(
+        input,
+        currentUser
+      );
       return updatedCourse;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -114,9 +120,15 @@ export class CoursesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteCourseById(@Param('id') id: number) {
+  async deleteCourseById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.coursesService.deleteCourseById(id);
+      const message = await this.coursesService.deleteCourseById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);

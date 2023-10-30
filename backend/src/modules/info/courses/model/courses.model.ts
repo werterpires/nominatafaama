@@ -220,7 +220,10 @@ export class CoursesModel {
     return personIds;
   }
 
-  async updateCourseById(updateCourse: IUpdateCourse): Promise<ICourse> {
+  async updateCourseById(
+    updateCourse: IUpdateCourse,
+    currentUser: UserFromJwt
+  ): Promise<ICourse> {
     let updatedCourse: ICourse | null = null;
     let sentError: Error | null = null;
 
@@ -237,7 +240,7 @@ export class CoursesModel {
         } = updateCourse;
 
         let approved = await trx('courses')
-          .first('course_approved')
+          .first('*')
           .where('course_id', course_id);
 
         if (approved.course_approved == true) {
@@ -255,6 +258,40 @@ export class CoursesModel {
 
         await trx.commit();
 
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', person_id)
+          .select('people.name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            curso: course_area,
+            instituição: institution,
+            data_inicio: await this.notificationsService.formatDate(begin_date),
+            data_conclusao: await this.notificationsService.formatDate(
+              conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            curso: approved.course_area,
+            instituição: approved.institution,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Cursos',
+        });
+
         updatedCourse = await this.findCourseById(course_id);
       } catch (error) {
         console.error(error);
@@ -270,24 +307,20 @@ export class CoursesModel {
     return updatedCourse!;
   }
 
-  async deleteCourseById(id: number): Promise<string> {
+  async deleteCourseById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingCourse = await trx('courses')
-          .select('course_id')
-          .where('course_id', id)
-          .first();
+        let approved = await trx('courses').first('*').where('course_id', id);
 
-        if (!existingCourse) {
+        if (!approved) {
           throw new Error('Course not found');
         }
-
-        let approved = await trx('courses')
-          .first('course_approved')
-          .where('course_id', id);
 
         if (approved.course_approved == true) {
           throw new Error('Registro já aprovado');
@@ -296,6 +329,31 @@ export class CoursesModel {
         await trx('courses').where('course_id', id).del();
 
         await trx.commit();
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', approved.person_id)
+          .select('people.name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            curso: approved.course_area,
+            instituição: approved.institution,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Cursos',
+        });
       } catch (error) {
         console.error(error);
         await trx.rollback();

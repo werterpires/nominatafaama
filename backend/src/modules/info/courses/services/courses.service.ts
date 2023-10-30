@@ -123,7 +123,10 @@ export class CoursesService {
     }
   }
 
-  async updateCourseById(dto: UpdateCourseDto): Promise<ICourse> {
+  async updateCourseById(
+    dto: UpdateCourseDto,
+    currentUser: UserFromJwt
+  ): Promise<ICourse> {
     try {
       const updateCourseData: IUpdateCourse = {
         ...dto,
@@ -135,7 +138,8 @@ export class CoursesService {
       };
 
       const updatedCourse = await this.coursesModel.updateCourseById(
-        updateCourseData
+        updateCourseData,
+        currentUser
       );
       return updatedCourse;
     } catch (error) {
@@ -143,9 +147,12 @@ export class CoursesService {
     }
   }
 
-  async deleteCourseById(id: number): Promise<string> {
+  async deleteCourseById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.coursesModel.deleteCourseById(id);
+      await this.coursesModel.deleteCourseById(id, currentUser);
       return 'Curso deletado com sucesso.';
     } catch (error) {
       throw error;
