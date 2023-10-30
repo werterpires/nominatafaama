@@ -6,51 +6,55 @@ import {
   IPreviousMarriage,
   IUpdatePreviousMarriage,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class PreviousMarriagesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createPreviousMarriage(
-    createPreviousMarriageData: ICreatePreviousMarriage
-  ): Promise<IPreviousMarriage> {
-    let previousMarriage: IPreviousMarriage | null = null;
-    let sentError: Error | null = null;
+    createPreviousMarriageData: ICreatePreviousMarriage,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const { marriage_end_date, previous_marriage_approved, student_id } =
+        createPreviousMarriageData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const { marriage_end_date, previous_marriage_approved, student_id } =
-          createPreviousMarriageData;
+      const [previous_marriage_id] = await this.knex('previous_marriages')
+        .insert({
+          student_id,
+          marriage_end_date,
+          previous_marriage_approved,
+        })
+        .returning('previous_marriage_id');
 
-        const [previous_marriage_id] = await trx('previous_marriages')
-          .insert({
-            student_id,
-            marriage_end_date,
-            previous_marriage_approved,
-          })
-          .returning('previous_marriage_id');
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          data_fim: await this.notificationsService.formatDate(
+            marriage_end_date
+          ),
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Casamentos prévios',
+      });
+    } catch (error) {
+      console.error(error);
 
-        await trx.commit();
-
-        previousMarriage = await this.findPreviousMarriageById(
-          previous_marriage_id
-        );
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Previous marriage already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Previous marriage already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
 
-    return previousMarriage!;
+    return true;
   }
 
   async findPreviousMarriageById(

@@ -15,6 +15,21 @@ import { ChildrenModule } from './children/children.module';
 import { StudentPhotosModule } from './student-photos/student-photos.module';
 
 @Module({
-  imports: [AcademicFormationsModule, LanguagesModule, EvangelisticExperiencesModule, EclExperiencesModule, CoursesModule, PreviousMarriageModule, ProfessionalExperiencesModule, PastEclExperiencesModule, PublicationsModule, EndowmentsModule, OrdinationsModule, RelatedMinistriesModule, ChildrenModule, StudentPhotosModule]
+  imports: [
+    AcademicFormationsModule,
+    LanguagesModule,
+    EvangelisticExperiencesModule,
+    EclExperiencesModule,
+    CoursesModule,
+    PreviousMarriageModule,
+    ProfessionalExperiencesModule,
+    PastEclExperiencesModule,
+    PublicationsModule,
+    EndowmentsModule,
+    OrdinationsModule,
+    RelatedMinistriesModule,
+    ChildrenModule,
+    StudentPhotosModule,
+  ],
 })
 export class InfoModule {}
