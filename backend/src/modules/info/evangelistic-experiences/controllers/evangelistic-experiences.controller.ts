@@ -113,12 +113,14 @@ export class EvangelisticExperiencesController {
   @UseGuards(JwtAuthGuard)
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   async updateEvangelisticExperienceById(
-    @Body() dto: UpdateEvangelisticExperienceDto
+    @Body() dto: UpdateEvangelisticExperienceDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IEvangelisticExperience> {
     try {
       const updatedEvangelisticExperience =
         await this.evangelisticExperiencesService.updateEvangelisticExperienceById(
-          dto
+          dto,
+          currentUser
         );
       return updatedEvangelisticExperience;
     } catch (error) {
@@ -129,11 +131,15 @@ export class EvangelisticExperiencesController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
-  async deleteEvangelisticExperienceById(@Param('id') id: number) {
+  async deleteEvangelisticExperienceById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const message = {
         text: await this.evangelisticExperiencesService.deleteEvangelisticExperienceById(
-          id
+          id,
+          currentUser
         ),
       };
 

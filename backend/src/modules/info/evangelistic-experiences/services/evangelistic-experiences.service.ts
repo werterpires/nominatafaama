@@ -139,7 +139,8 @@ export class EvangelisticExperiencesService {
   }
 
   async updateEvangelisticExperienceById(
-    dto: UpdateEvangelisticExperienceDto
+    dto: UpdateEvangelisticExperienceDto,
+    currentuser: UserFromJwt
   ): Promise<IEvangelisticExperience> {
     try {
       const begin_date = new Date(dto.exp_begin_date);
@@ -158,17 +159,22 @@ export class EvangelisticExperiencesService {
 
       const updatedExperience =
         await this.evangelisticExperiencesModel.updateEvangelisticExperienceById(
-          updatedEvangelisticExperience
+          updatedEvangelisticExperience,
+          currentuser
         );
       return updatedExperience;
     } catch (error) {
       throw error;
     }
   }
-  async deleteEvangelisticExperienceById(id: number): Promise<string> {
+  async deleteEvangelisticExperienceById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
       await this.evangelisticExperiencesModel.deleteEvangelisticExperienceById(
-        id
+        id,
+        currentUser
       );
       return 'Experiência evangelística deletada com sucesso.';
     } catch (error) {
