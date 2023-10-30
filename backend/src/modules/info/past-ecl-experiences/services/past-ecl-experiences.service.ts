@@ -130,7 +130,10 @@ export class PastEclExpsService {
     }
   }
 
-  async updatePastEclExpById(dto: UpdatePastEclExpDto): Promise<IPastEclExp> {
+  async updatePastEclExpById(
+    dto: UpdatePastEclExpDto,
+    currentUser: UserFromJwt
+  ): Promise<IPastEclExp> {
     try {
       const updatePastEclExpData: IUpdatePastEclExp = {
         ...dto,
@@ -142,16 +145,22 @@ export class PastEclExpsService {
       };
 
       const updatedPastEclExp =
-        await this.pastEclExpsModel.updatePastEclExpById(updatePastEclExpData);
+        await this.pastEclExpsModel.updatePastEclExpById(
+          updatePastEclExpData,
+          currentUser
+        );
       return updatedPastEclExp;
     } catch (error) {
       throw error;
     }
   }
 
-  async deletePastEclExpById(id: number): Promise<string> {
+  async deletePastEclExpById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.pastEclExpsModel.deletePastEclExpById(id);
+      await this.pastEclExpsModel.deletePastEclExpById(id, currentUser);
       return 'Experiência eclesiástica deletada com sucesso.';
     } catch (error) {
       throw error;

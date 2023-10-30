@@ -104,11 +104,12 @@ export class PastEclExpsController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updatePastEclExpById(
-    @Body() input: UpdatePastEclExpDto
+    @Body() input: UpdatePastEclExpDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IPastEclExp> {
     try {
       const updatedPastEclExp =
-        await this.pastEclExpsService.updatePastEclExpById(input);
+        await this.pastEclExpsService.updatePastEclExpById(input, currentUser);
       return updatedPastEclExp;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -117,9 +118,15 @@ export class PastEclExpsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deletePastEclExpById(@Param('id') id: number) {
+  async deletePastEclExpById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.pastEclExpsService.deletePastEclExpById(id);
+      const message = await this.pastEclExpsService.deletePastEclExpById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);

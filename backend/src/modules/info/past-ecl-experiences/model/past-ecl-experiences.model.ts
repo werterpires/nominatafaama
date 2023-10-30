@@ -232,7 +232,8 @@ export class PastEclExpsModel {
   }
 
   async updatePastEclExpById(
-    updatePastEclExp: IUpdatePastEclExp
+    updatePastEclExp: IUpdatePastEclExp,
+    currentUser: UserFromJwt
   ): Promise<IPastEclExp> {
     let updatedPastEclExp: IPastEclExp | null = null;
     let sentError: Error | null = null;
@@ -250,7 +251,8 @@ export class PastEclExpsModel {
         } = updatePastEclExp;
 
         let approved = await trx('past_ecl_exps')
-          .first('past_ecl_approved')
+          .first('*')
+          .leftJoin('people', 'people.person_id', 'past_ecl_exps.person_id')
           .where('past_ecl_id', past_ecl_id);
 
         if (approved.past_ecl_approved == true) {
@@ -267,6 +269,41 @@ export class PastEclExpsModel {
         });
 
         await trx.commit();
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', person_id)
+          .select('people.name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            funcao: expFunction,
+            local: place,
+            data_inicio: await this.notificationsService.formatDate(
+              past_exp_begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              past_exp_end_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            funcao: approved.function,
+            local: approved.place,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.past_exp_begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.past_exp_end_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Experiências eclesiásticas anteriores',
+        });
 
         updatedPastEclExp = await this.findPastEclExpById(past_ecl_id);
       } catch (error) {
@@ -283,24 +320,23 @@ export class PastEclExpsModel {
     return updatedPastEclExp!;
   }
 
-  async deletePastEclExpById(id: number): Promise<string> {
+  async deletePastEclExpById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingPastEclExp = await trx('past_ecl_exps')
-          .select('past_ecl_id')
-          .where('past_ecl_id', id)
-          .first();
+        let approved = await trx('past_ecl_exps')
+          .first('*')
+          .leftJoin('people', 'people.person_id', 'past_ecl_exps.person_id')
+          .where('past_ecl_id', id);
 
-        if (!existingPastEclExp) {
+        if (!approved) {
           throw new Error('PastEclExp not found');
         }
-
-        let approved = await trx('past_ecl_exps')
-          .first('past_ecl_approved')
-          .where('past_ecl_id', id);
 
         if (approved.past_ecl_approved == true) {
           throw new Error('Registro já aprovado');
@@ -309,6 +345,26 @@ export class PastEclExpsModel {
         await trx('past_ecl_exps').where('past_ecl_id', id).del();
 
         await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            funcao: approved.function,
+            local: approved.place,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.past_exp_begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.past_exp_end_date
+            ),
+            pessoa: approved.name,
+          },
+          table: 'Experiências eclesiásticas anteriores',
+        });
       } catch (error) {
         console.error(error);
         await trx.rollback();
