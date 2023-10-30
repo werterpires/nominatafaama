@@ -96,7 +96,8 @@ export class PublicationsService {
   }
 
   async updatePublicationById(
-    dto: UpdatePublicationDto
+    dto: UpdatePublicationDto,
+    currentUser: UserFromJwt
   ): Promise<IPublication> {
     try {
       const updatePublicationData: IUpdatePublication = {
@@ -104,7 +105,8 @@ export class PublicationsService {
         publication_approved: null,
       };
       const publicationId = await this.publicationsModel.updatePublicationById(
-        updatePublicationData
+        updatePublicationData,
+        currentUser
       );
 
       const updatedPublication =
@@ -116,9 +118,12 @@ export class PublicationsService {
     }
   }
 
-  async deletePublicationById(id: number): Promise<string> {
+  async deletePublicationById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.publicationsModel.deletePublicationById(id);
+      await this.publicationsModel.deletePublicationById(id, currentUser);
       return 'Publicação deletada com sucesso.';
     } catch (error) {
       throw error;

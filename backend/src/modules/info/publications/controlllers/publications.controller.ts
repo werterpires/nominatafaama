@@ -107,11 +107,15 @@ export class PublicationsController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updatePublicationById(
-    @Body() input: UpdatePublicationDto
+    @Body() input: UpdatePublicationDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IPublication> {
     try {
       const updatedPublication =
-        await this.publicationsService.updatePublicationById(input);
+        await this.publicationsService.updatePublicationById(
+          input,
+          currentUser
+        );
       return updatedPublication;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -120,9 +124,15 @@ export class PublicationsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deletePublicationById(@Param('id') id: number) {
+  async deletePublicationById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.publicationsService.deletePublicationById(id);
+      const message = await this.publicationsService.deletePublicationById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
