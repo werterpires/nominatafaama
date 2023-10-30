@@ -15,7 +15,7 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
   </div>
-  <section class="formCreationWrapper" *ngIf="showForm">
+  <section class="formCreationWrapper" *ngIf="showForm && showBox">
     <app-creation-form
       *ngIf="!registry?.spouse_id"
       (save)="showAlert('create', 'Confirmar a criação deste item?')"

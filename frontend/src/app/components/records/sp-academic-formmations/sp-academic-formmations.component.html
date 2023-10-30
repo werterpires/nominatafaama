@@ -87,7 +87,7 @@
     </app-creation-form>
   </section>
   <section *ngIf="showBox" class="registriesWrapper">
-    <<app-update-form
+    <app-update-form
       (editRegistry)="showAlert('edit', 'Confirmar a edição este item?', i)"
       (deleteRegistry)="
         showAlert(

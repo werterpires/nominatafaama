@@ -15,13 +15,13 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
   </div>
-  <section class="formCreationWrapper">
+  <section class="formCreationWrapper" *ngIf="showBox">
     <app-creation-form
       (save)="showAlert('create', 'Confirmar a criação deste item?')"
     >
       <div class="subSection">
         <label>
-          Pequena foto do estudante sozinho
+          Pequena foto do professor sozinho
           <input
             type="file"
             name="smallAlonePhoto"
