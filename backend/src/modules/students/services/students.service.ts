@@ -27,6 +27,7 @@ import { ChildrenModel } from 'src/modules/info/children/model/children.model';
 import { SpousesModel } from 'src/modules/spouses/model/spouses.model';
 import * as fs from 'fs';
 import { StudentPhotosService } from 'src/modules/info/student-photos/services/student-photos.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 @Injectable()
 export class StudentsService {
   constructor(
@@ -53,8 +54,9 @@ export class StudentsService {
 
   async createStudent(
     dto: CreateStudentDto,
-    userId: number
-  ): Promise<IStudent> {
+    userId: number,
+    currentUser: UserFromJwt
+  ): Promise<true> {
     try {
       const user = await this.usersService.findUserById(userId);
       if (user == null) {
@@ -86,8 +88,12 @@ export class StudentsService {
         student_approved: null,
       };
 
-      const newStudent = await this.studentsModel.createStudent(student, name);
-      return newStudent;
+      const newStudent = await this.studentsModel.createStudent(
+        student,
+        name,
+        currentUser
+      );
+      return true;
     } catch (error) {
       throw error;
     }

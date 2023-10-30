@@ -103,9 +103,7 @@ export class NotificationsService {
         objectUserId: notificationData.objectUserId,
         sent: false,
         read: false,
-        notificationText: [
-          `O usuário ${notificationData.agent_name} se cadastrou no sistema usando os seguintes dados: ${newDataToText}`,
-        ],
+        notificationText: `O usuário ${notificationData.agent_name} se cadastrou no sistema usando os seguintes dados: ${newDataToText}`,
         notifiedUserIds: notifiedUsersIds,
       };
     } catch (error) {

@@ -27,11 +27,15 @@ export class StudentsController {
   @Post()
   async createStudent(
     @Body() input: CreateStudentDto,
-    @CurrentUser() user: UserFromJwt
+    @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const userId = user.user_id;
-      const student = await this.studentsService.createStudent(input, userId);
+      const userId = currentUser.user_id;
+      const student = await this.studentsService.createStudent(
+        input,
+        userId,
+        currentUser
+      );
       return student;
     } catch (error) {
       throw new InternalServerErrorException(error.message);

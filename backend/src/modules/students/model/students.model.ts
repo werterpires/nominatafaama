@@ -3,47 +3,56 @@ import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { ICreateStudent, IStudent, IUpdateStudent } from '../types/types';
 import { IHiringField } from 'src/modules/nominatas/types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class StudentsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createStudent(
     createStudent: ICreateStudent,
-    name: string
-  ): Promise<IStudent> {
-    let student: IStudent | null = null;
+    name: string,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
     let sentError: Error | null = null;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const [student_id] = await trx('students')
-          .insert({
-            ...createStudent,
-            student_active: true,
-          })
-          .returning('student_id');
+    try {
+      const [student_id] = await this.knex('students')
+        .insert({
+          ...createStudent,
+          student_active: true,
+        })
+        .returning('student_id');
 
-        await trx.commit();
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          pessoa: name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Estudantes',
+      });
+    } catch (error) {
+      console.error(error);
 
-        student = await this.findStudentById(student_id);
-      } catch (error) {
-        console.error(error);
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Estudante já existe');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      if (error.code === 'ER_DUP_ENTRY') {
+        sentError = new Error('Estudante já existe');
+      } else {
+        sentError = new Error(error.sqlMessage);
       }
-    });
+    }
 
     if (sentError) {
       throw sentError;
     }
 
-    return student!;
+    return true;
   }
 
   async findStudentById(id: number): Promise<IStudent | null> {
