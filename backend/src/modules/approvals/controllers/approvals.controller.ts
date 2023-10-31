@@ -16,6 +16,8 @@ import { ERoles } from 'src/shared/auth/types/roles.enum';
 import { IUser } from 'src/modules/users/bz_types/types';
 import { ICompleteStudent, ICompleteUser } from '../types/types';
 import { error } from 'console';
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Controller('approvals')
 export class ApprovalsController {
@@ -102,14 +104,18 @@ export class ApprovalsController {
   @Put(':table')
   async approveAny(
     @Param('table') table: string,
-    @Body() data: { id: number; approve: boolean }
+    @Body() data: { id: number; approve: boolean },
+    @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const approved = await this.approvalsService.approveAny({
-        id: data.id,
-        approve: data.approve,
-        table: table,
-      });
+      const approved = await this.approvalsService.approveAny(
+        {
+          id: data.id,
+          approve: data.approve,
+          table: table,
+        },
+        currentUser
+      );
     } catch (error) {
       console.error(
         `Erro capturado no ApprovalsController approveAny: ${error}`
