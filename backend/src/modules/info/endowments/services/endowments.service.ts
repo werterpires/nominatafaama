@@ -93,14 +93,18 @@ export class EndowmentsService {
     }
   }
 
-  async updateEndowmentById(dto: UpdateEndowmentDto): Promise<IEndowment> {
+  async updateEndowmentById(
+    dto: UpdateEndowmentDto,
+    currentUser: UserFromJwt
+  ): Promise<IEndowment> {
     try {
       const updateEndowmentData: IUpdateEndowment = {
         ...dto,
         endowment_approved: null,
       };
       const endowmentId = await this.endowmentsModel.updateEndowmentById(
-        updateEndowmentData
+        updateEndowmentData,
+        currentUser
       );
 
       const updatedEndowment = this.endowmentsModel.findEndowmentById(
@@ -113,9 +117,12 @@ export class EndowmentsService {
     }
   }
 
-  async deleteEndowmentById(id: number): Promise<string> {
+  async deleteEndowmentById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.endowmentsModel.deleteEndowmentById(id);
+      await this.endowmentsModel.deleteEndowmentById(id, currentUser);
       return 'Investidura deletada com sucesso.';
     } catch (error) {
       throw error;

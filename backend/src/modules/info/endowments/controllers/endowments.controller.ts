@@ -104,11 +104,13 @@ export class EndowmentsController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updateEndowmentById(
-    @Body() input: UpdateEndowmentDto
+    @Body() input: UpdateEndowmentDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IEndowment> {
     try {
       const updatedEndowment = await this.endowmentsService.updateEndowmentById(
-        input
+        input,
+        currentUser
       );
       return updatedEndowment;
     } catch (error) {
@@ -118,9 +120,15 @@ export class EndowmentsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteEndowmentById(@Param('id') id: number) {
+  async deleteEndowmentById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.endowmentsService.deleteEndowmentById(id);
+      const message = await this.endowmentsService.deleteEndowmentById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
