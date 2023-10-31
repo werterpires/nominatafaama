@@ -103,11 +103,15 @@ export class PreviousMarriagesController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updatePreviousMarriageById(
-    @Body() input: UpdatePreviousMarriageDto
+    @Body() input: UpdatePreviousMarriageDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IPreviousMarriage> {
     try {
       const updatedPreviousMarriage =
-        await this.previousMarriagesService.updatePreviousMarriageById(input);
+        await this.previousMarriagesService.updatePreviousMarriageById(
+          input,
+          currentUser
+        );
       return updatedPreviousMarriage;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -116,10 +120,16 @@ export class PreviousMarriagesController {
 
   @Roles(ERoles.ADMINISTRACAO)
   @Delete(':id')
-  async deletePreviousMarriageById(@Param('id') id: number) {
+  async deletePreviousMarriageById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const message =
-        await this.previousMarriagesService.deletePreviousMarriageById(id);
+        await this.previousMarriagesService.deletePreviousMarriageById(
+          id,
+          currentUser
+        );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);

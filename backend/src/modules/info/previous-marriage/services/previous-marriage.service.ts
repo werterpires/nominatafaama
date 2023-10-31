@@ -101,7 +101,8 @@ export class PreviousMarriagesService {
   }
 
   async updatePreviousMarriageById(
-    dto: UpdatePreviousMarriageDto
+    dto: UpdatePreviousMarriageDto,
+    currentUser: UserFromJwt
   ): Promise<IPreviousMarriage> {
     try {
       const updatePreviousMarriageData: IUpdatePreviousMarriage = {
@@ -112,7 +113,8 @@ export class PreviousMarriagesService {
 
       const updatedPreviousMarriage =
         await this.previousMarriagesModel.updatePreviousMarriageById(
-          updatePreviousMarriageData
+          updatePreviousMarriageData,
+          currentUser
         );
       return updatedPreviousMarriage;
     } catch (error) {
@@ -120,9 +122,15 @@ export class PreviousMarriagesService {
     }
   }
 
-  async deletePreviousMarriageById(id: number): Promise<string> {
+  async deletePreviousMarriageById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.previousMarriagesModel.deletePreviousMarriageById(id);
+      await this.previousMarriagesModel.deletePreviousMarriageById(
+        id,
+        currentUser
+      );
       return 'Casamento prévio deletado com sucesso.';
     } catch (error) {
       throw error;
