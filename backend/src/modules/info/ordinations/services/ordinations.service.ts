@@ -97,14 +97,18 @@ export class OrdinationsService {
     }
   }
 
-  async updateOrdinationById(dto: UpdateOrdinationDto): Promise<IOrdination> {
+  async updateOrdinationById(
+    dto: UpdateOrdinationDto,
+    currentUser: UserFromJwt
+  ): Promise<IOrdination> {
     try {
       const updateOrdinationData: IUpdateOrdination = {
         ...dto,
         ordination_approved: null,
       };
       const ordinationId = await this.ordinationsModel.updateOrdinationById(
-        updateOrdinationData
+        updateOrdinationData,
+        currentUser
       );
 
       const updatedOrdination = this.ordinationsModel.findOrdinationById(
@@ -117,9 +121,12 @@ export class OrdinationsService {
     }
   }
 
-  async deleteOrdinationById(id: number): Promise<string> {
+  async deleteOrdinationById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.ordinationsModel.deleteOrdinationById(id);
+      await this.ordinationsModel.deleteOrdinationById(id, currentUser);
       return 'Ordenação deletada com sucesso.';
     } catch (error) {
       throw error;

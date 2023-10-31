@@ -105,11 +105,12 @@ export class OrdinationsController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updateOrdinationById(
-    @Body() input: UpdateOrdinationDto
+    @Body() input: UpdateOrdinationDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IOrdination> {
     try {
       const updatedOrdination =
-        await this.ordinationsService.updateOrdinationById(input);
+        await this.ordinationsService.updateOrdinationById(input, currentUser);
       return updatedOrdination;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -118,9 +119,15 @@ export class OrdinationsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteOrdinationById(@Param('id') id: number) {
+  async deleteOrdinationById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.ordinationsService.deleteOrdinationById(id);
+      const message = await this.ordinationsService.deleteOrdinationById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
