@@ -101,10 +101,14 @@ export class StudentsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
-  async updateStudent(@Body() input: UpdateStudentDto) {
+  async updateStudent(
+    @Body() input: UpdateStudentDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const updatedStudent = await this.studentsService.updateStudentById(
-        input
+        input,
+        currentUser
       );
       return updatedStudent;
     } catch (error) {
@@ -125,9 +129,15 @@ export class StudentsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteStudentById(@Param('id') id: number) {
+  async deleteStudentById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.studentsService.deleteStudentById(id);
+      const message = await this.studentsService.deleteStudentById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);

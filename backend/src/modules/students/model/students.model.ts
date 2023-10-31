@@ -473,7 +473,10 @@ export class StudentsModel {
     return studentList;
   }
 
-  async updateStudentById(updateStudent: IUpdateStudent): Promise<IStudent> {
+  async updateStudentById(
+    updateStudent: IUpdateStudent,
+    currentUser: UserFromJwt
+  ): Promise<IStudent> {
     let updatedStudent: IStudent | null = null;
     let sentError: Error | null = null;
 
@@ -499,6 +502,15 @@ export class StudentsModel {
           student_approved,
         } = updateStudent;
 
+        const approved = await trx('students')
+          .leftJoin('people', 'students.person_id', 'people.person_id')
+          .first('*')
+          .where('students.student_id', student_id);
+
+        if (approved.student_approved === true) {
+          throw new Error('Estudante já aprovado.');
+        }
+
         await trx('students').where('student_id', student_id).update({
           phone_number,
           is_whatsapp,
@@ -519,6 +531,20 @@ export class StudentsModel {
         });
 
         await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            pessoa: approved.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            pessoa: '(conferir na página do estudante)',
+          },
+          table: 'Estudantes',
+        });
       } catch (error) {
         console.error(error);
         console.error(error);
@@ -566,15 +592,43 @@ export class StudentsModel {
     return true;
   }
 
-  async deleteStudentById(id: number): Promise<string> {
+  async deleteStudentById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
+        const approved = await trx('students')
+          .leftJoin('people', 'students.person_id', 'people.person_id')
+          .first('*')
+          .where('students.student_id', id);
+
+        if (!approved) {
+          throw new Error('Estudante não encontrado.');
+        }
+
+        if (approved.student_approved) {
+          throw new Error('Estudante já aprovado.');
+        }
+
         await trx('students').where('student_id', id).del();
 
         await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            pessoa: approved.name,
+          },
+          table: 'Estudantes',
+        });
       } catch (error) {
         console.error(error);
         sentError = new Error(error.message);

@@ -540,7 +540,10 @@ export class StudentsService {
     }
   }
 
-  async updateStudentById(input: UpdateStudentDto): Promise<IStudent> {
+  async updateStudentById(
+    input: UpdateStudentDto,
+    currentUser: UserFromJwt
+  ): Promise<IStudent> {
     let updatedStudent: IStudent | null = null;
     let sentError: Error | null = null;
 
@@ -555,7 +558,10 @@ export class StudentsService {
     };
 
     try {
-      updatedStudent = await this.studentsModel.updateStudentById(updateData);
+      updatedStudent = await this.studentsModel.updateStudentById(
+        updateData,
+        currentUser
+      );
     } catch (error) {
       sentError = new Error(error.message);
     }
@@ -590,9 +596,15 @@ export class StudentsService {
     return true;
   }
 
-  async deleteStudentById(id: number): Promise<string> {
+  async deleteStudentById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      const message = await this.studentsModel.deleteStudentById(id);
+      const message = await this.studentsModel.deleteStudentById(
+        id,
+        currentUser
+      );
       return message;
     } catch (error) {
       throw error;
