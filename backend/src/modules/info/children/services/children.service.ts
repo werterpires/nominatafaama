@@ -85,14 +85,20 @@ export class ChildrenService {
     }
   }
 
-  async updateChildById(dto: UpdateChildDto): Promise<IChild> {
+  async updateChildById(
+    dto: UpdateChildDto,
+    currentUser: UserFromJwt
+  ): Promise<IChild> {
     try {
       const updateChildData: IUpdateChild = {
         ...dto,
         child_birth_date: new Date(dto.child_birth_date),
         child_approved: null,
       };
-      const childId = await this.childrenModel.updateChildById(updateChildData);
+      const childId = await this.childrenModel.updateChildById(
+        updateChildData,
+        currentUser
+      );
       const updatedChild = await this.childrenModel.findChildById(dto.child_id);
       return updatedChild;
     } catch (error) {
@@ -100,9 +106,9 @@ export class ChildrenService {
     }
   }
 
-  async deleteChildById(id: number): Promise<string> {
+  async deleteChildById(id: number, currentUser: UserFromJwt): Promise<string> {
     try {
-      await this.childrenModel.deleteChildById(id);
+      await this.childrenModel.deleteChildById(id, currentUser);
       return 'Criança deletada com sucesso.';
     } catch (error) {
       throw error;

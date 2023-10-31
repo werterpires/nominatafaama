@@ -87,9 +87,15 @@ export class ChildrenController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
-  async updateChildById(@Body() input: UpdateChildDto): Promise<IChild> {
+  async updateChildById(
+    @Body() input: UpdateChildDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ): Promise<IChild> {
     try {
-      const updatedChild = await this.childrenService.updateChildById(input);
+      const updatedChild = await this.childrenService.updateChildById(
+        input,
+        currentUser
+      );
       return updatedChild;
     } catch (error) {
       console.error('Erro capturado no controller: ', error);
@@ -99,9 +105,15 @@ export class ChildrenController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteChildById(@Param('id') id: number) {
+  async deleteChildById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.childrenService.deleteChildById(id);
+      const message = await this.childrenService.deleteChildById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       console.error('Erro capturado no controller: ', error);
