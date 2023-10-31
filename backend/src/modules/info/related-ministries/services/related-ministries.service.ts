@@ -102,7 +102,8 @@ export class RelatedMinistriesService {
   }
 
   async updateRelatedMinistryById(
-    dto: UpdateRelatedMinistryDto
+    dto: UpdateRelatedMinistryDto,
+    currentUser: UserFromJwt
   ): Promise<IRelatedMinistry> {
     try {
       const updateRelatedMinistryData: IUpdateRelatedMinistry = {
@@ -112,7 +113,8 @@ export class RelatedMinistriesService {
 
       const relatedMinistryId =
         await this.relatedMinistriesModel.updateRelatedMinistryById(
-          updateRelatedMinistryData
+          updateRelatedMinistryData,
+          currentUser
         );
 
       const updatedRelatedMinistry =
@@ -126,10 +128,16 @@ export class RelatedMinistriesService {
     }
   }
 
-  async deleteRelatedMinistryById(id: number): Promise<string> {
+  async deleteRelatedMinistryById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.relatedMinistriesModel.deleteRelatedMinistryById(id);
-      return 'Ministério relacionado deletado com sucesso.';
+      await this.relatedMinistriesModel.deleteRelatedMinistryById(
+        id,
+        currentUser
+      );
+      return 'Ministério de interesse deletado com sucesso.';
     } catch (error) {
       throw error;
     }

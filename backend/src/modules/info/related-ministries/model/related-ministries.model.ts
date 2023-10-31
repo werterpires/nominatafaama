@@ -304,7 +304,8 @@ export class RelatedMinistriesModel {
   }
 
   async updateRelatedMinistryById(
-    updateRelatedMinistry: IUpdateRelatedMinistry
+    updateRelatedMinistry: IUpdateRelatedMinistry,
+    currentUser: UserFromJwt
   ): Promise<number> {
     let updatedRelatedMinistry: number | null = null;
     let sentError: Error | null = null;
@@ -320,7 +321,17 @@ export class RelatedMinistriesModel {
         } = updateRelatedMinistry;
 
         let approved = await trx('related_ministries')
-          .first('related_ministry_approved')
+          .leftJoin(
+            'ministry_types',
+            'related_ministries.ministry_type_id',
+            'ministry_types.ministry_type_id'
+          )
+          .leftJoin(
+            'people',
+            'people.person_id',
+            'related_ministries.person_id'
+          )
+          .first('*')
           .where('related_ministry_id', related_ministry_id);
 
         if (approved.related_ministry_approved == true) {
@@ -337,6 +348,42 @@ export class RelatedMinistriesModel {
           });
 
         await trx.commit();
+
+        const personUndOthers = await this.knex('people')
+
+          .leftJoin(
+            'related_ministries',
+            'people.person_id',
+            'related_ministries.person_id'
+          )
+          .leftJoin(
+            'ministry_types',
+            'related_ministries.ministry_type_id',
+            'ministry_types.ministry_type_id'
+          )
+          .select('people.name', 'ministry_types.ministry_type_name')
+          .where('people.person_id', person_id)
+          .andWhere('ministry_types.ministry_type_id', '=', ministry_type_id)
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            ministerio: personUndOthers?.ministry_type_name,
+            prioridade: priority,
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            ministerio: approved?.ministry_type_name,
+            prioridade: approved.priority,
+            pessoa: approved?.name,
+          },
+          table: 'Ministérios de interesse',
+        });
       } catch (error) {
         await trx.rollback();
         sentError = new Error(error.message);
@@ -354,24 +401,32 @@ export class RelatedMinistriesModel {
     return updatedRelatedMinistry;
   }
 
-  async deleteRelatedMinistryById(id: number): Promise<string> {
+  async deleteRelatedMinistryById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingRelatedMinistry = await trx('related_ministries')
-          .select('related_ministry_id')
-          .where('related_ministry_id', id)
-          .first();
+        let approved = await trx('related_ministries')
+          .leftJoin(
+            'ministry_types',
+            'related_ministries.ministry_type_id',
+            'ministry_types.ministry_type_id'
+          )
+          .leftJoin(
+            'people',
+            'people.person_id',
+            'related_ministries.person_id'
+          )
+          .first('*')
+          .where('related_ministry_id', id);
 
-        if (!existingRelatedMinistry) {
+        if (!approved) {
           throw new Error('Related ministry not found');
         }
-
-        let approved = await trx('related_ministries')
-          .first('related_ministry_approved')
-          .where('related_ministry_id', id);
 
         if (approved.related_ministry_approved == true) {
           throw new Error('Registro já aprovado');
@@ -379,6 +434,20 @@ export class RelatedMinistriesModel {
         await trx('related_ministries').where('related_ministry_id', id).del();
 
         await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            ministerio: approved?.ministry_type_name,
+            prioridade: approved.priority,
+            pessoa: approved?.name,
+          },
+          table: 'Ministérios de interesse',
+        });
       } catch (error) {
         console.error(error);
         sentError = new Error(error.message);

@@ -110,11 +110,15 @@ export class RelatedMinistriesController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
   async updateRelatedMinistryById(
-    @Body() input: UpdateRelatedMinistryDto
+    @Body() input: UpdateRelatedMinistryDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IRelatedMinistry> {
     try {
       const updatedRelatedMinistry =
-        await this.relatedMinistriesService.updateRelatedMinistryById(input);
+        await this.relatedMinistriesService.updateRelatedMinistryById(
+          input,
+          currentUser
+        );
       return updatedRelatedMinistry;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -123,10 +127,16 @@ export class RelatedMinistriesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteRelatedMinistryById(@Param('id') id: number) {
+  async deleteRelatedMinistryById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const message =
-        await this.relatedMinistriesService.deleteRelatedMinistryById(id);
+        await this.relatedMinistriesService.deleteRelatedMinistryById(
+          id,
+          currentUser
+        );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
