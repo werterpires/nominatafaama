@@ -78,25 +78,17 @@ export class EclExperiencesController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   async updateEclExperienceById(
     @Body() dto: UpdateExperiencesDto,
-    @CurrentUser() user: UserFromJwt
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IEclExperience[]> {
     try {
-      const id = user.user_id;
+      const id = currentUser.user_id;
       const updatedEclExperience =
-        await this.eclExperiencesService.updateEclExperienceByPersonId(dto, id);
+        await this.eclExperiencesService.updateEclExperienceByPersonId(
+          dto,
+          id,
+          currentUser
+        );
       return updatedEclExperience;
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
-  }
-
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  @Roles(ERoles.ADMINISTRACAO)
-  async deleteEclExperienceById(@Param('id') id: number): Promise<string> {
-    try {
-      await this.eclExperiencesService.deleteEclExperienceById(id);
-      return 'Ecl experience deleted successfully.';
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

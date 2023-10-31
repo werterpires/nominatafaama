@@ -6,11 +6,13 @@ import {
   IEclExperience,
   IUpdateEclExperiences,
 } from '../types/types';
+import { UserFromJwt } from 'src/shared/auth/types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
 
 @Injectable()
 export class EclExperiencesModel {
   @InjectModel() private readonly knex: Knex;
-  constructor() {}
+  constructor(private notificationsService: NotificationsService) {}
 
   async findEclExperienceById(id: number): Promise<IEclExperience | null> {
     let eclExperience: IEclExperience | null = null;
@@ -219,13 +221,31 @@ export class EclExperiencesModel {
       ecl_exp_type_id: number;
       ecl_exp_approved: boolean | null;
     }[],
-    person_id
+    person_id,
+    currentUser: UserFromJwt
   ): Promise<void> {
     let updatedEclExperience: IEclExperience | null = null;
     let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
       try {
+        let oldDataExpsString: string;
+        const oldData = await trx('ecl_experiences')
+          .leftJoin('people', 'people.person_id', 'ecl_experiences.person_id')
+          .leftJoin(
+            'ecl_exp_types',
+            'ecl_exp_types.ecl_exp_type_id',
+            'ecl_experiences.ecl_exp_type_id'
+          )
+          .select('*')
+          .where('ecl_experiences.person_id', person_id);
+        if (oldData.length > 0) {
+          const oldDataExps = oldData.map((row: any) => row.ecl_exp_type_name);
+          oldDataExpsString = oldDataExps.join(', ');
+        } else {
+          oldDataExpsString = 'nenhuma experiência eclesiástica.';
+        }
+
         await trx('ecl_experiences').where('person_id', person_id).delete();
 
         if (updateEclExperience.length > 0) {
@@ -233,48 +253,53 @@ export class EclExperiencesModel {
         }
 
         await trx.commit();
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
-      }
-    });
+        let newDataExpsString: string;
+        const newData = await this.knex('ecl_experiences')
+          .leftJoin('people', 'people.person_id', 'ecl_experiences.person_id')
+          .leftJoin(
+            'ecl_exp_types',
+            'ecl_exp_types.ecl_exp_type_id',
+            'ecl_experiences.ecl_exp_type_id'
+          )
+          .select('*')
+          .where('ecl_experiences.person_id', person_id);
 
-    if (sentError) {
-      throw sentError;
-    }
-  }
-
-  async deleteEclExperienceById(id: number): Promise<string> {
-    let sentError: Error | null = null;
-    let message: string = '';
-
-    await this.knex.transaction(async (trx) => {
-      try {
-        const existingExperience = await trx('ecl_experiences')
-          .select('ecl_exp_id')
-          .where('ecl_exp_id', id)
-          .first();
-
-        if (!existingExperience) {
-          throw new Error('Ecl Experience not found');
+        if (newData.length > 0) {
+          const newDataExps = newData.map((row: any) => row.ecl_exp_type_name);
+          newDataExpsString = newDataExps.join(', ');
+        } else {
+          newDataExpsString = 'nenhuma experiência eclesiástica.';
         }
 
-        await trx('ecl_experiences').where('ecl_exp_id', id).del();
+        console.log(oldData, newData);
 
-        await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            experiencias: newDataExpsString,
+
+            pessoa: newData.length > 0 ? newData[0].name : oldData[0].name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            experiencias: oldDataExpsString,
+
+            pessoa: oldData.length > 0 ? oldData[0].name : newData[0].name,
+          },
+          table: 'Experiências eclesiásticas',
+        });
       } catch (error) {
         console.error(error);
-        sentError = new Error(error.message);
         await trx.rollback();
+        sentError = new Error(error.message);
       }
     });
 
     if (sentError) {
       throw sentError;
     }
-
-    message = 'Ecl Experience deleted successfully.';
-    return message;
   }
 }

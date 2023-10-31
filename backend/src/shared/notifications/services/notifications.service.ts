@@ -235,7 +235,7 @@ export class NotificationsService {
         if (notificationData.action === 'inseriu') {
           textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados de professor: ${newDataToText}`;
         } else if (notificationData.action === 'editou') {
-          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados de professor: de ${oldDataToText} passou a ser ${newDataToText}`;
+          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados de professor: de ${oldDataToText}, passou a ser ${newDataToText}`;
         } else if (notificationData.action === 'apagou') {
           textOne = `O usuário ${notificationData.agent_name} excluiu os seguintes dados de professor: ${oldDataToText}`;
         }
@@ -247,8 +247,8 @@ export class NotificationsService {
           textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para o professor ${objectName}: ${newDataToText}`;
           textTwo = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para você como professor: ${newDataToText}`;
         } else if (notificationData.action === 'editou') {
-          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados para o professor ${objectName}: de ${oldDataToText} passou a ser ${newDataToText}`;
-          textTwo = `O usuário ${notificationData.agent_name} editou seus dados como professor: de ${oldDataToText} passou a ser ${newDataToText}`;
+          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados para o professor ${objectName}: de ${oldDataToText}, passou a ser ${newDataToText}`;
+          textTwo = `O usuário ${notificationData.agent_name} editou seus dados como professor: de ${oldDataToText}, passou a ser ${newDataToText}`;
         } else if (notificationData.action === 'apagou') {
           textOne = `O usuário ${notificationData.agent_name} excluiu os seguintes dados de professor: ${oldDataToText}`;
           textTwo = `O usuário ${notificationData.agent_name} excluiu seus dados como professor: ${oldDataToText}`;
@@ -257,7 +257,7 @@ export class NotificationsService {
         if (notificationData.action === 'inseriu') {
           textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para si mesmo como professor: ${newDataToText}`;
         } else if (notificationData.action === 'editou') {
-          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados para si mesmo como professor: de ${oldDataToText} passou a ser ${newDataToText}`;
+          textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados para si mesmo como professor: de ${oldDataToText}, passou a ser ${newDataToText}`;
         } else if (notificationData.action === 'apagou') {
           textOne = `O usuário ${notificationData.agent_name} excluiu seus próprios dados de professor: ${oldDataToText}`;
         }
@@ -358,7 +358,7 @@ export class NotificationsService {
       if (notificationData.action === 'inseriu') {
         textOne = `O usuário ${notificationData.agent_name} inseriu dados em ${notificationData.table}: ${newDataToText}`;
       } else if (notificationData.action === 'editou') {
-        textOne = `O usuário ${notificationData.agent_name} editou dados em ${notificationData.table}: de ${oldDataToText} passou a ser ${newDataToText}`;
+        textOne = `O usuário ${notificationData.agent_name} editou dados em ${notificationData.table}: de ${oldDataToText}, passou a ser ${newDataToText}`;
       } else if (notificationData.action === 'apagou') {
         textOne = `O usuário ${notificationData.agent_name} excluiu dados em ${notificationData.table}: ${oldDataToText}`;
       }

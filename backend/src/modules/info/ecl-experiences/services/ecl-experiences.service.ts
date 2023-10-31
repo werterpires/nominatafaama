@@ -11,6 +11,7 @@ import { IUser } from 'src/modules/users/bz_types/types';
 import { UsersService } from 'src/modules/users/dz_services/users.service';
 import { SpousesModel } from 'src/modules/spouses/model/spouses.model';
 import { EclExperiencesModel } from '../model/ecl-experiences.model';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class EclExperiencesService {
@@ -66,7 +67,8 @@ export class EclExperiencesService {
 
   async updateEclExperienceByPersonId(
     dto: UpdateExperiencesDto,
-    id: number
+    id: number,
+    currentUser: UserFromJwt
   ): Promise<IEclExperience[]> {
     try {
       const user = await this.usersService.findUserById(id);
@@ -145,21 +147,12 @@ export class EclExperiencesService {
 
       await this.eclExperiencesModel.updateEclExperienceByPersonId(
         experiences,
-        person_id
+        person_id,
+        currentUser
       );
       const eclesiasticExperiences =
         await this.eclExperiencesModel.findEclExperiencesByPersonId(person_id);
       return eclesiasticExperiences;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async deleteEclExperienceById(id: number): Promise<string> {
-    try {
-      await this.eclExperiencesModel.deleteEclExperienceById(id);
-
-      return 'Formação acadêmica deletada com sucesso.';
     } catch (error) {
       throw error;
     }
