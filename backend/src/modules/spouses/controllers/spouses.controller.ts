@@ -56,13 +56,14 @@ export class SpousesController {
   @Put()
   async updateSpouse(
     @Body() input: UpdateSpouseDto,
-    @CurrentUser() user: UserFromJwt
+    @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const id = user.user_id;
+      const id = currentUser.user_id;
       const updatedSpouse = await this.spousesService.updateSpouseById(
         input,
-        id
+        id,
+        currentUser
       );
       return updatedSpouse;
     } catch (error) {
@@ -72,9 +73,15 @@ export class SpousesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteSpouseById(@Param('id') id: number) {
+  async deleteSpouseById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.spousesService.deleteSpouseById(id);
+      const message = await this.spousesService.deleteSpouseById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);

@@ -333,7 +333,10 @@ export class SpousesModel {
     return spouseList;
   }
 
-  async updateSpouseById(updateSpouse: IUpdateSpouse): Promise<ISpouse> {
+  async updateSpouseById(
+    updateSpouse: IUpdateSpouse,
+    currentUser: UserFromJwt
+  ): Promise<ISpouse> {
     let updatedSpouse: ISpouse | null = null;
     let sentError: Error | null = null;
 
@@ -364,6 +367,16 @@ export class SpousesModel {
           civil_marriage_state,
         } = updateSpouse;
 
+        let approved = await trx('spouses')
+          .leftJoin('people', 'spouses.person_id', 'people.person_id')
+          .where('spouse_id', spouse_id)
+          .select('*')
+          .first();
+
+        if (approved.spouse_approved === true) {
+          throw new Error('Cônjuge já aprovado');
+        }
+
         await trx('spouses')
           .update({
             phone_number,
@@ -393,6 +406,21 @@ export class SpousesModel {
         updatedSpouse = await this.findSpouseById(spouse_id);
 
         await trx.commit();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            pessoa: 'conferir na página de cônjuges do estudante',
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            pessoa: name,
+          },
+          table: 'Cônjuges',
+        });
       } catch (error) {
         await trx.rollback();
         sentError = new Error(error.message);
@@ -410,11 +438,23 @@ export class SpousesModel {
     return updatedSpouse;
   }
 
-  async deleteSpouseById(id: number): Promise<string> {
+  async deleteSpouseById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
+      let approved = await trx('spouses')
+        .leftJoin('people', 'spouses.person_id', 'people.person_id')
+        .where('spouse_id', id)
+        .select('spouse_approved')
+        .first();
+
+      if (approved.spouse_approved === true) {
+        throw new Error('Cônjuge já aprovado');
+      }
       try {
         await trx('spouses').where('spouse_id', id).del();
 

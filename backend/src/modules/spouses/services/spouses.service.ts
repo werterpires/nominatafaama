@@ -74,7 +74,11 @@ export class SpousesService {
     }
   }
 
-  async updateSpouseById(input: UpdateSpouseDto, id: number): Promise<ISpouse> {
+  async updateSpouseById(
+    input: UpdateSpouseDto,
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<ISpouse> {
     let updatedSpouse: ISpouse | null = null;
     let sentError: Error | null = null;
 
@@ -100,7 +104,10 @@ export class SpousesService {
     };
 
     try {
-      updatedSpouse = await this.spousesModel.updateSpouseById(updateData);
+      updatedSpouse = await this.spousesModel.updateSpouseById(
+        updateData,
+        currentUser
+      );
     } catch (error) {
       sentError = new Error(error.message);
     }
@@ -116,9 +123,12 @@ export class SpousesService {
     return updatedSpouse;
   }
 
-  async deleteSpouseById(id: number): Promise<string> {
+  async deleteSpouseById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      const message = await this.spousesModel.deleteSpouseById(id);
+      const message = await this.spousesModel.deleteSpouseById(id, currentUser);
       return message;
     } catch (error) {
       throw error;
