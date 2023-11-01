@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import {
-  CreateDirectVacancyDto,
-  CreateVacancyDto,
-} from '../dto/create-vacancy.dto';
+import { CreateDirectVacancyDto } from '../dto/create-vacancy.dto';
 import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
 import { ICreateDirectVacancy } from '../types/types';
 import { VacanciesModel } from '../model/vacancies.model';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class VacanciesService {
   constructor(private vacanciesModel: VacanciesModel) {}
 
-  async createDirectVacancy(dto: CreateDirectVacancyDto): Promise<boolean> {
+  async createDirectVacancy(
+    dto: CreateDirectVacancyDto,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
     try {
       const createDirectVacancy: ICreateDirectVacancy = {
         ...dto,
@@ -23,7 +24,8 @@ export class VacanciesService {
       };
 
       const newVacancy = await this.vacanciesModel.createDirectVacancy(
-        createDirectVacancy
+        createDirectVacancy,
+        currentUser
       );
       return newVacancy;
     } catch (error) {

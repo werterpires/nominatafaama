@@ -54,6 +54,13 @@ export class NotificationsService {
         createdNotification = await this.notificationsModel.createNotification(
           createNotification
         );
+      } else if (notificationData.notificationType === 6) {
+        const createNotification = await this.createNotificationTypeSix(
+          notificationData
+        );
+        createdNotification = await this.notificationsModel.createNotification(
+          createNotification
+        );
       }
 
       return createdNotification;
@@ -435,6 +442,56 @@ export class NotificationsService {
         sent: false,
         read: false,
         notificationText: textOne,
+        notifiedUserIds: notifiedUsersIds,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  async createNotificationTypeSix(
+    notificationData: INotificationData
+  ): Promise<ICreateNotification> {
+    try {
+      if (notificationData.newData === null || !notificationData.objectUserId) {
+        throw new Error('There is no data to send the notification');
+      }
+
+      let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
+        'direcao',
+        'ministerial',
+      ]);
+
+      notifiedUsersIds.push(notificationData.objectUserId);
+
+      let objectName = await this.getUserNameByUserId(
+        notificationData.objectUserId
+      );
+
+      let newDataToText: string = Object.entries(notificationData.newData)
+        .map(([prop, value]) => {
+          return `${prop}: ${value}`;
+        })
+        .join(', ');
+
+      let textOne = '';
+      let textTwo = '';
+
+      textOne = `O usuário ${notificationData.agent_name} mudou o status de contratação de ${objectName}. A partir de agora, passa a ter os seguintes dados: ${newDataToText}`;
+      textTwo = `O usuário ${notificationData.agent_name} mudou seu status de contratação. A partir de agora, passa a ter os seguintes dados: ${newDataToText}.`;
+
+      return {
+        agentUserId: notificationData.agentUserId,
+        notificationType: notificationData.notificationType,
+        action: notificationData.action,
+        table: notificationData.table,
+        oldData: notificationData.oldData,
+        newData: notificationData.newData,
+        objectUserId: notificationData.objectUserId,
+        sent: false,
+        read: false,
+        notificationText: [textOne, textTwo],
         notifiedUserIds: notifiedUsersIds,
       };
     } catch (error) {
