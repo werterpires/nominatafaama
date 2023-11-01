@@ -4,17 +4,20 @@ import { InjectModel } from 'nest-knexjs'
 import {
   IEndowmentType,
   ICreateEndowmentType,
-  IUpdateEndowmentType,
+  IUpdateEndowmentType
 } from '../types/types'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class EndowmentTypesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex
+  constructor(private notificationsService: NotificationsService) {}
 
-  async createEndowmentType({
-    endowment_type_name,
-    application,
-  }: ICreateEndowmentType): Promise<IEndowmentType> {
+  async createEndowmentType(
+    { endowment_type_name, application }: ICreateEndowmentType,
+    currentUser: UserFromJwt
+  ): Promise<IEndowmentType> {
     let endowmentType: IEndowmentType | null = null
     let sentError: Error | null = null
 
@@ -23,7 +26,7 @@ export class EndowmentTypesModel {
         const [endowment_type_id] = await trx('endowment_types')
           .insert({
             endowment_type_name,
-            application,
+            application
           })
           .returning('endowment_type_id')
 
@@ -32,10 +35,20 @@ export class EndowmentTypesModel {
           endowment_type_name,
           application,
           created_at: new Date(),
-          updated_at: new Date(),
+          updated_at: new Date()
         }
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'inseriu',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { investidura: endowment_type_name },
+          objectUserId: null,
+          oldData: null,
+          table: 'Investiduras'
+        })
       } catch (error) {
         console.error(error)
         await trx.rollback()
@@ -74,7 +87,7 @@ export class EndowmentTypesModel {
           endowment_type_name: result[0].endowment_type_name,
           application: result[0].application,
           created_at: result[0].created_at,
-          updated_at: result[0].updated_at,
+          updated_at: result[0].updated_at
         }
 
         await trx.commit()
@@ -106,7 +119,7 @@ export class EndowmentTypesModel {
           endowment_type_name: row.endowment_type_name,
           application: row.application,
           created_at: row.created_at,
-          updated_at: row.updated_at,
+          updated_at: row.updated_at
         }))
 
         await trx.commit()
@@ -125,7 +138,7 @@ export class EndowmentTypesModel {
   }
 
   async findEndowmentTypesByCategory(
-    category: string,
+    category: string
   ): Promise<IEndowmentType[]> {
     let endowmentTypesList: IEndowmentType[] = []
     let sentError: Error | null = null
@@ -152,7 +165,7 @@ export class EndowmentTypesModel {
           endowment_type_name: row.endowment_type_name,
           application: row.application,
           created_at: row.created_at,
-          updated_at: row.updated_at,
+          updated_at: row.updated_at
         }))
 
         await trx.commit()
@@ -172,6 +185,7 @@ export class EndowmentTypesModel {
 
   async updateEndowmentTypeById(
     updateEndowmentType: IUpdateEndowmentType,
+    currentUser: UserFromJwt
   ): Promise<IEndowmentType> {
     let updatedEndowmentType: IEndowmentType | null = null
     let sentError: Error | null = null
@@ -180,15 +194,25 @@ export class EndowmentTypesModel {
       try {
         const { endowment_type_name, application, endowment_type_id } =
           updateEndowmentType
-
+        const oldData = await this.findEndowmentTypeById(endowment_type_id)
         await trx('endowment_types')
           .where('endowment_type_id', endowment_type_id)
           .update({ endowment_type_name, application })
         updatedEndowmentType = await this.findEndowmentTypeById(
-          endowment_type_id,
+          endowment_type_id
         )
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { investidura: endowment_type_name },
+          objectUserId: null,
+          oldData: { investidura: oldData?.endowment_type_name },
+          table: 'Investiduras'
+        })
       } catch (error) {
         console.error(error)
         await trx.rollback()
@@ -207,15 +231,29 @@ export class EndowmentTypesModel {
     return updatedEndowmentType
   }
 
-  async deleteEndowmentTypeById(id: number): Promise<string> {
+  async deleteEndowmentTypeById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null
     let message: string = ''
 
     await this.knex.transaction(async (trx) => {
       try {
+        const oldData = await this.findEndowmentTypeById(id)
         await trx('endowment_types').where('endowment_type_id', id).del()
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          objectUserId: null,
+          oldData: { investidura: oldData?.endowment_type_name },
+          table: 'Investiduras'
+        })
       } catch (error) {
         console.error(error)
         sentError = new Error(error.message)
