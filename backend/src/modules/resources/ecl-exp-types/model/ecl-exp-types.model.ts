@@ -4,16 +4,21 @@ import { InjectModel } from 'nest-knexjs'
 import {
   IEclExpType,
   ICreateEclExpType,
-  IUpdateEclExpType,
+  IUpdateEclExpType
 } from '../types/types'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
 
 @Injectable()
 export class EclExpTypesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex
+  constructor(private notificationsService: NotificationsService) {}
 
-  async createEclExpType({
-    ecl_exp_type_name,
-  }: ICreateEclExpType): Promise<IEclExpType> {
+  async createEclExpType(
+    { ecl_exp_type_name }: ICreateEclExpType,
+    currentUser: UserFromJwt
+  ): Promise<IEclExpType> {
     let eclExpType: IEclExpType | null = null
     let sentError: Error | null = null
 
@@ -21,7 +26,7 @@ export class EclExpTypesModel {
       try {
         const [ecl_exp_type_id] = await trx('ecl_exp_types')
           .insert({
-            ecl_exp_type_name,
+            ecl_exp_type_name
           })
           .returning('ecl_exp_type_id')
 
@@ -29,10 +34,20 @@ export class EclExpTypesModel {
           ecl_exp_type_id: ecl_exp_type_id,
           ecl_exp_type_name,
           created_at: new Date(),
-          updated_at: new Date(),
+          updated_at: new Date()
         }
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'inseriu',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { experiencia: ecl_exp_type_name },
+          objectUserId: null,
+          oldData: null,
+          table: 'Experiências eclesiásticas'
+        })
       } catch (error) {
         console.error(error)
         await trx.rollback()
@@ -70,7 +85,7 @@ export class EclExpTypesModel {
           ecl_exp_type_id: result[0].ecl_exp_type_id,
           ecl_exp_type_name: result[0].ecl_exp_type_name,
           created_at: result[0].created_at,
-          updated_at: result[0].updated_at,
+          updated_at: result[0].updated_at
         }
 
         await trx.commit()
@@ -101,7 +116,7 @@ export class EclExpTypesModel {
           ecl_exp_type_id: row.ecl_exp_type_id,
           ecl_exp_type_name: row.ecl_exp_type_name,
           created_at: row.created_at,
-          updated_at: row.updated_at,
+          updated_at: row.updated_at
         }))
 
         await trx.commit()
@@ -121,12 +136,16 @@ export class EclExpTypesModel {
 
   async updateEclExpTypeById(
     updateEclExpType: IUpdateEclExpType,
+    currentUser: UserFromJwt
   ): Promise<IEclExpType> {
     let updatedEclExpType: IEclExpType | null = null
     let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
+        const oldData = await this.findEclExpTypeById(
+          updateEclExpType.ecl_exp_type_id
+        )
         const { ecl_exp_type_name } = updateEclExpType
         const { ecl_exp_type_id } = updateEclExpType
 
@@ -137,6 +156,16 @@ export class EclExpTypesModel {
         updatedEclExpType = await this.findEclExpTypeById(ecl_exp_type_id)
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { experiencia: ecl_exp_type_name },
+          objectUserId: null,
+          oldData: { experiencia: oldData?.ecl_exp_type_name },
+          table: 'Experiências eclesiásticas'
+        })
       } catch (error) {
         console.error(error)
         await trx.rollback()
@@ -155,20 +184,34 @@ export class EclExpTypesModel {
     return updatedEclExpType
   }
 
-  async deleteEclExpTypeById(id: number): Promise<string> {
+  async deleteEclExpTypeById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null
     let message: string = ''
 
     await this.knex.transaction(async (trx) => {
       try {
+        const oldData = await this.findEclExpTypeById(id)
         await trx('ecl_exp_types').where('ecl_exp_type_id', id).del()
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          objectUserId: null,
+          oldData: { experiencia: oldData?.ecl_exp_type_name },
+          table: 'Experiências eclesiásticas'
+        })
       } catch (error) {
         console.error(error)
         if (error.code == 'ER_ROW_IS_REFERENCED_2') {
           sentError = new Error(
-            'Alguém está usando o tipo de experiência eclesiástica que você está tentando apagar.',
+            'Alguém está usando o tipo de experiência eclesiástica que você está tentando apagar.'
           )
         } else {
           sentError = new Error(error.message)
