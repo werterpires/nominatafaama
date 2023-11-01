@@ -61,6 +61,13 @@ export class NotificationsService {
         createdNotification = await this.notificationsModel.createNotification(
           createNotification
         );
+      } else if (notificationData.notificationType === 7) {
+        const createNotification = await this.createNotificationTypeSeven(
+          notificationData
+        );
+        createdNotification = await this.notificationsModel.createNotification(
+          createNotification
+        );
       }
 
       return createdNotification;
@@ -201,7 +208,7 @@ export class NotificationsService {
       }
 
       let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
-        'direcao',
+        'direção',
         'ministerial',
       ]);
 
@@ -317,7 +324,7 @@ export class NotificationsService {
       }
 
       let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
-        'direcao',
+        'direção',
         'ministerial',
       ]);
 
@@ -459,7 +466,7 @@ export class NotificationsService {
       }
 
       let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
-        'direcao',
+        'direção',
         'ministerial',
       ]);
 
@@ -492,6 +499,88 @@ export class NotificationsService {
         sent: false,
         read: false,
         notificationText: [textOne, textTwo],
+        notifiedUserIds: notifiedUsersIds,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  async createNotificationTypeSeven(
+    notificationData: INotificationData
+  ): Promise<ICreateNotification> {
+    try {
+      if (
+        notificationData.newData === null &&
+        notificationData.action !== 'apagou'
+      ) {
+        throw new Error('There is no data to send the notification');
+      }
+
+      let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
+        'direção',
+        'ministerial',
+      ]);
+
+      const index = notifiedUsersIds.indexOf(notificationData.agentUserId);
+
+      if (index !== -1) {
+        notifiedUsersIds.splice(index, 1);
+      }
+
+      if (notificationData.oldData && notificationData.newData) {
+        const data = this.compareAndRemoveEqualProperties(
+          notificationData.oldData,
+          notificationData.newData
+        );
+        notificationData.oldData = data.oldData;
+        notificationData.newData = data.newData;
+      }
+
+      let newDataToText: string = '';
+      if (notificationData.newData) {
+        newDataToText = Object.entries(notificationData.newData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`;
+          })
+          .join('; ');
+      }
+
+      let oldDataToText: string = '';
+      if (notificationData.oldData) {
+        oldDataToText = Object.entries(notificationData.oldData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`;
+          })
+          .join('; ');
+      }
+
+      let textOne = '';
+
+      if (notificationData.action === 'inseriu') {
+        textOne = `O usuário ${notificationData.agent_name} inseriu novos parâmetros em ${notificationData.table}: ${newDataToText}`;
+      } else if (notificationData.action === 'editou') {
+        textOne = `O usuário ${notificationData.agent_name} editou parâmetros em ${notificationData.table}: de ${oldDataToText}, passou a ser ${newDataToText}`;
+      } else if (notificationData.action === 'apagou') {
+        textOne = `O usuário ${notificationData.agent_name} apagou parâmetros em ${notificationData.table}: ${oldDataToText}`;
+      }
+
+      let notificationText: string;
+
+      notificationText = textOne;
+
+      return {
+        agentUserId: notificationData.agentUserId,
+        notificationType: notificationData.notificationType,
+        action: notificationData.action,
+        table: notificationData.table,
+        oldData: notificationData.oldData,
+        newData: notificationData.newData,
+        objectUserId: notificationData.objectUserId,
+        sent: false,
+        read: false,
+        notificationText: notificationText,
         notifiedUserIds: notifiedUsersIds,
       };
     } catch (error) {
