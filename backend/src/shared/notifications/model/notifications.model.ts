@@ -120,8 +120,6 @@ export class NotificationsModel {
         .whereIn('roles.role_name', roles)
         .andWhere('user_approved', true);
 
-      console.log(roles, userIds);
-
       if (userIds.length === 0) {
         throw new Error('Users not found');
       }
