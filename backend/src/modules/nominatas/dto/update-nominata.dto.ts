@@ -14,4 +14,7 @@ export class UpdateNominataDto {
   @IsString()
   @Length(1, 7000)
   director_words: string
+
+  @IsNumber()
+  director: number
 }
