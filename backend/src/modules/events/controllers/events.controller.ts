@@ -7,14 +7,16 @@ import {
   Param,
   Delete,
   InternalServerErrorException,
-  Put,
-} from '@nestjs/common';
-import { EventsService } from '../services/events.service';
-import { CreateEventDto } from '../dto/create-event.dto';
-import { UpdateEventDto } from '../dto/update-event.dto';
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
-import { ERoles } from 'src/shared/auth/types/roles.enum';
-import { IEvent } from '../types/types';
+  Put
+} from '@nestjs/common'
+import { EventsService } from '../services/events.service'
+import { CreateEventDto } from '../dto/create-event.dto'
+import { UpdateEventDto } from '../dto/update-event.dto'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { IEvent } from '../types/types'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
 
 @Controller('events')
 export class EventsController {
@@ -22,12 +24,15 @@ export class EventsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
   @Post()
-  async createEvent(@Body() input: CreateEventDto) {
+  async createEvent(
+    @Body() input: CreateEventDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const event = await this.eventsService.createEvent(input);
-      return event;
+      const event = await this.eventsService.createEvent(input, currentUser)
+      return event
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -37,30 +42,36 @@ export class EventsController {
     try {
       const events = await this.eventsService.findAllEventsByNominataId(
         parseInt(nominataId.toString())
-      );
-      return events;
+      )
+      return events
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
   @Put()
-  async updateEvent(@Body() updateEventDto: UpdateEventDto) {
+  async updateEvent(
+    @Body() updateEventDto: UpdateEventDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      await this.eventsService.updateEventById(updateEventDto);
+      await this.eventsService.updateEventById(updateEventDto, currentUser)
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(
+    @Param('id') id: string,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      return { response: await this.eventsService.remove(+id) };
+      return { response: await this.eventsService.remove(+id, currentUser) }
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 }
