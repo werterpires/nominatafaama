@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { Knex } from 'knex';
-import { InjectModel } from 'nest-knexjs';
-import { ICreateStudent, IStudent, IUpdateStudent } from '../types/types';
-import { IHiringField } from 'src/modules/nominatas/types/types';
-import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
-import { UserFromJwt } from 'src/shared/auth/types/types';
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import { ICreateStudent, IStudent, IUpdateStudent } from '../types/types'
+import { IHiringField } from 'src/modules/nominatas/types/types'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class StudentsModel {
-  @InjectModel() private readonly knex: Knex;
+  @InjectModel() private readonly knex: Knex
   constructor(private notificationsService: NotificationsService) {}
 
   async createStudent(
@@ -16,43 +16,43 @@ export class StudentsModel {
     name: string,
     currentUser: UserFromJwt
   ): Promise<boolean> {
-    let sentError: Error | null = null;
+    let sentError: Error | null = null
 
     try {
       const [student_id] = await this.knex('students')
         .insert({
           ...createStudent,
-          student_active: true,
+          student_active: true
         })
-        .returning('student_id');
+        .returning('student_id')
 
       await this.notificationsService.createNotification({
         action: 'inseriu',
         agent_name: currentUser.name,
         agentUserId: currentUser.user_id,
         newData: {
-          pessoa: name,
+          pessoa: name
         },
         notificationType: 4,
         objectUserId: currentUser.user_id,
         oldData: null,
-        table: 'Estudantes',
-      });
+        table: 'Estudantes'
+      })
     } catch (error) {
-      console.error(error);
+      console.error(error)
 
       if (error.code === 'ER_DUP_ENTRY') {
-        sentError = new Error('Estudante já existe');
+        sentError = new Error('Estudante já existe')
       } else {
-        sentError = new Error(error.sqlMessage);
+        sentError = new Error(error.sqlMessage)
       }
     }
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return true;
+    return true
   }
 
   async findStudentById(id: number): Promise<IStudent | null> {
@@ -85,38 +85,38 @@ export class StudentsModel {
         'associations.association_id'
       )
       .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-      .where('students.student_id', '=', id);
+      .where('students.student_id', '=', id)
 
     if (!result) {
-      throw new Error('Estudante não encontrado');
+      throw new Error('Estudante não encontrado')
     }
 
-    return result;
+    return result
   }
 
   async findNotApprovedIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null;
-    let sentError: Error | null = null;
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
     try {
       const result = await this.knex
         .table('students')
         .select('students.person_id')
-        .whereNull('students.student_approved');
+        .whereNull('students.student_approved')
 
       if (result) {
-        personIds = result;
+        personIds = result
       }
     } catch (error) {
-      console.error('Erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
-    return personIds;
+    return personIds
   }
 
   async findStudentByUserId(userId: number): Promise<IStudent | null> {
-    let student: IStudent | null = null;
-    let sentError: Error | null = null;
+    let student: IStudent | null = null
+    let sentError: Error | null = null
     try {
       const result = await this.knex
         .table('students')
@@ -147,21 +147,21 @@ export class StudentsModel {
           'associations.association_id'
         )
         .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-        .where('users.user_id', userId);
+        .where('users.user_id', userId)
 
       if (result != null) {
-        student = result;
+        student = result
       }
     } catch (error) {
-      console.error('Esse é o erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return student;
+    return student
   }
 
   async findStudentMaritalStatusByUserId(
@@ -178,42 +178,42 @@ export class StudentsModel {
           'marital_status_types.marital_status_type_id'
         )
         .where('users.user_id', userId)
-        .first();
+        .first()
 
-      return result || null;
+      return result || null
     } catch (error) {
-      console.error('Esse é o erro capturado na model: ', error);
-      throw new Error(error.message);
+      console.error('Esse é o erro capturado na model: ', error)
+      throw new Error(error.message)
     }
   }
 
   async findActiveByUserId(userId: number): Promise<boolean | null> {
-    let acctive: boolean | null = null;
-    let sentError: Error | null = null;
+    let acctive: boolean | null = null
+    let sentError: Error | null = null
     try {
       const result = await this.knex
         .table('students')
         .first('students.student_active')
         .leftJoin('users', 'students.person_id', 'users.person_id')
-        .where('users.user_id', userId);
+        .where('users.user_id', userId)
       if (result) {
-        acctive = result.student_active;
+        acctive = result.student_active
       }
     } catch (error) {
-      console.error('Esse é o erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return acctive;
+    return acctive
   }
 
   async findHiringField(studentId: number) {
-    let hiringField: IHiringField | null = null;
-    let sentError: Error | null = null;
+    let hiringField: IHiringField | null = null
+    let sentError: Error | null = null
     try {
       let result = await this.knex
         .first(
@@ -245,56 +245,56 @@ export class StudentsModel {
         )
         .where('students.student_id', studentId)
         .andWhere('invites.accept', true)
-        .andWhere('invites.approved', true);
+        .andWhere('invites.approved', true)
 
       if (result != null) {
         hiringField = {
           association_acronym: result.association_acronym,
           student_id: result.student_id,
-          union_acronym: result.union_acronym,
-        };
+          union_acronym: result.union_acronym
+        }
       }
     } catch (error) {
-      console.error('Esse é o erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return hiringField;
+    return hiringField
   }
 
   async findActiveStudents(): Promise<{ cpf: string; name: string }[]> {
-    let activeStudents: { cpf: string; name: string }[] = [];
-    let sentError: Error | null = null;
+    let activeStudents: { cpf: string; name: string }[] = []
+    let sentError: Error | null = null
     try {
       const result = await this.knex
         .table('students')
         .select('people.cpf', 'people.name')
         .leftJoin('people', 'students.person_id', 'people.person_id')
-        .where('students.student_active', true);
+        .where('students.student_active', true)
       if (result) {
-        activeStudents = result;
+        activeStudents = result
       }
     } catch (error) {
-      console.error('Esse é o erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return activeStudents;
+    return activeStudents
   }
 
   async findApprovedStudentByUserId(
     studentId: number
   ): Promise<IStudent | null> {
-    let student: IStudent | null = null;
-    let sentError: Error | null = null;
+    let student: IStudent | null = null
+    let sentError: Error | null = null
     try {
       const result = await this.knex
         .table('students')
@@ -326,26 +326,26 @@ export class StudentsModel {
         )
         .leftJoin('unions', 'associations.union_id', 'unions.union_id')
         .where('students.student_id', studentId)
-        .andWhere('students.student_approved', true);
+        .andWhere('students.student_approved', true)
 
       if (result != null) {
-        student = result;
+        student = result
       }
     } catch (error) {
-      console.error('Esse é o erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return student;
+    return student
   }
 
   async findStudentByUserCpf(cpf: string): Promise<IStudent | null> {
-    let student: IStudent | null = null;
-    let sentError: Error | null = null;
+    let student: IStudent | null = null
+    let sentError: Error | null = null
     try {
       const result = await this.knex
         .table('students')
@@ -376,26 +376,26 @@ export class StudentsModel {
           'associations.association_id'
         )
         .leftJoin('unions', 'associations.union_id', 'unions.union_id')
-        .where('people.cpf', cpf);
+        .where('people.cpf', cpf)
 
       if (result != null) {
-        student = result;
+        student = result
       }
     } catch (error) {
-      console.error('Esse é o erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return student;
+    return student
   }
 
   async findAllStudents(): Promise<IStudent[]> {
-    let studentList: IStudent[] = [];
-    let sentError: Error | null = null;
+    let studentList: IStudent[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -423,7 +423,7 @@ export class StudentsModel {
             'students.updated_at',
             'people.name' // Adiciona a coluna 'name' da tabela 'people'
           )
-          .leftJoin('people', 'students.person_id', 'people.person_id'); // Faz o left join com a tabela 'people'
+          .leftJoin('people', 'students.person_id', 'people.person_id') // Faz o left join com a tabela 'people'
 
         studentList = results.map((row: any) => ({
           student_id: row.student_id,
@@ -455,30 +455,30 @@ export class StudentsModel {
           union_id: row.union_id,
           marital_status_type_name: row.marital_status_type_name,
           hiring_status_name: row.hiring_status_name,
-          hiring_status_description: row.hiring_status_description,
-        }));
+          hiring_status_description: row.hiring_status_description
+        }))
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.sqlMessage);
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return studentList;
+    return studentList
   }
 
   async updateStudentById(
     updateStudent: IUpdateStudent,
     currentUser: UserFromJwt
   ): Promise<IStudent> {
-    let updatedStudent: IStudent | null = null;
-    let sentError: Error | null = null;
+    let updatedStudent: IStudent | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -499,16 +499,16 @@ export class StudentsModel {
           baptism_place,
           marital_status_id,
           primary_school_state,
-          student_approved,
-        } = updateStudent;
+          student_approved
+        } = updateStudent
 
         const approved = await trx('students')
           .leftJoin('people', 'students.person_id', 'people.person_id')
           .first('*')
-          .where('students.student_id', student_id);
+          .where('students.student_id', student_id)
 
         if (approved.student_approved === true) {
-          throw new Error('Estudante já aprovado.');
+          throw new Error('Estudante já aprovado.')
         }
 
         await trx('students').where('student_id', student_id).update({
@@ -527,96 +527,116 @@ export class StudentsModel {
           baptism_place,
           marital_status_id,
           primary_school_state,
-          student_approved,
-        });
+          student_approved
+        })
 
-        await trx.commit();
+        await trx.commit()
         await this.notificationsService.createNotification({
           action: 'editou',
           agent_name: currentUser.name,
           agentUserId: currentUser.user_id,
           newData: {
-            pessoa: approved.name,
+            pessoa: approved.name
           },
           notificationType: 4,
           objectUserId: currentUser.user_id,
           oldData: {
-            pessoa: '(conferir na página do estudante)',
+            pessoa: '(conferir na página do estudante)'
           },
-          table: 'Estudantes',
-        });
+          table: 'Estudantes'
+        })
       } catch (error) {
-        console.error(error);
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
+        console.error(error)
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    updatedStudent = await this.findStudentById(updateStudent.student_id);
+    updatedStudent = await this.findStudentById(updateStudent.student_id)
     if (updatedStudent === null) {
-      throw new Error('Falha ao atualizar estudante.');
+      throw new Error('Falha ao atualizar estudante.')
     }
 
-    return updatedStudent;
+    return updatedStudent
   }
 
-  async turnStudentActiveToFalse(activeCpfs: string[]): Promise<boolean> {
-    let sentError: Error | null = null;
+  async turnStudentActiveToFalse(
+    activeCpfs: string[],
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         await trx('students')
           .leftJoin('people', 'students.person_id', 'people.person_id')
           .update({
-            student_active: false,
+            student_active: false
           })
-          .whereNotIn('people.cpf', activeCpfs);
+          .whereNotIn('people.cpf', activeCpfs)
 
-        await trx.commit();
+        await trx('students')
+          .leftJoin('people', 'students.person_id', 'people.person_id')
+          .update({
+            student_active: true
+          })
+          .whereIn('people.cpf', activeCpfs)
+
+        await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 8,
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { cpf_ativos: activeCpfs },
+          objectUserId: null,
+          oldData: null,
+          table: 'Estudantes ativos'
+        })
       } catch (error) {
-        console.error('Erro capturado na Model:', error);
-        await trx.rollback();
-        sentError = new Error(error.message);
+        console.error('Erro capturado na Model:', error)
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return true;
+    return true
   }
 
   async deleteStudentById(
     id: number,
     currentUser: UserFromJwt
   ): Promise<string> {
-    let sentError: Error | null = null;
-    let message: string = '';
+    let sentError: Error | null = null
+    let message: string = ''
 
     await this.knex.transaction(async (trx) => {
       try {
         const approved = await trx('students')
           .leftJoin('people', 'students.person_id', 'people.person_id')
           .first('*')
-          .where('students.student_id', id);
+          .where('students.student_id', id)
 
         if (!approved) {
-          throw new Error('Estudante não encontrado.');
+          throw new Error('Estudante não encontrado.')
         }
 
         if (approved.student_approved) {
-          throw new Error('Estudante já aprovado.');
+          throw new Error('Estudante já aprovado.')
         }
 
-        await trx('students').where('student_id', id).del();
+        await trx('students').where('student_id', id).del()
 
-        await trx.commit();
+        await trx.commit()
         await this.notificationsService.createNotification({
           action: 'editou',
           agent_name: currentUser.name,
@@ -625,22 +645,22 @@ export class StudentsModel {
           notificationType: 4,
           objectUserId: currentUser.user_id,
           oldData: {
-            pessoa: approved.name,
+            pessoa: approved.name
           },
-          table: 'Estudantes',
-        });
+          table: 'Estudantes'
+        })
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.message);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    message = 'Estudante excluído com sucesso.';
-    return message;
+    message = 'Estudante excluído com sucesso.'
+    return message
   }
 }
