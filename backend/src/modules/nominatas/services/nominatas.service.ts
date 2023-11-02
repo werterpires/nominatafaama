@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { CreateNominataDto } from '../dto/create-nominata.dto';
-import { UpdateNominataDto } from '../dto/update-nominata.dto';
-import { NominatasModel } from '../model/nominatas.model';
+import { Injectable } from '@nestjs/common'
+import { CreateNominataDto } from '../dto/create-nominata.dto'
+import { UpdateNominataDto } from '../dto/update-nominata.dto'
+import { NominatasModel } from '../model/nominatas.model'
 import {
   IBasicProfessor,
   IBasicStudent,
@@ -11,10 +11,11 @@ import {
   INominata,
   ISinteticProfessor,
   ISinteticStudent,
-  IUpdateNominata,
-} from '../types/types';
-import * as fs from 'fs';
-import { EventsModel } from 'src/modules/events/model/events.model';
+  IUpdateNominata
+} from '../types/types'
+import * as fs from 'fs'
+import { EventsModel } from 'src/modules/events/model/events.model'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class NominatasService {
@@ -23,85 +24,93 @@ export class NominatasService {
     private eventsModel: EventsModel
   ) {}
 
-  async createNominata(dto: CreateNominataDto): Promise<INominata> {
+  async createNominata(
+    dto: CreateNominataDto,
+    currentUser: UserFromJwt
+  ): Promise<INominata> {
     try {
       const createNominataData: ICreateNominata = {
         year: dto.year,
         orig_field_invites_begin: new Date(dto.orig_field_invites_begin),
         director_words: dto.director_words,
-        director: dto.director,
-      };
+        director: dto.director
+      }
 
       const newNominata = await this.nominatasModel.createNominata(
-        createNominataData
-      );
-      return newNominata;
+        createNominataData,
+        currentUser
+      )
+      return newNominata
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
   async addStudentsToNominata(
-    createNominataStudentsData: ICreateNominataStudents
+    createNominataStudentsData: ICreateNominataStudents,
+    currentUser: UserFromJwt
   ): Promise<boolean> {
     try {
-      const { nominata_id, student_id } = createNominataStudentsData;
+      const { nominata_id, student_id } = createNominataStudentsData
       const result = await this.nominatasModel.addStudentsToNominata(
         student_id,
-        nominata_id
-      );
-      return result;
+        nominata_id,
+        currentUser
+      )
+      return result
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
 
   async addProfessorsToNominata(
-    createNominataProfessorsData: ICreateNominataProfessors
+    createNominataProfessorsData: ICreateNominataProfessors,
+    currentUser: UserFromJwt
   ): Promise<boolean> {
     try {
-      const { nominata_id, professor_id } = createNominataProfessorsData;
+      const { nominata_id, professor_id } = createNominataProfessorsData
       const result = await this.nominatasModel.addProfessorsToNominata(
         professor_id,
-        nominata_id
-      );
-      return result;
+        nominata_id,
+        currentUser
+      )
+      return result
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
 
   async findNominataByYear(year: string): Promise<INominata> {
     try {
-      const nominata = await this.nominatasModel.findNominataByYear(year);
+      const nominata = await this.nominatasModel.findNominataByYear(year)
       let photosInfo: {
-        fileStream: fs.ReadStream | null;
-        headers: Record<string, string>;
-      }[] = [];
+        fileStream: fs.ReadStream | null
+        headers: Record<string, string>
+      }[] = []
 
       if (nominata) {
-        const { nominata_id } = nominata;
+        const { nominata_id } = nominata
 
         // const photo = await this.findNominaPhoto(nominata.class_photo);
         // nominata.photo = photo;
 
-        const students = await this.findNominataBasicStudents(nominata_id);
-        nominata.students = students;
+        const students = await this.findNominataBasicStudents(nominata_id)
+        nominata.students = students
 
-        const professors = await this.findNominataBasicProfessors(nominata_id);
-        nominata.professors = professors;
+        const professors = await this.findNominataBasicProfessors(nominata_id)
+        nominata.professors = professors
 
         const events = await this.eventsModel.findAllEventsByNominataId(
           nominata_id
-        );
-        nominata.events = events;
+        )
+        nominata.events = events
       }
 
-      return nominata as INominata;
+      return nominata as INominata
     } catch (error) {
       throw new Error(
         `Não foi possível encontrar uma nominata com ano ${year}: ${error.message}`
-      );
+      )
     }
   }
 
@@ -111,10 +120,10 @@ export class NominatasService {
     try {
       let students = await this.nominatasModel.findAllNominataBasicStudents(
         nominata_id
-      );
+      )
 
       if (students == null) {
-        return null;
+        return null
       }
 
       // for (const student of students) {
@@ -155,10 +164,10 @@ export class NominatasService {
       //   }
       // }
 
-      return students;
+      return students
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
   }
 
@@ -166,46 +175,46 @@ export class NominatasService {
     address: string | null
   ): Promise<{ file: Buffer; headers: Record<string, string> } | null> {
     try {
-      let photo: { file: Buffer; headers: Record<string, string> } | null;
+      let photo: { file: Buffer; headers: Record<string, string> } | null
       if (!address) {
-        return null;
+        return null
       } else {
-        const filePath = `./src/modules/nominatas/files/${address}`;
+        const filePath = `./src/modules/nominatas/files/${address}`
 
         if (!fs.existsSync(filePath)) {
-          return null;
+          return null
         }
-        const fileStream = fs.createReadStream(filePath);
+        const fileStream = fs.createReadStream(filePath)
         const headers = {
           'Content-Type': 'image/jpeg',
-          'Content-Disposition': `attachment; filename=${address}`,
-        };
+          'Content-Disposition': `attachment; filename=${address}`
+        }
 
         const filePromise = new Promise<Buffer>((resolve, reject) => {
-          const chunks: Buffer[] = [];
+          const chunks: Buffer[] = []
           fileStream.on('data', (chunk: Buffer) => {
-            chunks.push(chunk);
-          });
+            chunks.push(chunk)
+          })
           fileStream.on('end', () => {
-            const file = Buffer.concat(chunks);
-            resolve(file);
-          });
+            const file = Buffer.concat(chunks)
+            resolve(file)
+          })
           fileStream.on('error', (error: Error) => {
-            reject(error);
-          });
-        });
+            reject(error)
+          })
+        })
 
-        const file = await filePromise;
+        const file = await filePromise
         photo = {
           file,
-          headers,
-        };
+          headers
+        }
       }
 
-      return photo;
+      return photo
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
   }
 
@@ -215,10 +224,10 @@ export class NominatasService {
     try {
       let professors = await this.nominatasModel.findAllNominataBasicProfessors(
         nominata_id
-      );
+      )
 
       if (professors == null) {
-        return null;
+        return null
       }
       // for (const professor of professors) {
       //   if (professor.professor_photo_address == null) {
@@ -258,84 +267,87 @@ export class NominatasService {
       //   }
       // }
 
-      return professors;
+      return professors
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
   }
 
   async findAllNominatas(): Promise<INominata[]> {
     try {
-      const nominatas = await this.nominatasModel.findAllNominatas();
-      return nominatas;
+      const nominatas = await this.nominatasModel.findAllNominatas()
+      return nominatas
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
   async findAllNOminataStudents(): Promise<ISinteticStudent[]> {
     try {
-      const students = await this.nominatasModel.findAllNominataStudents();
-      return students;
+      const students = await this.nominatasModel.findAllNominataStudents()
+      return students
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
   async findAllNOminataProfessors(): Promise<ISinteticProfessor[]> {
     try {
-      const professors = await this.nominatasModel.findAllNominataProfessors();
+      const professors = await this.nominatasModel.findAllNominataProfessors()
 
-      return professors;
+      return professors
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
   async findNominataPhotoByNominataId(nominataId: number): Promise<{
-    fileStream: fs.ReadStream | null;
-    headers: Record<string, string>;
+    fileStream: fs.ReadStream | null
+    headers: Record<string, string>
   }> {
     try {
       const address = await this.nominatasModel.findNominataPhotoByNominataId(
         nominataId
-      );
+      )
 
       if (address == null) {
         return {
           fileStream: null,
           headers: {
             'Content-Type': 'image/jpeg',
-            'Content-Disposition': `attachment; filename`,
-          },
-        };
+            'Content-Disposition': `attachment; filename`
+          }
+        }
       }
 
-      const filePath = `./src/modules/nominatas/files/${address}`;
+      const filePath = `./src/modules/nominatas/files/${address}`
 
       if (fs.existsSync(filePath)) {
-        const fileStream = fs.createReadStream(filePath);
+        const fileStream = fs.createReadStream(filePath)
         const headers = {
           'Content-Type': 'image/jpeg',
-          'Content-Disposition': `attachment; filename=${address}`,
-        };
-        return { fileStream, headers };
+          'Content-Disposition': `attachment; filename=${address}`
+        }
+        return { fileStream, headers }
       } else {
-        return { fileStream: null, headers: {} };
+        return { fileStream: null, headers: {} }
       }
     } catch (error) {
       console.error(
         'Erro capturado no ProfessorService findProfessorPhotoByStudentId: ',
         error
-      );
-      throw error;
+      )
+      throw error
     }
   }
 
-  async updateNominataById(input: UpdateNominataDto): Promise<INominata> {
-    let updatedNominata: INominata | null = null;
-    let sentError: Error | null = null;
+  async updateNominataById(
+    input: UpdateNominataDto,
+    currentUser: UserFromJwt
+  ): Promise<INominata> {
+    let updatedNominata: INominata | null = null
+    let sentError: Error | null = null
 
     try {
       const updateNominataData: IUpdateNominata = {
@@ -343,72 +355,85 @@ export class NominatasService {
         orig_field_invites_begin: new Date(input.orig_field_invites_begin),
         year: input.year,
         director_words: input.director_words,
-      };
+        director: input.director
+      }
 
       updatedNominata = await this.nominatasModel.updateNominataById(
-        updateNominataData
-      );
+        updateNominataData,
+        currentUser
+      )
     } catch (error) {
-      sentError = new Error(error.message);
+      sentError = new Error(error.message)
     }
 
     if (sentError !== null) {
-      throw sentError;
+      throw sentError
     }
 
     if (updatedNominata === null) {
-      throw new Error('O grau acadêmico não pôde ser atualizado.');
+      throw new Error('O grau acadêmico não pôde ser atualizado.')
     }
 
-    return updatedNominata;
+    return updatedNominata
   }
 
   async createNominataPhoto(
     nominataId: number,
-    filename: string
+    filename: string,
+    currentUser: UserFromJwt
   ): Promise<null | number> {
     try {
-      const nominata = await this.nominatasModel.findNominataById(nominataId);
+      const nominata = await this.nominatasModel.findNominataById(nominataId)
 
       if (nominata == null) {
-        throw new Error('Nominata não encontrada');
+        throw new Error('Nominata não encontrada')
       }
 
-      const oldFile = nominata.class_photo;
+      const oldFile = nominata.class_photo
 
       if (oldFile != null && oldFile.length > 5) {
-        const filePath = `./src/modules/nominatas/files/${oldFile}`;
+        const filePath = `./src/modules/nominatas/files/${oldFile}`
 
         const fileExists = await fs.promises
           .access(filePath)
           .then(() => true)
-          .catch(() => false);
+          .catch(() => false)
 
         if (fileExists) {
-          await fs.promises.unlink(filePath);
+          await fs.promises.unlink(filePath)
         }
       }
 
-      const nominata_id = nominata.nominata_id;
+      const nominata_id = nominata.nominata_id
 
-      this.nominatasModel.updateNominataPhoto(filename, nominata_id);
+      this.nominatasModel.updateNominataPhoto(
+        filename,
+        nominata_id,
+        currentUser
+      )
 
-      return 1;
+      return 1
     } catch (error) {
       console.error(
         'Erro capturado no NominatasService createNominataPhoto: ',
         error
-      );
-      throw error;
+      )
+      throw error
     }
   }
 
-  async deleteNominataById(id: number): Promise<string> {
+  async deleteNominataById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      const message = await this.nominatasModel.deleteNominataById(id);
-      return message;
+      const message = await this.nominatasModel.deleteNominataById(
+        id,
+        currentUser
+      )
+      return message
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 }
