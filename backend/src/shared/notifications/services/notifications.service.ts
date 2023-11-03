@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { CreateNotificationDto } from '../dto/create-notification.dto'
 import { UpdateNotificationDto } from '../dto/update-notification.dto'
 import {
   ICreateNotification,
@@ -9,11 +8,12 @@ import {
 import { ApprovedBy } from 'src/modules/users/hz_maps/users.maps'
 import { NotificationsModel } from '../model/notifications.model'
 import { UserFromJwt } from 'src/shared/auth/types/types'
-import { log } from 'console'
+import * as cron from 'node-cron'
 
 @Injectable()
 export class NotificationsService {
   constructor(private notificationsModel: NotificationsModel) {}
+
   async createNotification(
     notificationData: INotificationData
   ): Promise<boolean> {
@@ -776,6 +776,10 @@ export class NotificationsService {
       console.error(error.message)
       throw new Error(error.message)
     }
+  }
+
+  sendNotification() {
+    console.log('Olha a hora')
   }
 
   findAll() {

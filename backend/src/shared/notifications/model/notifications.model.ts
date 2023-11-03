@@ -4,7 +4,8 @@ import { InjectModel } from 'nest-knexjs'
 import {
   ICreateNotification,
   INotification,
-  IUserNotification
+  IUserNotification,
+  IcompleteNotification
 } from '../types/types'
 
 @Injectable()
@@ -158,6 +159,40 @@ export class NotificationsModel {
       throw new Error(error.sqlMessage)
     }
   }
+
+  async findUserSentNotifications(
+    sent: boolean
+  ): Promise<IcompleteNotification[]> {
+    try {
+      const notifications = await this.knex
+        .table('users_notifications')
+        .andWhere('sent', '=', sent)
+        .leftJoin(
+          'notifications',
+          'users_notifications.notification_id',
+          'notifications.notification_id'
+        )
+        .leftJoin(
+          'users',
+          'users_notifications.notified_user_id',
+          'users.user_id'
+        )
+        .leftJoin('people', 'users.person_id', 'people.person_id')
+        .select(
+          'users_notifications.*',
+          'notifications.*',
+          'users.principal_email',
+          'people.name'
+        )
+        .orderBy('users_notifications.created_at', 'asc')
+        .limit(10)
+
+      return notifications
+    } catch (error) {
+      console.error(error)
+      throw new Error(error.sqlMessage)
+    }
+  }
   async setRead(userNotificationId: number): Promise<boolean> {
     let sentError: Error | null = null
 
@@ -186,5 +221,58 @@ export class NotificationsModel {
     }
 
     return true!
+  }
+
+  async setSent(userNotificationId: number[]): Promise<boolean> {
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        await trx('users_notifications')
+          .whereIn('user_notification_id', userNotificationId)
+          .update({
+            sent: true
+          })
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return true!
+  }
+
+  async deleteNotification(): Promise<boolean> {
+    try {
+      this.knex.transaction(async (trx) => {
+        await trx('users_notifications')
+          .del()
+          .where(
+            'created_at',
+            '<',
+            this.knex.raw('DATE_SUB(NOW(), INTERVAL 10 DAY)')
+          )
+
+        await trx('notifications')
+          .del()
+          .where(
+            'created_at',
+            '<',
+            this.knex.raw('DATE_SUB(NOW(), INTERVAL 4 YEAR)')
+          )
+      })
+
+      return true
+    } catch (error) {
+      console.error(error)
+      throw new Error(error.message)
+    }
   }
 }
