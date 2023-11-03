@@ -36,6 +36,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "nest-knexjs": "^0.0.12",
+    "node-cron": "^3.0.2",
     "nodemailer": "^6.9.3",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
