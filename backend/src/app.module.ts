@@ -23,6 +23,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as Nodemailer from 'nodemailer';
 import { NotificationsService } from './shared/notifications/services/notifications.service';
+import { SendEmailModule } from './shared/send-email/send-email.module';
 
 config();
 
@@ -99,6 +100,7 @@ const mssqlConfig: KnexModuleOptions = {
     VacanciesModule,
     TermsModule,
     NotificationsModule,
+    SendEmailModule,
   ],
   providers: [
     {
