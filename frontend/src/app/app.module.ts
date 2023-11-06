@@ -30,6 +30,7 @@ import { SpousesComponent } from './components/records/spouses/spouses.component
 import { StudentAcademicFormationsComponent } from './components/records/student-academic-formations/student-academic-formations.component'
 import { StudentsComponent } from './components/records/students/students.component'
 import { ProfessorsComponent } from './components/records/professors/professors.component'
+import { FieldRepsComponent } from './components/records/field-reps/field-reps.component'
 import { UnionsComponent } from './components/records/unions/unions.component'
 import { ConfirmationDialogComponent } from './components/shared/confirmation-dialog/confirmation-dialog.component'
 import { ContainerComponent } from './components/shared/container/container.component'
@@ -78,8 +79,8 @@ import { ScrollToAnchorDirective } from './components/nominata/scroll-to-anchor.
 import { VacanciesComponent } from './components/vacancies/vacancies.component'
 import { ModalVacancyComponent } from './components/modal-vacancy/modal-vacancy.component'
 import { ModalTermComponent } from './components/modal-term/modal-term.component'
-import { UnactiveComponent } from './components/parameterization/unactive/unactive.component';
-import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component';
+import { UnactiveComponent } from './components/parameterization/unactive/unactive.component'
+import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component'
 import { NotificationsComponent } from './components/shared/notifications/notifications.component'
 
 @NgModule({
@@ -145,6 +146,7 @@ import { NotificationsComponent } from './components/shared/notifications/notifi
     UsersComponent,
     ParameterizationComponent,
     ProfessorsComponent,
+    FieldRepsComponent,
     NominatasComponent,
     NominatasStudentsComponent,
     NominatasProfessorsComponent,

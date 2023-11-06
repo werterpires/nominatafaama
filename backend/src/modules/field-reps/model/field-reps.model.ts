@@ -96,7 +96,12 @@ export class FieldRepsModel {
         .where('users.user_id', userId)
 
       if (result != null) {
-        fieldRep = result
+        fieldRep = {
+          personId: result.person_id,
+          personName: result.person_name,
+          phoneNumber: result.phone_number,
+          repId: result.rep_id
+        }
       }
     } catch (error) {
       console.error('Esse é o erro capturado na model: ', error)

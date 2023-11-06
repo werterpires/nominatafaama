@@ -66,7 +66,7 @@ export class FieldRepsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
   @Delete(':id')
   async deleteStudentById(
     @Param('id') id: number,

@@ -172,5 +172,9 @@
       *ngIf="permissions.docente || permissions.administrador"
       [permissions]="permissions"
     ></app-small-alone-professor-photos>
+    <app-field-reps
+      *ngIf="permissions.representacao || permissions.administrador"
+      [permissions]="permissions"
+    ></app-field-reps>
   </div>
 </app-container>

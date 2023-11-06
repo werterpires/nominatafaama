@@ -1,0 +1,92 @@
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="toShowBox()">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIcon"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+  </div>
+  <section class="formCreationWrapper" *ngIf="showForm && showBox">
+    <app-creation-form
+      *ngIf="!registry?.repId"
+      (save)="showAlert('create', 'Confirmar a criação deste item?')"
+    >
+      <label class="inputLabel w-full">
+        Número de telefone:
+
+        <input
+          class="largeInput"
+          name="justificationInput"
+          placeholder="(98) 98765-4321"
+          (input)="formatarTelefone()"
+          [(ngModel)]="registry.phoneNumber"
+        />
+      </label>
+    </app-creation-form>
+  </section>
+  <section *ngIf="showBox" class="registriesWrapper">
+    <app-update-form
+      (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
+      *ngIf="registry.repId"
+    >
+      <label class="inputLabel w-full">
+        Número de telefone:
+        <input
+          class="largeInput"
+          name="justificationInput"
+          placeholder="(98) 98765-4321"
+          (input)="formatarTelefone()"
+          [(ngModel)]="registry.phoneNumber"
+        />
+      </label>
+    </app-update-form>
+  </section>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
