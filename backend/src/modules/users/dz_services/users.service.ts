@@ -4,7 +4,6 @@ import { UsersModel } from '../ez_model/users.model'
 import * as bcrypt from 'bcrypt'
 import {
   IAproveUser,
-  IBasicUser,
   ICreateUser,
   IUpdateUser,
   IUser,
@@ -209,7 +208,7 @@ export class UsersService {
         email
       )
 
-      if (foundUser == 0) {
+      if (foundUser === 0) {
         return true
       } else if (foundUser == 2) {
         return false
