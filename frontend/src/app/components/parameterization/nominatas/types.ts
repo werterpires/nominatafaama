@@ -3,6 +3,7 @@ export interface INominata {
   year: string
   orig_field_invites_begin: string
   director_words: string
+  director: number
   created_at: Date
   updated_at: Date
 }
@@ -11,6 +12,7 @@ export interface ICreateNominataDto {
   year: string
   orig_field_invites_begin: string
   director_words: string
+  director: number
 }
 
 export interface IUpdateNominata {
@@ -18,4 +20,5 @@ export interface IUpdateNominata {
   year: string
   orig_field_invites_begin: string
   director_words: string
+  director: number
 }

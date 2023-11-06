@@ -1,7 +1,11 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { AcademicDegreeService } from './academic-degrees.service'
-import { IAcademicDegree, ICreateAcademicDegreeDto } from './types'
+import {
+  IAcademicDegree,
+  ICreateAcademicDegreeDto,
+  IUpdateAcademicDegree,
+} from './types'
 
 @Component({
   selector: 'app-academic-degrees',
@@ -87,8 +91,12 @@ export class AcademicDegreesComponent {
 
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
+    const updateData: IUpdateAcademicDegree = {
+      degree_id: this.allRegistries[index].degree_id,
+      degree_name: this.allRegistries[index].degree_name,
+    }
 
-    this.service.updateRegistry(this.allRegistries[index]).subscribe({
+    this.service.updateRegistry(updateData).subscribe({
       next: (res) => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true

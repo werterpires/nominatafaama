@@ -2,17 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { ICreateDirectVacancy } from '../types/types';
-import { IHiringField } from 'src/modules/nominatas/types/types';
-import { error } from 'console';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class VacanciesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createDirectVacancy(
-    createDirectVacancy: ICreateDirectVacancy
+    createDirectVacancy: ICreateDirectVacancy,
+    currentUser: UserFromJwt
   ): Promise<boolean> {
-    let directVacancy: ICreateDirectVacancy | null = null;
     let sentError: Error | null = null;
 
     await this.knex.transaction(async (trx) => {
@@ -28,6 +29,8 @@ export class VacanciesModel {
           hiring_status_id,
         } = createDirectVacancy;
 
+        let vacancy_id: number | null = null;
+
         const acceptedInviteWhithoutRepId = await trx('vacancies')
           .first('*')
           .leftJoin(
@@ -40,7 +43,9 @@ export class VacanciesModel {
             'vacancies_students.vacancy_student_id',
             'invites.vacancy_student_id'
           )
-          .where('vacancies_students.student_id', student_id);
+          .where('vacancies_students.student_id', student_id)
+          .andWhere('vacancies.rep_id', null)
+          .andWhere('invites.accept', true);
 
         if (acceptedInviteWhithoutRepId) {
           await trx('vacancies')
@@ -60,7 +65,7 @@ export class VacanciesModel {
               .where('invite_id', acceptedInviteWhithoutRepId.invite_id);
           }
         } else {
-          const [vacancy_id] = await trx('vacancies')
+          [vacancy_id] = await trx('vacancies')
             .insert({
               title,
               description,
@@ -87,6 +92,55 @@ export class VacanciesModel {
           .where('student_id', student_id);
 
         await trx.commit();
+
+        const realVacancyId = vacancy_id
+          ? vacancy_id
+          : acceptedInviteWhithoutRepId.vacancy_id;
+
+        const personAndOthers = await this.knex('vacancies')
+          .leftJoin(
+            'vacancies_students',
+            'vacancies_students.vacancy_id',
+            'vacancies.vacancy_id'
+          )
+          .leftJoin(
+            'students',
+            'students.student_id',
+            'vacancies_students.student_id'
+          )
+          .leftJoin(
+            'hiring_status',
+            'students.hiring_status_id',
+            'hiring_status.hiring_status_id'
+          )
+          .leftJoin(
+            'associations',
+            'associations.association_id',
+            'vacancies.field_id'
+          )
+          .leftJoin('users', 'students.person_id', 'users.person_id')
+          .first(
+            'hiring_status_name',
+            'associations.association_name',
+            'users.user_id'
+          )
+          .where('vacancies.vacancy_id', realVacancyId);
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            titulo: title,
+            descricao: description,
+            campo: personAndOthers.association_name,
+            situacao: personAndOthers.hiring_status_name,
+          },
+          notificationType: 6,
+          objectUserId: personAndOthers.user_id,
+          oldData: null,
+          table: 'vagas',
+        });
       } catch (error) {
         await trx.rollback();
         if (error.code === 'ER_DUP_ENTRY') {

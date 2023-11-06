@@ -15,7 +15,10 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
   </div>
-  <section class="formCreationWrapper" *ngIf="allRegistries.length < 1">
+  <section
+    class="formCreationWrapper"
+    *ngIf="allRegistries.length < 1 && showBox"
+  >
     <app-creation-form
       (save)="showAlert('create', 'Confirmar a criação deste item?', 0)"
     >
@@ -40,7 +43,10 @@
       </div>
     </app-creation-form>
   </section>
-  <section class="formCreationWrapper" *ngIf="allRegistries.length === 1">
+  <section
+    class="formCreationWrapper"
+    *ngIf="allRegistries.length === 1 && showBox"
+  >
     <app-creation-form
       (save)="showAlert('create', 'Confirmar a criação deste item?', 1)"
     >
@@ -64,7 +70,10 @@
       </div>
     </app-creation-form>
   </section>
-  <section class="formCreationWrapper" *ngIf="allRegistries.length === 2">
+  <section
+    class="formCreationWrapper"
+    *ngIf="allRegistries.length === 2 && showBox"
+  >
     <app-creation-form
       (save)="showAlert('create', 'Confirmar a criação deste item?', 2)"
     >

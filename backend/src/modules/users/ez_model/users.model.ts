@@ -11,11 +11,15 @@ import {
 } from '../bz_types/types';
 import { IRole } from 'src/shared/roles/bz_types/types';
 import { ITerm } from 'src/shared/terms/types/types';
-import { Term } from 'src/shared/terms/entities/term.entity';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class UsersModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  constructor(
+    @InjectModel() private readonly knex: Knex,
+    private notificationsService: NotificationsService
+  ) {}
 
   async createUser({
     name,
@@ -103,7 +107,29 @@ export class UsersModel {
           await trx('terms_users').insert(termUsers);
         }
 
+        const papeis = await trx('roles')
+          .select('role_name')
+          .whereIn('role_id', role_id);
+
         await trx.commit();
+
+        const ok = await this.notificationsService.createNotification({
+          action: 'se cadastrou',
+          agent_name: name,
+          agentUserId: user_id,
+          newData: {
+            nome: name,
+            papeis: papeis,
+          },
+          objectUserId: null,
+          table: null,
+          notificationType: 1,
+          oldData: null,
+        });
+
+        if (!ok) {
+          throw new Error('Erro ao criar notificação');
+        }
       } catch (error) {
         console.error(error);
         await trx.rollback();
@@ -718,10 +744,10 @@ export class UsersModel {
     return users;
   }
 
-  async aproveUserById({
-    user_id,
-    user_approved,
-  }: IAproveUser): Promise<IAproveUser> {
+  async aproveUserById(
+    { user_id, user_approved }: IAproveUser,
+    currentUser: UserFromJwt
+  ): Promise<IAproveUser> {
     let sentError: Error | null = null;
     let user: IAproveUser | null = null;
     const result = await this.knex.transaction(async (trx) => {
@@ -741,17 +767,36 @@ export class UsersModel {
         }
 
         // Realiza a consulta do usuário atualizado
-        const [result] = await trx
+        const result = await trx
           .table('users')
-          .select('user_id', 'user_approved')
-          .where('user_id', '=', user_id);
+          .select(
+            'users.user_id',
+            'user_approved',
+            'roles.role_name',
+            'people.name'
+          )
+          .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
+          .leftJoin('roles', 'users_roles.role_id', 'roles.role_id')
+          .leftJoin('people', 'users.person_id', 'people.person_id')
+          .where('users.user_id', '=', user_id);
 
         user = {
-          user_id: result.user_id,
-          user_approved: result.user_approved,
+          user_id: result[0].user_id,
+          user_approved: result[0].user_approved,
         };
 
         await trx.commit();
+        const roles = result.map((role) => role.role_name);
+        this.notificationsService.createNotification({
+          notificationType: 2,
+          action: user_approved ? 'aprovou' : 'rejeitou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { papeis: roles, nome: result[0].name },
+          oldData: null,
+          objectUserId: user_id,
+          table: null,
+        });
         return user;
       } catch (error) {
         console.error(error);

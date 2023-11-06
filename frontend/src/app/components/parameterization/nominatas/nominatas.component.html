@@ -45,6 +45,23 @@
         </label>
       </div>
       <div class="subSection">
+        <label for="" class="inputLabel"
+          >Diretor
+          <select
+            name="nominataDirectorInput"
+            id=""
+            [(ngModel)]="createRegistryData.director"
+          >
+            <option
+              *ngFor="let professor of allProfessors"
+              [value]="professor.professor_id"
+            >
+              {{ professor.name }}
+            </option>
+          </select>
+        </label>
+      </div>
+      <div class="subSection">
         <label class="inputLabel">
           Palavras do diretor<textarea
             class="largeTextArea mediumInput"
@@ -78,6 +95,24 @@
             name="nominataBeginInput"
             [(ngModel)]="registry.orig_field_invites_begin"
           />
+        </label>
+      </div>
+      <div class="subSection">
+        <label for="" class="inputLabel"
+          >Diretor
+          <select
+            name="nominataDirectorInput"
+            id=""
+            [(ngModel)]="registry.director"
+          >
+            <option
+              *ngFor="let professor of allProfessors"
+              [value]="professor.professor_id"
+              [selected]="professor.professor_id === registry.director"
+            >
+              {{ professor.name }}
+            </option>
+          </select>
         </label>
       </div>
       <label class="inputLabel">

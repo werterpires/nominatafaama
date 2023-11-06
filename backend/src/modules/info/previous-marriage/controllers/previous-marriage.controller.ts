@@ -7,16 +7,19 @@ import {
   Post,
   Put,
   UseGuards,
-} from '@nestjs/common'
-import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
-import { ERoles } from 'src/shared/auth/types/roles.enum'
-import { UserFromJwt } from 'src/shared/auth/types/types'
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
-import { CreatePreviousMarriageDto } from '../dto/create-previous-marriage.dto'
-import { UpdatePreviousMarriageDto } from '../dto/update-previous-marriage.dto'
-import { IPreviousMarriage } from '../types/types'
-import { PreviousMarriagesService } from '../services/previous-marriage.service'
+} from '@nestjs/common';
+import {
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
+import { ERoles } from 'src/shared/auth/types/roles.enum';
+import { UserFromJwt } from 'src/shared/auth/types/types';
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
+import { CreatePreviousMarriageDto } from '../dto/create-previous-marriage.dto';
+import { UpdatePreviousMarriageDto } from '../dto/update-previous-marriage.dto';
+import { IPreviousMarriage } from '../types/types';
+import { PreviousMarriagesService } from '../services/previous-marriage.service';
 
 @Controller('previous-marriages')
 export class PreviousMarriagesController {
@@ -26,59 +29,62 @@ export class PreviousMarriagesController {
   @Post()
   async createPreviousMarriage(
     @Body() input: CreatePreviousMarriageDto,
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const { user_id } = user
+      const { user_id } = currentUser;
       const previousMarriage =
         await this.previousMarriagesService.createPreviousMarriage(
           input,
           user_id,
-        )
-      return previousMarriage
+          currentUser
+        );
+      return previousMarriage;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO, ERoles.DOCENTE)
   @Get('student')
   async findPreviousMarriagesByStudentId(
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() user: UserFromJwt
   ): Promise<IPreviousMarriage[]> {
     try {
-      const { user_id } = user
+      const { user_id } = user;
       const previousMarriages =
         await this.previousMarriagesService.findPreviousMarriagesByStudentId(
-          user_id,
-        )
+          user_id
+        );
 
       if (!previousMarriages) {
-        throw new NotFoundException(`No previous marriages found for student.`)
+        throw new NotFoundException(`No previous marriages found for student.`);
       }
 
-      return previousMarriages
+      return previousMarriages;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get(':id')
   async findPreviousMarriageById(
-    @Param('id') id: number,
+    @Param('id') id: number
   ): Promise<IPreviousMarriage> {
     try {
       const previousMarriage =
-        await this.previousMarriagesService.findPreviousMarriageById(id)
+        await this.previousMarriagesService.findPreviousMarriageById(id);
 
       if (!previousMarriage) {
-        throw new NotFoundException(`No previous marriage found with id ${id}.`)
+        throw new NotFoundException(
+          `No previous marriage found with id ${id}.`
+        );
       }
 
-      return previousMarriage
+      return previousMarriage;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -87,10 +93,10 @@ export class PreviousMarriagesController {
   async findAllPreviousMarriages(): Promise<IPreviousMarriage[]> {
     try {
       const previousMarriages =
-        await this.previousMarriagesService.findAllPreviousMarriages()
-      return previousMarriages
+        await this.previousMarriagesService.findAllPreviousMarriages();
+      return previousMarriages;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -98,25 +104,35 @@ export class PreviousMarriagesController {
   @Put()
   async updatePreviousMarriageById(
     @Body() input: UpdatePreviousMarriageDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IPreviousMarriage> {
     try {
       const updatedPreviousMarriage =
-        await this.previousMarriagesService.updatePreviousMarriageById(input)
-      return updatedPreviousMarriage
+        await this.previousMarriagesService.updatePreviousMarriageById(
+          input,
+          currentUser
+        );
+      return updatedPreviousMarriage;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO)
   @Delete(':id')
-  async deletePreviousMarriageById(@Param('id') id: number) {
+  async deletePreviousMarriageById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const message =
-        await this.previousMarriagesService.deletePreviousMarriageById(id)
-      return { message }
+        await this.previousMarriagesService.deletePreviousMarriageById(
+          id,
+          currentUser
+        );
+      return { message };
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

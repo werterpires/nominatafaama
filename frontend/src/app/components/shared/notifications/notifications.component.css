@@ -1,0 +1,147 @@
+.notificationsModal {
+  width: 30vw;
+  height: calc(100vh - 84px);
+  position: fixed;
+  padding-left: 8px;
+  padding-right: 4px;
+
+  background-color: #0d3362;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  gap: 0.5rem;
+  right: 0px;
+}
+
+.notifications {
+  background-color: #e1e1e3;
+  height: 100%;
+  /* padding: 5px; */
+}
+
+.choseReadDiv {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.readOption {
+  width: 92px;
+  border: #0d3362 1px solid;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  color: #0d3362;
+  text-align: center;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 100;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.selectedReadOption {
+  background-color: #0d3362;
+  color: white;
+}
+.notificationAllreadClick {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 100;
+  font-size: 11px;
+  color: #0d3362;
+}
+
+.notificationsList {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+  height: 91%;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* .notificationsList::-webkit-scrollbar {
+  background-color: unset;
+  background-color: #0d3362;
+  width: 10px;
+}
+.notificationsList::-webkit-scrollbar-thumb {
+  background-color: white;
+} */
+
+.notificationListItem {
+  padding: 5px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 100;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  color: #0d3362;
+  border-bottom: 3px solid #0d3362;
+}
+
+.notificationListItem:first-child {
+  border-top: 3px solid #0d3362;
+}
+
+.notificationsDivision {
+  height: 3px;
+  background-color: #0d3362;
+
+  border: none;
+  margin: 20px 0px 0px 0px;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.notificationCheck {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 5px solid #0d3362;
+  transition: transform 0.3s ease;
+  margin: 0;
+  cursor: pointer;
+}
+
+.notificationCheck:checked {
+  border-color: green;
+  background-color: green;
+}
+
+.notificationCheck::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: white;
+  margin: 4px;
+  visibility: hidden;
+}
+
+.notificationIcon {
+  height: 27px;
+}
+
+.notificationClick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

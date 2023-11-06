@@ -7,16 +7,19 @@ import {
   Post,
   Put,
   UseGuards,
-} from '@nestjs/common'
-import { CreateAcademicFormationDto } from '../dto/create-academic-formation.dto'
-import { UpdateAcademicFormationDto } from '../dto/update-academic-formation.dto'
-import { AcademicFormationsService } from '../services/academic-formations.service'
-import { IAcademicFormation } from '../types/types'
-import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
-import { ERoles } from 'src/shared/auth/types/roles.enum'
-import { UserFromJwt } from 'src/shared/auth/types/types'
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+} from '@nestjs/common';
+import { CreateAcademicFormationDto } from '../dto/create-academic-formation.dto';
+import { UpdateAcademicFormationDto } from '../dto/update-academic-formation.dto';
+import { AcademicFormationsService } from '../services/academic-formations.service';
+import { IAcademicFormation } from '../types/types';
+import {
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
+import { ERoles } from 'src/shared/auth/types/roles.enum';
+import { UserFromJwt } from 'src/shared/auth/types/types';
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
 
 @Controller('academic-formations')
 export class AcademicFormationsController {
@@ -26,18 +29,19 @@ export class AcademicFormationsController {
   @Post('student')
   async createStudentAcademicFormation(
     @Body() input: CreateAcademicFormationDto,
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() currentUser: UserFromJwt
   ) {
-    const id = user.user_id
+    const id = currentUser.user_id;
     try {
       const academicFormation =
         await this.academicFormationsService.createStudentAcademicFormation(
           input,
           id,
-        )
-      return academicFormation
+          currentUser
+        );
+      return academicFormation;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -45,64 +49,65 @@ export class AcademicFormationsController {
   @Post('spouse')
   async createSpouseAcademicFormation(
     @Body() input: CreateAcademicFormationDto,
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() currentUser: UserFromJwt
   ) {
-    const id = user.user_id
+    const id = currentUser.user_id;
     try {
       const academicFormation =
         await this.academicFormationsService.createSpouseAcademicFormation(
           input,
           id,
-        )
-      return academicFormation
+          currentUser
+        );
+      return academicFormation;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('student')
   async findStudentAcademicFormationsByPersonId(
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() user: UserFromJwt
   ): Promise<IAcademicFormation[]> {
     try {
-      const user_id = user.user_id
+      const user_id = user.user_id;
 
       const academicFormations =
         await this.academicFormationsService.findStudentAcademicFormationByPersonId(
-          user_id,
-        )
+          user_id
+        );
 
       if (!academicFormations) {
         throw new NotFoundException(
-          `No academic formations found for user with id ${user_id}.`,
-        )
+          `No academic formations found for user with id ${user_id}.`
+        );
       }
-      return academicFormations
+      return academicFormations;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('spouse')
   async findSpouseAcademicFormationsByPersonId(
-    @CurrentUser() user: UserFromJwt,
+    @CurrentUser() user: UserFromJwt
   ): Promise<IAcademicFormation[]> {
     try {
-      const user_id = user.user_id
+      const user_id = user.user_id;
       const academicFormations =
         await this.academicFormationsService.findSpouseAcademicFormationByPersonId(
-          user_id,
-        )
+          user_id
+        );
       if (!academicFormations) {
         throw new NotFoundException(
-          `No academic formations found for user with id ${user_id}.`,
-        )
+          `No academic formations found for user with id ${user_id}.`
+        );
       }
-      return academicFormations
+      return academicFormations;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -111,10 +116,10 @@ export class AcademicFormationsController {
   async findAllAcademicFormations(): Promise<IAcademicFormation[]> {
     try {
       const academicFormations =
-        await this.academicFormationsService.findAllAcademicFormations()
-      return academicFormations
+        await this.academicFormationsService.findAllAcademicFormations();
+      return academicFormations;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -122,25 +127,35 @@ export class AcademicFormationsController {
   @Put()
   async updateAcademicFormationById(
     @Body() input: UpdateAcademicFormationDto,
+    @CurrentUser() currentUser: UserFromJwt
   ): Promise<IAcademicFormation> {
     try {
       const updatedAcademicFormation =
-        await this.academicFormationsService.updateAcademicFormationById(input)
-      return updatedAcademicFormation
+        await this.academicFormationsService.updateAcademicFormationById(
+          input,
+          currentUser
+        );
+      return updatedAcademicFormation;
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteAcademicFormationById(@Param('id') id: number) {
+  async deleteAcademicFormationById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const message =
-        await this.academicFormationsService.deleteAcademicFormationById(id)
-      return { message }
+        await this.academicFormationsService.deleteAcademicFormationById(
+          id,
+          currentUser
+        );
+      return { message };
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

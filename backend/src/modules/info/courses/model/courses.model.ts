@@ -2,56 +2,74 @@ import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { ICreateCourse, ICourse, IUpdateCourse } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class CoursesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
-  async createCourse(createCourseData: ICreateCourse): Promise<ICourse> {
-    let course: ICourse | null = null;
-    let sentError: Error | null = null;
+  async createCourse(
+    createCourseData: ICreateCourse,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const {
+        course_area,
+        institution,
+        begin_date,
+        conclusion_date,
+        person_id,
+        course_approved,
+      } = createCourseData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
+      await this.knex('courses')
+        .insert({
           course_area,
           institution,
           begin_date,
           conclusion_date,
           person_id,
           course_approved,
-        } = createCourseData;
+        })
+        .returning('course_id');
 
-        const [course_id] = await trx('courses')
-          .insert({
-            course_area,
-            institution,
-            begin_date,
-            conclusion_date,
-            person_id,
-            course_approved,
-          })
-          .returning('course_id');
+      const personUndOthers = await this.knex('people')
+        .where('people.person_id', person_id)
+        .select('people.name')
+        .first();
 
-        await trx.commit();
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          curso: createCourseData.course_area,
+          instituição: createCourseData.institution,
+          data_inicio: await this.notificationsService.formatDate(
+            createCourseData.begin_date
+          ),
+          data_conclusao: await this.notificationsService.formatDate(
+            createCourseData.conclusion_date
+          ),
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Cursos',
+      });
 
-        course = await this.findCourseById(course_id);
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Course already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      return true;
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Course already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
-
-    return course!;
   }
 
   async findCourseById(id: number): Promise<ICourse | null> {
@@ -202,7 +220,10 @@ export class CoursesModel {
     return personIds;
   }
 
-  async updateCourseById(updateCourse: IUpdateCourse): Promise<ICourse> {
+  async updateCourseById(
+    updateCourse: IUpdateCourse,
+    currentUser: UserFromJwt
+  ): Promise<ICourse> {
     let updatedCourse: ICourse | null = null;
     let sentError: Error | null = null;
 
@@ -219,7 +240,7 @@ export class CoursesModel {
         } = updateCourse;
 
         let approved = await trx('courses')
-          .first('course_approved')
+          .first('*')
           .where('course_id', course_id);
 
         if (approved.course_approved == true) {
@@ -237,6 +258,40 @@ export class CoursesModel {
 
         await trx.commit();
 
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', person_id)
+          .select('people.name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            curso: course_area,
+            instituição: institution,
+            data_inicio: await this.notificationsService.formatDate(begin_date),
+            data_conclusao: await this.notificationsService.formatDate(
+              conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            curso: approved.course_area,
+            instituição: approved.institution,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Cursos',
+        });
+
         updatedCourse = await this.findCourseById(course_id);
       } catch (error) {
         console.error(error);
@@ -252,24 +307,20 @@ export class CoursesModel {
     return updatedCourse!;
   }
 
-  async deleteCourseById(id: number): Promise<string> {
+  async deleteCourseById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingCourse = await trx('courses')
-          .select('course_id')
-          .where('course_id', id)
-          .first();
+        let approved = await trx('courses').first('*').where('course_id', id);
 
-        if (!existingCourse) {
+        if (!approved) {
           throw new Error('Course not found');
         }
-
-        let approved = await trx('courses')
-          .first('course_approved')
-          .where('course_id', id);
 
         if (approved.course_approved == true) {
           throw new Error('Registro já aprovado');
@@ -278,6 +329,31 @@ export class CoursesModel {
         await trx('courses').where('course_id', id).del();
 
         await trx.commit();
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', approved.person_id)
+          .select('people.name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            curso: approved.course_area,
+            instituição: approved.institution,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Cursos',
+        });
       } catch (error) {
         console.error(error);
         await trx.rollback();

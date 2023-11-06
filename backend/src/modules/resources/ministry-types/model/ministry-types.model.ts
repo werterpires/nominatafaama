@@ -4,17 +4,20 @@ import { InjectModel } from 'nest-knexjs'
 import {
   ICreateMinistryType,
   IMinistryType,
-  IUpdateMinistryType,
+  IUpdateMinistryType
 } from '../types/types'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class MinistryTypesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex
+  constructor(private notificationsService: NotificationsService) {}
 
-  async createMinistryType({
-    ministry_type_name,
-    ministry_type_approved,
-  }: ICreateMinistryType): Promise<IMinistryType> {
+  async createMinistryType(
+    { ministry_type_name, ministry_type_approved }: ICreateMinistryType,
+    currentUser: UserFromJwt
+  ): Promise<IMinistryType> {
     let ministryType: IMinistryType | null = null
     let sentError: Error | null = null
 
@@ -23,7 +26,7 @@ export class MinistryTypesModel {
         const [ministry_type_id] = await trx('ministry_types')
           .insert({
             ministry_type_name,
-            ministry_type_approved,
+            ministry_type_approved
           })
           .returning('ministry_type_id')
 
@@ -32,10 +35,20 @@ export class MinistryTypesModel {
           ministry_type_name,
           ministry_type_approved,
           created_at: new Date(),
-          updated_at: new Date(),
+          updated_at: new Date()
         }
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'inseriu',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { ministerio: ministry_type_name },
+          objectUserId: null,
+          oldData: null,
+          table: 'Ministérios'
+        })
       } catch (error) {
         console.error(error)
         await trx.rollback()
@@ -74,7 +87,7 @@ export class MinistryTypesModel {
           ministry_type_name: result[0].ministry_type_name,
           ministry_type_approved: result[0].ministry_type_approved,
           created_at: result[0].created_at,
-          updated_at: result[0].updated_at,
+          updated_at: result[0].updated_at
         }
 
         await trx.commit()
@@ -106,7 +119,7 @@ export class MinistryTypesModel {
           ministry_type_name: row.ministry_type_name,
           ministry_type_approved: row.ministry_type_approved,
           created_at: row.created_at,
-          updated_at: row.updated_at,
+          updated_at: row.updated_at
         }))
 
         await trx.commit()
@@ -126,6 +139,7 @@ export class MinistryTypesModel {
 
   async updateMinistryTypeById(
     updateMinistryType: IUpdateMinistryType,
+    currentUser: UserFromJwt
   ): Promise<IMinistryType> {
     let updatedMinistryType: IMinistryType | null = null
     let sentError: Error | null = null
@@ -134,7 +148,7 @@ export class MinistryTypesModel {
       try {
         const { ministry_type_name, ministry_type_approved, ministry_type_id } =
           updateMinistryType
-
+        const oldData = await this.findMinistryTypeById(ministry_type_id)
         await trx('ministry_types')
           .where('ministry_type_id', ministry_type_id)
           .update({ ministry_type_name, ministry_type_approved })
@@ -142,6 +156,16 @@ export class MinistryTypesModel {
         updatedMinistryType = await this.findMinistryTypeById(ministry_type_id)
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: { ministerio: ministry_type_name },
+          objectUserId: null,
+          oldData: { ministerio: oldData?.ministry_type_name },
+          table: 'Ministérios'
+        })
       } catch (error) {
         console.error(error)
         await trx.rollback()
@@ -160,15 +184,29 @@ export class MinistryTypesModel {
     return updatedMinistryType
   }
 
-  async deleteMinistryTypeById(id: number): Promise<string> {
+  async deleteMinistryTypeById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null
     let message: string = ''
 
     await this.knex.transaction(async (trx) => {
       try {
+        const oldData = await this.findMinistryTypeById(id)
         await trx('ministry_types').where('ministry_type_id', id).del()
 
         await trx.commit()
+        await this.notificationsService.createNotification({
+          notificationType: 7,
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          objectUserId: null,
+          oldData: { ministerio: oldData?.ministry_type_name },
+          table: 'Ministérios'
+        })
       } catch (error) {
         console.error(error)
         sentError = new Error(error.message)

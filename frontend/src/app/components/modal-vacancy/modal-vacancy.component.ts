@@ -111,8 +111,6 @@ export class ModalVacancyComponent {
         this.isLoading = false
       },
     })
-
-    console.log('chegou aqui')
   }
 
   showForm() {

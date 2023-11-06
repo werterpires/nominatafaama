@@ -149,9 +149,15 @@ export class UsersController {
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @UseGuards(UsersGuard)
   @Put('approve')
-  async aproveUserById(@Body() input: AproveUserDto) {
+  async aproveUserById(
+    @Body() input: AproveUserDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const approvedUser = await this.usersService.approveUserById(input);
+      const approvedUser = await this.usersService.approveUserById(
+        input,
+        currentUser
+      );
       return approvedUser;
     } catch (error) {
       throw new InternalServerErrorException(error.message);

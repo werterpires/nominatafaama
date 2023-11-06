@@ -6,29 +6,30 @@ import {
   IPastEclExp,
   IUpdatePastEclExp,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class PastEclExpsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createPastEclExp(
-    createPastEclExpData: ICreatePastEclExp
-  ): Promise<IPastEclExp> {
-    let pastEclExp: IPastEclExp | null = null;
-    let sentError: Error | null = null;
+    createPastEclExpData: ICreatePastEclExp,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const {
+        function: expFunction,
+        place,
+        past_exp_begin_date,
+        past_exp_end_date,
+        person_id,
+        past_ecl_approved,
+      } = createPastEclExpData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
-          function: expFunction,
-          place,
-          past_exp_begin_date,
-          past_exp_end_date,
-          person_id,
-          past_ecl_approved,
-        } = createPastEclExpData;
-
-        const [past_ecl_id] = await trx('past_ecl_exps')
+      await this.knex.transaction(async (trx) => {
+        await trx('past_ecl_exps')
           .insert({
             function: expFunction,
             place,
@@ -40,24 +41,44 @@ export class PastEclExpsModel {
           .returning('past_ecl_id');
 
         await trx.commit();
+      });
 
-        pastEclExp = await this.findPastEclExpById(past_ecl_id);
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('PastEclExp already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      const personUndOthers = await this.knex('people')
+        .where('people.person_id', person_id)
+        .select('people.name')
+        .first();
+
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          funcao: expFunction,
+          local: place,
+          data_inicio: await this.notificationsService.formatDate(
+            past_exp_begin_date
+          ),
+          data_conclusao: await this.notificationsService.formatDate(
+            past_exp_end_date
+          ),
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Experiências eclesiásticas anteriores',
+      });
+    } catch (error) {
+      console.error(error);
+
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('PastEclExp already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
 
-    return pastEclExp!;
+    return true;
   }
 
   async findPastEclExpById(id: number): Promise<IPastEclExp | null> {
@@ -211,7 +232,8 @@ export class PastEclExpsModel {
   }
 
   async updatePastEclExpById(
-    updatePastEclExp: IUpdatePastEclExp
+    updatePastEclExp: IUpdatePastEclExp,
+    currentUser: UserFromJwt
   ): Promise<IPastEclExp> {
     let updatedPastEclExp: IPastEclExp | null = null;
     let sentError: Error | null = null;
@@ -229,7 +251,8 @@ export class PastEclExpsModel {
         } = updatePastEclExp;
 
         let approved = await trx('past_ecl_exps')
-          .first('past_ecl_approved')
+          .first('*')
+          .leftJoin('people', 'people.person_id', 'past_ecl_exps.person_id')
           .where('past_ecl_id', past_ecl_id);
 
         if (approved.past_ecl_approved == true) {
@@ -246,6 +269,41 @@ export class PastEclExpsModel {
         });
 
         await trx.commit();
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', person_id)
+          .select('people.name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            funcao: expFunction,
+            local: place,
+            data_inicio: await this.notificationsService.formatDate(
+              past_exp_begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              past_exp_end_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            funcao: approved.function,
+            local: approved.place,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.past_exp_begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.past_exp_end_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Experiências eclesiásticas anteriores',
+        });
 
         updatedPastEclExp = await this.findPastEclExpById(past_ecl_id);
       } catch (error) {
@@ -262,24 +320,23 @@ export class PastEclExpsModel {
     return updatedPastEclExp!;
   }
 
-  async deletePastEclExpById(id: number): Promise<string> {
+  async deletePastEclExpById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingPastEclExp = await trx('past_ecl_exps')
-          .select('past_ecl_id')
-          .where('past_ecl_id', id)
-          .first();
+        let approved = await trx('past_ecl_exps')
+          .first('*')
+          .leftJoin('people', 'people.person_id', 'past_ecl_exps.person_id')
+          .where('past_ecl_id', id);
 
-        if (!existingPastEclExp) {
+        if (!approved) {
           throw new Error('PastEclExp not found');
         }
-
-        let approved = await trx('past_ecl_exps')
-          .first('past_ecl_approved')
-          .where('past_ecl_id', id);
 
         if (approved.past_ecl_approved == true) {
           throw new Error('Registro já aprovado');
@@ -288,6 +345,26 @@ export class PastEclExpsModel {
         await trx('past_ecl_exps').where('past_ecl_id', id).del();
 
         await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            funcao: approved.function,
+            local: approved.place,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.past_exp_begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.past_exp_end_date
+            ),
+            pessoa: approved.name,
+          },
+          table: 'Experiências eclesiásticas anteriores',
+        });
       } catch (error) {
         console.error(error);
         await trx.rollback();

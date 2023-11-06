@@ -2,51 +2,65 @@ import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { ICreateEndowment, IEndowment, IUpdateEndowment } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class EndowmentsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createEndowment(
-    createEndowmentData: ICreateEndowment
-  ): Promise<number> {
-    let endowment_id!: number;
-    let sentError: Error | null = null;
+    createEndowmentData: ICreateEndowment,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const { endowment_type_id, person_id, endowment_approved } =
+        createEndowmentData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const { endowment_type_id, person_id, endowment_approved } =
-          createEndowmentData;
+      await this.knex('endowments')
+        .insert({
+          endowment_type_id,
+          person_id,
+          endowment_approved,
+        })
+        .returning('endowment_id');
 
-        [endowment_id] = await trx('endowments')
-          .insert({
-            endowment_type_id,
-            person_id,
-            endowment_approved,
-          })
-          .returning('endowment_id');
+      const personUndOthers = await this.knex('people')
+        .leftJoin('endowments', 'people.person_id', 'endowments.person_id')
+        .leftJoin(
+          'endowment_types',
+          'endowments.endowment_type_id',
+          'endowment_types.endowment_type_id'
+        )
+        .where('people.person_id', person_id)
+        .andWhere('endowment_types.endowment_type_id', endowment_type_id)
+        .select('people.name', 'endowment_types.endowment_type_name')
+        .first();
 
-        await trx.commit();
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Endowment already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          investidura: personUndOthers.endowment_type_name,
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Investiduras',
+      });
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Endowment already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
 
-    if (!endowment_id) {
-      throw new Error('Não foi possível criar ivestidura.');
-    }
-
-    return endowment_id;
+    return true;
   }
 
   async findEndowmentById(id: number): Promise<IEndowment> {
@@ -272,7 +286,8 @@ export class EndowmentsModel {
   }
 
   async updateEndowmentById(
-    updateEndowment: IUpdateEndowment
+    updateEndowment: IUpdateEndowment,
+    currentUser: UserFromJwt
   ): Promise<number> {
     let updatedEndowment: number | null = null;
     let sentError: Error | null = null;
@@ -287,7 +302,13 @@ export class EndowmentsModel {
         } = updateEndowment;
 
         let approved = await trx('endowments')
-          .first('endowment_approved')
+          .leftJoin(
+            'endowment_types',
+            'endowments.endowment_type_id',
+            'endowment_types.endowment_type_id'
+          )
+          .leftJoin('people', 'people.person_id', 'endowments.person_id')
+          .first('*')
           .where('endowment_id', endowment_id);
 
         if (approved.endowment_approved == true) {
@@ -303,6 +324,34 @@ export class EndowmentsModel {
           });
 
         await trx.commit();
+        const personUndOthers = await this.knex('people')
+          .leftJoin('endowments', 'people.person_id', 'endowments.person_id')
+          .leftJoin(
+            'endowment_types',
+            'endowments.endowment_type_id',
+            'endowment_types.endowment_type_id'
+          )
+          .where('people.person_id', person_id)
+          .andWhere('endowment_types.endowment_type_id', endowment_type_id)
+          .select('people.name', 'endowment_types.endowment_type_name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            investidura: personUndOthers.endowment_type_name,
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            investidura: approved.endowment_type_name,
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Investiduras',
+        });
       } catch (error) {
         await trx.rollback();
         sentError = new Error(error.message);
@@ -320,24 +369,28 @@ export class EndowmentsModel {
     return updatedEndowment;
   }
 
-  async deleteEndowmentById(id: number): Promise<string> {
+  async deleteEndowmentById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingEndowment = await trx('endowments')
-          .select('endowment_id')
-          .where('endowment_id', id)
-          .first();
+        let approved = await trx('endowments')
+          .leftJoin(
+            'endowment_types',
+            'endowments.endowment_type_id',
+            'endowment_types.endowment_type_id'
+          )
+          .leftJoin('people', 'people.person_id', 'endowments.person_id')
+          .first('*')
+          .where('endowment_id', id);
 
-        if (!existingEndowment) {
+        if (!approved) {
           throw new Error('Endowment not found');
         }
-
-        let approved = await trx('endowments')
-          .first('endowment_approved')
-          .where('endowment_id', id);
 
         if (approved.endowment_approved == true) {
           throw new Error('Registro já aprovado');
@@ -346,6 +399,20 @@ export class EndowmentsModel {
         await trx('endowments').where('endowment_id', id).del();
 
         await trx.commit();
+
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            investidura: approved.endowment_type_name,
+            pessoa: approved?.name,
+          },
+          table: 'Investiduras',
+        });
       } catch (error) {
         console.error(error);
         sentError = new Error(error.message);

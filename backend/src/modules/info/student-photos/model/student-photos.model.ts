@@ -1,26 +1,30 @@
-import { Injectable } from '@nestjs/common';
-import { Knex } from 'knex';
-import { InjectModel } from 'nest-knexjs';
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreateStudentPhoto,
   IStudentPhoto,
-  IUpdateStudentPhoto,
-} from '../types/types';
+  IUpdateStudentPhoto
+} from '../types/types'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class StudentPhotosModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex
+  constructor(private notificationsService: NotificationsService) {}
 
   async createStudentPhoto(
     createStudentPhotoData: ICreateStudentPhoto,
-    toDo: string
+    toDo: string,
+    currentUser: UserFromJwt
   ): Promise<void> {
-    let studentPhoto: IStudentPhoto | null = null;
-    let sentError: Error | null = null;
+    let studentPhoto: IStudentPhoto | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
-        let photo_pack_id: number = 0;
+        let photo_pack_id: number = 0
         const {
           alone_photo,
           family_photo,
@@ -28,11 +32,11 @@ export class StudentPhotosModel {
           spouse_photo,
           invite_photo,
           small_alone_photo,
-          student_id,
-        } = createStudentPhotoData;
+          student_id
+        } = createStudentPhotoData
 
         if (toDo === 'create') {
-          [photo_pack_id] = await trx('student_photos')
+          ;[photo_pack_id] = await trx('student_photos')
             .insert({
               alone_photo,
               family_photo,
@@ -40,54 +44,65 @@ export class StudentPhotosModel {
               spouse_photo,
               invite_photo,
               small_alone_photo,
-              student_id,
+              student_id
             })
-            .returning('photo_pack_id');
+            .returning('photo_pack_id')
         } else if (toDo === 'update') {
           const updateFields = Object.entries(createStudentPhotoData).reduce(
             (fields, [key, value]) => {
               if (value !== null) {
-                fields[key] = value;
+                fields[key] = value
               }
-              return fields;
+              return fields
             },
             {}
-          );
+          )
           await trx('student_photos')
             .where('student_id', student_id)
-            .update(updateFields);
+            .update(updateFields)
         }
 
-        await trx.commit();
+        await trx.commit()
+
+        // await this.notificationsService.createNotification({
+        // 	notificationType: 7,
+        // 	action: 'inseriu',
+        // 	agent_name: currentUser.name,
+        // 	agentUserId: currentUser.user_id,
+        // 	newData: {null},
+        // 	objectUserId: null,
+        // 	oldData: null,
+        // 	table: 'Foto de estudante',
+        // })
       } catch (error) {
-        console.error(error);
-        await trx.rollback();
+        console.error(error)
+        await trx.rollback()
         if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('StudentPhoto already exists');
+          sentError = new Error('StudentPhoto already exists')
         } else {
-          sentError = new Error(error.sqlMessage);
+          sentError = new Error(error.sqlMessage)
         }
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
   }
 
   async findStudentPhotoById(id: number): Promise<IStudentPhoto> {
-    let studentPhoto: IStudentPhoto | null = null;
-    let sentError: Error | null = null;
+    let studentPhoto: IStudentPhoto | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         const result = await trx
           .table('student_photos')
           .where('photo_pack_id', '=', id)
-          .first();
+          .first()
 
         if (!result) {
-          throw new Error('StudentPhoto not found');
+          throw new Error('StudentPhoto not found')
         }
 
         studentPhoto = {
@@ -100,42 +115,42 @@ export class StudentPhotosModel {
           small_alone_photo: result.small_alone_photo,
           student_id: result.student_id,
           created_at: result.created_at,
-          updated_at: result.updated_at,
-        };
+          updated_at: result.updated_at
+        }
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.message);
-        await trx.rollback();
-        throw error;
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
     if (studentPhoto == null) {
-      throw new Error('pack not found ');
+      throw new Error('pack not found ')
     }
-    return studentPhoto;
+    return studentPhoto
   }
 
   async findStudentPhotoByStudentId(
     studentId: number
   ): Promise<IStudentPhoto | null> {
-    let studentPhoto: IStudentPhoto | null = null;
-    let sentError: Error | null = null;
+    let studentPhoto: IStudentPhoto | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         const result = await trx
           .table('student_photos')
           .where('student_id', '=', studentId)
-          .first();
+          .first()
 
         if (!result) {
-          return;
+          return
         }
 
         studentPhoto = {
@@ -148,119 +163,119 @@ export class StudentPhotosModel {
           small_alone_photo: result.small_alone_photo,
           student_id: result.student_id,
           created_at: result.created_at,
-          updated_at: result.updated_at,
-        };
+          updated_at: result.updated_at
+        }
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.message);
-        await trx.rollback();
-        throw error;
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return studentPhoto;
+    return studentPhoto
   }
 
   async findAllStudentPhotos(): Promise<IStudentPhoto[]> {
-    let studentPhotoList: IStudentPhoto[] = [];
-    let sentError: Error | null = null;
+    let studentPhotoList: IStudentPhoto[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
-        studentPhotoList = await trx.table('student_photos').select('*');
+        studentPhotoList = await trx.table('student_photos').select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return studentPhotoList;
+    return studentPhotoList
   }
 
-  async updateStudentPhotoById(
-    updateStudentPhoto: IUpdateStudentPhoto
-  ): Promise<void> {
-    let updatedStudentPhoto: IStudentPhoto | null = null;
-    let sentError: Error | null = null;
+  // async updateStudentPhotoById(
+  //   updateStudentPhoto: IUpdateStudentPhoto
+  // ): Promise<void> {
+  //   let updatedStudentPhoto: IStudentPhoto | null = null
+  //   let sentError: Error | null = null
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
-          photo_pack_id,
-          alone_photo,
-          family_photo,
-          other_family_photo,
-          spouse_photo,
-          invite_photo,
-          student_id,
-        } = updateStudentPhoto;
+  //   await this.knex.transaction(async (trx) => {
+  //     try {
+  //       const {
+  //         photo_pack_id,
+  //         alone_photo,
+  //         family_photo,
+  //         other_family_photo,
+  //         spouse_photo,
+  //         invite_photo,
+  //         student_id
+  //       } = updateStudentPhoto
 
-        await trx('student_photos')
-          .where('photo_pack_id', photo_pack_id)
-          .update({
-            alone_photo,
-            family_photo,
-            other_family_photo,
-            spouse_photo,
-            invite_photo,
-            student_id,
-          });
+  //       await trx('student_photos')
+  //         .where('photo_pack_id', photo_pack_id)
+  //         .update({
+  //           alone_photo,
+  //           family_photo,
+  //           other_family_photo,
+  //           spouse_photo,
+  //           invite_photo,
+  //           student_id
+  //         })
 
-        await trx.commit();
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
-      }
-    });
+  //       await trx.commit()
+  //     } catch (error) {
+  //       console.error(error)
+  //       await trx.rollback()
+  //       sentError = new Error(error.message)
+  //     }
+  //   })
 
-    if (sentError) {
-      throw sentError;
-    }
-  }
+  //   if (sentError) {
+  //     throw sentError
+  //   }
+  // }
 
-  async deleteStudentPhotoById(id: number): Promise<string> {
-    let sentError: Error | null = null;
-    let message: string = '';
+  // async deleteStudentPhotoById(id: number): Promise<string> {
+  //   let sentError: Error | null = null
+  //   let message: string = ''
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const existingStudentPhoto = await trx('student_photos')
-          .select('photo_pack_id')
-          .where('photo_pack_id', id)
-          .first();
+  //   await this.knex.transaction(async (trx) => {
+  //     try {
+  //       const existingStudentPhoto = await trx('student_photos')
+  //         .select('photo_pack_id')
+  //         .where('photo_pack_id', id)
+  //         .first()
 
-        if (!existingStudentPhoto) {
-          throw new Error('StudentPhoto not found');
-        }
+  //       if (!existingStudentPhoto) {
+  //         throw new Error('StudentPhoto not found')
+  //       }
 
-        await trx('student_photos').where('photo_pack_id', id).del();
+  //       await trx('student_photos').where('photo_pack_id', id).del()
 
-        await trx.commit();
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
-      }
-    });
+  //       await trx.commit()
+  //     } catch (error) {
+  //       console.error(error)
+  //       await trx.rollback()
+  //       sentError = new Error(error.message)
+  //     }
+  //   })
 
-    if (sentError) {
-      throw sentError;
-    }
-    message = 'StudentPhoto deleted successfully.';
-    return message;
-  }
+  //   if (sentError) {
+  //     throw sentError
+  //   }
+  //   message = 'StudentPhoto deleted successfully.'
+  //   return message
+  // }
 }

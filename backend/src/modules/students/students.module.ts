@@ -2,10 +2,6 @@ import { Module } from '@nestjs/common'
 import { StudentsService } from './services/students.service'
 import { StudentsController } from './controllers/students.controller'
 import { StudentsModel } from './model/students.model'
-import { PeopleServices } from '../people/dz_services/people.service'
-import { PeopleModel } from '../people/ez_model/people.model'
-import { UsersService } from '../users/dz_services/users.service'
-import { UsersModel } from '../users/ez_model/users.model'
 import { SpousesModel } from '../spouses/model/spouses.model'
 import { AcademicFormationsModel } from '../info/academic-formations/model/academic-formations.model'
 import { LanguagesModel } from '../info/languages/model/languages.model'
@@ -22,14 +18,15 @@ import { PreviousMarriagesModel } from '../info/previous-marriage/model/previous
 import { ChildrenModel } from '../info/children/model/children.model'
 import { StudentPhotosService } from '../info/student-photos/services/student-photos.service'
 import { StudentPhotosModel } from '../info/student-photos/model/student-photos.model'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { NotificationsModule } from 'src/shared/notifications/notifications.module'
+import { PeopleModule } from '../people/people.module'
+import { UsersModule } from '../users/users.module'
+import { SpousesModule } from '../spouses/spouses.module'
 
 const services = [
   StudentsModel,
   StudentsService,
-  PeopleServices,
-  PeopleModel,
-  UsersService,
-  UsersModel,
   SpousesModel,
   AcademicFormationsModel,
   LanguagesModel,
@@ -44,14 +41,14 @@ const services = [
   RelatedMinistriesModel,
   PreviousMarriagesModel,
   ChildrenModel,
-  SpousesModel,
   StudentPhotosService,
-  StudentPhotosModel,
+  StudentPhotosModel
 ]
 
 @Module({
+  imports: [NotificationsModule, PeopleModule, UsersModule, SpousesModule],
   controllers: [StudentsController],
   providers: services,
-  exports: services,
+  exports: services
 })
 export class StudentsModule {}

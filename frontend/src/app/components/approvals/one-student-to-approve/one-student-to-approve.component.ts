@@ -102,7 +102,7 @@ export class OneStudentToApproveComponent implements OnInit {
         roles = this.user.roles.map((role) => role.role_name.toLowerCase())
         if (
           !roles.includes('docente') &&
-          !roles.includes('direcao') &&
+          !roles.includes('direção') &&
           !roles.includes('ministerial') &&
           !roles.includes('administrador')
         ) {

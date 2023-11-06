@@ -11,6 +11,7 @@ import { Router } from '@angular/router'
 export class ContainerComponent {
   loginMenu = false
   approvalMenu = false
+  notifications = false
   studentId!: number
 
   constructor(private loginService: LoginService, private router: Router) {}

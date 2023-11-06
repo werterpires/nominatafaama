@@ -64,9 +64,3 @@ export interface IApproveData {
   id: number;
   approve: boolean;
 }
-
-// export interface IApproveInfo {
-//   table:string,
-//   id: number,
-//   approve: boolean
-// }

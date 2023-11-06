@@ -39,6 +39,7 @@ export class ProfessorsController {
       const userId = user.user_id;
       const professor = await this.professorsService.createProfessor(
         input,
+        user,
         userId
       );
       return professor;
@@ -49,9 +50,15 @@ export class ProfessorsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.SECRETARIA)
   @Post('notuser')
-  async createPersonAndProfessor(@Body() input: CreateProfessorAssignmentDto) {
+  async createPersonAndProfessor(
+    @Body() input: CreateProfessorAssignmentDto,
+    @CurrentUser() user: UserFromJwt
+  ) {
     try {
-      const professor = await this.professorsService.createProfessor(input);
+      const professor = await this.professorsService.createProfessor(
+        input,
+        user
+      );
       return professor;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -75,10 +82,14 @@ export class ProfessorsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.DOCENTE)
   @Put()
-  async updateProfessor(@Body() input: UpdateProfessorAssgnmentDto) {
+  async updateProfessor(
+    @Body() input: UpdateProfessorAssgnmentDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const updatedProfessor = await this.professorsService.updateProfessorById(
-        input
+        input,
+        currentUser
       );
       return updatedProfessor;
     } catch (error) {
@@ -243,9 +254,15 @@ export class ProfessorsController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteStudentById(@Param('id') id: number) {
+  async deleteStudentById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.professorsService.deleteProfessorById(id);
+      const message = await this.professorsService.deleteProfessorById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       throw new InternalServerErrorException(error.message);

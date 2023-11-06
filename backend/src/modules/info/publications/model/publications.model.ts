@@ -6,56 +6,74 @@ import {
   IPublication,
   IUpdatePublication,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class PublicationsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createPublication(
-    createPublicationData: ICreatePublication
-  ): Promise<IPublication> {
-    let publication: IPublication | null = null;
-    let sentError: Error | null = null;
+    createPublicationData: ICreatePublication,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const {
+        publication_type_id,
+        reference,
+        link,
+        publication_approved,
+        person_id,
+      } = createPublicationData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
+      const [publication_id] = await this.knex('publications')
+        .insert({
           publication_type_id,
           reference,
           link,
           publication_approved,
           person_id,
-        } = createPublicationData;
+        })
+        .returning('publication_id');
 
-        const [publication_id] = await trx('publications')
-          .insert({
-            publication_type_id,
-            reference,
-            link,
-            publication_approved,
-            person_id,
-          })
-          .returning('publication_id');
+      const personAndType = await this.knex('people')
+        .leftJoin('publications', 'people.person_id', 'publications.person_id')
+        .leftJoin(
+          'publication_types',
+          'publication_types.publication_type_id',
+          'publications.publication_type_id'
+        )
+        .where('people.person_id', person_id)
+        .andWhere('publication_types.publication_type_id', publication_type_id)
+        .select('people.name', 'publication_types.publication_type')
+        .first();
 
-        await trx.commit();
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          tipo: personAndType.publication_type,
+          referencia: reference,
+          link: link ?? 'link não informado',
+          pessoa: personAndType?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Publicações',
+      });
 
-        publication = await this.findPublicationById(publication_id);
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Publication already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+      return true;
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Publication already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
-
-    return publication!;
   }
 
   async findPublicationById(id: number): Promise<IPublication> {
@@ -289,7 +307,8 @@ export class PublicationsModel {
   }
 
   async updatePublicationById(
-    updatePublication: IUpdatePublication
+    updatePublication: IUpdatePublication,
+    currentUser: UserFromJwt
   ): Promise<number> {
     let updatedPublication: number | null = null;
     let sentError: Error | null = null;
@@ -305,7 +324,13 @@ export class PublicationsModel {
         } = updatePublication;
 
         let approved = await trx('publications')
-          .first('publication_approved')
+          .leftJoin(
+            'publication_types',
+            'publication_types.publication_type_id',
+            'publications.publication_type_id'
+          )
+          .leftJoin('people', 'people.person_id', 'publications.person_id')
+          .first('*')
           .where('publication_id', publication_id);
 
         if (approved.publication_approved == true) {
@@ -322,6 +347,46 @@ export class PublicationsModel {
           });
 
         await trx.commit();
+
+        const personAndType = await this.knex('people')
+          .leftJoin(
+            'publications',
+            'people.person_id',
+            'publications.person_id'
+          )
+          .leftJoin(
+            'publication_types',
+            'publication_types.publication_type_id',
+            'publications.publication_type_id'
+          )
+          .where('people.person_id', approved.person_id)
+          .andWhere(
+            'publication_types.publication_type_id',
+            publication_type_id
+          )
+          .select('people.name', 'publication_types.publication_type')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            tipo: personAndType.publication_type,
+            referencia: reference,
+            link: link ?? 'link não informado',
+            pessoa: personAndType?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            tipo: personAndType.publication_type,
+            referencia: approved.reference,
+            link: approved.link ?? 'link não informado',
+            pessoa: personAndType?.name,
+          },
+          table: 'Publicações',
+        });
       } catch (error) {
         await trx.rollback();
         sentError = new Error(error.message);
@@ -339,24 +404,28 @@ export class PublicationsModel {
     return updatedPublication;
   }
 
-  async deletePublicationById(id: number): Promise<string> {
+  async deletePublicationById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingPublication = await trx('publications')
-          .select('publication_id')
-          .where('publication_id', id)
-          .first();
+        let approved = await trx('publications')
+          .first('*')
+          .leftJoin(
+            'publication_types',
+            'publication_types.publication_type_id',
+            'publications.publication_type_id'
+          )
+          .leftJoin('people', 'people.person_id', 'publications.person_id')
+          .where('publication_id', id);
 
-        if (!existingPublication) {
+        if (!approved) {
           throw new Error('Publication not found');
         }
-
-        let approved = await trx('publications')
-          .first('publication_approved')
-          .where('publication_id', id);
 
         if (approved.publication_approved == true) {
           throw new Error('Registro já aprovado');
@@ -365,6 +434,23 @@ export class PublicationsModel {
         await trx('publications').where('publication_id', id).del();
 
         await trx.commit();
+        console.log(approved);
+
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            tipo: approved.publication_type,
+            referencia: approved.reference,
+            link: approved.link ?? 'link não informado',
+            pessoa: approved?.name,
+          },
+          table: 'Publicações',
+        });
       } catch (error) {
         console.error(error);
         sentError = new Error(error.message);

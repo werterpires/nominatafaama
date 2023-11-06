@@ -6,20 +6,31 @@ import {
   ICreateAcademicFormation,
   IUpdateAcademicFormation,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class AcademicFormationsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createAcademicFormation(
-    createAcademicFormationData: ICreateAcademicFormation
+    createAcademicFormationData: ICreateAcademicFormation,
+    currentUser: UserFromJwt
   ): Promise<IAcademicFormation> {
-    let academicFormation: IAcademicFormation | null = null;
-    let sentError: Error | null = null;
+    try {
+      const {
+        course_area,
+        institution,
+        begin_date,
+        conclusion_date,
+        person_id,
+        degree_id,
+        academic_formation_approved,
+      } = createAcademicFormationData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
+      const [formation_id] = await this.knex('academic_formations')
+        .insert({
           course_area,
           institution,
           begin_date,
@@ -27,52 +38,66 @@ export class AcademicFormationsModel {
           person_id,
           degree_id,
           academic_formation_approved,
-        } = createAcademicFormationData;
+        })
+        .returning('formation_id');
 
-        const [formation_id] = await trx('academic_formations')
-          .insert({
-            course_area,
-            institution,
-            begin_date,
-            conclusion_date,
-            person_id,
-            degree_id,
-            academic_formation_approved,
-          })
-          .returning('formation_id');
+      const academicFormation = {
+        formation_id: formation_id,
+        course_area: course_area,
+        institution: institution,
+        begin_date: begin_date,
+        conclusion_date: conclusion_date,
+        person_id: person_id,
+        degree_id: degree_id,
+        created_at: new Date(),
+        updated_at: new Date(),
+        academic_formation_approved: null,
+        degree_name: `${degree_id}`,
+      };
 
-        academicFormation = {
-          formation_id: formation_id,
-          course_area: course_area,
-          institution: institution,
-          begin_date: begin_date,
-          conclusion_date: conclusion_date,
-          person_id: person_id,
-          degree_id: degree_id,
-          created_at: new Date(),
-          updated_at: new Date(),
-          academic_formation_approved: null,
-          degree_name: `${degree_id}`,
-        };
+      const personUndOthers = await this.knex('people')
+        .leftJoin(
+          'academic_formations',
+          'people.person_id',
+          'academic_formations.person_id'
+        )
+        .leftJoin(
+          'academic_degrees',
+          'academic_formations.degree_id',
+          'academic_degrees.degree_id'
+        )
+        .where('people.person_id', person_id)
+        .andWhere('academic_degrees.degree_id', degree_id)
+        .select('people.name', 'academic_degrees.degree_name')
+        .first();
 
-        await trx.commit();
-      } catch (error) {
-        console.error(error);
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Academic Formation already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
-      }
-    });
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          titulacao: personUndOthers.degree_name,
+          area: academicFormation.course_area,
+          instituicao: academicFormation.institution,
+          data_inicio: await this.notificationsService.formatDate(
+            academicFormation.begin_date
+          ),
+          data_conclusao: await this.notificationsService.formatDate(
+            academicFormation.conclusion_date
+          ),
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Formações acadêmicas',
+      });
 
-    if (sentError) {
-      throw sentError;
+      return academicFormation;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erro ao criar a formação acadêmica');
     }
-
-    return academicFormation!;
   }
 
   async findAcademicFormationById(
@@ -300,7 +325,8 @@ export class AcademicFormationsModel {
   }
 
   async updateAcademicFormationById(
-    updateAcademicFormation: IUpdateAcademicFormation
+    updateAcademicFormation: IUpdateAcademicFormation,
+    currentUser: UserFromJwt
   ): Promise<IAcademicFormation> {
     let updatedAcademicFormation: IAcademicFormation | null = null;
     let sentError: Error | null = null;
@@ -318,7 +344,12 @@ export class AcademicFormationsModel {
         } = updateAcademicFormation;
 
         let approved = await trx('academic_formations')
-          .first('academic_formation_approved')
+          .first('*')
+          .leftJoin(
+            'academic_degrees',
+            'academic_formations.degree_id',
+            'academic_degrees.degree_id'
+          )
           .where('formation_id', formation_id);
 
         if (approved.academic_formation_approved == true) {
@@ -340,6 +371,55 @@ export class AcademicFormationsModel {
         );
 
         await trx.commit();
+
+        const personUndOthers = await this.knex('people')
+          .leftJoin(
+            'academic_formations',
+            'people.person_id',
+            'academic_formations.person_id'
+          )
+          .leftJoin(
+            'academic_degrees',
+            'academic_formations.degree_id',
+            'academic_degrees.degree_id'
+          )
+          .where('people.person_id', approved.person_id)
+          .andWhere('academic_degrees.degree_id', degree_id)
+          .select('people.name', 'academic_degrees.degree_name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            titulacao: personUndOthers.degree_name,
+            area: updateAcademicFormation.course_area,
+            instituicao: updateAcademicFormation.institution,
+            data_inicio: await this.notificationsService.formatDate(
+              updateAcademicFormation.begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              updateAcademicFormation.conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            titulacao: approved.degree_name,
+            area: approved.course_area,
+            instituicao: approved.institution,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.conclusion_date
+            ),
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Formações acadêmicas',
+        });
       } catch (error) {
         console.error(error);
         await trx.rollback();
@@ -358,24 +438,29 @@ export class AcademicFormationsModel {
     return updatedAcademicFormation;
   }
 
-  async deleteAcademicFormationById(id: number): Promise<string> {
+  async deleteAcademicFormationById(id: number, currentUser): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingFormation = await trx('academic_formations')
-          .select('formation_id')
-          .where('formation_id', id)
-          .first();
+        let approved = await trx('academic_formations')
+          .first('*')
+          .leftJoin(
+            'academic_degrees',
+            'academic_formations.degree_id',
+            'academic_degrees.degree_id'
+          )
+          .leftJoin(
+            'people',
+            'people.person_id',
+            'academic_formations.person_id'
+          )
+          .where('formation_id', id);
 
-        if (!existingFormation) {
+        if (!approved) {
           throw new Error('Academic Formation not found');
         }
-
-        let approved = await trx('academic_formations')
-          .first('academic_formation_approved')
-          .where('formation_id', id);
 
         if (approved.academic_formation_approved == true) {
           throw new Error('Registro já aprovado');
@@ -384,6 +469,27 @@ export class AcademicFormationsModel {
         await trx('academic_formations').where('formation_id', id).del();
 
         await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            titulacao: approved.degree_name,
+            area: approved.course_area,
+            instituicao: approved.institution,
+            data_inicio: await this.notificationsService.formatDate(
+              approved.begin_date
+            ),
+            data_conclusao: await this.notificationsService.formatDate(
+              approved.conclusion_date
+            ),
+            pessoa: approved.name,
+          },
+          table: 'Formações acadêmicas',
+        });
       } catch (error) {
         console.error(error);
         sentError = new Error(error.message);

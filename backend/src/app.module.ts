@@ -1,29 +1,31 @@
-import { Module } from '@nestjs/common'
-import { APP_GUARD } from '@nestjs/core'
-import { config } from 'dotenv'
-import { KnexModule, KnexModuleOptions } from 'nest-knexjs'
-import { InfoModule } from './modules/info/info.module'
-import { PeopleModule } from './modules/people/people.module'
-import { ResourcesModule } from './modules/resources/resources.module'
-import { SpousesModule } from './modules/spouses/spouses.module'
-import { StudentsModule } from './modules/students/students.module'
-import { ProfessorsModule } from './modules/professors/professors.module'
-import { UsersModule } from './modules/users/users.module'
-import { AuthModule } from './shared/auth/auth.module'
-import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard'
-import { RolesGuard } from './shared/roles/gz_guards/roles.guard'
-import { RolesModule } from './shared/roles/roles.module'
-import { ApprovalsModule } from './modules/approvals/approvals.module'
+import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { config } from 'dotenv';
+import { KnexModule, KnexModuleOptions } from 'nest-knexjs';
+import { InfoModule } from './modules/info/info.module';
+import { PeopleModule } from './modules/people/people.module';
+import { ResourcesModule } from './modules/resources/resources.module';
+import { SpousesModule } from './modules/spouses/spouses.module';
+import { StudentsModule } from './modules/students/students.module';
+import { ProfessorsModule } from './modules/professors/professors.module';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './shared/auth/auth.module';
+import { JwtAuthGuard } from './shared/auth/guards/jwt-auth.guard';
+import { RolesGuard } from './shared/roles/gz_guards/roles.guard';
+import { RolesModule } from './shared/roles/roles.module';
+import { ApprovalsModule } from './modules/approvals/approvals.module';
 import { NominatasModule } from './modules/nominatas/nominatas.module';
 import { EventsModule } from './modules/events/events.module';
 import { VacanciesModule } from './modules/vacancies/vacancies.module';
 import { TermsModule } from './shared/terms/terms.module';
 import { NotificationsModule } from './shared/notifications/notifications.module';
-import * as fs from 'fs'
-import * as path from 'path'
-import * as Nodemailer from 'nodemailer'
+import * as fs from 'fs';
+import * as path from 'path';
+import * as Nodemailer from 'nodemailer';
+import { NotificationsService } from './shared/notifications/services/notifications.service';
+import { SendEmailModule } from './shared/send-email/send-email.module';
 
-config()
+config();
 
 const mysqlConfig: KnexModuleOptions = {
   config: {
@@ -50,22 +52,22 @@ const mysqlConfig: KnexModuleOptions = {
             case '':
             case 'null':
             case 'NULL':
-              return null
+              return null;
             case '0':
-              return false
+              return false;
             case '1':
-              return true
+              return true;
           }
         } else if (field.type === 'DATE' && field.length > 1) {
-          return field.string() // 1 = true, 0 = false
+          return field.string(); // 1 = true, 0 = false
         } else if (field.type === 'DATETIME' && field.length > 1) {
-          return field.string().substring(0, 10) // 1 = true, 0 = false
+          return field.string().substring(0, 10); // 1 = true, 0 = false
         }
-        return next()
+        return next();
       },
     },
   },
-}
+};
 
 const mssqlConfig: KnexModuleOptions = {
   config: {
@@ -78,7 +80,7 @@ const mssqlConfig: KnexModuleOptions = {
       options: { encrypt: true },
     },
   },
-}
+};
 
 @Module({
   imports: [
@@ -98,6 +100,7 @@ const mssqlConfig: KnexModuleOptions = {
     VacanciesModule,
     TermsModule,
     NotificationsModule,
+    SendEmailModule,
   ],
   providers: [
     {
@@ -108,6 +111,7 @@ const mssqlConfig: KnexModuleOptions = {
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    NotificationsService,
   ],
 })
 export class AppModule {}

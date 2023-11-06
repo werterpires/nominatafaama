@@ -23,6 +23,7 @@ import { IStudent } from 'src/modules/students/types/types';
 import { ISpouse } from 'src/modules/spouses/types/types';
 import { IAcademicFormation } from 'src/modules/info/academic-formations/types/types';
 import { ApprovalsModel } from '../model/approvals.model';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class ApprovalsService {
@@ -537,11 +538,14 @@ export class ApprovalsService {
     );
   }
 
-  async approveAny(data: IApproveData): Promise<boolean> {
+  async approveAny(
+    data: IApproveData,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
     let approved: boolean | null = null;
     try {
       data.id = parseInt(data.id.toString());
-      const approved = await this.approvalsModel.approveAny(data);
+      const approved = await this.approvalsModel.approveAny(data, currentUser);
       return approved;
     } catch (error) {
       console.error(`Erro capturado no ApprovalsService approve any: ${error}`);

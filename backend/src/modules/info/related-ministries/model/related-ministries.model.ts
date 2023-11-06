@@ -6,56 +6,77 @@ import {
   IRelatedMinistry,
   IUpdateRelatedMinistry,
 } from '../types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class RelatedMinistriesModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createRelatedMinistry(
-    createRelatedMinistryData: ICreateRelatedMinistry
-  ): Promise<number> {
-    let related_ministry_id!: number;
-    let sentError: Error | null = null;
+    createRelatedMinistryData: ICreateRelatedMinistry,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const {
+        person_id,
+        ministry_type_id,
+        priority,
+        related_ministry_approved,
+      } = createRelatedMinistryData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
+      await this.knex('related_ministries')
+        .insert({
           person_id,
           ministry_type_id,
           priority,
           related_ministry_approved,
-        } = createRelatedMinistryData;
+        })
+        .returning('related_ministry_id');
 
-        [related_ministry_id] = await trx('related_ministries')
-          .insert({
-            person_id,
-            ministry_type_id,
-            priority,
-            related_ministry_approved,
-          })
-          .returning('related_ministry_id');
+      const personUndOthers = await this.knex('people')
 
-        await trx.commit();
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        if (error.code === 'ER_DUP_ENTRY') {
-          sentError = new Error('Related ministry already exists');
-        } else {
-          sentError = new Error(error.sqlMessage);
-        }
+        .leftJoin(
+          'related_ministries',
+          'people.person_id',
+          'related_ministries.person_id'
+        )
+        .leftJoin(
+          'ministry_types',
+          'related_ministries.ministry_type_id',
+          'ministry_types.ministry_type_id'
+        )
+        .select('people.name', 'ministry_types.ministry_type_name')
+        .where('people.person_id', person_id)
+        .andWhere('ministry_types.ministry_type_id', '=', ministry_type_id)
+        .first();
+
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          ministerio: personUndOthers?.ministry_type_name,
+          prioridade: priority,
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Ministérios de interesse',
+      });
+    } catch (error) {
+      console.error(error);
+
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Related ministry already exists');
+      } else {
+        throw new Error(error.sqlMessage);
       }
-    });
-
-    if (sentError) {
-      throw sentError;
     }
 
-    if (!related_ministry_id) {
-      throw new Error('Não foi possível criar ministério relacionado.');
-    }
-
-    return related_ministry_id;
+    return true;
   }
 
   async findRelatedMinistryById(id: number): Promise<IRelatedMinistry> {
@@ -283,7 +304,8 @@ export class RelatedMinistriesModel {
   }
 
   async updateRelatedMinistryById(
-    updateRelatedMinistry: IUpdateRelatedMinistry
+    updateRelatedMinistry: IUpdateRelatedMinistry,
+    currentUser: UserFromJwt
   ): Promise<number> {
     let updatedRelatedMinistry: number | null = null;
     let sentError: Error | null = null;
@@ -299,7 +321,17 @@ export class RelatedMinistriesModel {
         } = updateRelatedMinistry;
 
         let approved = await trx('related_ministries')
-          .first('related_ministry_approved')
+          .leftJoin(
+            'ministry_types',
+            'related_ministries.ministry_type_id',
+            'ministry_types.ministry_type_id'
+          )
+          .leftJoin(
+            'people',
+            'people.person_id',
+            'related_ministries.person_id'
+          )
+          .first('*')
           .where('related_ministry_id', related_ministry_id);
 
         if (approved.related_ministry_approved == true) {
@@ -316,6 +348,42 @@ export class RelatedMinistriesModel {
           });
 
         await trx.commit();
+
+        const personUndOthers = await this.knex('people')
+
+          .leftJoin(
+            'related_ministries',
+            'people.person_id',
+            'related_ministries.person_id'
+          )
+          .leftJoin(
+            'ministry_types',
+            'related_ministries.ministry_type_id',
+            'ministry_types.ministry_type_id'
+          )
+          .select('people.name', 'ministry_types.ministry_type_name')
+          .where('people.person_id', person_id)
+          .andWhere('ministry_types.ministry_type_id', '=', ministry_type_id)
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            ministerio: personUndOthers?.ministry_type_name,
+            prioridade: priority,
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            ministerio: approved?.ministry_type_name,
+            prioridade: approved.priority,
+            pessoa: approved?.name,
+          },
+          table: 'Ministérios de interesse',
+        });
       } catch (error) {
         await trx.rollback();
         sentError = new Error(error.message);
@@ -333,24 +401,32 @@ export class RelatedMinistriesModel {
     return updatedRelatedMinistry;
   }
 
-  async deleteRelatedMinistryById(id: number): Promise<string> {
+  async deleteRelatedMinistryById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingRelatedMinistry = await trx('related_ministries')
-          .select('related_ministry_id')
-          .where('related_ministry_id', id)
-          .first();
+        let approved = await trx('related_ministries')
+          .leftJoin(
+            'ministry_types',
+            'related_ministries.ministry_type_id',
+            'ministry_types.ministry_type_id'
+          )
+          .leftJoin(
+            'people',
+            'people.person_id',
+            'related_ministries.person_id'
+          )
+          .first('*')
+          .where('related_ministry_id', id);
 
-        if (!existingRelatedMinistry) {
+        if (!approved) {
           throw new Error('Related ministry not found');
         }
-
-        let approved = await trx('related_ministries')
-          .first('related_ministry_approved')
-          .where('related_ministry_id', id);
 
         if (approved.related_ministry_approved == true) {
           throw new Error('Registro já aprovado');
@@ -358,6 +434,20 @@ export class RelatedMinistriesModel {
         await trx('related_ministries').where('related_ministry_id', id).del();
 
         await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            ministerio: approved?.ministry_type_name,
+            prioridade: approved.priority,
+            pessoa: approved?.name,
+          },
+          table: 'Ministérios de interesse',
+        });
       } catch (error) {
         console.error(error);
         sentError = new Error(error.message);

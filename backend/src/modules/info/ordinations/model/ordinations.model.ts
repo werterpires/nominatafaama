@@ -6,51 +6,58 @@ import {
   IOrdination,
   IUpdateOrdination,
 } from '../types/types';
+import { UserFromJwt } from 'src/shared/auth/types/types';
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
 
 @Injectable()
 export class OrdinationsModel {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  @InjectModel() private readonly knex: Knex;
+  constructor(private notificationsService: NotificationsService) {}
 
   async createOrdination(
-    createOrdinationData: ICreateOrdination
-  ): Promise<number> {
-    let ordinationId!: number;
-    let sentError: Error | null = null;
+    createOrdinationData: ICreateOrdination,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const { ordination_name, place, year, person_id, ordination_approved } =
+        createOrdinationData;
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const { ordination_name, place, year, person_id, ordination_approved } =
-          createOrdinationData;
+      const [ordination_id] = await this.knex('ordinations')
+        .insert({
+          ordination_name,
+          place,
+          year,
+          person_id,
+          ordination_approved,
+        })
+        .returning('ordination_id');
 
-        const [ordination_id] = await trx('ordinations')
-          .insert({
-            ordination_name,
-            place,
-            year,
-            person_id,
-            ordination_approved,
-          })
-          .returning('ordination_id');
+      const personUndOthers = await this.knex('people')
+        .where('people.person_id', person_id)
+        .select('people.name')
+        .first();
 
-        ordinationId = ordination_id;
-
-        await trx.commit();
-      } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.sqlMessage);
-      }
-    });
-
-    if (sentError) {
-      throw sentError;
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          ordenacao: createOrdinationData.ordination_name,
+          local: createOrdinationData.place,
+          ano: createOrdinationData.year,
+          pessoa: personUndOthers?.name,
+        },
+        notificationType: 4,
+        objectUserId: currentUser.user_id,
+        oldData: null,
+        table: 'Ordenações',
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
 
-    if (!ordinationId) {
-      throw new Error('Não foi possível criar ordenação.');
-    }
-
-    return ordinationId;
+    return true;
   }
 
   async findOrdinationById(id: number): Promise<IOrdination> {
@@ -238,7 +245,8 @@ export class OrdinationsModel {
   }
 
   async updateOrdinationById(
-    updateOrdination: IUpdateOrdination
+    updateOrdination: IUpdateOrdination,
+    currentUser: UserFromJwt
   ): Promise<number> {
     let updatedOrdination: number | null = null;
     let sentError: Error | null = null;
@@ -255,7 +263,8 @@ export class OrdinationsModel {
         } = updateOrdination;
 
         let approved = await trx('ordinations')
-          .first('ordination_approved')
+          .leftJoin('people', 'people.person_id', 'ordinations.person_id')
+          .first('*')
           .where('ordination_id', ordination_id);
 
         if (approved.ordination_approved == true) {
@@ -273,6 +282,32 @@ export class OrdinationsModel {
           });
 
         await trx.commit();
+
+        const personUndOthers = await this.knex('people')
+          .where('people.person_id', person_id)
+          .select('people.name')
+          .first();
+
+        await this.notificationsService.createNotification({
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            ordenacao: ordination_name,
+            local: place,
+            ano: year,
+            pessoa: personUndOthers?.name,
+          },
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            ordenacao: approved.ordination_name,
+            local: approved.place,
+            ano: approved.year,
+            pessoa: personUndOthers?.name,
+          },
+          table: 'Ordenações',
+        });
       } catch (error) {
         console.error(error);
         await trx.rollback();
@@ -291,24 +326,23 @@ export class OrdinationsModel {
     return updatedOrdination;
   }
 
-  async deleteOrdinationById(id: number): Promise<string> {
+  async deleteOrdinationById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     let sentError: Error | null = null;
     let message: string = '';
 
     await this.knex.transaction(async (trx) => {
       try {
-        const existingOrdination = await trx('ordinations')
-          .select('ordination_id')
-          .where('ordination_id', id)
-          .first();
+        let approved = await trx('ordinations')
+          .leftJoin('people', 'people.person_id', 'ordinations.person_id')
+          .first('*')
+          .where('ordination_id', id);
 
-        if (!existingOrdination) {
+        if (!approved) {
           throw new Error('Ordination not found');
         }
-
-        let approved = await trx('ordinations')
-          .first('ordination_approved')
-          .where('ordination_id', id);
 
         if (approved.ordination_approved == true) {
           throw new Error('Registro já aprovado');
@@ -316,6 +350,21 @@ export class OrdinationsModel {
         await trx('ordinations').where('ordination_id', id).del();
 
         await trx.commit();
+        await this.notificationsService.createNotification({
+          action: 'apagou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: null,
+          notificationType: 4,
+          objectUserId: currentUser.user_id,
+          oldData: {
+            ordenacao: approved.ordination_name,
+            local: approved.place,
+            ano: approved.year,
+            pessoa: approved.name,
+          },
+          table: 'Ordenações',
+        });
       } catch (error) {
         console.error(error);
         sentError = new Error(error.message);

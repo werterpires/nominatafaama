@@ -45,9 +45,7 @@ export class LanguagesComponent implements OnInit {
   index: number | null = null
 
   showAlert(func: string, message: string, idx?: number) {
-    if (idx) {
-      this.index = idx
-    }
+    this.index = idx ?? this.index
     this.func = func
     this.alertMessage = message
     this.alert = true

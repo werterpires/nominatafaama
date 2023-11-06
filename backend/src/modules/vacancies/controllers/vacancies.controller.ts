@@ -16,6 +16,8 @@ import {
 import { UpdateVacancyDto } from '../dto/update-vacancy.dto';
 import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
 import { ERoles } from 'src/shared/auth/types/roles.enum';
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Controller('vacancies')
 export class VacanciesController {
@@ -23,10 +25,14 @@ export class VacanciesController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Post('direct')
-  async createDirectVacancy(@Body() createVacancyDto: CreateDirectVacancyDto) {
+  async createDirectVacancy(
+    @Body() createVacancyDto: CreateDirectVacancyDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
       const newVacancy = await this.vacanciesService.createDirectVacancy(
-        createVacancyDto
+        createVacancyDto,
+        currentUser
       );
       return newVacancy;
     } catch (error) {

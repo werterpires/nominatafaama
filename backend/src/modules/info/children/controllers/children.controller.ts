@@ -29,11 +29,15 @@ export class ChildrenController {
   @Post()
   async createChild(
     @Body() input: CreateChildDto,
-    @CurrentUser() user: UserFromJwt
+    @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const { user_id } = user;
-      const newChild = await this.childrenService.createChild(input, user_id);
+      const { user_id } = currentUser;
+      const newChild = await this.childrenService.createChild(
+        input,
+        user_id,
+        currentUser
+      );
       return newChild;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -83,9 +87,15 @@ export class ChildrenController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Put()
-  async updateChildById(@Body() input: UpdateChildDto): Promise<IChild> {
+  async updateChildById(
+    @Body() input: UpdateChildDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ): Promise<IChild> {
     try {
-      const updatedChild = await this.childrenService.updateChildById(input);
+      const updatedChild = await this.childrenService.updateChildById(
+        input,
+        currentUser
+      );
       return updatedChild;
     } catch (error) {
       console.error('Erro capturado no controller: ', error);
@@ -95,9 +105,15 @@ export class ChildrenController {
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Delete(':id')
-  async deleteChildById(@Param('id') id: number) {
+  async deleteChildById(
+    @Param('id') id: number,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
     try {
-      const message = await this.childrenService.deleteChildById(id);
+      const message = await this.childrenService.deleteChildById(
+        id,
+        currentUser
+      );
       return { message };
     } catch (error) {
       console.error('Erro capturado no controller: ', error);

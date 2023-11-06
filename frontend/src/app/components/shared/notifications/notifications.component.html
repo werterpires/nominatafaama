@@ -1,0 +1,53 @@
+<div class="notificationsModal">
+  <div class="notifications">
+    <div class="choseReadDiv">
+      <span
+        class="readOption"
+        [ngClass]="{ selectedReadOption: read === false }"
+        (click)="getAllRegistries(false)"
+        >Não lidas</span
+      ><span
+        class="readOption"
+        [ngClass]="{ selectedReadOption: read === true }"
+        (click)="getAllRegistries(true)"
+        >Lidas</span
+      >
+    </div>
+    <label *ngIf="!read" class="notificationAllreadClick" for="">
+      <input
+        class="notificationCheck"
+        type="checkbox"
+        (input)="setReadToAll()"
+      />
+      Marcar todas como lidas</label
+    >
+    <ul class="notificationsList">
+      <li
+        *ngFor="let notification of allNotifications"
+        class="notificationListItem"
+      >
+        <div class="notification">
+          <label class="notificationClick" for="">
+            <img
+              class="notificationIcon"
+              [src]="
+                'assets/icons/notif' + notification.notification_type + '.svg'
+              "
+              alt="Símbolo de usuário" />
+
+            <input
+              class="notificationCheck"
+              type="checkbox"
+              [checked]="notification.read"
+              (input)="setRead(notification.user_notification_id)"
+          /></label>
+          <p class="notificationText">
+            {{ notification.notification_text }}
+          </p>
+        </div>
+
+        <!-- <hr class="notificationsDivision" /> -->
+      </li>
+    </ul>
+  </div>
+</div>

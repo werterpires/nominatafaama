@@ -4,12 +4,11 @@ import {
   ICreatePublication,
   IUpdatePublication,
 } from '../types/types';
-import { UsersService } from 'src/modules/users/dz_services/users.service';
-import { SpousesModel } from 'src/modules/spouses/model/spouses.model';
 import { PublicationsModel } from '../model/publications.model';
 import { CreatePublicationDto } from '../dto/create-publication.dto';
 import { UpdatePublicationDto } from '../dto/update-publication.dto';
 import { PeopleServices } from 'src/modules/people/dz_services/people.service';
+import { UserFromJwt } from 'src/shared/auth/types/types';
 
 @Injectable()
 export class PublicationsService {
@@ -21,8 +20,9 @@ export class PublicationsService {
   async createPublication(
     dto: CreatePublicationDto,
     user_id: number,
-    personType: string
-  ): Promise<IPublication> {
+    personType: string,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
     try {
       let personId = await this.peopleService.findPersonByUserId(
         user_id,
@@ -42,7 +42,8 @@ export class PublicationsService {
       };
 
       const newPublication = await this.publicationsModel.createPublication(
-        createPublicationData
+        createPublicationData,
+        currentUser
       );
       return newPublication;
     } catch (error) {
@@ -95,7 +96,8 @@ export class PublicationsService {
   }
 
   async updatePublicationById(
-    dto: UpdatePublicationDto
+    dto: UpdatePublicationDto,
+    currentUser: UserFromJwt
   ): Promise<IPublication> {
     try {
       const updatePublicationData: IUpdatePublication = {
@@ -103,7 +105,8 @@ export class PublicationsService {
         publication_approved: null,
       };
       const publicationId = await this.publicationsModel.updatePublicationById(
-        updatePublicationData
+        updatePublicationData,
+        currentUser
       );
 
       const updatedPublication =
@@ -115,9 +118,12 @@ export class PublicationsService {
     }
   }
 
-  async deletePublicationById(id: number): Promise<string> {
+  async deletePublicationById(
+    id: number,
+    currentUser: UserFromJwt
+  ): Promise<string> {
     try {
-      await this.publicationsModel.deletePublicationById(id);
+      await this.publicationsModel.deletePublicationById(id, currentUser);
       return 'Publicação deletada com sucesso.';
     } catch (error) {
       throw error;

@@ -10,8 +10,21 @@ import { EclExpTypesModule } from './ecl-exp-types/ecl-exp-types.module';
 import { PublicationTypesModule } from './publication-types/publication-types.module';
 import { EndowmentsTypesModule } from './endowments-types/endowments-types.module';
 import { MinistryTypesModule } from './ministry-types/ministry-types.module';
+import { NotificationsModule } from 'src/shared/notifications/notifications.module';
 
 @Module({
-  imports: [MaritalStatusModule, UnionsModule, AssociationsModule, HiringStatusModule, AcademicDegreesModule, LanguageTypesModule, EvangExpTypesModule, EclExpTypesModule, PublicationTypesModule, EndowmentsTypesModule, MinistryTypesModule]
+  imports: [
+    MaritalStatusModule,
+    UnionsModule,
+    AssociationsModule,
+    HiringStatusModule,
+    AcademicDegreesModule,
+    LanguageTypesModule,
+    EvangExpTypesModule,
+    EclExpTypesModule,
+    PublicationTypesModule,
+    EndowmentsTypesModule,
+    MinistryTypesModule,
+  ],
 })
 export class ResourcesModule {}

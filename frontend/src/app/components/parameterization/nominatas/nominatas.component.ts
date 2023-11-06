@@ -1,15 +1,19 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { ICreateNominataDto, INominata, IUpdateNominata } from './types'
 import { NominatasService } from './nominatas.service'
 import { DataService } from '../../shared/shared.service.ts/data.service'
+import { ProfessorsService } from '../../records/professors/professors.service'
+import { GeneralProfessorsService } from '../general-professors/general-professors.service'
+import { IProfessor } from '../../records/professors/types'
+import { ISinteticProfessor } from '../nominatas-professors/types'
 
 @Component({
   selector: 'app-nominatas',
   templateUrl: './nominatas.component.html',
   styleUrls: ['./nominatas.component.css'],
 })
-export class NominatasComponent {
+export class NominatasComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   allRegistries: INominata[] = []
@@ -18,6 +22,7 @@ export class NominatasComponent {
     orig_field_invites_begin: '',
     year: '',
     director_words: '',
+    director: 0,
   }
 
   showBox = false
@@ -28,9 +33,12 @@ export class NominatasComponent {
   error = false
   errorMessage = ''
 
+  allProfessors: ISinteticProfessor[] = []
+
   constructor(
     private service: NominatasService,
     public dataService: DataService,
+    private generalProfessorsService: GeneralProfessorsService,
   ) {}
 
   ngOnInit() {
@@ -38,8 +46,27 @@ export class NominatasComponent {
       orig_field_invites_begin: '',
       year: '',
       director_words: '',
+      director: 0,
     }
+    this.allProfessors = []
     this.getAllRegistries()
+    this.getProfessors()
+  }
+
+  getProfessors() {
+    this.isLoading = true
+    this.generalProfessorsService.findAllRegistries().subscribe({
+      next: (res) => {
+        this.allProfessors = res
+        this.dataService.nominatas = this.allRegistries
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
   }
 
   getAllRegistries() {
@@ -79,13 +106,16 @@ export class NominatasComponent {
     this.service
       .createRegistry({
         ...this.createRegistryData,
+        director: parseInt(this.createRegistryData.director.toString()),
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true
           this.isLoading = false
+          this.allProfessors = []
           this.getAllRegistries()
+          this.getProfessors()
           this.showForm = false
           this.resetCreationRegistry()
         },
@@ -107,10 +137,11 @@ export class NominatasComponent {
       ),
       year: this.allRegistries[index].year,
       director_words: this.allRegistries[index].director_words,
+      director: parseInt(this.allRegistries[index].director.toString()),
     }
 
     this.service.updateRegistry(updateNominataData).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro editado com sucesso.'
         this.done = true
         document.getElementById(buttonId)?.classList.add('hidden')
@@ -127,13 +158,13 @@ export class NominatasComponent {
   deleteRegistry(id: number) {
     this.isLoading = true
     this.service.deleteRegistry(id).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage = 'Registro removido com sucesso.'
         this.done = true
         this.isLoading = false
         this.ngOnInit()
       },
-      error: (err) => {
+      error: () => {
         this.errorMessage = 'Não foi possível remover o registro.'
         this.error = true
         this.isLoading = false
