@@ -3,11 +3,11 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core'
 import { IPermissions } from '../shared/container/types'
-import { ICompleteUser } from '../approvals/student-to-approve/types'
 import { DataService } from '../shared/shared.service.ts/data.service'
 import { DomSanitizer } from '@angular/platform-browser'
 import { NominataService } from './nominata.service'
@@ -21,7 +21,7 @@ import { environment } from 'src/environments/environment'
   templateUrl: './nominata.component.html',
   styleUrls: ['./nominata.component.css'],
 })
-export class NominataComponent {
+export class NominataComponent implements OnInit {
   @Input() permissions!: IPermissions
   @Output() selectOne: EventEmitter<void> = new EventEmitter<void>()
   @Output() toStudent = new EventEmitter<{
@@ -118,6 +118,10 @@ export class NominataComponent {
               return 0
             }
           })
+
+          if (this.Registry.professors) {
+            this.findDirector(this.Registry.professors, this.Registry.director)
+          }
         }
 
         this.Registry.students?.forEach((student) => {
@@ -156,7 +160,7 @@ export class NominataComponent {
           })
         }
 
-        this.Registry.professors?.forEach((professor) => {
+        this.Registry.professors?.forEach(() => {
           // const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
           //   type: 'image/jpeg',
           // })
@@ -169,9 +173,6 @@ export class NominataComponent {
           // } else {
           //   this.showForm = true
           // }
-          if (this.Registry && this.Registry.professors) {
-            this.findDirector(this.Registry.professors, this.Registry?.director)
-          }
         })
 
         if (this.Registry.events) {
@@ -311,21 +312,9 @@ export class NominataComponent {
     return this.datePipe.transform(date, 'dd/MM/yyyy')
   }
 
-  // getOneStudent(userId: number) {
-  //   this.isLoading = true
-  //   this.service.findOneRegistry(userId).subscribe({
-  //     next: async (res) => {
-  //       this.dataService.selectedStudent = res
-  //       this.selectOne.emit()
-  //       this.isLoading = false
-  //     },
-  //     error: (err) => {
-  //       this.errorMessage = err.message
-  //       this.error = true
-  //       this.isLoading = false
-  //     },
-  //   })
-  // }
+  setFavorite(studentId: number, fav: boolean) {
+    console.log(fav)
+  }
 
   selectStudent(studentId: string) {
     this.router.navigate(['student/' + studentId])

@@ -103,7 +103,7 @@
           <div (click)="selectStudent(student.student_id.toString())">
             <div class="smallAlonePhoto">
               <div
-                class="imageContainer"
+                class="imageContainer withFavorite"
                 [ngStyle]="{
                   'background-image':
                     'url(' +
@@ -112,7 +112,26 @@
                     student.student_id +
                     '/small_alone_photo)'
                 }"
-              ></div>
+              >
+                <img
+                  src="assets/icons/notFavorite.svg"
+                  alt="figura de uma estrela"
+                  class="favoriteIcon"
+                  (click)="
+                    setFavorite(student.student_id, false);
+                    $event.stopPropagation()
+                  "
+                />
+                <img
+                  src="assets/icons/favorite.svg"
+                  alt="figura de uma estrela"
+                  class="favoriteIcon"
+                  (click)="
+                    setFavorite(student.student_id, true);
+                    $event.stopPropagation()
+                  "
+                />
+              </div>
             </div>
             <div class="studentDatacontainer">
               <div class="hiringStatusSpace">

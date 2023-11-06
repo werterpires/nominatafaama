@@ -485,4 +485,17 @@ footer {
   .directorTextContainer {
     max-width: unset;
   }
+
+  .withFavorite {
+    display: flex;
+    justify-content: flex-end;
+    align-items: start;
+  }
+
+  .favoriteIcon {
+    stroke: white;
+    fill: blue;
+    stroke-width: 2px;
+    width: 40px;
+  }
 }
