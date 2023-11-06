@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
 export class UpdateFormComponent {
   @Input() registryId: any
   @Input() fieldChanged = false
+  @Input() del = true
   @Output() deleteRegistry = new EventEmitter<number>()
   @Output() editRegistry = new EventEmitter<{
     id: number

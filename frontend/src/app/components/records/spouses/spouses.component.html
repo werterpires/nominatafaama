@@ -265,6 +265,7 @@
       [registryId]="registry.spouse_id"
       *ngIf="registry"
       (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
+      [del]="false"
     >
       <div class="subSection">
         <label class="inputLabel">

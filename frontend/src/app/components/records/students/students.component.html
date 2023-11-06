@@ -243,6 +243,7 @@
     <app-update-form
       (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
       *ngIf="registry.student_id"
+      [del]="false"
     >
       <div class="subSection gap-2">
         <label class="inputLabel">
