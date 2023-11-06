@@ -8,5 +8,5 @@ export class UpdateFieldRepDto extends PartialType(CreateFieldRepDto) {
   phoneNumber: string
 
   @IsNumber()
-  rep_id: number
+  repId: number
 }

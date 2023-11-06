@@ -80,35 +80,35 @@ export class FieldRepsModel {
     return result
   }
 
-  // async findFieldRepByUserId(userId: number): Promise<IFieldRep | null> {
-  //   let fieldRep: IFieldRep | null = null
-  //   let sentError: Error | null = null
-  //   try {
-  //     const result = await this.knex
-  //       .table('fieldReps')
-  //       .first(
-  //         'fieldReps.*',
-  //         'people.name as person_name',
-  //         'people.person_id as person_id'
-  //       )
-  //       .leftJoin('users', 'fieldReps.person_id', 'users.person_id')
-  //       .leftJoin('people', 'fieldReps.person_id', 'people.person_id')
-  //       .where('users.user_id', userId)
+  async findFieldRepByUserId(userId: number): Promise<IFieldRep | null> {
+    let fieldRep: IFieldRep | null = null
+    let sentError: Error | null = null
+    try {
+      const result = await this.knex
+        .table('field_reps')
+        .first(
+          'field_reps.*',
+          'people.name as person_name',
+          'people.person_id as person_id'
+        )
+        .leftJoin('users', 'field_reps.person_id', 'users.person_id')
+        .leftJoin('people', 'field_reps.person_id', 'people.person_id')
+        .where('users.user_id', userId)
 
-  //     if (result != null) {
-  //       fieldRep = result
-  //     }
-  //   } catch (error) {
-  //     console.error('Esse é o erro capturado na model: ', error)
-  //     sentError = new Error(error.message)
-  //   }
+      if (result != null) {
+        fieldRep = result
+      }
+    } catch (error) {
+      console.error('Esse é o erro capturado na model: ', error)
+      sentError = new Error(error.message)
+    }
 
-  //   if (sentError) {
-  //     throw sentError
-  //   }
+    if (sentError) {
+      throw sentError
+    }
 
-  //   return fieldRep
-  // }
+    return fieldRep
+  }
 
   async updateFieldRepById(
     updateFieldRep: IUpdateFieldRep,
