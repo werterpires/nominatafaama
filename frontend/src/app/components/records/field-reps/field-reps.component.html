@@ -37,6 +37,7 @@
     <app-update-form
       (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
       *ngIf="registry.repId"
+      [del]="false"
     >
       <label class="inputLabel w-full">
         Número de telefone:

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { LanguageTypesService } from '../language-types/language-types.service'
-import { ILanguageType } from '../language-types/types'
+import { LanguageTypesService } from '../../parameterization/language-types/language-types.service'
+import { ILanguageType } from '../../parameterization/language-types/types'
 import { LanguageService } from './language.service'
 import { ICreateLanguageDto, ILanguage, IUpdateLanguageDto } from './types'
 

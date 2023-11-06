@@ -1,7 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { DataService } from '../../shared/shared.service.ts/data.service'
-import { OthersServices } from '../../shared/shared.service.ts/others.service'
 import { ElementRef, ViewChild } from '@angular/core'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 import { ICreateFieldRep, IFieldRep, IUpdateFieldRep } from './types'
