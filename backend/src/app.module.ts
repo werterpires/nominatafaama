@@ -25,6 +25,7 @@ import * as Nodemailer from 'nodemailer';
 import { NotificationsService } from './shared/notifications/services/notifications.service';
 import { SendEmailModule } from './shared/send-email/send-email.module';
 import { FieldRepsModule } from './modules/field-reps/field-reps.module';
+import { FieldRepresentationsModule } from './modules/field-representations/field-representations.module';
 
 config();
 
@@ -103,6 +104,7 @@ const mssqlConfig: KnexModuleOptions = {
     NotificationsModule,
     SendEmailModule,
     FieldRepsModule,
+    FieldRepresentationsModule,
   ],
   providers: [
     {
