@@ -75,6 +75,13 @@ export class NotificationsService {
         createdNotification = await this.notificationsModel.createNotification(
           createNotification
         )
+      } else if (notificationData.notificationType === 9) {
+        const createNotification = await this.createNotificationTypeNine(
+          notificationData
+        )
+        createdNotification = await this.notificationsModel.createNotification(
+          createNotification
+        )
       }
 
       return createdNotification
@@ -660,6 +667,80 @@ export class NotificationsService {
       }
 
       let notificationText: string
+
+      notificationText = textOne
+
+      return {
+        agentUserId: notificationData.agentUserId,
+        notificationType: notificationData.notificationType,
+        action: notificationData.action,
+        table: notificationData.table,
+        oldData: notificationData.oldData,
+        newData: notificationData.newData,
+        objectUserId: notificationData.objectUserId,
+        sent: false,
+        read: false,
+        notificationText: notificationText,
+        notifiedUserIds: notifiedUsersIds
+      }
+    } catch (error) {
+      console.error(error)
+      throw new Error(error.message)
+    }
+  }
+
+  async createNotificationTypeNine(
+    notificationData: INotificationData
+  ): Promise<ICreateNotification> {
+    try {
+      if (
+        notificationData.newData === null &&
+        notificationData.action !== 'apagou'
+      ) {
+        throw new Error('newData is null')
+      }
+
+      let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
+        'direção',
+        'ministerial'
+      ])
+
+      const index = notifiedUsersIds.indexOf(notificationData.agentUserId)
+      let objectName = ''
+
+      if (index !== -1) {
+        notifiedUsersIds.splice(index, 1)
+      }
+
+      let newDataToText: string = ''
+      if (notificationData.newData) {
+        newDataToText = Object.entries(notificationData.newData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`
+          })
+          .join(', ')
+      }
+
+      let oldDataToText: string = ''
+      if (notificationData.oldData) {
+        oldDataToText = Object.entries(notificationData.oldData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`
+          })
+          .join(', ')
+      }
+
+      let textOne = ''
+
+      if (notificationData.action === 'inseriu') {
+        textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados para si mesmo como representante de campo: ${newDataToText}`
+      } else if (notificationData.action === 'editou') {
+        textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados para si mesmo como representante de campo: de ${oldDataToText}, passou a ser ${newDataToText}`
+      } else if (notificationData.action === 'apagou') {
+        textOne = `O usuário ${notificationData.agent_name} excluiu seus próprios dados representante de campo: ${oldDataToText}`
+      }
+
+      let notificationText: string | string[]
 
       notificationText = textOne
 
