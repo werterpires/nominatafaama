@@ -6,12 +6,13 @@ import { NotificationsService } from 'src/shared/notifications/services/notifica
 import { UserFromJwt } from 'src/shared/auth/types/types'
 import {
   ICreateFieldRepresentation,
+  IEvaluateFieldRepresentation,
   IFieldRepresentation,
   IUpdateFieldRepresentation
 } from '../types/types'
 
 @Injectable()
-export class FieldRresentationsModel {
+export class FieldRepresentationsModel {
   @InjectModel() private readonly knex: Knex
   constructor(private notificationsService: NotificationsService) {}
 
@@ -301,7 +302,7 @@ export class FieldRresentationsModel {
     return fieldRepresentations!
   }
 
-  async updateFieldRById(
+  async updateFieldRepresentationById(
     updateFieldRepresentation: IUpdateFieldRepresentation,
     currentUser: UserFromJwt
   ): Promise<IFieldRepresentation> {
@@ -370,6 +371,70 @@ export class FieldRresentationsModel {
     }
 
     return updatedFieldRepresentation
+  }
+
+  async evaluateFieldRepresentation(
+    evaluateFieldRepresentation: IEvaluateFieldRepresentation,
+    currentUser: UserFromJwt
+  ): Promise<IFieldRepresentation> {
+    let evaluatedFieldRepresentation: IFieldRepresentation | null = null
+    let sentError: Error | null = null
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const { repActiveValidate, repApproved, representationId } =
+          evaluateFieldRepresentation
+
+        const oldData = await this.findFieldRepresentationById(representationId)
+
+        await trx('field_representations')
+          .where('representation_id', representationId)
+          .limit(1)
+          .update({
+            rep_active_validate: repActiveValidate,
+            rep_approved: repApproved
+          })
+
+        await trx.commit()
+
+        const newData = await this.findFieldRepresentationById(representationId)
+        evaluatedFieldRepresentation = newData!
+        this.notificationsService.createNotification({
+          notificationType: 11,
+          action: 'editou',
+          agent_name: currentUser.name,
+          agentUserId: currentUser.user_id,
+          newData: {
+            campo: newData?.representedField,
+            funcao: newData?.functionn,
+            validade: newData?.repActiveValidate,
+            aprovado: newData?.repApproved
+          },
+          oldData: {
+            campo: oldData?.representedField,
+            funcao: oldData?.functionn,
+            validade: oldData?.repActiveValidate,
+            aprovado: oldData?.repApproved
+          },
+          objectUserId: currentUser.user_id,
+          table: 'Representações de campo'
+        })
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    if (evaluatedFieldRepresentation === null) {
+      throw new Error('Falha ao atualizar fieldRep.')
+    }
+
+    return evaluatedFieldRepresentation
   }
 
   async deleteFieldRepresentationById(
