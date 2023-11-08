@@ -84,6 +84,7 @@ import { AlertModalComponent } from './components/shared/alert-modal/alert-modal
 import { NotificationsComponent } from './components/shared/notifications/notifications.component'
 import { RepresentationsComponent } from './components/records/representations/representations.component'
 import { RepresentationsToApproveComponent } from './components/approvals/representations-to_approve/representations-to-approve.component'
+import { OneRepresentationsToApproveComponent } from './components/approvals/one-representation-to-approve/one-representation-to-approve.component'
 
 @NgModule({
   declarations: [
@@ -164,6 +165,7 @@ import { RepresentationsToApproveComponent } from './components/approvals/repres
     NotificationsComponent,
     RepresentationsComponent,
     RepresentationsToApproveComponent,
+    OneRepresentationsToApproveComponent,
   ],
   imports: [
     BrowserModule,

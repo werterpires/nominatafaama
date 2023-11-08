@@ -49,6 +49,17 @@ export class FieldRepsController {
     }
   }
 
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Get('all')
+  async getAllFieldReps() {
+    try {
+      const fieldRep = await this.fieldRepsService.findAllFieldRep()
+      return fieldRep
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
   @Put()
   async updateFieldRep(

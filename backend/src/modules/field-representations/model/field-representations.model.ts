@@ -283,7 +283,7 @@ export class FieldRepresentationsModel {
           'field_representations.represented_field_id',
           'associations.association_id'
         )
-        .where('representations.rep_id', repId)
+        .where('field_representations.rep_id', repId)
 
       if (result === null) {
         throw new Error('Representações de campo não encontradas')

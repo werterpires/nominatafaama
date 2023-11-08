@@ -52,6 +52,16 @@ export class FieldRepsService {
     }
   }
 
+  async findAllFieldRep(): Promise<IFieldRep[] | null> {
+    try {
+      const fieldRep = await this.fieldRepsModel.findAllFieldReps()
+      return fieldRep
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
   async updateFieldRepById(
     input: UpdateFieldRepDto,
     currentUser: UserFromJwt

@@ -80,6 +80,32 @@ export class FieldRepsModel {
     return result
   }
 
+  async findAllFieldReps(): Promise<IFieldRep[] | null> {
+    const result = await this.knex
+      .table('field_reps')
+      .select(
+        'field_reps.*',
+        'people.name as person_name',
+        'people.person_id as person_id'
+      )
+      .leftJoin('people', 'field_reps.person_id', 'people.person_id')
+
+    if (!result) {
+      throw new Error('Representantes de campo não encontrados')
+    }
+
+    const reps: IFieldRep[] = result.map((rep) => {
+      return {
+        personId: rep.person_id,
+        personName: rep.person_name,
+        phoneNumber: rep.phone_number,
+        repId: rep.rep_id
+      }
+    })
+
+    return reps
+  }
+
   async findFieldRepByUserId(userId: number): Promise<IFieldRep | null> {
     let fieldRep: IFieldRep | null = null
     let sentError: Error | null = null
