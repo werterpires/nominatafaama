@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import {
   IPermissions,
   IRole,
@@ -15,7 +15,7 @@ import { Router } from '@angular/router'
   templateUrl: './users-approves.component.html',
   styleUrls: ['./users-approves.component.css'],
 })
-export class UsersApprovesComponent {
+export class UsersApprovesComponent implements OnInit {
   constructor(
     private userServices: UsersServices,
     private usersApprovesServices: UserApprovesService,

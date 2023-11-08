@@ -9,6 +9,7 @@ import { UsersApprovesComponent } from './components/approvals/users-approves/us
 import { StudentToApproveComponent } from './components/approvals/student-to-approve/student-to-approve.component'
 import { OneStudentToApproveComponent } from './components/approvals/one-student-to-approve/one-student-to-approve.component'
 import { ParameterizationComponent } from './components/parameterization/parameterization.component'
+import { RepresentationsToApproveComponent } from './components/approvals/representations-to_approve/representations-to_approve.component'
 
 const routes: Routes = [
   { path: 'student/:studentid', component: StudentComponent },
@@ -18,6 +19,10 @@ const routes: Routes = [
   },
   { path: 'approve/students', component: StudentToApproveComponent },
   { path: 'approve/users', component: UsersApprovesComponent },
+  {
+    path: 'approve/representations',
+    component: RepresentationsToApproveComponent,
+  },
   { path: 'login', component: LoginComponent },
   { path: 'logon', component: LogonComponent },
   { path: 'nominata', component: NominataComponent },

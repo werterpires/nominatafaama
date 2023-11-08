@@ -83,6 +83,7 @@ import { UnactiveComponent } from './components/parameterization/unactive/unacti
 import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component'
 import { NotificationsComponent } from './components/shared/notifications/notifications.component'
 import { RepresentationsComponent } from './components/records/representations/representations.component'
+import { RepresentationsToApproveComponent } from './components/approvals/representations-to_approve/representations-to_approve.component'
 
 @NgModule({
   declarations: [
@@ -162,6 +163,7 @@ import { RepresentationsComponent } from './components/records/representations/r
     AlertModalComponent,
     NotificationsComponent,
     RepresentationsComponent,
+    RepresentationsToApproveComponent,
   ],
   imports: [
     BrowserModule,
