@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { ElementRef, ViewChild } from '@angular/core'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
 import { ICreateFieldRep, IFieldRep, IUpdateFieldRep } from './types'
 import { FieldRepsService } from './field-reps.service'
@@ -15,7 +14,6 @@ export class FieldRepsComponent implements OnInit {
     private fieldRepsService: FieldRepsService,
     private validateService: ValidateService,
   ) {}
-  @ViewChild('phoneNumberInput') phoneNumberInput!: ElementRef
 
   @Input() permissions!: IPermissions
   registry: IFieldRep = {

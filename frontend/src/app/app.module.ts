@@ -82,6 +82,7 @@ import { ModalTermComponent } from './components/modal-term/modal-term.component
 import { UnactiveComponent } from './components/parameterization/unactive/unactive.component'
 import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component'
 import { NotificationsComponent } from './components/shared/notifications/notifications.component'
+import { RepresentationsComponent } from './components/records/representations/representations.component'
 
 @NgModule({
   declarations: [
@@ -161,6 +162,7 @@ import { NotificationsComponent } from './components/shared/notifications/notifi
     UnactiveComponent,
     AlertModalComponent,
     NotificationsComponent,
+    RepresentationsComponent,
   ],
   imports: [
     BrowserModule,

@@ -176,5 +176,9 @@
       *ngIf="permissions.representacao || permissions.administrador"
       [permissions]="permissions"
     ></app-field-reps>
+    <app-representations
+      *ngIf="permissions.representacao || permissions.administrador"
+      [permissions]="permissions"
+    ></app-representations>
   </div>
 </app-container>

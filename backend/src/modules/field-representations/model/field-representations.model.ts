@@ -150,24 +150,32 @@ export class FieldRepresentationsModel {
       if (result === null) {
         throw new Error('Representações de campo não encontradas')
       }
-      fieldRepresentations = result.reduce(
-        (acc: IFieldRepresentation[], cur: any) => {
-          acc.push({
-            representationId: cur.representation_id,
-            rep: {
-              repId: cur.rep_id,
-              personName: cur.person_name,
-              phoneNumber: cur.phone_number,
-              personId: cur.person_id
-            },
-            representedField: cur.association_name,
-            representedFieldId: cur.represented_field_id,
-            functionn: cur.function,
-            repApproved: cur.rep_approved,
-            repActiveValidate: cur.rep_active_validate
-          })
-        }
-      )
+      if (result.length === 0) {
+        fieldRepresentations = []
+      } else {
+        fieldRepresentations = result.reduce(
+          (acc: IFieldRepresentation[], cur: any) => {
+            return [
+              ...acc,
+              {
+                representationId: cur.representation_id,
+                rep: {
+                  repId: cur.rep_id,
+                  personName: cur.person_name,
+                  phoneNumber: cur.phone_number,
+                  personId: cur.person_id
+                },
+                representedField: cur.association_name,
+                representedFieldId: cur.represented_field_id,
+                functionn: cur.function,
+                repApproved: cur.rep_approved,
+                repActiveValidate: cur.rep_active_validate
+              }
+            ]
+          },
+          []
+        )
+      }
     } catch (error) {
       console.error('Esse é o erro capturado na model: ', error)
       sentError = new Error(error.message)
@@ -211,24 +219,28 @@ export class FieldRepresentationsModel {
       if (result === null) {
         throw new Error('Representações de campo não encontradas')
       }
-      fieldRepresentations = result.reduce(
-        (acc: IFieldRepresentation[], cur: any) => {
-          acc.push({
-            representationId: cur.representation_id,
-            rep: {
-              repId: cur.rep_id,
-              personName: cur.person_name,
-              phoneNumber: cur.phone_number,
-              personId: cur.person_id
-            },
-            representedField: cur.association_name,
-            representedFieldId: cur.represented_field_id,
-            functionn: cur.function,
-            repApproved: cur.rep_approved,
-            repActiveValidate: cur.rep_active_validate
-          })
-        }
-      )
+      if (result.length === 0) {
+        fieldRepresentations = []
+      } else {
+        fieldRepresentations = result.reduce(
+          (acc: IFieldRepresentation[], cur: any) => {
+            acc.push({
+              representationId: cur.representation_id,
+              rep: {
+                repId: cur.rep_id,
+                personName: cur.person_name,
+                phoneNumber: cur.phone_number,
+                personId: cur.person_id
+              },
+              representedField: cur.association_name,
+              representedFieldId: cur.represented_field_id,
+              functionn: cur.function,
+              repApproved: cur.rep_approved,
+              repActiveValidate: cur.rep_active_validate
+            })
+          }
+        )
+      }
     } catch (error) {
       console.error('Esse é o erro capturado na model: ', error)
       sentError = new Error(error.message)
@@ -272,24 +284,32 @@ export class FieldRepresentationsModel {
       if (result === null) {
         throw new Error('Representações de campo não encontradas')
       }
-      fieldRepresentations = result.reduce(
-        (acc: IFieldRepresentation[], cur: any) => {
-          acc.push({
-            representationId: cur.representation_id,
-            rep: {
-              repId: cur.rep_id,
-              personName: cur.person_name,
-              phoneNumber: cur.phone_number,
-              personId: cur.person_id
-            },
-            representedField: cur.association_name,
-            representedFieldId: cur.represented_field_id,
-            functionn: cur.function,
-            repApproved: cur.rep_approved,
-            repActiveValidate: cur.rep_active_validate
-          })
-        }
-      )
+      if (result.length === 0) {
+        fieldRepresentations = []
+      } else {
+        fieldRepresentations = result.reduce(
+          (acc: IFieldRepresentation[], cur: any) => {
+            return [
+              ...acc,
+              {
+                representationId: cur.representation_id,
+                rep: {
+                  repId: cur.rep_id,
+                  personName: cur.person_name,
+                  phoneNumber: cur.phone_number,
+                  personId: cur.person_id
+                },
+                representedField: cur.association_name,
+                representedFieldId: cur.represented_field_id,
+                functionn: cur.function,
+                repApproved: cur.rep_approved,
+                repActiveValidate: cur.rep_active_validate
+              }
+            ]
+          },
+          []
+        )
+      }
     } catch (error) {
       console.error('Esse é o erro capturado na model: ', error)
       sentError = new Error(error.message)
@@ -309,65 +329,61 @@ export class FieldRepresentationsModel {
     let updatedFieldRepresentation: IFieldRepresentation | null = null
     let sentError: Error | null = null
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const {
-          repActiveValidate,
-          functionn,
-          repApproved,
-          representationId,
-          representedFieldId
-        } = updateFieldRepresentation
+    try {
+      const {
+        repActiveValidate,
+        functionn,
+        repApproved,
+        representationId,
+        representedFieldId
+      } = updateFieldRepresentation
 
-        const oldData = await this.findFieldRepresentationById(representationId)
+      const oldData = await this.findFieldRepresentationById(representationId)
 
-        await trx('field_representations')
-          .where('representation_id', representationId)
-          .limit(1)
-          .update({
-            represented_field_id: representedFieldId,
-            function: functionn,
-            rep_active_validate: repActiveValidate,
-            rep_approved: repApproved
-          })
-
-        await trx.commit()
-
-        const newData = await this.findFieldRepresentationById(representationId)
-        updateFieldRepresentation = newData!
-        this.notificationsService.createNotification({
-          notificationType: 10,
-          action: 'editou',
-          agent_name: currentUser.name,
-          agentUserId: currentUser.user_id,
-          newData: {
-            campo: newData?.representedField,
-            funcao: newData?.functionn,
-            validade: newData?.repActiveValidate,
-            aprovado: newData?.repApproved
-          },
-          oldData: {
-            campo: oldData?.representedField,
-            funcao: oldData?.functionn,
-            validade: oldData?.repActiveValidate,
-            aprovado: oldData?.repApproved
-          },
-          objectUserId: currentUser.user_id,
-          table: 'Representações de campo'
+      await this.knex('field_representations')
+        .where('representation_id', representationId)
+        .limit(1)
+        .update({
+          represented_field_id: representedFieldId,
+          function: functionn,
+          rep_active_validate: repActiveValidate,
+          rep_approved: repApproved
         })
-      } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.message)
-      }
-    })
+
+      const newData = await this.findFieldRepresentationById(representationId)
+      updatedFieldRepresentation = newData!
+      this.notificationsService.createNotification({
+        notificationType: 10,
+        action: 'editou',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          campo: newData?.representedField,
+          funcao: newData?.functionn,
+          validade: newData?.repActiveValidate,
+          aprovado: newData?.repApproved
+        },
+        oldData: {
+          campo: oldData?.representedField,
+          funcao: oldData?.functionn,
+          validade: oldData?.repActiveValidate,
+          aprovado: oldData?.repApproved
+        },
+        objectUserId: currentUser.user_id,
+        table: 'Representações de campo'
+      })
+    } catch (error) {
+      console.error(error)
+
+      sentError = new Error(error.message)
+    }
 
     if (sentError) {
       throw sentError
     }
 
     if (updatedFieldRepresentation === null) {
-      throw new Error('Falha ao atualizar fieldRep.')
+      throw new Error('Representação de campo não encontrada')
     }
 
     return updatedFieldRepresentation
