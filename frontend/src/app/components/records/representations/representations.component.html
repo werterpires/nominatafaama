@@ -57,7 +57,7 @@
           Associação
           <select
             name="associationSelect"
-            [(ngModel)]="createRegistryData.representedFieldId"
+            [(ngModel)]="createRegistryData.representedFieldID"
           >
             <option
               *ngFor="let association of filteredAssociations"
@@ -77,7 +77,7 @@
         showAlert(
           'delete',
           'Confirmar a exclusão deste item?',
-          registry.representationId
+          registry.representationID
         )
       "
       [registryId]="i"
@@ -112,7 +112,7 @@
             <option
               *ngFor="let union of allUnions"
               [value]="union.union_id"
-              [selected]="union.union_id === registries[i].representedFieldId"
+              [selected]="union.union_id === registries[i].representedFieldID"
             >
               {{ union.union_name }}
             </option>
@@ -120,12 +120,12 @@
         </label>
         <label>
           Campo
-          <select name="courseArea" [(ngModel)]="registry.representedFieldId">
+          <select name="courseArea" [(ngModel)]="registry.representedFieldID">
             <option
               *ngFor="let association of filteredAssociationsGroup[i]"
               [value]="association.association_id"
               [selected]="
-                association.association_id === registry.representedFieldId
+                association.association_id === registry.representedFieldID
               "
             >
               {{ association.association_name }}

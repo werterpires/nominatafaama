@@ -109,14 +109,15 @@ export class FieldRepresentationsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
-  @Put()
-  async updateFieldRepresentation(
-    @Body() input: UpdateFieldRepresentationDto,
+  @Put('evaluate')
+  async evaluateFieldRepresentation(
+    @Body() input: EvaluateFieldRepresentationDto,
     @CurrentUser() currentUser: UserFromJwt
   ) {
+    console.log('aqui')
     try {
       const updatedFieldRep =
-        await this.fieldRepresentationsService.updateFieldRepresentationById(
+        await this.fieldRepresentationsService.evaluateFieldRepresentationById(
           input,
           currentUser
         )
@@ -127,14 +128,14 @@ export class FieldRepresentationsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
-  @Put('evaluate')
-  async evaluateFieldRepresentation(
-    @Body() input: EvaluateFieldRepresentationDto,
+  @Put()
+  async updateFieldRepresentation(
+    @Body() input: UpdateFieldRepresentationDto,
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
       const updatedFieldRep =
-        await this.fieldRepresentationsService.evaluateFieldRepresentationById(
+        await this.fieldRepresentationsService.updateFieldRepresentationById(
           input,
           currentUser
         )

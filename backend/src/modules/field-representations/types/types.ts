@@ -1,33 +1,33 @@
 import { IFieldRep } from 'src/modules/field-reps/types/types'
 
 export interface IFieldRepresentation {
-  representationId: number
+  representationID: number
   rep: IFieldRep
   representedField: string
-  representedFieldId: number
+  representedFieldID: number
   functionn: string
   repApproved: boolean | null
   repActiveValidate: Date
 }
 
 export interface ICreateFieldRepresentation {
-  repId: number
-  representedFieldId: number
+  repID: number
+  representedFieldID: number
   functionn: string
   repApproved: boolean | null
   repActiveValidate: Date
 }
 
 export interface IUpdateFieldRepresentation {
-  representationId: number
-  representedFieldId: number
+  representationID: number
+  representedFieldID: number
   functionn: string
   repApproved: boolean | null
   repActiveValidate: Date
 }
 
 export interface IEvaluateFieldRepresentation {
-  representationId: number
+  representationID: number
   repApproved: boolean
   repActiveValidate: Date
 }

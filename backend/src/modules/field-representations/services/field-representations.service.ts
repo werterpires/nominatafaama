@@ -34,8 +34,8 @@ export class FieldRepresentationsService {
       }
 
       const createRepresentationData: ICreateFieldRepresentation = {
-        repId: rep.repId,
-        representedFieldId: dto.representedFieldId,
+        repID: rep.repId,
+        representedFieldID: dto.representedFieldID,
         functionn: dto.functionn,
         repApproved: null,
         repActiveValidate: new Date()

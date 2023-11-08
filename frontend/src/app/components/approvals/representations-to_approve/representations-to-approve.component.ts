@@ -7,9 +7,9 @@ import { LoginService } from '../../shared/shared.service.ts/login.service'
 import { Router } from '@angular/router'
 
 @Component({
-  selector: 'app-representations',
-  templateUrl: './representations-to_approve.component.html',
-  styleUrls: ['./representations-to_approve.component.css'],
+  selector: 'app-representations-to-approve',
+  templateUrl: './representations-to-approve.component.html',
+  styleUrls: ['./representations-to-approve.component.css'],
 })
 export class RepresentationsToApproveComponent implements OnInit {
   constructor(
@@ -73,7 +73,25 @@ export class RepresentationsToApproveComponent implements OnInit {
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
     })
+    this.getAllRegistries()
     console.log(this.permissions)
+  }
+
+  getAllRegistries() {
+    this.isLoading = true
+    this.representationsToApproveService.findAllRegistries().subscribe({
+      next: (res) => {
+        console.log(res)
+        this.allRegistries = res
+
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
   }
 
   approveRepresentation(
@@ -103,7 +121,7 @@ export class RepresentationsToApproveComponent implements OnInit {
     const date = this.dataService.dateFormatter(
       this.allRegistries[idx].repActiveValidate,
     )
-
+    console.log(representationID)
     this.representationsToApproveService
       .approveRepresentation({
         representationID,
@@ -112,7 +130,7 @@ export class RepresentationsToApproveComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          this.doneMessage = 'Status modificao com sucesso.'
+          this.doneMessage = 'Ação concluída com sucesso.'
           this.done = true
           this.isLoading = false
           if (approved) {

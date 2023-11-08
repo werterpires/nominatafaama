@@ -57,7 +57,7 @@ export class RepresentationsComponent implements OnInit {
   }
 
   createRegistryData: CreateFieldRepresentationDto = {
-    representedFieldId: 0,
+    representedFieldID: 0,
     functionn: '',
   }
 
@@ -189,11 +189,13 @@ export class RepresentationsComponent implements OnInit {
 
   setGroups() {
     this.selectedUnionGroup = []
+
     this.filteredAssociationsGroup = []
     for (let i = 0; i < this.registries.length; i++) {
       this.selectedUnionGroup.push(this.setUnion(i))
 
       this.filteredAssociationsGroup.push(this.allAssociations)
+
       this.filterRegistryAssociations(i)
     }
   }
@@ -202,7 +204,7 @@ export class RepresentationsComponent implements OnInit {
     const unionId =
       this.allAssociations.find((association) => {
         if (
-          association.association_id === this.registries[idx].representedFieldId
+          association.association_id === this.registries[idx].representedFieldID
         ) {
           return true
         } else {
@@ -217,7 +219,7 @@ export class RepresentationsComponent implements OnInit {
     this.filteredAssociations = this.allAssociations.filter((association) => {
       return association.union_id == this.selectedUnion
     })
-    this.createRegistryData.representedFieldId =
+    this.createRegistryData.representedFieldID =
       this.filteredAssociations[0].association_id
   }
 
@@ -227,7 +229,7 @@ export class RepresentationsComponent implements OnInit {
         return association.union_id == this.selectedUnionGroup[idx]
       },
     )
-    this.registries[idx].representedFieldId =
+    this.registries[idx].representedFieldID =
       this.filteredAssociationsGroup[idx][0].association_id
   }
 
@@ -239,7 +241,7 @@ export class RepresentationsComponent implements OnInit {
       )
       return
     }
-    if (this.createRegistryData.representedFieldId < 1) {
+    if (this.createRegistryData.representedFieldID < 1) {
       this.showError(
         'Escolha um campo ao qual representa para prosseguir com o registro.',
       )
@@ -248,8 +250,8 @@ export class RepresentationsComponent implements OnInit {
 
     const newRepresentation: CreateFieldRepresentationDto = {
       functionn: this.createRegistryData.functionn,
-      representedFieldId: parseInt(
-        this.createRegistryData.representedFieldId.toString(),
+      representedFieldID: parseInt(
+        this.createRegistryData.representedFieldID.toString(),
       ),
     }
     this.representationsService
@@ -278,7 +280,7 @@ export class RepresentationsComponent implements OnInit {
       )
       return
     }
-    if (this.registries[i].representedFieldId < 1) {
+    if (this.registries[i].representedFieldID < 1) {
       this.showError(
         'Escolha um campo ao qual representa para prosseguir com a edição.',
       )
@@ -286,10 +288,10 @@ export class RepresentationsComponent implements OnInit {
     }
     const editRepresentation: UpdateFieldRepresentationDto = {
       functionn: this.registries[i].functionn,
-      representedFieldId: parseInt(
-        this.registries[i].representedFieldId.toString(),
+      representedFieldID: parseInt(
+        this.registries[i].representedFieldID.toString(),
       ),
-      representationId: this.registries[i].representationId,
+      representationID: this.registries[i].representationID,
     }
     this.representationsService
       .updateRepresentation(editRepresentation)

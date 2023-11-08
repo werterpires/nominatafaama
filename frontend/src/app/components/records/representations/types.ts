@@ -1,27 +1,27 @@
 import { IFieldRep } from '../field-reps/types'
 
 export interface IFieldRepresentation {
-  representationId: number
+  representationID: number
   rep: IFieldRep
   representedField: string
-  representedFieldId: number
+  representedFieldID: number
   functionn: string
   repApproved: boolean | null
   repActiveValidate: string
 }
 
 export interface CreateFieldRepresentationDto {
-  representedFieldId: number
+  representedFieldID: number
   functionn: string
 }
 
 export interface UpdateFieldRepresentationDto
   extends CreateFieldRepresentationDto {
-  representationId: number
+  representationID: number
 }
 
 export interface EvaluateFieldRepresentationDto {
-  representationId: number
+  representationID: number
   repApproved: boolean
   repActiveValidate: string
 }

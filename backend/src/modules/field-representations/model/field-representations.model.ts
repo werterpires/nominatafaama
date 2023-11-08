@@ -27,8 +27,8 @@ export class FieldRepresentationsModel {
       try {
         const [fieldRepresentationId] = await trx('field_representations')
           .insert({
-            rep_id: createFieldRepresentation.repId,
-            represented_field_id: createFieldRepresentation.representedFieldId,
+            rep_id: createFieldRepresentation.repID,
+            represented_field_id: createFieldRepresentation.representedFieldID,
             function: createFieldRepresentation.functionn,
             rep_approved: createFieldRepresentation.repApproved,
             rep_active_validate: createFieldRepresentation.repActiveValidate
@@ -74,7 +74,7 @@ export class FieldRepresentationsModel {
   }
 
   async findFieldRepresentationById(
-    representationId: number
+    representationID: number
   ): Promise<IFieldRepresentation | null> {
     const result = await this.knex
       .table('field_representations')
@@ -95,14 +95,14 @@ export class FieldRepresentationsModel {
         'field_representations.represented_field_id',
         'associations.association_id'
       )
-      .where('field_representations.representation_id', '=', representationId)
+      .where('field_representations.representation_id', '=', representationID)
 
     if (!result) {
       throw new Error('Representação de campo não encontrada')
     }
 
     const representation: IFieldRepresentation = {
-      representationId: result.representation_id,
+      representationID: result.representation_id,
       rep: {
         repId: result.rep_id,
         personName: result.person_name,
@@ -110,7 +110,7 @@ export class FieldRepresentationsModel {
         personId: result.person_id
       },
       representedField: result.association_name,
-      representedFieldId: result.represented_field_id,
+      representedFieldID: result.represented_field_id,
       functionn: result.function,
       repApproved: result.rep_approved,
       repActiveValidate: result.rep_active_validate
@@ -158,7 +158,7 @@ export class FieldRepresentationsModel {
             return [
               ...acc,
               {
-                representationId: cur.representation_id,
+                representationID: cur.representation_id,
                 rep: {
                   repId: cur.rep_id,
                   personName: cur.person_name,
@@ -166,7 +166,7 @@ export class FieldRepresentationsModel {
                   personId: cur.person_id
                 },
                 representedField: cur.association_name,
-                representedFieldId: cur.represented_field_id,
+                representedFieldID: cur.represented_field_id,
                 functionn: cur.function,
                 repApproved: cur.rep_approved,
                 repActiveValidate: cur.rep_active_validate
@@ -224,21 +224,25 @@ export class FieldRepresentationsModel {
       } else {
         fieldRepresentations = result.reduce(
           (acc: IFieldRepresentation[], cur: any) => {
-            acc.push({
-              representationId: cur.representation_id,
-              rep: {
-                repId: cur.rep_id,
-                personName: cur.person_name,
-                phoneNumber: cur.phone_number,
-                personId: cur.person_id
-              },
-              representedField: cur.association_name,
-              representedFieldId: cur.represented_field_id,
-              functionn: cur.function,
-              repApproved: cur.rep_approved,
-              repActiveValidate: cur.rep_active_validate
-            })
-          }
+            return [
+              ...acc,
+              {
+                representationID: cur.representation_id,
+                rep: {
+                  repId: cur.rep_id,
+                  personName: cur.person_name,
+                  phoneNumber: cur.phone_number,
+                  personId: cur.person_id
+                },
+                representedField: cur.association_name,
+                representedFieldID: cur.represented_field_id,
+                functionn: cur.function,
+                repApproved: cur.rep_approved,
+                repActiveValidate: cur.rep_active_validate
+              }
+            ]
+          },
+          []
         )
       }
     } catch (error) {
@@ -292,7 +296,7 @@ export class FieldRepresentationsModel {
             return [
               ...acc,
               {
-                representationId: cur.representation_id,
+                representationID: cur.representation_id,
                 rep: {
                   repId: cur.rep_id,
                   personName: cur.person_name,
@@ -300,7 +304,7 @@ export class FieldRepresentationsModel {
                   personId: cur.person_id
                 },
                 representedField: cur.association_name,
-                representedFieldId: cur.represented_field_id,
+                representedFieldID: cur.represented_field_id,
                 functionn: cur.function,
                 repApproved: cur.rep_approved,
                 repActiveValidate: cur.rep_active_validate
@@ -334,23 +338,23 @@ export class FieldRepresentationsModel {
         repActiveValidate,
         functionn,
         repApproved,
-        representationId,
-        representedFieldId
+        representationID,
+        representedFieldID
       } = updateFieldRepresentation
 
-      const oldData = await this.findFieldRepresentationById(representationId)
+      const oldData = await this.findFieldRepresentationById(representationID)
 
       await this.knex('field_representations')
-        .where('representation_id', representationId)
+        .where('representation_id', representationID)
         .limit(1)
         .update({
-          represented_field_id: representedFieldId,
+          represented_field_id: representedFieldID,
           function: functionn,
           rep_active_validate: repActiveValidate,
           rep_approved: repApproved
         })
 
-      const newData = await this.findFieldRepresentationById(representationId)
+      const newData = await this.findFieldRepresentationById(representationID)
       updatedFieldRepresentation = newData!
       this.notificationsService.createNotification({
         notificationType: 10,
@@ -396,51 +400,47 @@ export class FieldRepresentationsModel {
     let evaluatedFieldRepresentation: IFieldRepresentation | null = null
     let sentError: Error | null = null
 
-    await this.knex.transaction(async (trx) => {
-      try {
-        const { repActiveValidate, repApproved, representationId } =
-          evaluateFieldRepresentation
+    try {
+      const { repActiveValidate, repApproved, representationID } =
+        evaluateFieldRepresentation
 
-        const oldData = await this.findFieldRepresentationById(representationId)
+      const oldData = await this.findFieldRepresentationById(representationID)
 
-        await trx('field_representations')
-          .where('representation_id', representationId)
-          .limit(1)
-          .update({
-            rep_active_validate: repActiveValidate,
-            rep_approved: repApproved
-          })
-
-        await trx.commit()
-
-        const newData = await this.findFieldRepresentationById(representationId)
-        evaluatedFieldRepresentation = newData!
-        this.notificationsService.createNotification({
-          notificationType: 11,
-          action: 'editou',
-          agent_name: currentUser.name,
-          agentUserId: currentUser.user_id,
-          newData: {
-            campo: newData?.representedField,
-            funcao: newData?.functionn,
-            validade: newData?.repActiveValidate,
-            aprovado: newData?.repApproved
-          },
-          oldData: {
-            campo: oldData?.representedField,
-            funcao: oldData?.functionn,
-            validade: oldData?.repActiveValidate,
-            aprovado: oldData?.repApproved
-          },
-          objectUserId: currentUser.user_id,
-          table: 'Representações de campo'
+      await this.knex('field_representations')
+        .where('representation_id', representationID)
+        .limit(1)
+        .update({
+          rep_active_validate: repActiveValidate,
+          rep_approved: repApproved
         })
-      } catch (error) {
-        console.error(error)
-        await trx.rollback()
-        sentError = new Error(error.message)
-      }
-    })
+
+      const newData = await this.findFieldRepresentationById(representationID)
+      evaluatedFieldRepresentation = newData!
+      this.notificationsService.createNotification({
+        notificationType: 11,
+        action: 'editou',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          campo: newData?.representedField,
+          funcao: newData?.functionn,
+          validade: newData?.repActiveValidate,
+          aprovado: newData?.repApproved
+        },
+        oldData: {
+          campo: oldData?.representedField,
+          funcao: oldData?.functionn,
+          validade: oldData?.repActiveValidate,
+          aprovado: oldData?.repApproved
+        },
+        objectUserId: currentUser.user_id,
+        table: 'Representações de campo'
+      })
+    } catch (error) {
+      console.error(error)
+
+      sentError = new Error(error.message)
+    }
 
     if (sentError) {
       throw sentError
@@ -454,7 +454,7 @@ export class FieldRepresentationsModel {
   }
 
   async deleteFieldRepresentationById(
-    representationId: number,
+    representationID: number,
     currentUser: UserFromJwt
   ): Promise<string> {
     let sentError: Error | null = null
@@ -462,9 +462,9 @@ export class FieldRepresentationsModel {
 
     await this.knex.transaction(async (trx) => {
       try {
-        const oldData = await this.findFieldRepresentationById(representationId)
+        const oldData = await this.findFieldRepresentationById(representationID)
         await trx('field_representations')
-          .where('representation_id', representationId)
+          .where('representation_id', representationID)
           .del()
 
         await trx.commit()

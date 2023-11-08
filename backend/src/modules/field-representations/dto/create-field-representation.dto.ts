@@ -2,7 +2,7 @@ import { IsNumber, IsString } from 'class-validator'
 
 export class CreateFieldRepresentationDto {
   @IsNumber()
-  representedFieldId: number
+  representedFieldID: number
 
   @IsString()
   functionn: string

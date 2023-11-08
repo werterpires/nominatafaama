@@ -4,12 +4,12 @@ import { IsBoolean, IsNumber, IsString } from 'class-validator'
 
 export class UpdateFieldRepresentationDto extends CreateFieldRepresentationDto {
   @IsNumber()
-  representationId: number
+  representationID: number
 }
 
 export class EvaluateFieldRepresentationDto {
   @IsNumber()
-  representationId: number
+  representationID: number
   @IsBoolean()
   repApproved: boolean
   @IsString()
