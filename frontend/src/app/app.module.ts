@@ -6,8 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { ToastrModule } from 'ngx-toastr'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
-import { ApprovesComponent } from './components/approves/approves.component'
-import { UsersApprovesComponent } from './components/approves/users-approves/users-approves.component'
+// import { ApprovesComponent } from './components/approves/approves.component'
+import { UsersApprovesComponent } from './components/approvals/users-approves/users-approves.component'
 import { LoginComponent } from './components/login/login.component'
 import { LogonComponent } from './components/logon/logon.component'
 import { NominataComponent } from './components/nominata/nominata.component'
@@ -93,7 +93,6 @@ import { RepresentationsComponent } from './components/records/representations/r
     NominataComponent,
     RecordsComponent,
     MaritalStatusComponent,
-    ApprovesComponent,
     LogonComponent,
     UsersApprovesComponent,
     UnionsComponent,

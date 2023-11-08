@@ -11,4 +11,15 @@
   <button class="loginMenuButton defaultButton" (click)="choseStudents()">
     Estudantes
   </button>
+  <button
+    *ngIf="
+      permissions.ministerial ||
+      permissions.direcao ||
+      permissions.administrador
+    "
+    class="loginMenuButton defaultButton"
+    (click)="choseRepresentations()"
+  >
+    Representantes de campo
+  </button>
 </div>
