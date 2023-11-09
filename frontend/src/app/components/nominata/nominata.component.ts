@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core'
-import { IPermissions } from '../shared/container/types'
+import { IPermissions, IUserApproved } from '../shared/container/types'
 import { DataService } from '../shared/shared.service.ts/data.service'
 import { DomSanitizer } from '@angular/platform-browser'
 import { NominataService } from './nominata.service'
@@ -15,6 +15,7 @@ import { IBasicProfessor, IBasicStudent, ICompleteNominata } from './types'
 import { DatePipe } from '@angular/common'
 import { Router } from '@angular/router'
 import { environment } from 'src/environments/environment'
+import { LoginService } from '../shared/shared.service.ts/login.service'
 
 @Component({
   selector: 'app-nominata',
@@ -22,7 +23,17 @@ import { environment } from 'src/environments/environment'
   styleUrls: ['./nominata.component.css'],
 })
 export class NominataComponent implements OnInit {
-  @Input() permissions!: IPermissions
+  @Input() permissions: IPermissions = {
+    estudante: false,
+    secretaria: false,
+    direcao: false,
+    representacao: false,
+    administrador: false,
+    docente: false,
+    ministerial: false,
+    design: false,
+    isApproved: false,
+  }
   @Output() selectOne: EventEmitter<void> = new EventEmitter<void>()
   @Output() toStudent = new EventEmitter<{
     option: string
@@ -64,13 +75,41 @@ export class NominataComponent implements OnInit {
 
   constructor(
     private service: NominataService,
-    private dataService: DataService,
-    private sanitizer: DomSanitizer,
+    private loginService: LoginService,
     public datePipe: DatePipe,
     private router: Router,
   ) {}
 
+  user: IUserApproved | null = null
+
   ngOnInit() {
+    this.loginService.user$.subscribe((user) => {
+      if (user === 'wait') {
+        return
+      }
+
+      let roles: Array<string> = []
+
+      if (typeof user !== 'string' && user) {
+        this.user = user
+
+        roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+
+        this.permissions.isApproved = this.user.user_approved
+      } else {
+        this.user = null
+        this.router.navigate(['nominata'])
+        this.permissions.isApproved = false
+      }
+      this.permissions.estudante = roles.includes('estudante')
+      this.permissions.secretaria = roles.includes('secretaria')
+      this.permissions.direcao = roles.includes('direção')
+      this.permissions.representacao = roles.includes('representacao')
+      this.permissions.administrador = roles.includes('administrador')
+      this.permissions.docente = roles.includes('docente')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
+    })
     this.getAllRegistries()
   }
 
