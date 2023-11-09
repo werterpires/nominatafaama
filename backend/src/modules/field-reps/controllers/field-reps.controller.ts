@@ -16,10 +16,15 @@ import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
 import { ERoles } from 'src/shared/auth/types/roles.enum'
 import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
 import { UserFromJwt } from 'src/shared/auth/types/types'
+import { FavoritesService } from '../services/favorites.service'
+import { SetFavDto } from '../dto/set-fav.dto'
 
 @Controller('field-reps')
 export class FieldRepsController {
-  constructor(private readonly fieldRepsService: FieldRepsService) {}
+  constructor(
+    private readonly fieldRepsService: FieldRepsService,
+    private readonly favoritesService: FavoritesService
+  ) {}
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
   @Post()
@@ -37,6 +42,20 @@ export class FieldRepsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
+  @Post('favorite')
+  async setFavorite(
+    @Body() input: SetFavDto,
+    @CurrentUser() user: UserFromJwt
+  ) {
+    try {
+      const favorites = await this.favoritesService.setFavorite(input, user)
+      return favorites
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
   @Get('edit')
   async getFieldRepByIdToEdit(@CurrentUser() user: UserFromJwt) {
     const id = user.user_id
@@ -44,6 +63,17 @@ export class FieldRepsController {
     try {
       const fieldRep = await this.fieldRepsService.findFieldRepByIdToEdit(id)
       return fieldRep
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
+  @Get('favorites')
+  async getRepFavorites(@CurrentUser() user: UserFromJwt) {
+    try {
+      const favorites = await this.favoritesService.findRepFavorites(user)
+      return favorites
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
@@ -89,6 +119,23 @@ export class FieldRepsController {
         currentUser
       )
       return { message }
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
+  @Delete('favorites')
+  async setNotFavorite(
+    @Body() input: SetFavDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
+    try {
+      const favorites = await this.favoritesService.setNotFavorite(
+        input,
+        currentUser
+      )
+      return favorites
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }

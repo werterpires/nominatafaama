@@ -14,3 +14,8 @@ export interface IUpdateFieldRep {
   repId: number
   phoneNumber: string
 }
+
+export interface ISetFav {
+  studentId: number
+  repId: number
+}
