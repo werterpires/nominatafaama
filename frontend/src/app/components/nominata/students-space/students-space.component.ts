@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common'
 import { Router } from '@angular/router'
 import { environment } from 'src/environments/environment'
 import { IBasicStudent } from '../types'
+import { StudentsSpaceService } from './students-space.service'
 
 @Component({
   selector: 'app-students-space',
@@ -52,6 +53,7 @@ export class StudentsSpaceComponent implements OnInit {
   searchedUnion = ''
   searchedAssociation = ''
   searchedStudent = ''
+  onlyfavs = false
 
   @Input() students: IBasicStudent[] | null | undefined = []
 
@@ -66,7 +68,13 @@ export class StudentsSpaceComponent implements OnInit {
 
   urlBase = environment.API
 
-  constructor(public datePipe: DatePipe, private router: Router) {}
+  constructor(
+    public datePipe: DatePipe,
+    private router: Router,
+    private studentsSpaceService: StudentsSpaceService,
+  ) {}
+
+  favorites: number[] = []
 
   ngOnInit() {
     if (this.students) {
@@ -77,9 +85,49 @@ export class StudentsSpaceComponent implements OnInit {
       })
       this.studentsToList = this.students
     }
+    this.getAllFavs()
   }
 
-  filterStudents(union?: boolean) {
+  getAllFavs() {
+    this.studentsSpaceService.findAllFavs().subscribe({
+      next: (res) => {
+        console.log(res)
+        this.favorites = res
+      },
+      error: (error) => {
+        console.log(error)
+        this.favorites = []
+      },
+    })
+  }
+
+  setFav(studentId: number) {
+    this.isLoading = true
+    this.studentsSpaceService.setFavs({ studentId }).subscribe({
+      next: (res) => {
+        this.favorites = res
+      },
+      error: (error) => {
+        console.log(error)
+        this.isLoading = false
+      },
+    })
+  }
+
+  setNotFav(studentId: number) {
+    this.isLoading = true
+    this.studentsSpaceService.setNotFavs({ studentId }).subscribe({
+      next: (res) => {
+        this.favorites = res
+      },
+      error: (error) => {
+        console.log(error)
+        this.isLoading = false
+      },
+    })
+  }
+
+  filterStudents(union?: boolean, fav?: boolean) {
     if (this.students) {
       this.studentsToList = this.students
       if (union) {
@@ -94,6 +142,10 @@ export class StudentsSpaceComponent implements OnInit {
       }
       if (this.searchedStudent.length > 0) {
         this.filterStudentByname()
+      }
+      this.onlyfavs = fav ?? this.onlyfavs
+      if (fav) {
+        this.filterStudentByFav()
       }
     }
   }
@@ -127,6 +179,14 @@ export class StudentsSpaceComponent implements OnInit {
         return student.name
           .toLowerCase()
           .includes(this.searchedStudent.toLocaleLowerCase())
+      })
+    }
+  }
+
+  filterStudentByFav() {
+    if (this.studentsToList) {
+      this.studentsToList = this.studentsToList.filter((student) => {
+        return this.favorites.includes(student.student_id)
       })
     }
   }

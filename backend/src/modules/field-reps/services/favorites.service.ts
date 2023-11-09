@@ -55,16 +55,16 @@ export class FavoritesService {
       if (repId == null) {
         throw new Error('Nenhum representante de campo válido foi encontrado.')
       }
-
+      console.log(repId)
       return await this.favoritesModel.findRepFavorites(repId)
     } catch (error) {
       console.error(error)
-      return null as any
+      throw error
     }
   }
 
   async setNotFavorite(
-    dto: SetFavDto,
+    studentId: number,
     currentUser: UserFromJwt
   ): Promise<number[]> {
     try {
@@ -77,7 +77,7 @@ export class FavoritesService {
 
       const setFavData: ISetFav = {
         repId: repId,
-        studentId: dto.studentId
+        studentId: studentId
       }
 
       const favs = await this.favoritesModel.setNotFavorite(setFavData)

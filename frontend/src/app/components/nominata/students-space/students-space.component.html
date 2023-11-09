@@ -35,6 +35,24 @@
     [(ngModel)]="searchedStudent"
     (input)="filterStudents()"
   />
+  <button
+    *ngIf="
+      (permissions.administrador || permissions.representacao) && !onlyfavs
+    "
+    (click)="filterStudents(false, true)"
+    id="cleanSearchButton"
+  >
+    Favoritos
+  </button>
+
+  <button
+    *ngIf="(permissions.administrador || permissions.representacao) && onlyfavs"
+    (click)="filterStudents(false, false)"
+    id="cleanSearchButton"
+  >
+    Todos
+  </button>
+
   <button (click)="cleanFilters()" id="cleanSearchButton">
     Limpar filtros
   </button>
@@ -55,22 +73,24 @@
           }"
         >
           <img
-            *ngIf="permissions.representacao || permissions.administrador"
+            *ngIf="
+              (permissions.representacao || permissions.administrador) &&
+              !favorites.includes(student.student_id)
+            "
             src="assets/icons/notFavorite.svg"
             alt="figura de uma estrela"
             class="favoriteIcon"
-            (click)="
-              setFavorite(student.student_id, false); $event.stopPropagation()
-            "
+            (click)="setFav(student.student_id); $event.stopPropagation()"
           />
           <img
-            *ngIf="permissions.representacao || permissions.administrador"
+            *ngIf="
+              (permissions.representacao || permissions.administrador) &&
+              favorites.includes(student.student_id)
+            "
             src="assets/icons/favorite.svg"
             alt="figura de uma estrela"
             class="favoriteIcon"
-            (click)="
-              setFavorite(student.student_id, true); $event.stopPropagation()
-            "
+            (click)="setNotFav(student.student_id); $event.stopPropagation()"
           />
         </div>
       </div>

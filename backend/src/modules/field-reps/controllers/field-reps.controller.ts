@@ -42,7 +42,7 @@ export class FieldRepsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
-  @Post('favorite')
+  @Post('favorites')
   async setFavorite(
     @Body() input: SetFavDto,
     @CurrentUser() user: UserFromJwt
@@ -125,14 +125,14 @@ export class FieldRepsController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
-  @Delete('favorites')
+  @Delete('favorites/:studentId')
   async setNotFavorite(
-    @Body() input: SetFavDto,
+    @Param('studentId') studentId: string,
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
       const favorites = await this.favoritesService.setNotFavorite(
-        input,
+        parseInt(studentId),
         currentUser
       )
       return favorites

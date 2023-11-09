@@ -44,7 +44,7 @@ export class FavoritesModel {
       throw new Error('FieldRep não encontrado')
     }
 
-    const favorites: number[] = result
+    const favorites: number[] = result.map((item) => item.student_id)
 
     return favorites
   }
