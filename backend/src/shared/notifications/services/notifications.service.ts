@@ -82,6 +82,20 @@ export class NotificationsService {
         createdNotification = await this.notificationsModel.createNotification(
           createNotification
         )
+      } else if (notificationData.notificationType === 10) {
+        const createNotification = await this.createNotificationTypeTen(
+          notificationData
+        )
+        createdNotification = await this.notificationsModel.createNotification(
+          createNotification
+        )
+      } else if (notificationData.notificationType === 11) {
+        const createNotification = await this.createNotificationTypeEleven(
+          notificationData
+        )
+        createdNotification = await this.notificationsModel.createNotification(
+          createNotification
+        )
       }
 
       return createdNotification
@@ -755,6 +769,148 @@ export class NotificationsService {
         sent: false,
         read: false,
         notificationText: notificationText,
+        notifiedUserIds: notifiedUsersIds
+      }
+    } catch (error) {
+      console.error(error)
+      throw new Error(error.message)
+    }
+  }
+
+  async createNotificationTypeTen(
+    notificationData: INotificationData
+  ): Promise<ICreateNotification> {
+    try {
+      if (
+        notificationData.newData === null &&
+        notificationData.action !== 'apagou'
+      ) {
+        throw new Error('newData is null')
+      }
+
+      let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
+        'direção',
+        'ministerial'
+      ])
+
+      const index = notifiedUsersIds.indexOf(notificationData.agentUserId)
+      let objectName = ''
+
+      if (index !== -1) {
+        notifiedUsersIds.splice(index, 1)
+      }
+
+      let newDataToText: string = ''
+      if (notificationData.newData) {
+        newDataToText = Object.entries(notificationData.newData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`
+          })
+          .join(', ')
+      }
+
+      let oldDataToText: string = ''
+      if (notificationData.oldData) {
+        oldDataToText = Object.entries(notificationData.oldData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`
+          })
+          .join(', ')
+      }
+
+      let textOne = ''
+
+      if (notificationData.action === 'inseriu') {
+        textOne = `O usuário ${notificationData.agent_name} inseriu os seguintes dados em ${notificationData.table}: ${newDataToText}`
+      } else if (notificationData.action === 'editou') {
+        textOne = `O usuário ${notificationData.agent_name} editou os seguintes dados em ${notificationData.table}: de ${oldDataToText}, passou a ser ${newDataToText}`
+      } else if (notificationData.action === 'apagou') {
+        textOne = `O usuário ${notificationData.agent_name} excluiu os seguintes dados em ${notificationData.table}: ${oldDataToText}`
+      }
+
+      let notificationText: string | string[]
+
+      notificationText = textOne
+
+      return {
+        agentUserId: notificationData.agentUserId,
+        notificationType: notificationData.notificationType,
+        action: notificationData.action,
+        table: notificationData.table,
+        oldData: notificationData.oldData,
+        newData: notificationData.newData,
+        objectUserId: notificationData.objectUserId,
+        sent: false,
+        read: false,
+        notificationText: notificationText,
+        notifiedUserIds: notifiedUsersIds
+      }
+    } catch (error) {
+      console.error(error)
+      throw new Error(error.message)
+    }
+  }
+
+  async createNotificationTypeEleven(
+    notificationData: INotificationData
+  ): Promise<ICreateNotification> {
+    try {
+      if (
+        notificationData.newData === null ||
+        notificationData.objectUserId === null
+      ) {
+        throw new Error('newData is null')
+      }
+
+      let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
+        'direção',
+        'ministerial'
+      ])
+
+      notifiedUsersIds.splice(
+        notifiedUsersIds.indexOf(notificationData.agentUserId),
+        1
+      )
+
+      notifiedUsersIds.push(notificationData.agentUserId)
+
+      let newDataToText: string = ''
+      if (notificationData.newData) {
+        newDataToText = Object.entries(notificationData.newData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`
+          })
+          .join(', ')
+      }
+
+      let oldDataToText: string = ''
+      if (notificationData.oldData) {
+        oldDataToText = Object.entries(notificationData.oldData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`
+          })
+          .join(', ')
+      }
+
+      const textOne =
+        notificationData.action === 'aprovou'
+          ? `O usuário ${notificationData.agent_name} aprovou a seguinte representação de campo: ${newDataToText}.`
+          : `O usuário ${notificationData.agent_name} rejeitou a seguinte representação de campo: ${newDataToText}.`
+      const textTwo =
+        notificationData.action === 'aprovou'
+          ? `O usuário ${notificationData.agent_name} aprovou sua representação de campo com os seguintes dados: ${newDataToText}.`
+          : `Sua representação de campo não foi aprovada.`
+      return {
+        agentUserId: notificationData.agentUserId,
+        notificationType: notificationData.notificationType,
+        action: notificationData.action,
+        table: notificationData.table,
+        oldData: notificationData.oldData,
+        newData: notificationData.newData,
+        objectUserId: notificationData.objectUserId,
+        sent: false,
+        read: false,
+        notificationText: [textOne, textTwo],
         notifiedUserIds: notifiedUsersIds
       }
     } catch (error) {

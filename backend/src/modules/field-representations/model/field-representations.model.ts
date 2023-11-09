@@ -418,7 +418,9 @@ export class FieldRepresentationsModel {
       evaluatedFieldRepresentation = newData!
       this.notificationsService.createNotification({
         notificationType: 11,
-        action: 'editou',
+        action: evaluateFieldRepresentation.repApproved
+          ? 'aprovou'
+          : 'desaprovou',
         agent_name: currentUser.name,
         agentUserId: currentUser.user_id,
         newData: {
