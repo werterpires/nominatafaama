@@ -10,6 +10,7 @@ import { StudentToApproveComponent } from './components/approvals/student-to-app
 import { OneStudentToApproveComponent } from './components/approvals/one-student-to-approve/one-student-to-approve.component'
 import { ParameterizationComponent } from './components/parameterization/parameterization.component'
 import { RepresentationsToApproveComponent } from './components/approvals/representations-to_approve/representations-to-approve.component'
+import { VacanciesComponent } from './components/vacancies/vacancies.component'
 
 const routes: Routes = [
   { path: 'student/:studentid', component: StudentComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'nominata', component: NominataComponent },
   { path: 'cadastros', component: RecordsComponent },
   { path: 'parametrizacao', component: ParameterizationComponent },
+  { path: 'vagas', component: VacanciesComponent },
   { path: '', component: NominataComponent },
 ]
 
