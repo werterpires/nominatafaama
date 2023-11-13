@@ -1,0 +1,52 @@
+<div class="smallAlonePhoto">
+  <div
+    class="imageContainer withFavorite"
+    [ngStyle]="{
+      'background-image':
+        'url(' +
+        urlBase +
+        '/student-photos/student/' +
+        student.student_id +
+        '/small_alone_photo)'
+    }"
+  >
+    <img
+      *ngIf="(permissions.representacao || permissions.administrador) && !fav"
+      src="assets/icons/notFavorite.svg"
+      alt="figura de uma estrela"
+      class="favoriteIcon"
+      (click)="setFav(true); $event.stopPropagation()"
+    />
+    <img
+      *ngIf="(permissions.representacao || permissions.administrador) && fav"
+      src="assets/icons/favorite.svg"
+      alt="figura de uma estrela"
+      class="favoriteIcon"
+      (click)="setFav(false); $event.stopPropagation()"
+    />
+  </div>
+</div>
+<div class="studentDatacontainer">
+  <div class="hiringStatusSpace">
+    <div
+      [ngClass]="{
+        disponivelIndicator: student.hiring_status_name === 'Disponível',
+        contratadoIndicator: student.hiring_status_name === 'Contratado',
+        chamadoIndicator: student.hiring_status_name === 'Chamado'
+      }"
+    ></div>
+    <span class="hiringStatusText">{{ student.hiring_status_name }}</span>
+    <span *ngIf="student.hiringField" class="hiringStatusText"> - </span>
+    <span class="hiringStatusText">{{
+      student.hiringField?.union_acronym
+    }}</span>
+    <span *ngIf="student.hiringField" class="hiringStatusText">/</span
+    ><span class="hiringStatusText">{{
+      student.hiringField?.association_acronym
+    }}</span>
+  </div>
+  <p class="nominataStudentName">{{ student.name }}</p>
+  <p class="studentCompData">
+    {{ student.union_acronym }}/{{ student.association_acronym }}
+  </p>
+</div>

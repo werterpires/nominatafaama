@@ -58,7 +58,7 @@
   </button>
 </form>
 <section class="perfilList">
-  <div *ngFor="let student of studentsToList; index as i">
+  <!-- <div *ngFor="let student of studentsToList; index as i">
     <div (click)="selectStudent(student.student_id.toString())">
       <div class="smallAlonePhoto">
         <div
@@ -118,6 +118,17 @@
           {{ student.union_acronym }}/{{ student.association_acronym }}
         </p>
       </div>
+    </div>
+  </div> -->
+  <div *ngFor="let student of studentsToList; index as i">
+    <div (click)="selectStudent(student.student_id.toString())">
+      <app-student-cards
+        [student]="student"
+        [permissions]="permissions"
+        [fav]="favorites.includes(student.student_id)"
+        (setFavEmiter)="favoriteStudent($event)"
+      >
+      </app-student-cards>
     </div>
   </div>
 </section>

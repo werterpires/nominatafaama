@@ -85,7 +85,8 @@ import { NotificationsComponent } from './components/shared/notifications/notifi
 import { RepresentationsComponent } from './components/records/representations/representations.component'
 import { RepresentationsToApproveComponent } from './components/approvals/representations-to_approve/representations-to-approve.component'
 import { OneRepresentationsToApproveComponent } from './components/approvals/one-representation-to-approve/one-representation-to-approve.component';
-import { StudentsSpaceComponent } from './components/nominata/students-space/students-space.component'
+import { StudentsSpaceComponent } from './components/nominata/students-space/students-space.component';
+import { StudentCardsComponent } from './components/shared/student-cards/student-cards.component'
 
 @NgModule({
   declarations: [
@@ -168,6 +169,7 @@ import { StudentsSpaceComponent } from './components/nominata/students-space/stu
     RepresentationsToApproveComponent,
     OneRepresentationsToApproveComponent,
     StudentsSpaceComponent,
+    StudentCardsComponent,
   ],
   imports: [
     BrowserModule,

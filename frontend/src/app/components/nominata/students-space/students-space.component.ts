@@ -101,6 +101,14 @@ export class StudentsSpaceComponent implements OnInit {
     })
   }
 
+  favoriteStudent(event: { fav: boolean; studentId: number }) {
+    if (event.fav) {
+      this.setFav(event.studentId)
+    } else {
+      this.setNotFav(event.studentId)
+    }
+  }
+
   setFav(studentId: number) {
     this.isLoading = true
     this.studentsSpaceService.setFavs({ studentId }).subscribe({
