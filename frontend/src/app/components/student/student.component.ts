@@ -1,8 +1,9 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   Input,
+  OnInit,
   ViewChild,
 } from '@angular/core'
 import { IPermissions, IUserApproved } from '../shared/container/types'
@@ -14,15 +15,14 @@ import { SafeResourceUrl } from '@angular/platform-browser'
 import { DataService } from '../shared/shared.service.ts/data.service'
 import { environment } from 'src/environments/environment'
 import { LoginService } from '../shared/shared.service.ts/login.service'
-
-// import { jsPDF } from 'jspdf'
+import { StudentsSpaceService } from '../nominata/students-space/students-space.service'
 
 @Component({
   selector: 'app-student',
   templateUrl: './student.component.html',
   styleUrls: ['./student.component.css'],
 })
-export class StudentComponent {
+export class StudentComponent implements OnInit {
   @Input() permissions: IPermissions = {
     estudante: false,
     secretaria: false,
@@ -124,6 +124,7 @@ export class StudentComponent {
     public datePipe: DatePipe,
     private dataService: DataService,
     private loginService: LoginService,
+    private studentsSpaceService: StudentsSpaceService,
   ) {}
 
   @Input() studentId!: number
@@ -136,7 +137,9 @@ export class StudentComponent {
     this.isLoading = true
 
     this.loginService.user$.subscribe((user) => {
+      this.isLoading = true
       if (user === 'wait') {
+        this.isLoading = false
         return
       }
 
@@ -161,6 +164,7 @@ export class StudentComponent {
       this.permissions.docente = roles.includes('docente')
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
+      this.isLoading = false
     })
 
     this.activatedRoute.paramMap.subscribe((params) => {
@@ -170,6 +174,7 @@ export class StudentComponent {
         this.studentId = parseInt(studentId)
       }
     })
+    this.isLoading = true
     this.service.findOneRegistry(this.studentId).subscribe({
       next: async (res) => {
         this.student = res
@@ -214,19 +219,6 @@ export class StudentComponent {
             .join(' ')
         }
 
-        // await this.getFile(this.student.photos?.alone_photo?.file.data, 'alone')
-        // await this.getFile(
-        //   this.student.photos?.small_alone_photo?.file.data,
-        //   'small_alone',
-        // )
-        // await this.getFile(
-        //   this.student.photos?.spouse_photo?.file.data,
-        //   'spouse',
-        // )
-        // await this.getFile(
-        //   this.student.photos?.family_photo?.file.data,
-        //   'family',
-        // )
         const key = 'l' + this.student.student?.person_id
         this.curriculumLink =
           'https://drive.google.com/uc?export=download&id=' + this.links[key]
@@ -244,11 +236,69 @@ export class StudentComponent {
         this.isLoading = false
       },
     })
+
+    this.getAllFavs()
+    this.isLoading = false
   }
 
-  ngAfterViewInit() {
+  favorites: number[] = []
+
+  getAllFavs() {
+    this.studentsSpaceService.findAllFavs().subscribe({
+      next: (res) => {
+        this.favorites = res
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.favorites = []
+        this.isLoading = false
+      },
+    })
+  }
+
+  setFav(studentId: number) {
+    this.isLoading = true
+    this.studentsSpaceService.setFavs({ studentId }).subscribe({
+      next: (res) => {
+        this.favorites = res
+        this.isLoading = false
+      },
+      error: (error) => {
+        console.log(error)
+        this.isLoading = false
+      },
+    })
+  }
+
+  setNotFav(studentId: number) {
+    this.isLoading = true
+    this.studentsSpaceService.setNotFavs({ studentId }).subscribe({
+      next: (res) => {
+        this.favorites = res
+        this.isLoading = false
+      },
+      error: (error) => {
+        console.log(error)
+        this.isLoading = false
+      },
+    })
+  }
+
+  scrollMoved = false
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    if (!this.scrollMoved) {
+      this.growWhiteSpace()
+
+      this.scrollMoved = true
+    }
+  }
+
+  growWhiteSpace() {
     if (this.student.student) {
       this.isLoading = true
+
       const contentHeight = document.body.scrollHeight - 640
 
       const divElement = this.whiteSpaceElement.nativeElement
@@ -258,26 +308,26 @@ export class StudentComponent {
     }
   }
 
-  async getFile(data: any, photo: string) {
-    const blob1 = new Blob([new Uint8Array(data)], {
-      type: 'image/jpeg',
-    })
-    if (blob1 instanceof Blob) {
-      const reader = new FileReader()
-      reader.onload = (e: any) => {
-        if (photo == 'alone') {
-          this.alonePhoto = e.target.result
-        } else if (photo == 'spouse') {
-          this.spousePhoto = e.target.result
-        } else if (photo == 'family') {
-          this.familyPhoto = e.target.result
-        } else if (photo == 'small_alone') {
-          this.smallAlonePhoto = e.target.result
-        }
-      }
-      reader.readAsDataURL(blob1)
-    }
-  }
+  // async getFile(data: any, photo: string) {
+  //   const blob1 = new Blob([new Uint8Array(data)], {
+  //     type: 'image/jpeg',
+  //   })
+  //   if (blob1 instanceof Blob) {
+  //     const reader = new FileReader()
+  //     reader.onload = (e: any) => {
+  //       if (photo == 'alone') {
+  //         this.alonePhoto = e.target.result
+  //       } else if (photo == 'spouse') {
+  //         this.spousePhoto = e.target.result
+  //       } else if (photo == 'family') {
+  //         this.familyPhoto = e.target.result
+  //       } else if (photo == 'small_alone') {
+  //         this.smallAlonePhoto = e.target.result
+  //       }
+  //     }
+  //     reader.readAsDataURL(blob1)
+  //   }
+  // }
 
   formatDate(date: string) {
     return this.datePipe.transform(date, 'dd/MM/yyyy')

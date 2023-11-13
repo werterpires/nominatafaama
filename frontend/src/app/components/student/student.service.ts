@@ -13,7 +13,7 @@ export class StudentService {
 
   findOneRegistry(studentId: number): Observable<ICompleteStudent> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<ICompleteStudent>(environment.API + `/students/${studentId}`, {
         headers: head_obj,

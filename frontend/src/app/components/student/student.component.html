@@ -893,3 +893,20 @@
   <div *ngIf="isLoading === true" class="loader1"></div>
   <div *ngIf="isLoading === true" class="loader2"></div>
 </app-container>
+
+<ng-container *ngIf="student.student">
+  <img
+    *ngIf="!favorites.includes(student.student.student_id)"
+    src="assets/icons/notFavorite.svg"
+    alt="figura de uma estrela"
+    class="favoriteIcon"
+    (click)="setFav(student.student.student_id)"
+  />
+  <img
+    *ngIf="favorites.includes(student.student.student_id)"
+    src="assets/icons/favorite.svg"
+    alt="figura de uma estrela"
+    class="favoriteIcon"
+    (click)="setNotFav(student.student.student_id)"
+  />
+</ng-container>
