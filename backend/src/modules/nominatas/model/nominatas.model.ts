@@ -665,6 +665,37 @@ export class NominatasModel {
     return nominatasList
   }
 
+  async findAllNominatasYears(): Promise<
+    { year: string; nominataId: number }[]
+  > {
+    let nominatasList: { year: string; nominataId: number }[] = []
+    let sentError: Error | null = null
+
+    try {
+      const results = await this.knex
+        .table('nominatas')
+        .leftJoin('professors', 'nominatas.director', 'professors.professor_id')
+        .leftJoin('people', 'professors.person_id', 'people.person_id')
+        .select('*')
+        .orderBy('year', 'desc')
+
+      nominatasList = results.map((row: any) => ({
+        nominataId: row.nominata_id,
+        year: row.year
+      }))
+    } catch (error) {
+      console.error(error)
+
+      sentError = new Error(error.sqlMessage)
+    }
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return nominatasList
+  }
+
   async updateNominataById(
     updateNominata: IUpdateNominata,
     currentUser: UserFromJwt

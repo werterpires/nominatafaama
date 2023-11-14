@@ -66,7 +66,7 @@ export class VacanciesService {
 
       const activeFieldRepresentation = fieldRepresentations.find(
         (representaion) =>
-          representaion.repActiveValidate <= new Date() &&
+          new Date(representaion.repActiveValidate) >= new Date() &&
           representaion.repApproved
       )
 
@@ -114,7 +114,7 @@ export class VacanciesService {
 
       const activeFieldRepresentation = fieldRepresentations.find(
         (representaion) =>
-          representaion.repActiveValidate <= new Date() &&
+          new Date(representaion.repActiveValidate) >= new Date() &&
           representaion.repApproved
       )
 
@@ -168,7 +168,7 @@ export class VacanciesService {
 
       const activeFieldRepresentation = fieldRepresentations.find(
         (representaion) =>
-          representaion.repActiveValidate <= new Date() &&
+          new Date(representaion.repActiveValidate) >= new Date() &&
           representaion.repApproved
       )
 
@@ -209,7 +209,7 @@ export class VacanciesService {
 
       const activeFieldRepresentation = fieldRepresentations.find(
         (representaion) =>
-          representaion.repActiveValidate <= new Date() &&
+          new Date(representaion.repActiveValidate) >= new Date() &&
           representaion.repApproved
       )
 

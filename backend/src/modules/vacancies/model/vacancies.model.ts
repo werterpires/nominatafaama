@@ -206,19 +206,21 @@ export class VacanciesModel {
       const { title, description, hiringStatusId, ministryId, vacancyId } =
         updateVacancyData
 
-      const [vacancy_id] = await this.knex('vacancies')
+      await this.knex('vacancies')
         .update({
           title,
           description,
           ministry_id: ministryId,
           hiring_status_id: hiringStatusId
         })
+        .where('vacancy_id', vacancyId)
         .returning('vacancy_id')
     } catch (error) {
+      console.error('erro capturado no updateVacancy no VacanciesModel:', error)
       if (error.code === 'ER_DUP_ENTRY') {
         throw new Error('Vaga já existe')
       } else {
-        throw new Error(error.sqlMessage)
+        throw error
       }
     }
 
@@ -232,7 +234,7 @@ export class VacanciesModel {
         .where('vacancy_id', vacancyId)
         .returning('vacancy_id')
     } catch (error) {
-      console.error(error)
+      console.error('erro capturado no deleteVacancy no VacanciesModel:', error)
       throw new Error(error.sqlMessage)
     }
 
@@ -248,7 +250,7 @@ export class VacanciesModel {
         .leftJoin(
           'ministry_types',
           'vacancies.ministry_id',
-          'ministry_types.ministry_id'
+          'ministry_types.ministry_type_id'
         )
         .leftJoin(
           'hiring_status',
@@ -271,7 +273,7 @@ export class VacanciesModel {
           'unions.union_name',
           'unions.union_acronym',
           'nominatas.year',
-          'nominatas.origin_field_invites_begin'
+          'nominatas.orig_field_invites_begin'
         )
         .where('vacancies.nominata_id', findVacanciesData.nominataId)
         .andWhere('vacancies.rep_id', findVacanciesData.repId)
@@ -299,7 +301,7 @@ export class VacanciesModel {
           associationAcronym: vacancy.association_acronym,
           unionAcronym: vacancy.union_acronym,
           nominataYear: vacancy.year,
-          originFieldInvitesBegins: vacancy.origin_field_invites_begin,
+          originFieldInvitesBegins: vacancy.orig_field_invites_begin,
           vacancyStudents: []
         }
       })
@@ -319,12 +321,13 @@ export class VacanciesModel {
           'vacancies_students.student_id',
           'students.student_id'
         )
-        .leftJoin('peoples', 'people.person_id', 'students.person_id')
+        .leftJoin('people', 'people.person_id', 'students.person_id')
         .leftJoin(
           'associations',
           'students.origin_field_id',
           'associations.association_id'
         )
+        .leftJoin('users', 'users.person_id', 'people.person_id')
         .leftJoin('unions', 'unions.union_id', 'associations.union_id')
         .leftJoin(
           'hiring_status',
@@ -334,6 +337,8 @@ export class VacanciesModel {
         .select(
           'vacancies_students.*',
           'people.name',
+          'people.person_id',
+          'users.user_id',
           'associations.association_name',
           'unions.union_name',
           'associations.association_acronym',
@@ -351,12 +356,16 @@ export class VacanciesModel {
             studentId: vacancyStudent.student_id,
             vacancyId: vacancyStudent.vacancy_id,
             comments: vacancyStudent.comments,
-            name: vacancyStudent.name,
-            associationName: vacancyStudent.association_name,
-            unionName: vacancyStudent.union_name,
-            associationAcronym: vacancyStudent.association_acronym,
-            unionAcronym: vacancyStudent.union_acronym,
-            hiringStatus: vacancyStudent.hiring_status_name,
+            student: {
+              association_acronym: vacancyStudent.association_acronym,
+              hiring_status_name: vacancyStudent.hiring_status_name,
+              name: vacancyStudent.name,
+              person_id: vacancyStudent.person_id,
+              union_acronym: vacancyStudent.union_acronym,
+              student_id: vacancyStudent.student_id,
+              user_id: vacancyStudent.user_id,
+              small_alone_photo: ''
+            },
             invites: []
           }
         }
@@ -396,7 +405,6 @@ export class VacanciesModel {
         })
       })
 
-      console.log(vacanciesStudentsConsult)
       return vacancies
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {
@@ -407,13 +415,13 @@ export class VacanciesModel {
     }
   }
 
-  async findRepVacancyWhitNoAccepts(vacancyId: number): Promise<IVacancy[]> {
+  async findRepVacancyWhitNoAccepts(vacancyId: number): Promise<true> {
     try {
       const vacanciesConsult = await this.knex('vacancies')
         .leftJoin(
           'ministry_types',
           'vacancies.ministry_id',
-          'ministry_types.ministry_id'
+          'ministry_types.ministry_type_id'
         )
         .leftJoin(
           'vacancies_students',
@@ -429,16 +437,20 @@ export class VacanciesModel {
         .where('vacancies.vacancy_id', vacancyId)
         .andWhereNot('invites.accept', null)
 
-      if (vacanciesConsult === null) {
+      if (vacanciesConsult) {
         throw new Error('null accept not found')
       }
 
-      return vacanciesConsult.vacancy_id
+      return true
     } catch (error) {
+      console.error(
+        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        error
+      )
       if (error.code === 'ER_DUP_ENTRY') {
         throw new Error('Vaga já existe')
       } else {
-        throw new Error(error.sqlMessage)
+        throw error
       }
     }
   }

@@ -283,6 +283,17 @@ export class NominatasService {
     }
   }
 
+  async findAllNominatasYears(): Promise<
+    { year: string; nominataId: number }[]
+  > {
+    try {
+      const nominatas = await this.nominatasModel.findAllNominatasYears()
+      return nominatas
+    } catch (error) {
+      throw error
+    }
+  }
+
   async findAllNOminataStudents(): Promise<ISinteticStudent[]> {
     try {
       const students = await this.nominatasModel.findAllNominataStudents()

@@ -204,7 +204,7 @@ export class StudentAcademicFormationsComponent implements OnInit {
         ),
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.ngOnInit()
           this.doneMessage = 'Registro criado com sucesso.'
           this.done = true

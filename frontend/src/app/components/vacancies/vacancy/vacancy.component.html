@@ -1,0 +1,132 @@
+<section
+  #sectionBox
+  [ngClass]="{ showVacancy: !showBox, notShowVacancy: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="toShowBox()">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+      <p class="sectionTitle1">{{ vacancy.title }}</p>
+    </span>
+  </div>
+  <div class="flex">
+    <section *ngIf="showBox" class="registriesWrapper">
+      <app-update-form
+        (editRegistry)="
+          showAlert('edit', 'Confirmar a edição este item?', vacancy.vacancyId)
+        "
+        (deleteRegistry)="
+          showAlert(
+            'delete',
+            'Confirmar a exclusão deste item?',
+            vacancy.vacancyId
+          )
+        "
+        [registryId]="vacancy.vacancyId"
+      >
+        <span class="field w-full">
+          <p class="fieldTitle">Título</p>
+          <input
+            class="fieldContent"
+            [id]="'titleInput'"
+            name="titleInput"
+            [(ngModel)]="vacancy.title"
+          />
+        </span>
+        <span class="field w-full">
+          <p class="fieldTitle">Descrição</p>
+          <input
+            class="fieldContent"
+            [id]="'descriptionInput'"
+            name="descriptionInput"
+            [(ngModel)]="vacancy.description"
+          />
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Ministério</p>
+          <select
+            name="ministrySelect"
+            id="ministrySelect"
+            [(ngModel)]="vacancy.ministryId"
+          >
+            <option
+              *ngFor="let ministry of allMinistries"
+              [value]="ministry.ministry_type_id"
+              [selected]="vacancy.ministryId === ministry.ministry_type_id"
+            >
+              {{ ministry.ministry_type_name }}
+            </option>
+          </select>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Tipo de contratação</p>
+          <select
+            name="hiringSelect"
+            id="hiringSelect"
+            [(ngModel)]="vacancy.hiringStatusId"
+          >
+            <option
+              *ngFor="let status of allHiringStatus"
+              [value]="status.hiring_status_id"
+              [selected]="vacancy.hiringStatusId === status.hiring_status_id"
+            >
+              {{ status.hiring_status_name }}
+            </option>
+          </select>
+        </span>
+      </app-update-form>
+      <div>
+        <app-student-cards
+          class="studentCards"
+          *ngFor="let vacancyStudent of vacancy.vacancyStudents"
+          [student]="vacancyStudent.student"
+        ></app-student-cards>
+      </div>
+    </section>
+  </div>
+</section>
+
+<div *ngIf="error" class="error">
+  <div class="errorTitle">
+    <p>Atenção</p>
+  </div>
+  <div class="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeError()"
+  />
+</div>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

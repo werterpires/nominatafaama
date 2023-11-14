@@ -50,6 +50,7 @@ export class VacanciesController {
     @Body() createVacancyDto: CreateVacancyDto,
     @CurrentUser() currentUser: UserFromJwt
   ) {
+    console.log('estou aqui')
     try {
       const newVacancy = await this.vacanciesService.createVacancy(
         createVacancyDto,
@@ -81,17 +82,17 @@ export class VacanciesController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
-  @Delete('')
+  @Delete(':vacancyId')
   async deleteVacancy(
-    @Body() updateVacancyDto: UpdateVacancyDto,
+    @Param('vacancyId') vacancyId: string,
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const updatedVacancy = await this.vacanciesService.udpateVacancyById(
-        updateVacancyDto,
+      const updatedVacancy = await this.vacanciesService.deleteVacancyById(
+        parseInt(vacancyId.toString()),
         currentUser
       )
-      return updateVacancyDto
+      return updatedVacancy
     } catch (error) {
       console.error('erro capturado em updateVacancy em Vacanciescontroller')
       throw new InternalServerErrorException(error.message)
@@ -105,10 +106,11 @@ export class VacanciesController {
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const deletedVacancy = await this.vacanciesService.deleteVacancyById(
-        Number(nominataId),
-        currentUser
-      )
+      const deletedVacancy =
+        await this.vacanciesService.findRepVacanciesByNominataId(
+          currentUser,
+          Number(nominataId)
+        )
       return deletedVacancy
     } catch (error) {
       console.error('erro capturado em updateVacancy em Vacanciescontroller')

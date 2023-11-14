@@ -1,4 +1,5 @@
 import { IFieldRep } from 'src/modules/field-reps/types/types'
+import { IBasicStudent } from 'src/modules/nominatas/types/types'
 
 export interface IVacancy {
   vacancyId: number
@@ -61,13 +62,8 @@ export interface IInvite {
 export interface IVacancyStudent {
   vacancyStudentId: number
   studentId: number
+  student: IBasicStudent
   vacancyId: number
   comments: string
-  name: string
-  associationName: string
-  unionName: string
-  associationAcronym: string
-  unionAcronym: string
-  hiringStatus: string
   invites: IInvite[]
 }
