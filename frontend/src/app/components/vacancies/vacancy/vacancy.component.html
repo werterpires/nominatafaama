@@ -1,36 +1,26 @@
-<section
-  #sectionBox
-  [ngClass]="{ showVacancy: !showBox, notShowVacancy: showBox }"
->
-  <div class="boxHead">
-    <span class="headField" (click)="toShowBox()">
-      <img
-        #expandIcon
-        class="seeMoreIcon"
-        [ngClass]="{ rotatedClock: showBox }"
-        id="seeMoreIconFormations"
-        src="assets/icons/seeMoreIcon.png"
-        alt="Expandir"
-      />
-      <p class="sectionTitle1">{{ vacancy.title }}</p>
-    </span>
-  </div>
-  <div class="flex">
-    <section *ngIf="showBox" class="registriesWrapper">
-      <app-update-form
-        (editRegistry)="
-          showAlert('edit', 'Confirmar a edição este item?', vacancy.vacancyId)
-        "
-        (deleteRegistry)="
-          showAlert(
-            'delete',
-            'Confirmar a exclusão deste item?',
-            vacancy.vacancyId
-          )
-        "
-        [registryId]="vacancy.vacancyId"
-      >
-        <span class="field w-full">
+<div class="vacancyModal">
+  <section class="vacancyContainer">
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeError()"
+    />
+    <app-update-form
+      (editRegistry)="
+        showAlert('edit', 'Confirmar a edição este item?', vacancy.vacancyId)
+      "
+      (deleteRegistry)="
+        showAlert(
+          'delete',
+          'Confirmar a exclusão deste item?',
+          vacancy.vacancyId
+        )
+      "
+      [registryId]="vacancy.vacancyId"
+    >
+      <div class="subSection">
+        <span class="field">
           <p class="fieldTitle">Título</p>
           <input
             class="fieldContent"
@@ -39,7 +29,7 @@
             [(ngModel)]="vacancy.title"
           />
         </span>
-        <span class="field w-full">
+        <span class="field">
           <p class="fieldTitle">Descrição</p>
           <input
             class="fieldContent"
@@ -48,6 +38,9 @@
             [(ngModel)]="vacancy.description"
           />
         </span>
+      </div>
+
+      <div class="subSection">
         <span class="field">
           <p class="fieldTitle">Ministério</p>
           <select
@@ -80,17 +73,20 @@
             </option>
           </select>
         </span>
-      </app-update-form>
-      <div>
-        <app-student-cards
-          class="studentCards"
-          *ngFor="let vacancyStudent of vacancy.vacancyStudents"
-          [student]="vacancyStudent.student"
-        ></app-student-cards>
       </div>
-    </section>
-  </div>
-</section>
+    </app-update-form>
+    <div>
+      <button #addIcon src="assets/icons/addIcon.png">
+        Adicionar estudante à vaga
+      </button>
+    </div>
+    <app-student-cards
+      class="studentCards"
+      *ngFor="let vacancyStudent of vacancy.vacancyStudents"
+      [student]="vacancyStudent.student"
+    ></app-student-cards>
+  </section>
+</div>
 
 <div *ngIf="error" class="error">
   <div class="errorTitle">

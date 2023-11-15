@@ -37,6 +37,8 @@ export class VacanciesComponent {
   selectedNominata!: number
   allHiringStatus: IHiringStatus[] = []
 
+  selectedVacancy: IVacancy | null = null
+
   constructor(
     private vacanciesService: VacanciesService,
     private hiringStatusService: HiringStatusService,
@@ -190,6 +192,15 @@ export class VacanciesComponent {
 
   closeDone() {
     this.done = false
+  }
+
+  selectVacancy(vacancyId: number) {
+    const foundVacancy = this.allVacancies.find(
+      (vacancy) => vacancy.vacancyId == vacancyId,
+    )
+    if (foundVacancy) {
+      this.selectedVacancy = foundVacancy
+    }
   }
   confirm(response: { confirm: boolean; func: string }) {
     const { confirm, func } = response

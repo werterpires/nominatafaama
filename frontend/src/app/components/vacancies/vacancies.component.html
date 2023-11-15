@@ -82,15 +82,21 @@
       </section>
       <div *ngIf="allVacancies.length > 0">
         <div *ngFor="let vacancy of allVacancies">
-          <app-vacancy
-            [vacancy]="vacancy"
-            [allHiringStatus]="allHiringStatus"
-            [allMinistries]="allMinistries"
-            (changeAlert)="ngOnInit()"
-          ></app-vacancy>
+          <p class="sectionTitle1" (click)="selectVacancy(vacancy.vacancyId)">
+            {{ vacancy.title }}
+          </p>
         </div>
       </div>
     </section>
+  </div>
+
+  <div *ngIf="selectedVacancy">
+    <app-vacancy
+      [vacancy]="selectedVacancy"
+      [allHiringStatus]="allHiringStatus"
+      [allMinistries]="allMinistries"
+      (changeAlert)="ngOnInit()"
+    ></app-vacancy>
   </div>
 
   <div *ngIf="error" class="error">

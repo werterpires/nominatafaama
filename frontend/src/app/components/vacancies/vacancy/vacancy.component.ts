@@ -11,7 +11,6 @@ import { UpdateVacancyDto } from '../types'
   styleUrls: ['./vacancy.component.css'],
 })
 export class VacancyComponent {
-  showBox = false
   @Input() vacancy!: IVacancy
   alert = false
   alertMessage = ''
@@ -29,9 +28,6 @@ export class VacancyComponent {
 
   constructor(private vacancyService: VacancyService) {}
 
-  toShowBox() {
-    this.showBox = !this.showBox
-  }
   showAlert(func: string, message: string, idx?: number) {
     this.index = idx ?? this.index
     this.func = func
