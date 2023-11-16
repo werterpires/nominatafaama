@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
 import {
+  IAddStudentToVacancy,
   ICreateDirectVacancy,
   ICreateVacancy,
   IInvite,
   IUpdateVacancy,
+  IUpdateVacancyStudent,
   IVacancy,
   IVacancyStudent
 } from '../types/types'
@@ -201,6 +203,30 @@ export class VacanciesModel {
 
     return true
   }
+
+  async addStudentToVacancy(
+    addStudentToVacancyData: IAddStudentToVacancy
+  ): Promise<boolean> {
+    try {
+      const { comments, studentId, vacancyId } = addStudentToVacancyData
+
+      const [vacancy_id] = await this.knex('vacancies_students')
+        .insert({
+          comments,
+          student_id: studentId,
+          vacancy_id: vacancyId
+        })
+        .returning('vacancy_id')
+    } catch (error) {
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Estudante já está na vaga.')
+      } else {
+        throw new Error(error.sqlMessage)
+      }
+    }
+
+    return true
+  }
   async udpateVacancy(updateVacancyData: IUpdateVacancy): Promise<boolean> {
     try {
       const { title, description, hiringStatusId, ministryId, vacancyId } =
@@ -227,6 +253,32 @@ export class VacanciesModel {
     return true
   }
 
+  async udpateStudentInVacancy(
+    updateStudentInVacancyData: IUpdateVacancyStudent
+  ): Promise<boolean> {
+    try {
+      const { comments, vacancyStudentId } = updateStudentInVacancyData
+
+      await this.knex('vacancies')
+        .update({
+          comments
+        })
+        .where('vacancy_student_id', vacancyStudentId)
+        .returning('vacancy_id')
+    } catch (error) {
+      console.error(
+        'erro capturado no udpateStudentInVacancy no VacanciesModel:',
+        error
+      )
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Vaga já existe')
+      } else {
+        throw error
+      }
+    }
+
+    return true
+  }
   async deleteVacancy(vacancyId: number): Promise<boolean> {
     try {
       await this.knex('vacancies')
@@ -235,6 +287,23 @@ export class VacanciesModel {
         .returning('vacancy_id')
     } catch (error) {
       console.error('erro capturado no deleteVacancy no VacanciesModel:', error)
+      throw new Error(error.sqlMessage)
+    }
+
+    return true
+  }
+
+  async removeStudentFromVacancy(vacancyStudentId: number): Promise<boolean> {
+    try {
+      await this.knex('vacancies_students')
+        .del()
+        .where('vacancy_student_id', vacancyStudentId)
+        .returning('vacancy_student_id')
+    } catch (error) {
+      console.error(
+        'erro capturado no removeStudentFromVacancy no VacanciesModel:',
+        error
+      )
       throw new Error(error.sqlMessage)
     }
 
@@ -414,15 +483,9 @@ export class VacanciesModel {
       }
     }
   }
-
-  async findRepVacancyWhitNoAccepts(vacancyId: number): Promise<true> {
+  async findRepVacancyWhitNotNullAccepts(vacancyId: number): Promise<true> {
     try {
       const vacanciesConsult = await this.knex('vacancies')
-        .leftJoin(
-          'ministry_types',
-          'vacancies.ministry_id',
-          'ministry_types.ministry_type_id'
-        )
         .leftJoin(
           'vacancies_students',
           'vacancies.vacancy_id',
@@ -438,7 +501,109 @@ export class VacanciesModel {
         .andWhereNot('invites.accept', null)
 
       if (vacanciesConsult) {
-        throw new Error('null accept not found')
+        throw new Error('vacancy already answered')
+      }
+
+      return true
+    } catch (error) {
+      console.error(
+        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        error
+      )
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Vaga já existe')
+      } else {
+        throw error
+      }
+    }
+  }
+
+  async validateNotAcceptsToVacancy(vacancyId: number): Promise<true> {
+    try {
+      const vacanciesConsult = await this.knex('vacancies')
+        .leftJoin(
+          'vacancies_students',
+          'vacancies.vacancy_id',
+          'vacancies_students.vacancy_id'
+        )
+        .leftJoin(
+          'invites',
+          'invites.vacancy_student_id',
+          'vacancies_students.vacancy_student_id'
+        )
+        .first('vacancies.vacancy_id')
+        .where('vacancies.vacancy_id', vacancyId)
+        .andWhere('invites.accept', true)
+
+      if (vacanciesConsult) {
+        throw new Error('vacancy already accepted')
+      }
+
+      return true
+    } catch (error) {
+      console.error(
+        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        error
+      )
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Vaga já existe')
+      } else {
+        throw error
+      }
+    }
+  }
+
+  async validateNotAcceptsToStudent(studentId: number): Promise<true> {
+    try {
+      const studentsConsult = await this.knex('students')
+        .leftJoin(
+          'vacancies_students',
+          'vacancies.student_id',
+          'vacancies_students.student_id'
+        )
+        .leftJoin(
+          'invites',
+          'invites.vacancy_student_id',
+          'vacancies_students.vacancy_student_id'
+        )
+        .first('students.student_id')
+        .where('students.student_id', studentId)
+        .andWhere('invites.accept', true)
+
+      if (studentsConsult) {
+        throw new Error('student already accepted another vacancy')
+      }
+
+      return true
+    } catch (error) {
+      console.error(
+        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        error
+      )
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Vaga já existe')
+      } else {
+        throw error
+      }
+    }
+  }
+
+  async validateNotAcceptsToStudentAndToVacancy(
+    vacancyStudentId: number
+  ): Promise<true> {
+    try {
+      const studentsConsult = await this.knex('vacancies_students')
+        .leftJoin(
+          'invites',
+          'invites.vacancy_student_id',
+          'vacancies_students.vacancy_student_id'
+        )
+        .first('invites.invite_id')
+        .where('vacancies_students.vacancy_student_id', vacancyStudentId)
+        .andWhereNot('invites.accept', null)
+
+      if (studentsConsult) {
+        throw new Error('student already answered this vacancy')
       }
 
       return true

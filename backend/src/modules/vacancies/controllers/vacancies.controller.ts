@@ -19,6 +19,8 @@ import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
 import { ERoles } from 'src/shared/auth/types/roles.enum'
 import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
 import { UserFromJwt } from 'src/shared/auth/types/types'
+import { CreateVacancyStudentDto } from '../dto/create-vacancy-student.dto'
+import { UpdateVacancyStudentDto } from '../dto/update-vacancy-student.dto'
 
 @Controller('vacancies')
 export class VacanciesController {
@@ -64,6 +66,26 @@ export class VacanciesController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
+  @Post('')
+  async addStudentToVacancy(
+    @Body() createVacancyStudent: CreateVacancyStudentDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
+    try {
+      const newVacancyStudent = await this.vacanciesService.addStudentToVacancy(
+        createVacancyStudent,
+        currentUser
+      )
+      return newVacancyStudent
+    } catch (error) {
+      console.error(
+        'erro capturado em addStudentToVacancy em Vacanciescontroller'
+      )
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
   @Put('')
   async updateVacancy(
     @Body() updateVacancyDto: UpdateVacancyDto,
@@ -77,6 +99,27 @@ export class VacanciesController {
       return updateVacancyDto
     } catch (error) {
       console.error('erro capturado em updateVacancy em Vacanciescontroller')
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
+  @Put('')
+  async updateVacancyStudent(
+    @Body() updateVacancyStudentDto: UpdateVacancyStudentDto,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
+    try {
+      const updatedVacancyStudent =
+        await this.vacanciesService.udpateVacancyStudentById(
+          updateVacancyStudentDto,
+          currentUser
+        )
+      return updatedVacancyStudent
+    } catch (error) {
+      console.error(
+        'erro capturado em updateVacancyStudent em Vacanciescontroller'
+      )
       throw new InternalServerErrorException(error.message)
     }
   }

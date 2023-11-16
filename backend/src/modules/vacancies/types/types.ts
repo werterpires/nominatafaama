@@ -67,3 +67,14 @@ export interface IVacancyStudent {
   comments: string
   invites: IInvite[]
 }
+
+export interface IAddStudentToVacancy {
+  studentId: number
+  vacancyId: number
+  comments: string
+}
+
+export interface IUpdateVacancyStudent {
+  vacancyStudentId: number
+  comments: string
+}

@@ -5,15 +5,19 @@ import {
 } from '../dto/create-vacancy.dto'
 import { UpdateVacancyDto } from '../dto/update-vacancy.dto'
 import {
+  IAddStudentToVacancy,
   ICreateDirectVacancy,
   ICreateVacancy,
   IUpdateVacancy,
+  IUpdateVacancyStudent,
   IVacancy
 } from '../types/types'
 import { VacanciesModel } from '../model/vacancies.model'
 import { UserFromJwt } from 'src/shared/auth/types/types'
 import { FieldRepsModel } from 'src/modules/field-reps/model/field-reps.model'
 import { FieldRepresentationsModel } from 'src/modules/field-representations/model/field-representations.model'
+import { CreateVacancyStudentDto } from '../dto/create-vacancy-student.dto'
+import { UpdateVacancyStudentDto } from '../dto/update-vacancy-student.dto'
 
 @Injectable()
 export class VacanciesService {
@@ -97,7 +101,58 @@ export class VacanciesService {
       throw error
     }
   }
+  async addStudentToVacancy(
+    createvacancyStudentDto: CreateVacancyStudentDto,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const fieldRepresentations =
+        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
+          currentUser.user_id
+        )
 
+      if (!fieldRepresentations) {
+        throw new Error('representations not found')
+      }
+
+      const activeFieldRepresentation = fieldRepresentations.find(
+        (representaion) =>
+          new Date(representaion.repActiveValidate) >= new Date() &&
+          representaion.repApproved
+      )
+
+      if (!activeFieldRepresentation) {
+        throw new Error('active representation not found')
+      }
+
+      const vacancyNotAlreadyAccpetted =
+        await this.vacanciesModel.validateNotAcceptsToVacancy(
+          createvacancyStudentDto.vacancyId
+        )
+      const studentNotAlreadyAccpetted =
+        await this.vacanciesModel.validateNotAcceptsToStudent(
+          createvacancyStudentDto.studentId
+        )
+
+      const createVacancyStudentData: IAddStudentToVacancy = {
+        comments: createvacancyStudentDto.comments,
+        studentId: createvacancyStudentDto.studentId,
+        vacancyId: createvacancyStudentDto.vacancyId
+      }
+
+      const newVacancyStudent = await this.vacanciesModel.addStudentToVacancy(
+        createVacancyStudentData
+      )
+
+      return true
+    } catch (error) {
+      console.error(
+        'erro capturado no addStudentToVacancy no VacanciesService:',
+        error
+      )
+      throw error
+    }
+  }
   async udpateVacancyById(
     updateVacancyDto: UpdateVacancyDto,
     currentUser: UserFromJwt
@@ -123,7 +178,7 @@ export class VacanciesService {
       }
 
       const nullAccptInviteVacancy =
-        await this.vacanciesModel.findRepVacancyWhitNoAccepts(
+        await this.vacanciesModel.findRepVacancyWhitNotNullAccepts(
           updateVacancyDto.vacancyId
         )
 
@@ -145,6 +200,48 @@ export class VacanciesService {
     } catch (error) {
       console.error(
         'erro capturado no udpateVacancyById no VacanciesService:',
+        error
+      )
+      throw error
+    }
+    return true
+  }
+  async udpateVacancyStudentById(
+    updateVacancyStudentDto: UpdateVacancyStudentDto,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const fieldRepresentations =
+        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
+          currentUser.user_id
+        )
+
+      if (!fieldRepresentations) {
+        throw new Error('representations not found')
+      }
+
+      const activeFieldRepresentation = fieldRepresentations.find(
+        (representaion) =>
+          new Date(representaion.repActiveValidate) >= new Date() &&
+          representaion.repApproved
+      )
+
+      if (!activeFieldRepresentation) {
+        throw new Error('active representation not found')
+      }
+
+      const updateVacancyStudentData: IUpdateVacancyStudent = {
+        comments: updateVacancyStudentDto.comments,
+        vacancyStudentId: updateVacancyStudentDto.vacancyStudentId
+      }
+
+      const updatedVacancyStudent =
+        await this.vacanciesModel.udpateStudentInVacancy(
+          updateVacancyStudentData
+        )
+    } catch (error) {
+      console.error(
+        'erro capturado no udpateVacancyStudentById no VacanciesService:',
         error
       )
       throw error
@@ -177,12 +274,52 @@ export class VacanciesService {
       }
 
       const nullAccptInviteVacancy =
-        await this.vacanciesModel.findRepVacancyWhitNoAccepts(vacancyId)
+        await this.vacanciesModel.findRepVacancyWhitNotNullAccepts(vacancyId)
 
       if (!nullAccptInviteVacancy) {
         throw new Error('null accept invite vacancy not found')
       }
       await this.vacanciesModel.deleteVacancy(vacancyId)
+    } catch (error) {
+      console.error(
+        'erro capturado no deleteVacancyById no VacanciesService:',
+        error
+      )
+      throw error
+    }
+    return true
+  }
+
+  async removeStudentFromVacancy(
+    vacancyStudentId: number,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      const fieldRepresentations =
+        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
+          currentUser.user_id
+        )
+
+      if (!fieldRepresentations) {
+        throw new Error('representations not found')
+      }
+
+      const activeFieldRepresentation = fieldRepresentations.find(
+        (representaion) =>
+          new Date(representaion.repActiveValidate) >= new Date() &&
+          representaion.repApproved
+      )
+
+      if (!activeFieldRepresentation) {
+        throw new Error('active representation not found')
+      }
+
+      const notInviteAnswered =
+        this.vacanciesModel.validateNotAcceptsToStudentAndToVacancy(
+          vacancyStudentId
+        )
+
+      await this.vacanciesModel.removeStudentFromVacancy(vacancyStudentId)
     } catch (error) {
       console.error(
         'erro capturado no deleteVacancyById no VacanciesService:',
