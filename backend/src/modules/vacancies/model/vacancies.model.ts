@@ -519,8 +519,11 @@ export class VacanciesModel {
     }
   }
 
-  async findAllStudentsWithNoAccepts(nominataId): Promise<IBasicStudent[]> {
+  async findAllStudentsWithNoAccepts(
+    nominataId: number
+  ): Promise<IBasicStudent[]> {
     try {
+      console.log('Nominata:', nominataId)
       const studentsConsult = await this.knex('students')
         .leftJoin('users', 'users.person_id', 'students.person_id')
         .leftJoin('people', 'people.person_id', 'students.person_id')
@@ -542,8 +545,8 @@ export class VacanciesModel {
         )
         .leftJoin(
           'vacancies_students',
-          'vacancies.vacancy_id',
-          'vacancies_students.vacancy_id'
+          'students.student_id',
+          'vacancies_students.student_id'
         )
         .leftJoin(
           'invites',
@@ -560,7 +563,6 @@ export class VacanciesModel {
           'hiring_status.hiring_status_name'
         )
         .where('nominatas_students.nominata_id', nominataId)
-        .andWhereNot('invites.accept', true)
         .whereNotExists(function () {
           this.select('vacancy_student_id')
             .from('invites')

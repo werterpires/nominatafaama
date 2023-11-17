@@ -393,10 +393,9 @@ export class VacanciesService {
         throw new Error('active representation not found')
       }
 
-      const students = await this.vacanciesModel.findAllStudentsWithNoAccepts({
-        nominataId: nominataId,
-        repId: activeFieldRepresentation.rep.repId
-      })
+      const students = await this.vacanciesModel.findAllStudentsWithNoAccepts(
+        nominataId
+      )
       return students
     } catch (error) {
       console.error(
