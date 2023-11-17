@@ -75,16 +75,34 @@
         </span>
       </div>
     </app-update-form>
-    <div>
+    <div class="hidden">
       <button #addIcon src="assets/icons/addIcon.png">
         Adicionar estudante à vaga
       </button>
     </div>
-    <app-student-cards
-      class="studentCards"
-      *ngFor="let vacancyStudent of vacancy.vacancyStudents"
-      [student]="vacancyStudent.student"
-    ></app-student-cards>
+    <div class="vacancyStudents">
+      <div class="studentsInVacancy">
+        <!-- <app-student-cards
+          class="studentCards"
+          *ngFor="let vacancyStudent of vacancy.vacancyStudents"
+          [student]="vacancyStudent.student"
+        ></app-student-cards> -->
+        <app-small-student-cards
+          class="studentCards"
+          *ngFor="let vacancyStudent of vacancy.vacancyStudents"
+          [student]="vacancyStudent.student"
+        ></app-small-student-cards>
+
+        <div style="width: 100px; height: 100px; background-color: red"></div>
+      </div>
+      <div class="studentsNotInVacancy">
+        <app-small-student-cards
+          class="studentCards"
+          *ngFor="let student of allStudents"
+          [student]="student"
+        ></app-small-student-cards>
+      </div>
+    </div>
   </section>
 </div>
 

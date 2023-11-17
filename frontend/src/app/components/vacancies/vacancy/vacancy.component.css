@@ -1,6 +1,4 @@
 .studentCards {
-  width: 100%;
-  overflow: auto;
 }
 
 .vacancyModal {
@@ -18,8 +16,40 @@
 }
 
 .vacancyContainer {
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   overflow: auto;
+}
+
+.vacancyStudents {
+  display: flex;
+  overflow: hidden;
+  padding: 10px;
+  gap: 20px;
+}
+
+.studentsInVacancy {
+  display: flex;
+  width: 100%;
+  flex: 3;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 20px;
+  overflow: auto;
+  border: solid 1px green;
+  padding: 10px;
+}
+
+.studentsNotInVacancy {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 20px;
+  overflow: auto;
+  border: solid 1px red;
+  padding: 10px;
+  align-items: center;
 }

@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators'
 
 import { environment } from 'src/environments/environment'
 import { UpdateVacancyDto } from '../types'
+import { IBasicStudent } from '../../nominata/types'
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +59,29 @@ export class VacancyService {
             )
           }
           return throwError(() => new Error('Não foi possível deletar a vaga.'))
+        }),
+      )
+  }
+
+  getStudentsWithNoAccepts(nominataId: number): Observable<IBasicStudent[]> {
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .get<IBasicStudent[]>(
+        environment.API + `/vacancies/students/${nominataId}`,
+        {
+          headers: head_obj,
+        },
+      )
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(() => new Error(error.message))
+          }
+          return throwError(
+            () => new Error('Não foi possível atualizar a vaga.'),
+          )
         }),
       )
   }
