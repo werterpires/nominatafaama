@@ -126,44 +126,6 @@ export class NominatasService {
         return null
       }
 
-      // for (const student of students) {
-      //   if (student.small_alone_photo == null) {
-      //     student.photo = null;
-      //   } else {
-      //     const filePath = `./src/modules/info/student-photos/files/${student.small_alone_photo}`;
-
-      //     if (!fs.existsSync(filePath)) {
-      //       student.photo = null;
-      //     } else {
-      //       const fileStream = fs.createReadStream(filePath);
-      //       const headers = {
-      //         'Content-Type': 'image/jpeg',
-      //         'Content-Disposition': `attachment; filename=${student.small_alone_photo}`,
-      //       };
-
-      //       const filePromise = new Promise<Buffer>((resolve, reject) => {
-      //         const chunks: Buffer[] = [];
-      //         fileStream.on('data', (chunk: Buffer) => {
-      //           chunks.push(chunk);
-      //         });
-      //         fileStream.on('end', () => {
-      //           const file = Buffer.concat(chunks);
-      //           resolve(file);
-      //         });
-      //         fileStream.on('error', (error: Error) => {
-      //           reject(error);
-      //         });
-      //       });
-
-      //       const file = await filePromise;
-      //       student.photo = {
-      //         file,
-      //         headers,
-      //       };
-      //     }
-      //   }
-      // }
-
       return students
     } catch (error) {
       console.error(error)
