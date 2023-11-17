@@ -87,7 +87,8 @@ import { RepresentationsToApproveComponent } from './components/approvals/repres
 import { OneRepresentationsToApproveComponent } from './components/approvals/one-representation-to-approve/one-representation-to-approve.component';
 import { StudentsSpaceComponent } from './components/nominata/students-space/students-space.component';
 import { StudentCardsComponent } from './components/shared/student-cards/student-cards.component';
-import { VacancyComponent } from './components/vacancies/vacancy/vacancy.component'
+import { VacancyComponent } from './components/vacancies/vacancy/vacancy.component';
+import { SmallStudentCardsComponent } from './components/shared/small-student-cards/small-student-cards.component'
 
 @NgModule({
   declarations: [
@@ -172,6 +173,7 @@ import { VacancyComponent } from './components/vacancies/vacancy/vacancy.compone
     StudentsSpaceComponent,
     StudentCardsComponent,
     VacancyComponent,
+    SmallStudentCardsComponent,
   ],
   imports: [
     BrowserModule,

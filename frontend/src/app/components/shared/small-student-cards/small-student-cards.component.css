@@ -1,0 +1,95 @@
+.withFavorite {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.sSmallAlonePhoto {
+  width: 130px;
+  height: 133px;
+  overflow: hidden;
+}
+
+.sImageContainer {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.sFavoriteIcon {
+  stroke: white;
+  fill: blue;
+  stroke-width: 2px;
+  width: 40px;
+}
+
+.sStudentDatacontainer {
+  width: 130px;
+  height: 65px;
+  background: #23435f;
+  padding: 8px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+.sHiringStatusSpace {
+  display: flex;
+  align-items: center;
+}
+
+.sDisponivelIndicator {
+  border-radius: 100%;
+  background-color: #4edf72;
+  width: 6px;
+  height: 6px;
+}
+
+.sContratadoIndicator {
+  border-radius: 100%;
+  background-color: #f60e0e;
+  width: 6px;
+  height: 6px;
+}
+
+.sChamadoIndicator {
+  border-radius: 100%;
+  background-color: #ff7f00;
+  width: 6px;
+  height: 6px;
+}
+
+.sHiringStatusText {
+  margin-left: 2px;
+  color: #fff;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: uppercase;
+}
+
+.sNominataStudentName {
+  margin-top: 10px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 10px;
+  letter-spacing: 0.1px;
+  color: #ffffff;
+}
+
+.sStudentCompData {
+  font-family: 'Poppins';
+  font-style: normal;
+  margin-top: 3px;
+  font-weight: 500;
+  font-size: 6px;
+  line-height: 9px;
+  color: #ffffff;
+}
