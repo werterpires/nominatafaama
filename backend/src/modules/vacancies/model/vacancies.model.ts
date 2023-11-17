@@ -13,6 +13,7 @@ import {
 } from '../types/types'
 import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
 import { UserFromJwt } from 'src/shared/auth/types/types'
+import { IBasicStudent } from 'src/modules/nominatas/types/types'
 
 @Injectable()
 export class VacanciesModel {
@@ -505,6 +506,84 @@ export class VacanciesModel {
       }
 
       return true
+    } catch (error) {
+      console.error(
+        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        error
+      )
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('Vaga já existe')
+      } else {
+        throw error
+      }
+    }
+  }
+
+  async findAllStudentsWithNoAccepts(nominataId): Promise<IBasicStudent[]> {
+    try {
+      const studentsConsult = await this.knex('students')
+        .leftJoin('users', 'users.person_id', 'students.person_id')
+        .leftJoin('people', 'people.person_id', 'students.person_id')
+        .leftJoin(
+          'associations',
+          'associations.association_id',
+          'students.origin_field_id'
+        )
+        .leftJoin('unions', 'unions.union_id', 'associations.union_id')
+        .leftJoin(
+          'hiring_status',
+          'hiring_status.hiring_status_id',
+          'students.hiring_status_id'
+        )
+        .leftJoin(
+          'nominatas_students',
+          'nominatas_students.student_id',
+          'students.student_id'
+        )
+        .leftJoin(
+          'vacancies_students',
+          'vacancies.vacancy_id',
+          'vacancies_students.vacancy_id'
+        )
+        .leftJoin(
+          'invites',
+          'invites.vacancy_student_id',
+          'vacancies_students.vacancy_student_id'
+        )
+        .select(
+          'students.student_id',
+          'students.person_id',
+          'users.user_id',
+          'people.name',
+          'associations.association_acronym',
+          'unions.union_acronym',
+          'hiring_status.hiring_status_name'
+        )
+        .where('nominatas_students.nominata_id', nominataId)
+        .andWhereNot('invites.accept', true)
+        .whereNotExists(function () {
+          this.select('vacancy_student_id')
+            .from('invites')
+            .whereRaw(
+              'invites.vacancy_student_id = vacancies_students.vacancy_student_id'
+            )
+            .andWhere('invites.accept', true)
+        })
+
+      const studentsList: IBasicStudent[] = studentsConsult.map((student) => {
+        return {
+          student_id: student.student_id,
+          user_id: student.user_id,
+          person_id: student.person_id,
+          name: student.name,
+          union_acronym: student.union_acronym,
+          association_acronym: student.association_acronym,
+          hiring_status_name: student.hiring_status_name,
+          small_alone_photo: ''
+        }
+      })
+
+      return studentsList
     } catch (error) {
       console.error(
         'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',

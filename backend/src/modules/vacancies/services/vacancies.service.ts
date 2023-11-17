@@ -18,6 +18,7 @@ import { FieldRepsModel } from 'src/modules/field-reps/model/field-reps.model'
 import { FieldRepresentationsModel } from 'src/modules/field-representations/model/field-representations.model'
 import { CreateVacancyStudentDto } from '../dto/create-vacancy-student.dto'
 import { UpdateVacancyStudentDto } from '../dto/update-vacancy-student.dto'
+import { IBasicStudent } from 'src/modules/nominatas/types/types'
 
 @Injectable()
 export class VacanciesService {
@@ -359,6 +360,44 @@ export class VacanciesService {
         repId: activeFieldRepresentation.rep.repId
       })
       return vacancies
+    } catch (error) {
+      console.error(
+        'erro capturado no findRepVacanciesByNominataId no VacanciesService:',
+        error
+      )
+      throw error
+    }
+  }
+
+  async findAllStudentsWithNoAcceptsByNominataId(
+    currentUser: UserFromJwt,
+    nominataId: number
+  ): Promise<IBasicStudent[]> {
+    try {
+      const fieldRepresentations =
+        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
+          currentUser.user_id
+        )
+
+      if (!fieldRepresentations) {
+        throw new Error('representations not found')
+      }
+
+      const activeFieldRepresentation = fieldRepresentations.find(
+        (representaion) =>
+          new Date(representaion.repActiveValidate) >= new Date() &&
+          representaion.repApproved
+      )
+
+      if (!activeFieldRepresentation) {
+        throw new Error('active representation not found')
+      }
+
+      const students = await this.vacanciesModel.findAllStudentsWithNoAccepts({
+        nominataId: nominataId,
+        repId: activeFieldRepresentation.rep.repId
+      })
+      return students
     } catch (error) {
       console.error(
         'erro capturado no findRepVacanciesByNominataId no VacanciesService:',

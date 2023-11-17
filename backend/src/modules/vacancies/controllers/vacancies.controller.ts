@@ -143,18 +143,37 @@ export class VacanciesController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
+  @Get('students/:nominataId')
+  async getAllStudentsWithNoAccepts(
+    @Param('nominataId') nominataId: string,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
+    try {
+      const students =
+        await this.vacanciesService.findAllStudentsWithNoAcceptsByNominataId(
+          currentUser,
+          Number(nominataId)
+        )
+      return students
+    } catch (error) {
+      console.error('erro capturado em updateVacancy em Vacanciescontroller')
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
   @Get(':nominataId')
   async getRepVacanciesByNominataId(
     @Param('nominataId') nominataId: string,
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const deletedVacancy =
+      const vacancies =
         await this.vacanciesService.findRepVacanciesByNominataId(
           currentUser,
           Number(nominataId)
         )
-      return deletedVacancy
+      return vacancies
     } catch (error) {
       console.error('erro capturado em updateVacancy em Vacanciescontroller')
       throw new InternalServerErrorException(error.message)
