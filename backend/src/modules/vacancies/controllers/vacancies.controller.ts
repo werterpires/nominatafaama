@@ -66,7 +66,7 @@ export class VacanciesController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
-  @Post('')
+  @Post('students')
   async addStudentToVacancy(
     @Body() createVacancyStudent: CreateVacancyStudentDto,
     @CurrentUser() currentUser: UserFromJwt
@@ -79,7 +79,8 @@ export class VacanciesController {
       return newVacancyStudent
     } catch (error) {
       console.error(
-        'erro capturado em addStudentToVacancy em Vacanciescontroller'
+        'erro capturado em addStudentToVacancy em Vacanciescontroller',
+        error
       )
       throw new InternalServerErrorException(error.message)
     }

@@ -10,7 +10,8 @@ import {
   ICreateVacancy,
   IUpdateVacancy,
   IUpdateVacancyStudent,
-  IVacancy
+  IVacancy,
+  IVacancyStudent
 } from '../types/types'
 import { VacanciesModel } from '../model/vacancies.model'
 import { UserFromJwt } from 'src/shared/auth/types/types'
@@ -105,7 +106,7 @@ export class VacanciesService {
   async addStudentToVacancy(
     createvacancyStudentDto: CreateVacancyStudentDto,
     currentUser: UserFromJwt
-  ): Promise<boolean> {
+  ): Promise<IVacancyStudent> {
     try {
       const fieldRepresentations =
         await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
@@ -145,7 +146,7 @@ export class VacanciesService {
         createVacancyStudentData
       )
 
-      return true
+      return newVacancyStudent
     } catch (error) {
       console.error(
         'erro capturado no addStudentToVacancy no VacanciesService:',

@@ -1,5 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { IVacancy } from './Types'
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  Renderer2,
+} from '@angular/core'
+import { CreateVacancyStudentDto, IVacancy } from './Types'
 import { IMinistryType } from '../../parameterization/minstry-types/types'
 import { IHiringStatus } from '../../parameterization/hiring-status/types'
 import { VacancyService } from './vacancy.service'
@@ -29,8 +37,46 @@ export class VacancyComponent implements OnInit {
   @Input() allMinistries: IMinistryType[] = []
   @Output() changeAlert = new EventEmitter<void>()
 
-  constructor(private vacancyService: VacancyService) {}
+  constructor(
+    private vacancyService: VacancyService,
+    private renderer: Renderer2,
+    private el: ElementRef,
+  ) {}
 
+  onDragStart(event: DragEvent, student: any) {
+    if (!event.dataTransfer) {
+      return
+    }
+    // Define os dados que serão transferidos durante o arrastar
+    event.dataTransfer.setData('text/plain', JSON.stringify(student))
+  }
+
+  onDragOver(event: DragEvent) {
+    // Previne o comportamento padrão para permitir a queda
+    event.preventDefault()
+  }
+
+  onDrop(event: DragEvent) {
+    // Impede o comportamento padrão
+    event.preventDefault()
+    if (!event.dataTransfer) {
+      return
+    }
+    // Obtém os dados transferidos durante o arrastar
+    const studentData = event.dataTransfer.getData('text/plain')
+    const student = JSON.parse(studentData)
+
+    // Adiciona o estudante ao array vacancy.vacancyStudents
+    // this.vacancy.vacancyStudents.push({ student: student });
+    console.log(student)
+    this.addStudent(student.student_id)
+
+    // Remove o estudante do array allStudents
+    const index = this.allStudents.findIndex((s) => s === student)
+    if (index !== -1) {
+      this.allStudents.splice(index, 1)
+    }
+  }
   ngOnInit(): void {
     this.getAllStudents()
   }
@@ -79,6 +125,34 @@ export class VacancyComponent implements OnInit {
         this.doneMessage = 'Vaga deletada com sucesso.'
         this.done = true
         this.changeAlert.emit()
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.errorMessage = error
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
+
+  addStudent(studentId: number) {
+    this.isLoading = true
+    const addStudentToVacancyData: CreateVacancyStudentDto = {
+      comments: '',
+      studentId: studentId,
+      vacancyId: this.vacancy.vacancyId,
+    }
+    console.log(addStudentToVacancyData)
+    this.vacancyService.addStudentToVacancy(addStudentToVacancyData).subscribe({
+      next: (res) => {
+        this.vacancy.vacancyStudents.push(res)
+        this.allStudents = this.allStudents.filter((student) => {
+          return student.student_id !== res.studentId
+        })
+
+        this.doneMessage = 'Estudante adicionado à vaga.'
+        this.done = true
+
         this.isLoading = false
       },
       error: (error) => {

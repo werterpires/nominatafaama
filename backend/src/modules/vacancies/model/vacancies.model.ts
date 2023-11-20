@@ -207,26 +207,85 @@ export class VacanciesModel {
 
   async addStudentToVacancy(
     addStudentToVacancyData: IAddStudentToVacancy
-  ): Promise<boolean> {
+  ): Promise<IVacancyStudent> {
     try {
       const { comments, studentId, vacancyId } = addStudentToVacancyData
+      let vacancyStudentId: number
+      let vacancyStudentConsult
+      const trx = await this.knex.transaction(async (trx) => {
+        vacancyStudentId = await trx('vacancies_students')
+          .insert({
+            comments,
+            student_id: studentId,
+            vacancy_id: vacancyId
+          })
+          .returning('vacancy_id')
+        console.log('vacancyStudentId', vacancyStudentId[0])
 
-      const [vacancy_id] = await this.knex('vacancies_students')
-        .insert({
-          comments,
-          student_id: studentId,
-          vacancy_id: vacancyId
-        })
-        .returning('vacancy_id')
+        vacancyStudentConsult = await trx('vacancies_students')
+          .leftJoin(
+            'students',
+            'students.student_id',
+            'vacancies_students.student_id'
+          )
+          .leftJoin('users', 'users.person_id', 'students.person_id')
+          .leftJoin('people', 'people.person_id', 'students.person_id')
+          .leftJoin(
+            'associations',
+            'associations.association_id',
+            'students.origin_field_id'
+          )
+          .leftJoin('unions', 'unions.union_id', 'associations.union_id')
+          .leftJoin(
+            'hiring_status',
+            'hiring_status.hiring_status_id',
+            'students.hiring_status_id'
+          )
+          .where('vacancy_student_id', vacancyStudentId[0])
+          .first(
+            'students.student_id',
+            'users.user_id',
+            'people.person_id',
+            'people.name',
+            'unions.union_acronym',
+            'associations.association_acronym',
+            'hiring_status.hiring_status_name',
+            'vacancies_students.*'
+          )
+      })
+
+      console.log('vacancyStudentConsult', vacancyStudentConsult)
+
+      const vacancyStudent: IVacancyStudent = {
+        vacancyStudentId: vacancyStudentConsult.vacancy_student_id,
+        studentId: vacancyStudentConsult.student_id,
+        student: {
+          person_id: vacancyStudentConsult.person_id,
+          name: vacancyStudentConsult.name,
+          union_acronym: vacancyStudentConsult.union_acronym,
+          association_acronym: vacancyStudentConsult.association_acronym,
+          hiring_status_name: vacancyStudentConsult.hiring_status_name,
+          student_id: vacancyStudentConsult.student_id,
+          user_id: vacancyStudentConsult.user_id,
+          small_alone_photo: ''
+        },
+        vacancyId: vacancyStudentConsult.vacancy_id,
+        invites: [],
+        comments: vacancyStudentConsult.comments
+      }
+
+      return vacancyStudent
     } catch (error) {
+      console.error(
+        'erro capturado no addStudentToVacancy no VacanciesModel:',
+        error
+      )
       if (error.code === 'ER_DUP_ENTRY') {
         throw new Error('Estudante já está na vaga.')
       } else {
         throw new Error(error.sqlMessage)
       }
     }
-
-    return true
   }
   async udpateVacancy(updateVacancyData: IUpdateVacancy): Promise<boolean> {
     try {
@@ -639,7 +698,7 @@ export class VacanciesModel {
       const studentsConsult = await this.knex('students')
         .leftJoin(
           'vacancies_students',
-          'vacancies.student_id',
+          'students.student_id',
           'vacancies_students.student_id'
         )
         .leftJoin(

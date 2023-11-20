@@ -81,12 +81,11 @@
       </button>
     </div>
     <div class="vacancyStudents">
-      <div class="studentsInVacancy">
-        <!-- <app-student-cards
-          class="studentCards"
-          *ngFor="let vacancyStudent of vacancy.vacancyStudents"
-          [student]="vacancyStudent.student"
-        ></app-student-cards> -->
+      <div
+        class="studentsInVacancy"
+        (drop)="onDrop($event)"
+        (dragover)="onDragOver($event)"
+      >
         <app-small-student-cards
           class="studentCards"
           *ngFor="let vacancyStudent of vacancy.vacancyStudents"
@@ -100,6 +99,8 @@
           class="studentCards"
           *ngFor="let student of allStudents"
           [student]="student"
+          draggable="true"
+          (dragstart)="onDragStart($event, student)"
         ></app-small-student-cards>
       </div>
     </div>

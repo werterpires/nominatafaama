@@ -38,3 +38,9 @@ export interface IInvite {
   deadline: Date
   approved: boolean | null
 }
+
+export interface CreateVacancyStudentDto {
+  studentId: number
+  vacancyId: number
+  comments: string
+}
