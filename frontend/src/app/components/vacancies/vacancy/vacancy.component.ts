@@ -7,7 +7,7 @@ import {
   Output,
   Renderer2,
 } from '@angular/core'
-import { CreateVacancyStudentDto, IVacancy } from './Types'
+import { CreateVacancyStudentDto, IVacancy, IVacancyStudent } from './Types'
 import { IMinistryType } from '../../parameterization/minstry-types/types'
 import { IHiringStatus } from '../../parameterization/hiring-status/types'
 import { VacancyService } from './vacancy.service'
@@ -43,12 +43,20 @@ export class VacancyComponent implements OnInit {
     private el: ElementRef,
   ) {}
 
-  onDragStart(event: DragEvent, student: any) {
+  onStudentDragStart(event: DragEvent, student: IBasicStudent) {
     if (!event.dataTransfer) {
       return
     }
-    // Define os dados que serão transferidos durante o arrastar
+
     event.dataTransfer.setData('text/plain', JSON.stringify(student))
+  }
+
+  onVacancyDragStart(event: DragEvent, vacancyStudent: IVacancyStudent) {
+    if (!event.dataTransfer) {
+      return
+    }
+
+    event.dataTransfer.setData('text/plain', JSON.stringify(vacancyStudent))
   }
 
   onDragOver(event: DragEvent) {
@@ -56,7 +64,7 @@ export class VacancyComponent implements OnInit {
     event.preventDefault()
   }
 
-  onDrop(event: DragEvent) {
+  onDropInVacancy(event: DragEvent) {
     // Impede o comportamento padrão
     event.preventDefault()
     if (!event.dataTransfer) {
@@ -68,17 +76,35 @@ export class VacancyComponent implements OnInit {
 
     // Adiciona o estudante ao array vacancy.vacancyStudents
     // this.vacancy.vacancyStudents.push({ student: student });
-    console.log(student)
+
     this.addStudent(student.student_id)
 
-    // Remove o estudante do array allStudents
-    const index = this.allStudents.findIndex((s) => s === student)
-    if (index !== -1) {
-      this.allStudents.splice(index, 1)
-    }
+    // // Remove o estudante do array allStudents
+    // const index = this.allStudents.findIndex((s) => s === student)
+    // if (index !== -1) {
+    //   this.allStudents.splice(index, 1)
+    // }
   }
+
+  onDropOutVacancy(event: DragEvent) {
+    // Impede o comportamento padrão
+    event.preventDefault()
+    if (!event.dataTransfer) {
+      return
+    }
+    // Obtém os dados transferidos durante o arrastar
+    const vacancyStudentData = event.dataTransfer.getData('text/plain')
+    const vacancyStudent = JSON.parse(vacancyStudentData)
+
+    // Adiciona o estudante ao array vacancy.vacancyStudents
+    // this.vacancy.vacancyStudents.push({ student: student });
+
+    this.removeStudent(vacancyStudent)
+  }
+
   ngOnInit(): void {
     this.getAllStudents()
+    console.log(this.vacancy)
   }
 
   showAlert(func: string, message: string, idx?: number) {
@@ -142,7 +168,7 @@ export class VacancyComponent implements OnInit {
       studentId: studentId,
       vacancyId: this.vacancy.vacancyId,
     }
-    console.log(addStudentToVacancyData)
+
     this.vacancyService.addStudentToVacancy(addStudentToVacancyData).subscribe({
       next: (res) => {
         this.vacancy.vacancyStudents.push(res)
@@ -156,11 +182,42 @@ export class VacancyComponent implements OnInit {
         this.isLoading = false
       },
       error: (error) => {
-        this.errorMessage = error
+        this.errorMessage = error.message
         this.error = true
         this.isLoading = false
       },
     })
+  }
+
+  removeStudent(vacancyStudent: IVacancyStudent) {
+    this.isLoading = true
+
+    this.vacancyService
+      .removeStudentFromVacancy(vacancyStudent.vacancyStudentId)
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.allStudents.push(vacancyStudent.student)
+            this.vacancy.vacancyStudents = this.vacancy.vacancyStudents.filter(
+              (student) => {
+                return (
+                  student.vacancyStudentId !== vacancyStudent.vacancyStudentId
+                )
+              },
+            )
+          }
+
+          this.doneMessage = 'Estudante removido da vaga.'
+          this.done = true
+
+          this.isLoading = false
+        },
+        error: (error) => {
+          this.errorMessage = error.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
   }
 
   getAllStudents() {
@@ -171,7 +228,7 @@ export class VacancyComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.allStudents = res
-          console.log(this.allStudents)
+
           this.filterStudents()
           this.isLoading = false
         },
@@ -187,11 +244,10 @@ export class VacancyComponent implements OnInit {
     const studentsIdInVacancy = this.vacancy.vacancyStudents.map(
       (student) => student.studentId,
     )
-    console.log(studentsIdInVacancy)
+
     this.allStudents = this.allStudents.filter(
       (student) => !studentsIdInVacancy.includes(student.student_id),
     )
-    console.log(this.allStudents)
   }
   confirm(response: { confirm: boolean; func: string }) {
     const { confirm, func } = response

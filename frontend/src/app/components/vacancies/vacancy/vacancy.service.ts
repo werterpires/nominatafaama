@@ -119,4 +119,38 @@ export class VacancyService {
         }),
       )
   }
+
+  removeStudentFromVacancy(vacancyStudentId: number): Observable<boolean> {
+    console.log('vacancyStudentId:', vacancyStudentId)
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .delete<boolean>(
+        environment.API + '/vacancies/students/' + `${vacancyStudentId}`,
+
+        {
+          headers: head_obj,
+        },
+      )
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          if (error.error.message == 'Registro já aprovado') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar ou deletar um item ja aprovado (com colração verde).',
+                ),
+            )
+          } else if (
+            error.error.message == 'student already answered this vacancy'
+          ) {
+            throw new Error(
+              'Este estudante não pode ser removido pois respondeu a um convite para esta vaga.',
+            )
+          }
+          return throwError(() => new Error(error.error.message))
+        }),
+      )
+  }
 }

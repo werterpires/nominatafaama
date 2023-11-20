@@ -144,6 +144,29 @@ export class VacanciesController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
+  @Delete('students/:vacancyStudentId')
+  async removeStudentFromVacancy(
+    @Param('vacancyStudentId') vacancyStudentId: string,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
+    console.log('vacancyStudentId', vacancyStudentId)
+    try {
+      const updatedVacancy =
+        await this.vacanciesService.removeStudentFromVacancy(
+          parseInt(vacancyStudentId.toString()),
+          currentUser
+        )
+      return updatedVacancy
+    } catch (error) {
+      console.error(
+        'erro capturado em removeStudentFromVacancy em Vacanciescontroller',
+        error
+      )
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
   @Get('students/:nominataId')
   async getAllStudentsWithNoAccepts(
     @Param('nominataId') nominataId: string,

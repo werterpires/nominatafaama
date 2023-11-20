@@ -83,24 +83,34 @@
     <div class="vacancyStudents">
       <div
         class="studentsInVacancy"
-        (drop)="onDrop($event)"
+        (drop)="onDropInVacancy($event)"
         (dragover)="onDragOver($event)"
       >
         <app-small-student-cards
           class="studentCards"
           *ngFor="let vacancyStudent of vacancy.vacancyStudents"
           [student]="vacancyStudent.student"
+          [draggable]="
+            (vacancyStudent.invites[0] &&
+              vacancyStudent.invites[0].accept === null) ||
+            !vacancyStudent.invites[0]
+          "
+          (dragstart)="onVacancyDragStart($event, vacancyStudent)"
         ></app-small-student-cards>
 
         <div style="width: 100px; height: 100px; background-color: red"></div>
       </div>
-      <div class="studentsNotInVacancy">
+      <div
+        class="studentsNotInVacancy"
+        (drop)="onDropOutVacancy($event)"
+        (dragover)="onDragOver($event)"
+      >
         <app-small-student-cards
           class="studentCards"
           *ngFor="let student of allStudents"
           [student]="student"
           draggable="true"
-          (dragstart)="onDragStart($event, student)"
+          (dragstart)="onStudentDragStart($event, student)"
         ></app-small-student-cards>
       </div>
     </div>

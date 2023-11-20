@@ -296,6 +296,7 @@ export class VacanciesService {
     vacancyStudentId: number,
     currentUser: UserFromJwt
   ): Promise<boolean> {
+    console.log('vacancyStudentId', vacancyStudentId)
     try {
       const fieldRepresentations =
         await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
@@ -317,14 +318,18 @@ export class VacanciesService {
       }
 
       const notInviteAnswered =
-        this.vacanciesModel.validateNotAcceptsToStudentAndToVacancy(
+        await this.vacanciesModel.validateNotAcceptsToStudentAndToVacancy(
           vacancyStudentId
         )
+
+      if (!notInviteAnswered) {
+        throw new Error('invite answered')
+      }
 
       await this.vacanciesModel.removeStudentFromVacancy(vacancyStudentId)
     } catch (error) {
       console.error(
-        'erro capturado no deleteVacancyById no VacanciesService:',
+        'erro capturado no removeStudentFromVacancy no VacanciesService:',
         error
       )
       throw error

@@ -220,7 +220,6 @@ export class VacanciesModel {
             vacancy_id: vacancyId
           })
           .returning('vacancy_id')
-        console.log('vacancyStudentId', vacancyStudentId[0])
 
         vacancyStudentConsult = await trx('vacancies_students')
           .leftJoin(
@@ -253,8 +252,6 @@ export class VacanciesModel {
             'vacancies_students.*'
           )
       })
-
-      console.log('vacancyStudentConsult', vacancyStudentConsult)
 
       const vacancyStudent: IVacancyStudent = {
         vacancyStudentId: vacancyStudentConsult.vacancy_student_id,
@@ -501,12 +498,14 @@ export class VacanciesModel {
       )
 
       const vacanciesStudentsIds: number[] = vacanciesStudentsConsult.map(
-        (vacancyStudent) => vacancyStudent.vacancy_id
+        (vacancyStudent) => vacancyStudent.vacancy_student_id
       )
 
       const invitesConsult = await this.knex('invites')
         .select('*')
         .whereIn('invites.vacancy_student_id', vacanciesStudentsIds)
+
+      console.log(vacanciesStudentsIds, invitesConsult)
 
       const invites: IInvite[] = invitesConsult.map((invite) => {
         return {
@@ -567,7 +566,7 @@ export class VacanciesModel {
       return true
     } catch (error) {
       console.error(
-        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        'erro capturado no findRepVacancyWhitNotNullAccepts no VacanciesService:',
         error
       )
       if (error.code === 'ER_DUP_ENTRY') {
@@ -582,7 +581,6 @@ export class VacanciesModel {
     nominataId: number
   ): Promise<IBasicStudent[]> {
     try {
-      console.log('Nominata:', nominataId)
       const studentsConsult = await this.knex('students')
         .leftJoin('users', 'users.person_id', 'students.person_id')
         .leftJoin('people', 'people.person_id', 'students.person_id')
@@ -647,7 +645,7 @@ export class VacanciesModel {
       return studentsList
     } catch (error) {
       console.error(
-        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        'erro capturado no findAllStudentsWithNoAccepts no VacanciesService:',
         error
       )
       if (error.code === 'ER_DUP_ENTRY') {
@@ -682,7 +680,7 @@ export class VacanciesModel {
       return true
     } catch (error) {
       console.error(
-        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        'erro capturado no validateNotAcceptsToVacancy no VacanciesService:',
         error
       )
       if (error.code === 'ER_DUP_ENTRY') {
@@ -717,7 +715,7 @@ export class VacanciesModel {
       return true
     } catch (error) {
       console.error(
-        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        'erro capturado no validateNotAcceptsToStudent no VacanciesService:',
         error
       )
       if (error.code === 'ER_DUP_ENTRY') {
@@ -749,13 +747,13 @@ export class VacanciesModel {
       return true
     } catch (error) {
       console.error(
-        'erro capturado no findRepVacancyWhitNoAccepts no VacanciesService:',
+        'erro capturado no validateNotAcceptsToStudentAndToVacancy no VacanciesModel:',
         error
       )
       if (error.code === 'ER_DUP_ENTRY') {
         throw new Error('Vaga já existe')
       } else {
-        throw error
+        throw new Error(error.message)
       }
     }
   }
