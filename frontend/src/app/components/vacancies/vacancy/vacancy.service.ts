@@ -25,11 +25,11 @@ export class VacancyService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          if (error.error.message == 'Registro já aprovado') {
+          if (error.error.message == 'vacancy already answered') {
             return throwError(
               () =>
                 new Error(
-                  'Não é possível atualizar ou deletar um item ja aprovado (com colração verde).',
+                  'Não é possível atualizar uma vaga com convites aceitos ou recusados.',
                 ),
             )
           }

@@ -50,3 +50,18 @@
     {{ student.union_acronym }}/{{ student.association_acronym }}
   </p>
 </div>
+<div *ngIf="commentsAllowed" class="commentSpace" [title]="comments">
+  <p class="fieldContent">Comentários</p>
+  <textarea
+    [(ngModel)]="comments"
+    spellcheck="false"
+    (input)="readyToSave = true"
+  ></textarea>
+
+  <img
+    *ngIf="readyToSave"
+    class="saveIcon"
+    src="assets/icons/saveIcon.svg"
+    alt="Salvar"
+  />
+</div>

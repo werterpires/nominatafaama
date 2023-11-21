@@ -93,3 +93,70 @@
   line-height: 9px;
   color: #ffffff;
 }
+
+.commentSpace {
+  width: 130px;
+  height: 100%;
+  max-height: 61px;
+  background-color: #e1e1e3;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 10px;
+  letter-spacing: 0.1px;
+}
+
+textarea {
+  width: 100%;
+  height: 87%;
+  resize: none;
+  margin: 0;
+  padding: 0 3px;
+  border: unset;
+  box-shadow: unset;
+  appearance: none;
+  outline: none;
+  background-color: #e1e1e3;
+  overflow: hidden;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 13px;
+  letter-spacing: 0.1px;
+  color: #23435f;
+}
+
+textarea:focus {
+  width: 100%;
+  height: 87%;
+  resize: none;
+  margin: 0;
+  padding: 0 1px;
+  border: unset;
+  box-shadow: unset;
+  appearance: none;
+
+  overflow: auto;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.3px;
+  color: #23435f;
+}
+
+.saveIcon {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  bottom: 15px;
+  left: 125px;
+  transition: ease-in 0.1s all;
+}
+
+.saveIcon:hover {
+  scale: 1.2;
+}

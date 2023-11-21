@@ -22,11 +22,15 @@ export class SmallStudentCardsComponent {
     isApproved: false,
   }
   @Input() student!: IBasicStudent
+  @Input() comments!: string
+  @Input() commentsAllowed = false
 
   @Input() fav = false
 
   @Output() setFavEmiter: EventEmitter<{ studentId: number; fav: boolean }> =
     new EventEmitter<{ studentId: number; fav: boolean }>()
+
+  readyToSave = false
 
   setFav(fav: boolean) {
     this.setFavEmiter.emit({ studentId: this.student.student_id, fav: fav })

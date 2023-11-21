@@ -33,23 +33,135 @@
 .studentsInVacancy {
   display: flex;
   width: 100%;
+  min-height: 320px;
   flex: 3;
   justify-content: space-evenly;
   flex-wrap: wrap;
   gap: 20px;
   overflow: auto;
-  border: solid 1px green;
   padding: 10px;
+  background-color: #8ea98e82;
+  border-radius: 25px;
 }
 
 .studentsNotInVacancy {
   height: 100%;
+  min-width: 150px;
   display: flex;
   flex-direction: column;
-  flex: 1;
+
   gap: 20px;
   overflow: auto;
-  border: solid 1px red;
+
   padding: 10px;
   align-items: center;
+  background-color: #d9d9ac;
+  border-radius: 10px;
+}
+
+.commentModal {
+  width: 50vw;
+  min-width: 320px;
+  min-height: 30vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 30px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: #ffffff;
+}
+
+.commentInput {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  margin: 4px 0;
+  background: #ffffff;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1.5px solid #dcdada;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #23435f;
+}
+
+button {
+  align-self: self-end;
+}
+
+.commentSpace {
+  width: 130px;
+  height: 100%;
+  max-height: 61px;
+  margin-top: 4px;
+  padding: 3px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 10px;
+  letter-spacing: 0.1px;
+}
+
+textarea {
+  width: 130px;
+  height: 61px;
+  resize: none;
+  margin: 0;
+  padding: 0;
+  border: unset;
+  box-shadow: unset;
+  appearance: none;
+  outline: none;
+  overflow: hidden;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 13px;
+  letter-spacing: 0.1px;
+  color: #23435f;
+}
+
+textarea:focus {
+  width: 130px;
+  height: 61px;
+  resize: none;
+  margin: 0;
+  padding: 0;
+  border: unset;
+  box-shadow: unset;
+  appearance: none;
+  overflow: auto;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.3px;
+  color: #23435f;
+}
+
+.saveIcon {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  bottom: 15px;
+  left: 125px;
+  transition: ease-in 0.1s all;
+}
+
+.saveIcon:hover {
+  scale: 1.2;
 }

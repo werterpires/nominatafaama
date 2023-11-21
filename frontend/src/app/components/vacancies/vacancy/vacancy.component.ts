@@ -30,8 +30,13 @@ export class VacancyComponent implements OnInit {
   doneMessage = ''
   error = false
   errorMessage = ''
+  commentModal = false
+
+  comment = ''
+  readyToSave = false
 
   allStudents: IBasicStudent[] = []
+  studentId = 0
 
   @Input() allHiringStatus: IHiringStatus[] = []
   @Input() allMinistries: IMinistryType[] = []
@@ -73,17 +78,27 @@ export class VacancyComponent implements OnInit {
     // Obtém os dados transferidos durante o arrastar
     const studentData = event.dataTransfer.getData('text/plain')
     const student = JSON.parse(studentData)
+    if (!student.student_id) {
+      return
+    }
 
     // Adiciona o estudante ao array vacancy.vacancyStudents
     // this.vacancy.vacancyStudents.push({ student: student });
 
-    this.addStudent(student.student_id)
+    this.studentId = student.student_id
+    this.showCommentModal()
+
+    // this.addStudent(student.student_id)
 
     // // Remove o estudante do array allStudents
     // const index = this.allStudents.findIndex((s) => s === student)
     // if (index !== -1) {
     //   this.allStudents.splice(index, 1)
     // }
+  }
+
+  showCommentModal() {
+    this.commentModal = true
   }
 
   onDropOutVacancy(event: DragEvent) {
@@ -95,6 +110,10 @@ export class VacancyComponent implements OnInit {
     // Obtém os dados transferidos durante o arrastar
     const vacancyStudentData = event.dataTransfer.getData('text/plain')
     const vacancyStudent = JSON.parse(vacancyStudentData)
+
+    if (!vacancyStudent.vacancyStudentId) {
+      return
+    }
 
     // Adiciona o estudante ao array vacancy.vacancyStudents
     // this.vacancy.vacancyStudents.push({ student: student });
@@ -130,7 +149,7 @@ export class VacancyComponent implements OnInit {
         this.isLoading = false
       },
       error: (error) => {
-        this.errorMessage = error
+        this.errorMessage = error.message
         this.error = true
         this.isLoading = false
       },
@@ -154,18 +173,18 @@ export class VacancyComponent implements OnInit {
         this.isLoading = false
       },
       error: (error) => {
-        this.errorMessage = error
+        this.errorMessage = error.message
         this.error = true
         this.isLoading = false
       },
     })
   }
 
-  addStudent(studentId: number) {
+  addStudent() {
     this.isLoading = true
     const addStudentToVacancyData: CreateVacancyStudentDto = {
-      comments: '',
-      studentId: studentId,
+      comments: this.comment,
+      studentId: this.studentId,
       vacancyId: this.vacancy.vacancyId,
     }
 
@@ -178,12 +197,17 @@ export class VacancyComponent implements OnInit {
 
         this.doneMessage = 'Estudante adicionado à vaga.'
         this.done = true
-
+        this.studentId = 0
+        this.commentModal = false
+        this.comment = ''
         this.isLoading = false
       },
       error: (error) => {
         this.errorMessage = error.message
         this.error = true
+        this.studentId = 0
+        this.commentModal = false
+        this.comment = ''
         this.isLoading = false
       },
     })
@@ -233,7 +257,7 @@ export class VacancyComponent implements OnInit {
           this.isLoading = false
         },
         error: (error) => {
-          this.errorMessage = error
+          this.errorMessage = error.message
           this.error = true
           this.isLoading = false
         },
