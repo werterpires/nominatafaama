@@ -105,7 +105,7 @@ export class VacanciesController {
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.REPRESENTACAO)
-  @Put('')
+  @Put('students')
   async updateVacancyStudent(
     @Body() updateVacancyStudentDto: UpdateVacancyStudentDto,
     @CurrentUser() currentUser: UserFromJwt

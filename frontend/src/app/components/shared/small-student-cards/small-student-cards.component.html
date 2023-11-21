@@ -63,5 +63,6 @@
     class="saveIcon"
     src="assets/icons/saveIcon.svg"
     alt="Salvar"
+    (click)="editEmiter.emit({ comments }); readyToSave = false"
   />
 </div>

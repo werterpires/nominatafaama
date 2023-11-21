@@ -316,7 +316,7 @@ export class VacanciesModel {
     try {
       const { comments, vacancyStudentId } = updateStudentInVacancyData
 
-      await this.knex('vacancies')
+      await this.knex('vacancies_students')
         .update({
           comments
         })

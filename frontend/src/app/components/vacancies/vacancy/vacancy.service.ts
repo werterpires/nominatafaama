@@ -7,7 +7,11 @@ import { catchError } from 'rxjs/operators'
 import { environment } from 'src/environments/environment'
 import { UpdateVacancyDto } from '../types'
 import { IBasicStudent } from '../../nominata/types'
-import { CreateVacancyStudentDto, IVacancyStudent } from './Types'
+import {
+  CreateVacancyStudentDto,
+  IVacancyStudent,
+  UpdateVacancyStudentDto,
+} from './Types'
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +26,37 @@ export class VacancyService {
       .put<boolean>(environment.API + '/vacancies', editVacancyData, {
         headers: head_obj,
       })
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          if (error.error.message == 'vacancy already answered') {
+            return throwError(
+              () =>
+                new Error(
+                  'Não é possível atualizar uma vaga com convites aceitos ou recusados.',
+                ),
+            )
+          }
+          return throwError(
+            () => new Error('Não foi possível atualizar a vaga.'),
+          )
+        }),
+      )
+  }
+
+  updateComments(
+    editVacancyStudentData: UpdateVacancyStudentDto,
+  ): Observable<boolean> {
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .put<boolean>(
+        environment.API + '/vacancies/students',
+        editVacancyStudentData,
+        {
+          headers: head_obj,
+        },
+      )
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

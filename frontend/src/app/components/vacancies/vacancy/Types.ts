@@ -44,3 +44,8 @@ export interface CreateVacancyStudentDto {
   vacancyId: number
   comments: string
 }
+
+export interface UpdateVacancyStudentDto {
+  vacancyStudentId: number
+  comments: string
+}

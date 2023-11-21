@@ -98,21 +98,13 @@
             "
             [commentsAllowed]="true"
             (dragstart)="onVacancyDragStart($event, vacancyStudent)"
+            (editEmiter)="
+              editVacancyStudent(
+                vacancyStudent.vacancyStudentId,
+                $event.comments
+              )
+            "
           ></app-small-student-cards>
-          <!-- <div class="commentSpace" [title]="vacancyStudent.comments">
-            <textarea
-              *ngIf
-              [(ngModel)]="vacancyStudent.comments"
-              spellcheck="false"
-              (input)="readyToSave = true"
-            ></textarea>
-
-            <img
-              class="saveIcon"
-              src="assets/icons/saveIcon.svg"
-              alt="Salvar"
-            />
-          </div> -->
         </div>
       </div>
       <div

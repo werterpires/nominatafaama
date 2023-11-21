@@ -7,7 +7,12 @@ import {
   Output,
   Renderer2,
 } from '@angular/core'
-import { CreateVacancyStudentDto, IVacancy, IVacancyStudent } from './Types'
+import {
+  CreateVacancyStudentDto,
+  IVacancy,
+  IVacancyStudent,
+  UpdateVacancyStudentDto,
+} from './Types'
 import { IMinistryType } from '../../parameterization/minstry-types/types'
 import { IHiringStatus } from '../../parameterization/hiring-status/types'
 import { VacancyService } from './vacancy.service'
@@ -168,6 +173,27 @@ export class VacancyComponent implements OnInit {
     this.vacancyService.updateRegistry(updateVacancyData).subscribe({
       next: () => {
         this.doneMessage = 'Vaga deletada com sucesso.'
+        this.done = true
+        this.changeAlert.emit()
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.errorMessage = error.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
+
+  editVacancyStudent(vacancyStudentId: number, comments: string) {
+    this.isLoading = true
+    const updateVacancyStudentData: UpdateVacancyStudentDto = {
+      vacancyStudentId,
+      comments,
+    }
+    this.vacancyService.updateComments(updateVacancyStudentData).subscribe({
+      next: () => {
+        this.doneMessage = 'Comentários atualizados.'
         this.done = true
         this.changeAlert.emit()
         this.isLoading = false
