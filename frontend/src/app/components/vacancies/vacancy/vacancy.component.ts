@@ -43,6 +43,17 @@ export class VacancyComponent implements OnInit {
   allStudents: IBasicStudent[] = []
   studentId = 0
 
+  onlyfavs = false
+  searchedUnion = ''
+  unions: string[] = []
+  associations: string[] = []
+
+  searchedAssociation = ''
+  searchedStudent = ''
+
+  studentsToList!: IBasicStudent[] | null
+  favorites: number[] = []
+
   @Input() allHiringStatus: IHiringStatus[] = []
   @Input() allMinistries: IMinistryType[] = []
   @Output() changeAlert = new EventEmitter<void>()
@@ -221,6 +232,9 @@ export class VacancyComponent implements OnInit {
           return student.student_id !== res.studentId
         })
 
+        this.studentsToList = this.allStudents
+        this.cleanFilters()
+        this.updateUnions()
         this.doneMessage = 'Estudante adicionado à vaga.'
         this.done = true
         this.studentId = 0
@@ -255,6 +269,9 @@ export class VacancyComponent implements OnInit {
                 )
               },
             )
+            this.studentsToList = this.allStudents
+            this.updateUnions()
+            this.cleanFilters()
           }
 
           this.doneMessage = 'Estudante removido da vaga.'
@@ -278,8 +295,9 @@ export class VacancyComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.allStudents = res
-
-          this.filterStudents()
+          this.removeStudentsInVacancy()
+          this.studentsToList = this.allStudents
+          this.updateUnions()
           this.isLoading = false
         },
         error: (error) => {
@@ -290,7 +308,98 @@ export class VacancyComponent implements OnInit {
       })
   }
 
-  filterStudents() {
+  updateUnions() {
+    if (!this.studentsToList) {
+      return
+    }
+    this.unions = []
+    this.studentsToList.forEach((student) => {
+      if (!this.unions.includes(student.union_acronym)) {
+        this.unions.push(student.union_acronym)
+      }
+    })
+  }
+
+  filterStudents(union?: boolean, fav?: boolean) {
+    if (!this.allStudents) {
+      return
+    }
+
+    this.studentsToList = this.allStudents
+    if (union) {
+      this.searchedAssociation = ''
+      this.associations = []
+    }
+    if (this.searchedUnion != '') {
+      this.filterStudentsByUnion()
+    }
+    if (this.searchedAssociation != '') {
+      this.filterStudentsByAssociation()
+    }
+    if (this.searchedStudent.length > 0) {
+      this.filterStudentByname()
+    }
+    this.onlyfavs = fav ?? this.onlyfavs
+    if (fav) {
+      this.filterStudentByFav()
+    }
+  }
+
+  cleanFilters() {
+    this.searchedAssociation = ''
+    this.searchedUnion = ''
+    this.searchedStudent = ''
+    if (this.allStudents) {
+      this.studentsToList = this.allStudents
+    }
+  }
+
+  filterStudentsByUnion() {
+    if (!this.studentsToList) {
+      return
+    }
+    this.studentsToList = this.studentsToList.filter((student) => {
+      return student.union_acronym === this.searchedUnion
+    })
+
+    this.studentsToList.forEach((student) => {
+      const association = student.association_acronym
+      if (!this.associations.includes(association)) {
+        this.associations.push(association)
+      }
+    })
+  }
+
+  filterStudentsByAssociation() {
+    if (!this.studentsToList) {
+      return
+    }
+    this.studentsToList = this.studentsToList.filter((student) => {
+      return student.association_acronym === this.searchedAssociation
+    })
+  }
+
+  filterStudentByname() {
+    if (!this.studentsToList) {
+      return
+    }
+    this.studentsToList = this.studentsToList.filter((student) => {
+      return student.name
+        .toLowerCase()
+        .includes(this.searchedStudent.toLocaleLowerCase())
+    })
+  }
+
+  filterStudentByFav() {
+    if (!this.studentsToList) {
+      return
+    }
+    this.studentsToList = this.studentsToList.filter((student) => {
+      return this.favorites.includes(student.student_id)
+    })
+  }
+
+  removeStudentsInVacancy() {
     const studentsIdInVacancy = this.vacancy.vacancyStudents.map(
       (student) => student.studentId,
     )

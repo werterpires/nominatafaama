@@ -112,9 +112,65 @@
         (drop)="onDropOutVacancy($event)"
         (dragover)="onDragOver($event)"
       >
+        <form action="" id="searchForm">
+          <select
+            name="unionSelect"
+            id=""
+            class="searchConrols"
+            [(ngModel)]="searchedUnion"
+            (change)="filterStudents(true)"
+          >
+            <option value="">Todas as uniões</option>
+            <option *ngFor="let union of unions" [value]="union">
+              {{ union }}
+            </option>
+          </select>
+          <select
+            name="associationSelect"
+            class="searchConrols"
+            id=""
+            [(ngModel)]="searchedAssociation"
+            (change)="filterStudents()"
+          >
+            <option value="">Todas as associações</option>
+            <option
+              *ngFor="let association of associations"
+              [value]="association"
+            >
+              {{ association }}
+            </option>
+          </select>
+          <input
+            type="text"
+            name="searchedStudentInput"
+            class="searchConrols"
+            placeholder="Pesquisar por nome"
+            [(ngModel)]="searchedStudent"
+            (input)="filterStudents()"
+          />
+          <button
+            *ngIf="!onlyfavs"
+            (click)="filterStudents(false, true)"
+            id="cleanSearchButton"
+          >
+            Favoritos
+          </button>
+
+          <button
+            *ngIf="onlyfavs"
+            (click)="filterStudents(false, false)"
+            id="cleanSearchButton"
+          >
+            Todos
+          </button>
+
+          <button (click)="cleanFilters()" id="cleanSearchButton">
+            Limpar filtros
+          </button>
+        </form>
         <app-small-student-cards
           class="studentCards"
-          *ngFor="let student of allStudents"
+          *ngFor="let student of studentsToList"
           [student]="student"
           draggable="true"
           (dragstart)="onStudentDragStart($event, student)"
