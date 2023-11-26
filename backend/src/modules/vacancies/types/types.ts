@@ -19,7 +19,27 @@ export interface IVacancy {
   unionAcronym: string
   nominataYear: string
   originFieldInvitesBegins: Date
-  vacancyStudents: IVacancyStudent[]
+  vacancyStudents: IMediumVacancyStudent[]
+}
+
+export interface ICompleteVacancy {
+  vacancyId: number
+  title: string
+  description: string
+  fieldId: number
+  repId: number
+  ministryId: number
+  hiringStatusId: number
+  nominataId: number
+  rep: IFieldRep
+  ministry: string
+  hiring_status: string
+  associationName: string
+  unionName: string
+  associationAcronym: string
+  unionAcronym: string
+  nominataYear: string
+  originFieldInvitesBegins: Date
 }
 
 export interface ICreateDirectVacancy {
@@ -51,7 +71,7 @@ export interface IUpdateVacancy {
   hiringStatusId: number
 }
 
-export interface IInvite {
+export interface IBasicInvite {
   inviteId: number
   vacancyStudentId: number
   accept: boolean | null
@@ -59,13 +79,22 @@ export interface IInvite {
   approved: boolean | null
 }
 
-export interface IVacancyStudent {
+export interface IMediumVacancyStudent {
   vacancyStudentId: number
   studentId: number
   student: IBasicStudent
   vacancyId: number
   comments: string
-  invites: IInvite[]
+  invites: IBasicInvite[]
+}
+
+export interface ICompleteVacancyStudent {
+  vacancyStudentId: number
+  studentId: number
+  vacancyId: number
+  comments: string
+  student: IBasicStudent
+  vacancy: ICompleteVacancy
 }
 
 export interface IAddStudentToVacancy {
@@ -76,5 +105,12 @@ export interface IAddStudentToVacancy {
 
 export interface IUpdateVacancyStudent {
   vacancyStudentId: number
+  comments: string
+}
+
+export interface IBasicVacancyStudent {
+  vacancyStudentId: number
+  studentId: number
+  vacancyId: number
   comments: string
 }

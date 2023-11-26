@@ -11,15 +11,15 @@ import {
   IUpdateVacancy,
   IUpdateVacancyStudent,
   IVacancy,
-  IVacancyStudent
+  IMediumVacancyStudent
 } from '../types/types'
 import { VacanciesModel } from '../model/vacancies.model'
 import { UserFromJwt } from 'src/shared/auth/types/types'
-import { FieldRepsModel } from 'src/modules/field-reps/model/field-reps.model'
 import { FieldRepresentationsModel } from 'src/modules/field-representations/model/field-representations.model'
 import { CreateVacancyStudentDto } from '../dto/create-vacancy-student.dto'
 import { UpdateVacancyStudentDto } from '../dto/update-vacancy-student.dto'
 import { IBasicStudent } from 'src/modules/nominatas/types/types'
+import { IFieldRepresentation } from 'src/modules/field-representations/types/types'
 
 @Injectable()
 export class VacanciesService {
@@ -56,17 +56,16 @@ export class VacanciesService {
     }
   }
 
-  async createVacancy(
-    createVacancyDto: CreateVacancyDto,
-    currentUser: UserFromJwt
-  ): Promise<boolean> {
+  async findActiveRepresentation(
+    userId: number
+  ): Promise<IFieldRepresentation> {
     try {
       const fieldRepresentations =
         await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
-          currentUser.user_id
+          userId
         )
 
-      if (!fieldRepresentations) {
+      if (fieldRepresentations.length === 0) {
         throw new Error('representations not found')
       }
 
@@ -79,6 +78,107 @@ export class VacanciesService {
       if (!activeFieldRepresentation) {
         throw new Error('active representation not found')
       }
+
+      return activeFieldRepresentation
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async validateNotAlredyAcceptedVacancy(vacancyId: number): Promise<void> {
+    try {
+      const vacancyNotAlreadyAccpetted =
+        await this.vacanciesModel.validateNotAcceptsToVacancy(vacancyId)
+
+      if (!vacancyNotAlreadyAccpetted) {
+        throw new Error('vacancy already accepted')
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async validateNotAlreadyAcceptsToStudent(studentId: number) {
+    try {
+      const studentNotAlreadyAccpetted =
+        await this.vacanciesModel.validateNotAcceptsToStudent(studentId)
+
+      if (!studentNotAlreadyAccpetted) {
+        throw new Error('student already accepted a vacancy')
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async validateNotAnswersToVacancy(vacancyId: number) {
+    try {
+      const vacancyNotAswered =
+        await this.vacanciesModel.validateNotAnswersToVacancy(vacancyId)
+
+      if (!vacancyNotAswered) {
+        throw new Error('vacancy already answered')
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async validateNotAnswersToStudentAndVacancy(vacancyStudentId: number) {
+    try {
+      const notInviteAnswered =
+        await this.vacanciesModel.validateNotAcceptsToStudentAndToVacancy(
+          vacancyStudentId
+        )
+
+      if (!notInviteAnswered) {
+        throw new Error('student already answered a invite to this vacancy')
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async validateSameFieldToVacancyAndRepresentations(
+    representationId: number,
+    vacancyId: number | null,
+    vacancyStudentId: number | null
+  ) {
+    try {
+      let validateData: {
+        representationId: number
+        vacancyId?: number
+        vacancyStudentId?: number
+      }
+      if (vacancyId) {
+        validateData = { representationId, vacancyId }
+      } else if (vacancyStudentId) {
+        validateData = { representationId, vacancyStudentId }
+      } else {
+        throw new Error('data to validateData not found')
+      }
+
+      const thereIsCorrespondense =
+        await this.vacanciesModel.validateSameFieldToVacancyAndRepresentations(
+          validateData
+        )
+
+      if (!thereIsCorrespondense) {
+        throw new Error(
+          'there is no correspondense between vacancy and representation'
+        )
+      }
+    } catch (error) {}
+  }
+  async createVacancy(
+    createVacancyDto: CreateVacancyDto,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
+    try {
+      //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
+      const activeFieldRepresentation = await this.findActiveRepresentation(
+        currentUser.user_id
+      )
 
       const createVacancyData: ICreateVacancy = {
         fieldId: activeFieldRepresentation.representedFieldID,
@@ -106,35 +206,29 @@ export class VacanciesService {
   async addStudentToVacancy(
     createvacancyStudentDto: CreateVacancyStudentDto,
     currentUser: UserFromJwt
-  ): Promise<IVacancyStudent> {
+  ): Promise<IMediumVacancyStudent> {
     try {
-      const fieldRepresentations =
-        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
-          currentUser.user_id
-        )
-
-      if (!fieldRepresentations) {
-        throw new Error('representations not found')
-      }
-
-      const activeFieldRepresentation = fieldRepresentations.find(
-        (representaion) =>
-          new Date(representaion.repActiveValidate) >= new Date() &&
-          representaion.repApproved
+      //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
+      const activeFieldRepresentation = await this.findActiveRepresentation(
+        currentUser.user_id
       )
 
-      if (!activeFieldRepresentation) {
-        throw new Error('active representation not found')
-      }
+      //Verifica se a vaga corresponde à representação ativa
+      await this.validateSameFieldToVacancyAndRepresentations(
+        activeFieldRepresentation.representedFieldID,
+        createvacancyStudentDto.vacancyId,
+        null
+      )
 
-      const vacancyNotAlreadyAccpetted =
-        await this.vacanciesModel.validateNotAcceptsToVacancy(
-          createvacancyStudentDto.vacancyId
-        )
-      const studentNotAlreadyAccpetted =
-        await this.vacanciesModel.validateNotAcceptsToStudent(
-          createvacancyStudentDto.studentId
-        )
+      //verifica se a vaga seleccionada já não possui um aceite por parte de outro estudante.
+      await this.validateNotAlredyAcceptedVacancy(
+        createvacancyStudentDto.vacancyId
+      )
+
+      //verifica se o estudante não aceitou alguma vaga
+      await this.validateNotAlreadyAcceptsToStudent(
+        createvacancyStudentDto.studentId
+      )
 
       const createVacancyStudentData: IAddStudentToVacancy = {
         comments: createvacancyStudentDto.comments,
@@ -160,33 +254,20 @@ export class VacanciesService {
     currentUser: UserFromJwt
   ): Promise<boolean> {
     try {
-      const fieldRepresentations =
-        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
-          currentUser.user_id
-        )
-
-      if (!fieldRepresentations) {
-        throw new Error('representations not found')
-      }
-
-      const activeFieldRepresentation = fieldRepresentations.find(
-        (representaion) =>
-          new Date(representaion.repActiveValidate) >= new Date() &&
-          representaion.repApproved
+      //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
+      const activeFieldRepresentation = await this.findActiveRepresentation(
+        currentUser.user_id
       )
 
-      if (!activeFieldRepresentation) {
-        throw new Error('active representation not found')
-      }
+      //Verifica se a vaga corresponde à representação ativa
+      await this.validateSameFieldToVacancyAndRepresentations(
+        activeFieldRepresentation.representedFieldID,
+        updateVacancyDto.vacancyId,
+        null
+      )
 
-      const nullAccptInviteVacancy =
-        await this.vacanciesModel.findRepVacancyWhitNotNullAccepts(
-          updateVacancyDto.vacancyId
-        )
-
-      if (!nullAccptInviteVacancy) {
-        throw new Error('null accept invite vacancy not found')
-      }
+      //verifica se a vaga não possui nenhuma resposta.
+      await this.validateNotAnswersToVacancy(updateVacancyDto.vacancyId)
 
       const updateVacancyData: IUpdateVacancy = {
         description: updateVacancyDto.description,
@@ -213,24 +294,16 @@ export class VacanciesService {
     currentUser: UserFromJwt
   ): Promise<boolean> {
     try {
-      const fieldRepresentations =
-        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
-          currentUser.user_id
-        )
-
-      if (!fieldRepresentations) {
-        throw new Error('representations not found')
-      }
-
-      const activeFieldRepresentation = fieldRepresentations.find(
-        (representaion) =>
-          new Date(representaion.repActiveValidate) >= new Date() &&
-          representaion.repApproved
+      //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
+      const activeFieldRepresentation = await this.findActiveRepresentation(
+        currentUser.user_id
       )
-
-      if (!activeFieldRepresentation) {
-        throw new Error('active representation not found')
-      }
+      //Verifica se a vaga corresponde à representação ativa
+      await this.validateSameFieldToVacancyAndRepresentations(
+        activeFieldRepresentation.representedFieldID,
+        null,
+        updateVacancyStudentDto.vacancyStudentId
+      )
 
       const updateVacancyStudentData: IUpdateVacancyStudent = {
         comments: updateVacancyStudentDto.comments,
@@ -256,31 +329,20 @@ export class VacanciesService {
     currentUser: UserFromJwt
   ): Promise<boolean> {
     try {
-      const fieldRepresentations =
-        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
-          currentUser.user_id
-        )
-
-      if (!fieldRepresentations) {
-        throw new Error('representations not found')
-      }
-
-      const activeFieldRepresentation = fieldRepresentations.find(
-        (representaion) =>
-          new Date(representaion.repActiveValidate) >= new Date() &&
-          representaion.repApproved
+      //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
+      const activeFieldRepresentation = await this.findActiveRepresentation(
+        currentUser.user_id
+      )
+      //Verifica se a vaga corresponde à representação ativa
+      await this.validateSameFieldToVacancyAndRepresentations(
+        activeFieldRepresentation.representedFieldID,
+        vacancyId,
+        null
       )
 
-      if (!activeFieldRepresentation) {
-        throw new Error('active representation not found')
-      }
+      //verifica se a vaga não possui nenhuma resposta.
+      await this.validateNotAnswersToVacancy(vacancyId)
 
-      const nullAccptInviteVacancy =
-        await this.vacanciesModel.findRepVacancyWhitNotNullAccepts(vacancyId)
-
-      if (!nullAccptInviteVacancy) {
-        throw new Error('null accept invite vacancy not found')
-      }
       await this.vacanciesModel.deleteVacancy(vacancyId)
     } catch (error) {
       console.error(
@@ -298,33 +360,20 @@ export class VacanciesService {
   ): Promise<boolean> {
     console.log('vacancyStudentId', vacancyStudentId)
     try {
-      const fieldRepresentations =
-        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
-          currentUser.user_id
-        )
-
-      if (!fieldRepresentations) {
-        throw new Error('representations not found')
-      }
-
-      const activeFieldRepresentation = fieldRepresentations.find(
-        (representaion) =>
-          new Date(representaion.repActiveValidate) >= new Date() &&
-          representaion.repApproved
+      //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
+      const activeFieldRepresentation = await this.findActiveRepresentation(
+        currentUser.user_id
       )
 
-      if (!activeFieldRepresentation) {
-        throw new Error('active representation not found')
-      }
+      //Verifica se a vaga corresponde à representação ativa
+      await this.validateSameFieldToVacancyAndRepresentations(
+        activeFieldRepresentation.representedFieldID,
+        null,
+        vacancyStudentId
+      )
 
-      const notInviteAnswered =
-        await this.vacanciesModel.validateNotAcceptsToStudentAndToVacancy(
-          vacancyStudentId
-        )
-
-      if (!notInviteAnswered) {
-        throw new Error('invite answered')
-      }
+      //verifica se essa vaga já não foi respondida por esse estudante
+      await this.validateNotAnswersToStudentAndVacancy(vacancyStudentId)
 
       await this.vacanciesModel.removeStudentFromVacancy(vacancyStudentId)
     } catch (error) {
@@ -342,24 +391,10 @@ export class VacanciesService {
     nominataId: number
   ): Promise<IVacancy[]> {
     try {
-      const fieldRepresentations =
-        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
-          currentUser.user_id
-        )
-
-      if (!fieldRepresentations) {
-        throw new Error('representations not found')
-      }
-
-      const activeFieldRepresentation = fieldRepresentations.find(
-        (representaion) =>
-          new Date(representaion.repActiveValidate) >= new Date() &&
-          representaion.repApproved
+      //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
+      const activeFieldRepresentation = await this.findActiveRepresentation(
+        currentUser.user_id
       )
-
-      if (!activeFieldRepresentation) {
-        throw new Error('active representation not found')
-      }
 
       const vacancies = await this.vacanciesModel.findRepVacanciesByNominataId({
         nominataId: nominataId,
@@ -380,24 +415,10 @@ export class VacanciesService {
     nominataId: number
   ): Promise<IBasicStudent[]> {
     try {
-      const fieldRepresentations =
-        await this.fieldRepresentationsModel.findFieldRepresentationsByUserId(
-          currentUser.user_id
-        )
-
-      if (!fieldRepresentations) {
-        throw new Error('representations not found')
-      }
-
-      const activeFieldRepresentation = fieldRepresentations.find(
-        (representaion) =>
-          new Date(representaion.repActiveValidate) >= new Date() &&
-          representaion.repApproved
+      //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
+      const activeFieldRepresentation = await this.findActiveRepresentation(
+        currentUser.user_id
       )
-
-      if (!activeFieldRepresentation) {
-        throw new Error('active representation not found')
-      }
 
       const students = await this.vacanciesModel.findAllStudentsWithNoAccepts(
         nominataId

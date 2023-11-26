@@ -5,11 +5,11 @@ import {
   IAddStudentToVacancy,
   ICreateDirectVacancy,
   ICreateVacancy,
-  IInvite,
+  IBasicInvite,
   IUpdateVacancy,
   IUpdateVacancyStudent,
   IVacancy,
-  IVacancyStudent
+  IMediumVacancyStudent
 } from '../types/types'
 import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
 import { UserFromJwt } from 'src/shared/auth/types/types'
@@ -207,7 +207,7 @@ export class VacanciesModel {
 
   async addStudentToVacancy(
     addStudentToVacancyData: IAddStudentToVacancy
-  ): Promise<IVacancyStudent> {
+  ): Promise<IMediumVacancyStudent> {
     try {
       const { comments, studentId, vacancyId } = addStudentToVacancyData
       let vacancyStudentId: number
@@ -253,7 +253,7 @@ export class VacanciesModel {
           )
       })
 
-      const vacancyStudent: IVacancyStudent = {
+      const vacancyStudent: IMediumVacancyStudent = {
         vacancyStudentId: vacancyStudentConsult.vacancy_student_id,
         studentId: vacancyStudentConsult.student_id,
         student: {
@@ -475,8 +475,8 @@ export class VacanciesModel {
         .andWhere('students.student_approved', true)
         .returning('vacancy_id')
 
-      const vacanciesStudents: IVacancyStudent[] = vacanciesStudentsConsult.map(
-        (vacancyStudent) => {
+      const vacanciesStudents: IMediumVacancyStudent[] =
+        vacanciesStudentsConsult.map((vacancyStudent) => {
           return {
             vacancyStudentId: vacancyStudent.vacancy_student_id,
             studentId: vacancyStudent.student_id,
@@ -494,8 +494,7 @@ export class VacanciesModel {
             },
             invites: []
           }
-        }
-      )
+        })
 
       const vacanciesStudentsIds: number[] = vacanciesStudentsConsult.map(
         (vacancyStudent) => vacancyStudent.vacancy_student_id
@@ -507,7 +506,7 @@ export class VacanciesModel {
 
       console.log(vacanciesStudentsIds, invitesConsult)
 
-      const invites: IInvite[] = invitesConsult.map((invite) => {
+      const invites: IBasicInvite[] = invitesConsult.map((invite) => {
         return {
           inviteId: invite.invite_id,
           vacancyStudentId: invite.vacancy_student_id,
@@ -542,7 +541,7 @@ export class VacanciesModel {
       }
     }
   }
-  async findRepVacancyWhitNotNullAccepts(vacancyId: number): Promise<true> {
+  async validateNotAnswersToVacancy(vacancyId: number): Promise<boolean> {
     try {
       const vacanciesConsult = await this.knex('vacancies')
         .leftJoin(
@@ -560,13 +559,13 @@ export class VacanciesModel {
         .andWhereNot('invites.accept', null)
 
       if (vacanciesConsult) {
-        throw new Error('vacancy already answered')
+        return false
+      } else {
+        return true
       }
-
-      return true
     } catch (error) {
       console.error(
-        'erro capturado no findRepVacancyWhitNotNullAccepts no VacanciesService:',
+        'erro capturado no validateNotAnswersToVacancy no VacanciesService:',
         error
       )
       if (error.code === 'ER_DUP_ENTRY') {
@@ -656,7 +655,7 @@ export class VacanciesModel {
     }
   }
 
-  async validateNotAcceptsToVacancy(vacancyId: number): Promise<true> {
+  async validateNotAcceptsToVacancy(vacancyId: number): Promise<boolean> {
     try {
       const vacanciesConsult = await this.knex('vacancies')
         .leftJoin(
@@ -674,10 +673,10 @@ export class VacanciesModel {
         .andWhere('invites.accept', true)
 
       if (vacanciesConsult) {
-        throw new Error('vacancy already accepted')
+        return false
+      } else {
+        return true
       }
-
-      return true
     } catch (error) {
       console.error(
         'erro capturado no validateNotAcceptsToVacancy no VacanciesService:',
@@ -691,7 +690,7 @@ export class VacanciesModel {
     }
   }
 
-  async validateNotAcceptsToStudent(studentId: number): Promise<true> {
+  async validateNotAcceptsToStudent(studentId: number): Promise<boolean> {
     try {
       const studentsConsult = await this.knex('students')
         .leftJoin(
@@ -709,10 +708,10 @@ export class VacanciesModel {
         .andWhere('invites.accept', true)
 
       if (studentsConsult) {
-        throw new Error('student already accepted another vacancy')
+        return false
+      } else {
+        return true
       }
-
-      return true
     } catch (error) {
       console.error(
         'erro capturado no validateNotAcceptsToStudent no VacanciesService:',
@@ -728,7 +727,7 @@ export class VacanciesModel {
 
   async validateNotAcceptsToStudentAndToVacancy(
     vacancyStudentId: number
-  ): Promise<true> {
+  ): Promise<boolean> {
     try {
       const studentsConsult = await this.knex('vacancies_students')
         .leftJoin(
@@ -741,20 +740,71 @@ export class VacanciesModel {
         .andWhereNot('invites.accept', null)
 
       if (studentsConsult) {
-        throw new Error('student already answered this vacancy')
+        return false
+      } else {
+        return true
       }
-
-      return true
     } catch (error) {
       console.error(
         'erro capturado no validateNotAcceptsToStudentAndToVacancy no VacanciesModel:',
         error
       )
-      if (error.code === 'ER_DUP_ENTRY') {
-        throw new Error('Vaga já existe')
-      } else {
-        throw new Error(error.message)
+      throw error
+    }
+  }
+
+  async validateSameFieldToVacancyAndRepresentations(validateData: {
+    representationId: number
+    vacancyId?: number
+    vacancyStudentId?: number
+  }): Promise<boolean> {
+    try {
+      let consultResult
+      if (validateData.vacancyId) {
+        consultResult = await this.knex('vacancies')
+          .leftJoin(
+            'field_representations',
+            'field_representations.represented_field_id',
+            'vacancies.field_id'
+          )
+          .where({
+            'vacancies.vacancy_id': validateData.vacancyId,
+            'field_representations.representation_id':
+              validateData.representationId
+          })
+          .first('vacancies.vacancy_id')
+      } else if (validateData.vacancyStudentId) {
+        consultResult = await this.knex('vacancies')
+          .join(
+            'vacancies_students',
+            'vacancies_students.vacancy_id',
+            'vacancies.vacancy_id'
+          )
+          .join(
+            'field_representations',
+            'field_representations.represented_field_id',
+            'vacancies.field_id'
+          )
+          .where({
+            'vacancies_students.vacancy_student_id':
+              validateData.vacancyStudentId,
+            'field_representations.representation_id':
+              validateData.representationId
+          })
+          .first('vacancies.vacancy_id')
       }
+
+      if (consultResult) {
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.error(
+        'erro capturado no validateSameFieldToVacancyAndRepresentations no VacanciesModel:',
+        error
+      )
+      throw error
     }
   }
 }

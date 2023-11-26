@@ -26,6 +26,7 @@ import { NotificationsService } from './shared/notifications/services/notificati
 import { SendEmailModule } from './shared/send-email/send-email.module';
 import { FieldRepsModule } from './modules/field-reps/field-reps.module';
 import { FieldRepresentationsModule } from './modules/field-representations/field-representations.module';
+import { InvitesModule } from './modules/invites/invites.module';
 
 config();
 
@@ -105,6 +106,7 @@ const mssqlConfig: KnexModuleOptions = {
     SendEmailModule,
     FieldRepsModule,
     FieldRepresentationsModule,
+    InvitesModule,
   ],
   providers: [
     {

@@ -121,7 +121,7 @@ export class FieldRepresentationsModel {
 
   async findFieldRepresentationsByUserId(
     userId: number
-  ): Promise<IFieldRepresentation[] | null> {
+  ): Promise<IFieldRepresentation[]> {
     let fieldRepresentations: IFieldRepresentation[] | null = null
     let sentError: Error | null = null
     try {
@@ -147,9 +147,6 @@ export class FieldRepresentationsModel {
         )
         .where('users.user_id', userId)
 
-      if (result === null) {
-        throw new Error('Representações de campo não encontradas')
-      }
       if (result.length === 0) {
         fieldRepresentations = []
       } else {
