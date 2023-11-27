@@ -111,10 +111,10 @@ export class VacanciesService {
     }
   }
 
-  async validateNotAnswersToVacancy(vacancyId: number) {
+  async validateNotApprovedInvitesToVacancy(vacancyId: number) {
     try {
       const vacancyNotAswered =
-        await this.vacanciesModel.validateNotAnswersToVacancy(vacancyId)
+        await this.vacanciesModel.validateNotApprovedInvitesToVacancy(vacancyId)
 
       if (!vacancyNotAswered) {
         throw new Error('vacancy already answered')
@@ -266,8 +266,8 @@ export class VacanciesService {
         null
       )
 
-      //verifica se a vaga não possui nenhuma resposta.
-      await this.validateNotAnswersToVacancy(updateVacancyDto.vacancyId)
+      //verifica se a vaga não possui nenhum pedido aprovado.
+      await this.validateNotApprovedInvitesToVacancy(updateVacancyDto.vacancyId)
 
       const updateVacancyData: IUpdateVacancy = {
         description: updateVacancyDto.description,
