@@ -541,7 +541,9 @@ export class VacanciesModel {
       }
     }
   }
-  async validateNotAnswersToVacancy(vacancyId: number): Promise<boolean> {
+  async validateNotApprovedInvitesToVacancy(
+    vacancyId: number
+  ): Promise<boolean> {
     try {
       const vacanciesConsult = await this.knex('vacancies')
         .leftJoin(
@@ -556,7 +558,7 @@ export class VacanciesModel {
         )
         .first('vacancies.vacancy_id')
         .where('vacancies.vacancy_id', vacancyId)
-        .andWhereNot('invites.accept', null)
+        .andWhereNot('invites.approved', null)
 
       if (vacanciesConsult) {
         return false
