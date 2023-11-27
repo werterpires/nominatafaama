@@ -402,14 +402,22 @@ export class FieldRepresentationsModel {
         evaluateFieldRepresentation
 
       const oldData = await this.findFieldRepresentationById(representationID)
-
-      await this.knex('field_representations')
-        .where('representation_id', representationID)
-        .limit(1)
-        .update({
-          rep_active_validate: repActiveValidate,
-          rep_approved: repApproved
-        })
+      this.knex.transaction(async (trx) => {
+        if (evaluateFieldRepresentation.repApproved) {
+          await trx('field_representations')
+            .where('rep_id', oldData?.rep.repId)
+            .update({
+              rep_approved: false
+            })
+        }
+        await trx('field_representations')
+          .where('representation_id', representationID)
+          .limit(1)
+          .update({
+            rep_active_validate: repActiveValidate,
+            rep_approved: repApproved
+          })
+      })
 
       const newData = await this.findFieldRepresentationById(representationID)
       evaluatedFieldRepresentation = newData!

@@ -124,8 +124,9 @@ export class RepresentationsComponent implements OnInit {
           this.showBox = true
           this.showForm = false
         }
-
+        this.allUnions = []
         this.getUnions()
+        this.allAssociations = []
         this.getAssociations()
 
         this.isLoading = false

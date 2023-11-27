@@ -504,8 +504,6 @@ export class VacanciesModel {
         .select('*')
         .whereIn('invites.vacancy_student_id', vacanciesStudentsIds)
 
-      console.log(vacanciesStudentsIds, invitesConsult)
-
       const invites: IBasicInvite[] = invitesConsult.map((invite) => {
         return {
           inviteId: invite.invite_id,
@@ -629,6 +627,9 @@ export class VacanciesModel {
             )
             .andWhere('invites.accept', true)
         })
+        .distinct()
+
+      console.log(studentsConsult)
 
       const studentsList: IBasicStudent[] = studentsConsult.map((student) => {
         return {
@@ -762,6 +763,7 @@ export class VacanciesModel {
   }): Promise<boolean> {
     try {
       let consultResult
+
       if (validateData.vacancyId) {
         consultResult = await this.knex('vacancies')
           .leftJoin(
@@ -774,7 +776,12 @@ export class VacanciesModel {
             'field_representations.representation_id':
               validateData.representationId
           })
-          .first('vacancies.vacancy_id')
+          .first(
+            'vacancies.vacancy_id',
+            'vacancies.field_id',
+            'field_representations.represented_field_id',
+            'field_representations.representation_id'
+          )
       } else if (validateData.vacancyStudentId) {
         consultResult = await this.knex('vacancies')
           .join(

@@ -12,12 +12,17 @@ import {
   IVacancyStudent,
   UpdateVacancyStudentDto,
 } from './Types'
+import { ErrorServices } from '../../shared/shared.service.ts/error.service'
 
 @Injectable({
   providedIn: 'root',
 })
 export class VacancyService {
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private errorService: ErrorServices,
+  ) {}
 
   updateRegistry(editVacancyData: UpdateVacancyDto): Observable<boolean> {
     const token = localStorage.getItem('access_token')
@@ -29,14 +34,9 @@ export class VacancyService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          if (error.error.message == 'vacancy already answered') {
-            return throwError(
-              () =>
-                new Error(
-                  'Não é possível atualizar uma vaga com convites aceitos ou recusados.',
-                ),
-            )
-          }
+          throw new Error(
+            this.errorService.makeErrorMessage(error.error.message),
+          )
           return throwError(
             () => new Error('Não foi possível atualizar a vaga.'),
           )
@@ -60,16 +60,8 @@ export class VacancyService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          if (error.error.message == 'vacancy already answered') {
-            return throwError(
-              () =>
-                new Error(
-                  'Não é possível atualizar uma vaga com convites aceitos ou recusados.',
-                ),
-            )
-          }
-          return throwError(
-            () => new Error('Não foi possível atualizar a vaga.'),
+          throw new Error(
+            this.errorService.makeErrorMessage(error.error.message),
           )
         }),
       )
@@ -85,14 +77,9 @@ export class VacancyService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          if (error.error.message == 'vacancy already answered') {
-            return throwError(
-              () =>
-                new Error(
-                  'Não é possível Deletar uma vaga com pelo menos um convite já respondido.',
-                ),
-            )
-          }
+          throw new Error(
+            this.errorService.makeErrorMessage(error.error.message),
+          )
           return throwError(() => new Error('Não foi possível deletar a vaga.'))
         }),
       )
@@ -137,19 +124,9 @@ export class VacancyService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          if (error.error.message == 'Registro já aprovado') {
-            return throwError(
-              () =>
-                new Error(
-                  'Não é possível atualizar ou deletar um item ja aprovado (com colração verde).',
-                ),
-            )
-          } else if (error.error.message == 'vacancy already accepted') {
-            throw new Error(
-              'Um estudante já aceitou um convite para esta vaga.',
-            )
-          }
-          return throwError(() => new Error(error.error.message))
+          throw new Error(
+            this.errorService.makeErrorMessage(error.error.message),
+          )
         }),
       )
   }
@@ -169,21 +146,9 @@ export class VacancyService {
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
-          if (error.error.message == 'Registro já aprovado') {
-            return throwError(
-              () =>
-                new Error(
-                  'Não é possível atualizar ou deletar um item ja aprovado (com colração verde).',
-                ),
-            )
-          } else if (
-            error.error.message == 'student already answered this vacancy'
-          ) {
-            throw new Error(
-              'Este estudante não pode ser removido pois respondeu a um convite para esta vaga.',
-            )
-          }
-          return throwError(() => new Error(error.error.message))
+          throw new Error(
+            this.errorService.makeErrorMessage(error.error.message),
+          )
         }),
       )
   }

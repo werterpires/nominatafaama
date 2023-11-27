@@ -139,7 +139,6 @@ export class VacancyComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllStudents()
-    console.log(this.vacancy)
   }
 
   showAlert(func: string, message: string, idx?: number) {

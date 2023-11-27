@@ -67,7 +67,7 @@ export class VacanciesComponent {
           this.isLoading = false
         },
         error: (err) => {
-          this.errorMessage = err
+          this.errorMessage = err.message
           this.error = true
           this.isLoading = false
         },
@@ -84,7 +84,7 @@ export class VacanciesComponent {
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = err
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },
@@ -100,7 +100,7 @@ export class VacanciesComponent {
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = err
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },
@@ -117,7 +117,7 @@ export class VacanciesComponent {
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = err
+        this.errorMessage = err.message
         this.error = true
         this.isLoading = false
       },
@@ -179,7 +179,7 @@ export class VacanciesComponent {
         }
       },
       error: (err) => {
-        this.errorMessage = err
+        this.errorMessage = err.message
         this.error = true
 
         this.isLoading = false

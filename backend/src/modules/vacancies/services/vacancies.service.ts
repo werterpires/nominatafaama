@@ -162,13 +162,16 @@ export class VacanciesService {
         await this.vacanciesModel.validateSameFieldToVacancyAndRepresentations(
           validateData
         )
+      console.log(thereIsCorrespondense)
 
       if (!thereIsCorrespondense) {
         throw new Error(
           'there is no correspondense between vacancy and representation'
         )
       }
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
   }
   async createVacancy(
     createVacancyDto: CreateVacancyDto,
@@ -215,7 +218,7 @@ export class VacanciesService {
 
       //Verifica se a vaga corresponde à representação ativa
       await this.validateSameFieldToVacancyAndRepresentations(
-        activeFieldRepresentation.representedFieldID,
+        activeFieldRepresentation.representationID,
         createvacancyStudentDto.vacancyId,
         null
       )
@@ -261,7 +264,7 @@ export class VacanciesService {
 
       //Verifica se a vaga corresponde à representação ativa
       await this.validateSameFieldToVacancyAndRepresentations(
-        activeFieldRepresentation.representedFieldID,
+        activeFieldRepresentation.representationID,
         updateVacancyDto.vacancyId,
         null
       )
@@ -300,7 +303,7 @@ export class VacanciesService {
       )
       //Verifica se a vaga corresponde à representação ativa
       await this.validateSameFieldToVacancyAndRepresentations(
-        activeFieldRepresentation.representedFieldID,
+        activeFieldRepresentation.representationID,
         null,
         updateVacancyStudentDto.vacancyStudentId
       )
@@ -333,9 +336,10 @@ export class VacanciesService {
       const activeFieldRepresentation = await this.findActiveRepresentation(
         currentUser.user_id
       )
+      console.log(activeFieldRepresentation)
       //Verifica se a vaga corresponde à representação ativa
       await this.validateSameFieldToVacancyAndRepresentations(
-        activeFieldRepresentation.representedFieldID,
+        activeFieldRepresentation.representationID,
         vacancyId,
         null
       )
@@ -366,7 +370,7 @@ export class VacanciesService {
 
       //Verifica se a vaga corresponde à representação ativa
       await this.validateSameFieldToVacancyAndRepresentations(
-        activeFieldRepresentation.representedFieldID,
+        activeFieldRepresentation.representationID,
         null,
         vacancyStudentId
       )
