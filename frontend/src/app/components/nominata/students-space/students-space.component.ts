@@ -91,11 +91,9 @@ export class StudentsSpaceComponent implements OnInit {
   getAllFavs() {
     this.studentsSpaceService.findAllFavs().subscribe({
       next: (res) => {
-        console.log(res)
         this.favorites = res
       },
       error: (error) => {
-        console.log(error)
         this.favorites = []
       },
     })
