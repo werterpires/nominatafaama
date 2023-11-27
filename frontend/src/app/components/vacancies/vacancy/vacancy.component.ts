@@ -137,8 +137,19 @@ export class VacancyComponent implements OnInit {
     this.removeStudent(vacancyStudent)
   }
 
+  sortStudents() {
+    this.vacancy.vacancyStudents = this.vacancy.vacancyStudents.sort((a, b) => {
+      if (a.invites.some((i) => i.accept)) {
+        return -1
+      }
+
+      return 0
+    })
+  }
+
   ngOnInit(): void {
     this.getAllStudents()
+    this.sortStudents()
   }
 
   showAlert(func: string, message: string, idx?: number) {

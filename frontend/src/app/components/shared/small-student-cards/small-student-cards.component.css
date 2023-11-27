@@ -160,3 +160,38 @@ textarea:focus {
 .saveIcon:hover {
   scale: 1.2;
 }
+
+.actions {
+  height: 133px;
+  min-width: 130px;
+  position: relative;
+  right: 130px;
+  padding: 21px 5px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+
+  background-color: #223a53a6;
+}
+
+.inviteIcon {
+  width: 34px;
+  transition: ease-in 0.1s all;
+}
+
+.inviteIcon:hover {
+  scale: 1.2;
+  rotate: -30deg;
+}
+
+.inviteIcon:active {
+  scale: 1.35;
+  rotate: -45deg;
+}
+
+.fixWidth {
+  width: 130px;
+  overflow: hidden;
+}

@@ -1,68 +1,88 @@
-<div class="sSmallAlonePhoto">
-  <div
-    class="sImageContainer withFavorite"
-    [ngStyle]="{
-      'background-image':
-        'url(' +
-        urlBase +
-        '/student-photos/student/' +
-        student.student_id +
-        '/small_alone_photo)'
-    }"
-  >
-    <img
-      *ngIf="(permissions.representacao || permissions.administrador) && !fav"
-      src="assets/icons/notFavorite.svg"
-      alt="figura de uma estrela"
-      class="sFavoriteIcon"
-      (click)="setFav(true); $event.stopPropagation()"
-    />
-    <img
-      *ngIf="(permissions.representacao || permissions.administrador) && fav"
-      src="assets/icons/favorite.svg"
-      alt="figura de uma estrela"
-      class="sFavoriteIcon"
-      (click)="setFav(false); $event.stopPropagation()"
-    />
-  </div>
-</div>
-<div class="sStudentDatacontainer">
-  <div class="sHiringStatusSpace">
-    <div
-      [ngClass]="{
-        sDisponivelIndicator: student.hiring_status_name === 'Disponível',
-        sDontratadoIndicator: student.hiring_status_name === 'Contratado',
-        sChamadoIndicator: student.hiring_status_name === 'Chamado'
-      }"
-    ></div>
-    <span class="sHiringStatusText">{{ student.hiring_status_name }}</span>
-    <span *ngIf="student.hiringField" class="sHiringStatusText"> - </span>
-    <span class="sHiringStatusText">{{
-      student.hiringField?.union_acronym
-    }}</span>
-    <span *ngIf="student.hiringField" class="sHiringStatusText">/</span
-    ><span class="sHiringStatusText">{{
-      student.hiringField?.association_acronym
-    }}</span>
-  </div>
-  <p class="sNominataStudentName">{{ student.name }}</p>
-  <p class="sStudentCompData">
-    {{ student.union_acronym }}/{{ student.association_acronym }}
-  </p>
-</div>
-<div *ngIf="commentsAllowed" class="commentSpace" [title]="comments">
-  <p class="fieldContent">Comentários</p>
-  <textarea
-    [(ngModel)]="comments"
-    spellcheck="false"
-    (input)="readyToSave = true"
-  ></textarea>
+<div
+  class="flex fixWidth"
+  (mouseenter)="showTicket(true)"
+  (mouseleave)="showTicket(false)"
+>
+  <div>
+    <div class="sSmallAlonePhoto">
+      <div
+        class="sImageContainer withFavorite"
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            urlBase +
+            '/student-photos/student/' +
+            student.student_id +
+            '/small_alone_photo)'
+        }"
+      >
+        <img
+          *ngIf="
+            (permissions.representacao || permissions.administrador) && !fav
+          "
+          src="assets/icons/notFavorite.svg"
+          alt="figura de uma estrela"
+          class="sFavoriteIcon"
+          (click)="setFav(true); $event.stopPropagation()"
+        />
+        <img
+          *ngIf="
+            (permissions.representacao || permissions.administrador) && fav
+          "
+          src="assets/icons/favorite.svg"
+          alt="figura de uma estrela"
+          class="sFavoriteIcon"
+          (click)="setFav(false); $event.stopPropagation()"
+        />
+      </div>
+    </div>
+    <div class="sStudentDatacontainer">
+      <div class="sHiringStatusSpace">
+        <div
+          [ngClass]="{
+            sDisponivelIndicator: student.hiring_status_name === 'Disponível',
+            sDontratadoIndicator: student.hiring_status_name === 'Contratado',
+            sChamadoIndicator: student.hiring_status_name === 'Chamado'
+          }"
+        ></div>
+        <span class="sHiringStatusText">{{ student.hiring_status_name }}</span>
+        <span *ngIf="student.hiringField" class="sHiringStatusText"> - </span>
+        <span class="sHiringStatusText">{{
+          student.hiringField?.union_acronym
+        }}</span>
+        <span *ngIf="student.hiringField" class="sHiringStatusText">/</span
+        ><span class="sHiringStatusText">{{
+          student.hiringField?.association_acronym
+        }}</span>
+      </div>
+      <p class="sNominataStudentName">{{ student.name }}</p>
+      <p class="sStudentCompData">
+        {{ student.union_acronym }}/{{ student.association_acronym }}
+      </p>
+    </div>
+    <div *ngIf="commentsAllowed" class="commentSpace" [title]="comments">
+      <p class="fieldContent">Comentários</p>
+      <textarea
+        [(ngModel)]="comments"
+        spellcheck="false"
+        (input)="readyToSave = true"
+      ></textarea>
 
-  <img
-    *ngIf="readyToSave"
-    class="saveIcon"
-    src="assets/icons/saveIcon.svg"
-    alt="Salvar"
-    (click)="editEmiter.emit({ comments }); readyToSave = false"
-  />
+      <img
+        *ngIf="readyToSave"
+        class="saveIcon"
+        src="assets/icons/saveIcon.svg"
+        alt="Salvar"
+        (click)="editEmiter.emit({ comments }); readyToSave = false"
+      />
+    </div>
+  </div>
+  <div *ngIf="ticket && commentsAllowed" class="actions">
+    <img
+      class="inviteIcon"
+      src="assets/icons/invite_icon.svg"
+      alt="icone de um ticket"
+      title="Realizar chamado"
+    />
+  </div>
 </div>

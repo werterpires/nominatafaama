@@ -12,6 +12,7 @@ import { Comments } from 'xlsx'
 })
 export class SmallStudentCardsComponent {
   urlBase = environment.API
+  ticket = false
   @Input() permissions: IPermissions = {
     estudante: false,
     secretaria: false,
@@ -46,5 +47,10 @@ export class SmallStudentCardsComponent {
     this.editEmiter.emit({
       comments: this.comments,
     })
+  }
+
+  showTicket(show: boolean) {
+    this.ticket = show
+    console.log(this.ticket)
   }
 }
