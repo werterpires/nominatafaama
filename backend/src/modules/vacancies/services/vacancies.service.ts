@@ -339,9 +339,8 @@ export class VacanciesService {
         vacancyId,
         null
       )
-
-      //verifica se a vaga não possui nenhuma resposta.
-      await this.validateNotAnswersToVacancy(vacancyId)
+      //verifica se a vaga não possui nenhum pedido aprovado.
+      await this.validateNotApprovedInvitesToVacancy(vacancyId)
 
       await this.vacanciesModel.deleteVacancy(vacancyId)
     } catch (error) {
