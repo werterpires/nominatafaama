@@ -12,4 +12,10 @@ export class CreateInviteDto {
 
   @IsString()
   deadline: string
+
+  @IsString()
+  voteNumber: string
+
+  @IsString()
+  voteDate: string
 }

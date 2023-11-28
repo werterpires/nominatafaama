@@ -11,6 +11,7 @@ import { UserFromJwt } from 'src/shared/auth/types/types'
 import { VacanciesModel } from 'src/modules/vacancies/model/vacancies.model'
 import { FieldRepresentationsModel } from 'src/modules/field-representations/model/field-representations.model'
 import { VacanciesService } from 'src/modules/vacancies/services/vacancies.service'
+import { isDate } from 'util/types'
 
 @Injectable()
 export class InvitesService {
@@ -77,11 +78,23 @@ export class InvitesService {
         throw new Error('date is equal or less than today')
       }
 
+      const voteDate = new Date(createInviteDto.voteDate)
+
+      if (isDate(voteDate)) {
+        throw new Error('Data do voto precisa ser uma data válida')
+      }
+
+      if (deadline <= new Date()) {
+        throw new Error('date is equal or less than today')
+      }
+
       const createInviteData: ICreateInvite = {
         accept: null,
         approved: null,
         deadline,
-        vacancyStudentId: createInviteDto.vacancyStudentId
+        vacancyStudentId: createInviteDto.vacancyStudentId,
+        voteDate,
+        voteNumber: createInviteDto.voteNumber
       }
 
       return await this.invitesModel.createInvite(createInviteData, currentUser)

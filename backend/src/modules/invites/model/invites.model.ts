@@ -27,13 +27,22 @@ export class InvitesModel {
     currentUser: UserFromJwt
   ): Promise<boolean> {
     try {
-      const { vacancyStudentId, accept, approved, deadline } = createInviteData
+      const {
+        vacancyStudentId,
+        accept,
+        approved,
+        deadline,
+        voteDate,
+        voteNumber
+      } = createInviteData
 
       const [invite_id] = await this.knex('invites').insert({
         vacancy_student_id: vacancyStudentId,
         accept,
         approved,
-        deadline
+        deadline,
+        vote_date: voteDate,
+        vote_number: voteNumber
       })
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {
@@ -202,7 +211,9 @@ export class InvitesModel {
           'invites.accept',
           'invites.deadline',
           'invites.ivite_id',
-          'invites.approved'
+          'invites.approved',
+          'invites.vote_number',
+          'invites.vote_date'
         )
         .where('invites.approved', null)
 
@@ -260,7 +271,9 @@ export class InvitesModel {
           deadline: row.deadline,
           inviteId: row.invite_id,
           approved: row.approved,
-          vacancyStudent
+          vacancyStudent,
+          voteDate: row.vote_date,
+          voteNumber: row.vote_number
         }
 
         return invite
@@ -377,7 +390,9 @@ export class InvitesModel {
           'invites.accept',
           'invites.deadline',
           'invites.ivite_id',
-          'invites.approved'
+          'invites.approved',
+          'invites.vote_date',
+          'invites.vote_number'
         )
         .where('vacancies_students.student_id', studentId)
 
@@ -435,7 +450,9 @@ export class InvitesModel {
           deadline: row.deadline,
           inviteId: row.invite_id,
           approved: row.approved,
-          vacancyStudent
+          vacancyStudent,
+          voteDate: row.vote_date,
+          voteNumber: row.vote_number
         }
 
         return invite
@@ -468,6 +485,8 @@ export class InvitesModel {
         approved: inviteConsult.approved,
         deadline: inviteConsult.deadline,
         inviteId: inviteConsult.invite_id,
+        voteDate: inviteConsult.vote_date,
+        voteNumber: inviteConsult.vote_number,
         vacancyStudent: {
           comments: inviteConsult.comments,
           vacancyId: inviteConsult.vacancy_id,
@@ -583,7 +602,9 @@ export class InvitesModel {
           'invites.accept',
           'invites.deadline',
           'invites.ivite_id',
-          'invites.approved'
+          'invites.approved',
+          'invites.vote_number',
+          'invites.vote_date'
         )
         .where('vacancies.rep_id', repId)
 
@@ -641,7 +662,9 @@ export class InvitesModel {
           deadline: row.deadline,
           inviteId: row.invite_id,
           approved: row.approved,
-          vacancyStudent
+          vacancyStudent,
+          voteDate: row.vote_date,
+          voteNumber: row.vote_number
         }
 
         return invite

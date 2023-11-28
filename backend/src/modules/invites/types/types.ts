@@ -10,6 +10,8 @@ export interface ICreateInvite {
   accept: boolean | null
   deadline: Date
   approved: boolean | null
+  voteDate: Date
+  voteNumber: string
 }
 
 export interface IEvaluateInvite {
@@ -28,6 +30,8 @@ export interface ICompleteInvite {
   accept: boolean
   deadline: Date
   approved: boolean
+  voteDate: Date
+  voteNumber: string
 }
 
 export interface IInvite {
@@ -36,4 +40,6 @@ export interface IInvite {
   accept: boolean
   approved: boolean
   vacancyStudent: IBasicVacancyStudent
+  voteDate: Date
+  voteNumber: string
 }

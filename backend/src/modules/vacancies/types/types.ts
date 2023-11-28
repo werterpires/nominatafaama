@@ -77,6 +77,8 @@ export interface IBasicInvite {
   accept: boolean | null
   deadline: Date
   approved: boolean | null
+  voteDate: Date
+  voteNumber: string
 }
 
 export interface IMediumVacancyStudent {

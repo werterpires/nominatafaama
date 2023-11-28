@@ -510,7 +510,9 @@ export class VacanciesModel {
           vacancyStudentId: invite.vacancy_student_id,
           accept: invite.accept,
           deadline: invite.deadline,
-          approved: invite.approved
+          approved: invite.approved,
+          voteDate: invite.vote_date,
+          voteNumber: invite.vote_number
         }
       })
 
