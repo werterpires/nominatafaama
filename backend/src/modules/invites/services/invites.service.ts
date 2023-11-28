@@ -46,7 +46,7 @@ export class InvitesService {
   async createInvite(
     createInviteDto: CreateInviteDto,
     currentUser: UserFromJwt
-  ) {
+  ): Promise<number> {
     try {
       //verifica se o usuário possui uma representação válida
       const activeRepresentation =
@@ -80,12 +80,8 @@ export class InvitesService {
 
       const voteDate = new Date(createInviteDto.voteDate)
 
-      if (isDate(voteDate)) {
+      if (!(typeof voteDate === 'object') || !(voteDate instanceof Date)) {
         throw new Error('Data do voto precisa ser uma data válida')
-      }
-
-      if (deadline <= new Date()) {
-        throw new Error('date is equal or less than today')
       }
 
       const createInviteData: ICreateInvite = {
@@ -97,7 +93,11 @@ export class InvitesService {
         voteNumber: createInviteDto.voteNumber
       }
 
-      return await this.invitesModel.createInvite(createInviteData, currentUser)
+      const inviteId = await this.invitesModel.createInvite(
+        createInviteData,
+        currentUser
+      )
+      return inviteId
     } catch (error) {
       console.error('erro capturado no createInvite no InvitesService:', error)
       throw error

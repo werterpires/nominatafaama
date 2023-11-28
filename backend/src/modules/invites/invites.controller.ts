@@ -32,10 +32,14 @@ export class InvitesController {
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      return await this.invitesService.createInvite(
+      const inviteId = await this.invitesService.createInvite(
         createInviteDto,
         currentUser
       )
+
+      return {
+        inviteId
+      }
     } catch (error) {
       console.error('erro capturado em createInvite em Invitescontroller')
       throw new InternalServerErrorException(error.message)

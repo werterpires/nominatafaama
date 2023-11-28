@@ -631,8 +631,6 @@ export class VacanciesModel {
         })
         .distinct()
 
-      console.log(studentsConsult)
-
       const studentsList: IBasicStudent[] = studentsConsult.map((student) => {
         return {
           student_id: student.student_id,

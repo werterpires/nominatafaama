@@ -25,7 +25,7 @@ export class InvitesModel {
   async createInvite(
     createInviteData: ICreateInvite,
     currentUser: UserFromJwt
-  ): Promise<boolean> {
+  ): Promise<number> {
     try {
       const {
         vacancyStudentId,
@@ -36,7 +36,7 @@ export class InvitesModel {
         voteNumber
       } = createInviteData
 
-      const [invite_id] = await this.knex('invites').insert({
+      const [inviteId] = await this.knex('invites').insert({
         vacancy_student_id: vacancyStudentId,
         accept,
         approved,
@@ -44,6 +44,8 @@ export class InvitesModel {
         vote_date: voteDate,
         vote_number: voteNumber
       })
+
+      return inviteId
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {
         throw new Error('Convite já existe')
@@ -51,8 +53,6 @@ export class InvitesModel {
         throw new Error(error)
       }
     }
-
-    return true
   }
 
   async deleteInvite(
