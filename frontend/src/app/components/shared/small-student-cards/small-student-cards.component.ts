@@ -2,8 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { environment } from 'src/environments/environment'
 import { IPermissions } from '../container/types'
 import { IBasicStudent } from '../../nominata/types'
-import { UpdateVacancyStudentDto } from '../../vacancies/vacancy/Types'
-import { Comments } from 'xlsx'
 
 @Component({
   selector: 'app-small-student-cards',
@@ -27,6 +25,7 @@ export class SmallStudentCardsComponent {
   @Input() student!: IBasicStudent
   @Input() comments!: string
   @Input() commentsAllowed = false
+  @Input() inviteState = ''
 
   @Input() fav = false
 

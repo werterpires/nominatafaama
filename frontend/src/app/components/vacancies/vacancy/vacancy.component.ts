@@ -363,6 +363,13 @@ export class VacancyComponent implements OnInit {
       })
   }
 
+  checkInvites(invites: IInvite[]) {
+    if (invites.some((invite) => invite.approved === null)) {
+      return 'notApproved'
+    }
+    return 'none'
+  }
+
   createInvite(createInviteBasicData: IBasicInviteData) {
     this.isLoading = true
     const vacancyStudent = this.vacancy.vacancyStudents.find(

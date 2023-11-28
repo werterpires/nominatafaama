@@ -1,5 +1,8 @@
 <div
   class="flex fixWidth"
+  [ngClass]="{
+    notApproved: inviteState === 'notApproved'
+  }"
   (mouseenter)="showTicket(true)"
   (mouseleave)="showTicket(false)"
 >
@@ -55,6 +58,7 @@
           student.hiringField?.association_acronym
         }}</span>
       </div>
+
       <p class="sNominataStudentName">{{ student.name }}</p>
       <p class="sStudentCompData">
         {{ student.union_acronym }}/{{ student.association_acronym }}
@@ -77,7 +81,10 @@
       />
     </div>
   </div>
-  <div *ngIf="ticket && commentsAllowed" class="actions">
+  <div
+    *ngIf="ticket && inviteState !== 'notApproved' && commentsAllowed"
+    class="actions"
+  >
     <img
       class="inviteIcon"
       src="assets/icons/invite_icon.svg"

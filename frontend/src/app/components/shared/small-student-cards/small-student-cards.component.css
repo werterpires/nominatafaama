@@ -195,3 +195,7 @@ textarea:focus {
   width: 130px;
   overflow: hidden;
 }
+
+.notApproved {
+  box-shadow: 0 0 50px rgb(255 255 3 / 56%);
+}

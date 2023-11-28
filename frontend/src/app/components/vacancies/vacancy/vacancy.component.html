@@ -89,6 +89,7 @@
         <div *ngFor="let vacancyStudent of vacancy.vacancyStudents">
           <app-small-student-cards
             class="studentCards"
+            [inviteState]="checkInvites(vacancyStudent.invites)"
             [student]="vacancyStudent.student"
             [comments]="vacancyStudent.comments"
             [draggable]="
