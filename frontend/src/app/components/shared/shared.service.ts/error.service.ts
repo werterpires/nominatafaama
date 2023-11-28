@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
+import { BehaviorSubject } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +23,21 @@ export class ErrorServices {
       default:
         return 'Não foi possível completar a ação.'
     }
+  }
+
+  private errorSubject = new BehaviorSubject<boolean>(false)
+  private errorMessageSubject = new BehaviorSubject<string>('')
+
+  error$ = this.errorSubject.asObservable()
+  errorMessage$ = this.errorMessageSubject.asObservable()
+
+  showError(message: string): void {
+    this.errorSubject.next(true)
+    this.errorMessageSubject.next(message)
+  }
+
+  closeError(): void {
+    this.errorSubject.next(false)
+    this.errorMessageSubject.next('')
   }
 }
