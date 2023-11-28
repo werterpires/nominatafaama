@@ -37,6 +37,8 @@ export class SmallStudentCardsComponent {
     comments: string
   }>()
 
+  @Output() inviteEmiter: EventEmitter<void> = new EventEmitter<void>()
+
   readyToSave = false
 
   setFav(fav: boolean) {

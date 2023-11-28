@@ -1,0 +1,19 @@
+<div class="createInviteModal">
+  <app-creation-form (save)="createInvite()">
+    <div class="subSection">
+      <label for=""
+        >Data do voto
+        <input [(ngModel)]="createInviteData.voteDate" type="date" />
+      </label>
+      <label for=""
+        >Número do voto
+        <input [(ngModel)]="createInviteData.voteNumber" type="text" />
+      </label>
+      <label for=""
+        >Prazo para resposta do convite
+        <input [(ngModel)]="createInviteData.deadline" type="date" />
+      </label>
+    </div>
+  </app-creation-form>
+  <app-error-modal *ngIf="error"></app-error-modal>
+</div>

@@ -204,3 +204,17 @@ textarea:focus {
   padding: 10px;
   box-shadow: none;
 }
+
+.inviteModal {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 3;
+  margin: auto;
+  background-color: #202c3da3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -8,7 +8,9 @@ import {
   Renderer2,
 } from '@angular/core'
 import {
+  CreateInviteDto,
   CreateVacancyStudentDto,
+  IInvite,
   IVacancy,
   IVacancyStudent,
   UpdateVacancyStudentDto,
@@ -18,6 +20,10 @@ import { IHiringStatus } from '../../parameterization/hiring-status/types'
 import { VacancyService } from './vacancy.service'
 import { UpdateVacancyDto } from '../types'
 import { IBasicStudent } from '../../nominata/types'
+import { IBasicInviteData } from '../invites/types'
+import { ErrorServices } from '../../shared/shared.service.ts/error.service'
+import { InvitesService } from './invites.service'
+import { DataService } from '../../shared/shared.service.ts/data.service'
 
 @Component({
   selector: 'app-vacancy',
@@ -32,9 +38,8 @@ export class VacancyComponent implements OnInit {
   index: number | null = null
   isLoading = false
   done = false
-  doneMessage = ''
   error = false
-  errorMessage = ''
+  doneMessage = ''
   commentModal = false
 
   comment = ''
@@ -54,6 +59,8 @@ export class VacancyComponent implements OnInit {
   studentsToList!: IBasicStudent[] | null
   favorites: number[] = []
 
+  vacancyStudentId: number | null = null
+
   @Input() allHiringStatus: IHiringStatus[] = []
   @Input() allMinistries: IMinistryType[] = []
   @Output() changeAlert = new EventEmitter<void>()
@@ -62,6 +69,9 @@ export class VacancyComponent implements OnInit {
     private vacancyService: VacancyService,
     private renderer: Renderer2,
     private el: ElementRef,
+    private errorService: ErrorServices,
+    private inviteService: InvitesService,
+    private dataService: DataService,
   ) {}
 
   onStudentDragStart(event: DragEvent, student: IBasicStudent) {
@@ -139,16 +149,77 @@ export class VacancyComponent implements OnInit {
 
   sortStudents() {
     this.vacancy.vacancyStudents = this.vacancy.vacancyStudents.sort((a, b) => {
-      if (a.invites.some((i) => i.accept)) {
+      // Caso: algum invite.accept == true
+      if (a.invites.some((i) => i.accept) && !b.invites.some((i) => i.accept)) {
         return -1
+      } else if (
+        b.invites.some((i) => i.accept) &&
+        !a.invites.some((i) => i.accept)
+      ) {
+        return 1
       }
 
-      return 0
+      // Caso: algum invite.accept == null
+      if (
+        a.invites.some((i) => i.accept === null) &&
+        !b.invites.some((i) => i.accept === null)
+      ) {
+        return -1
+      } else if (
+        b.invites.some((i) => i.accept === null) &&
+        !a.invites.some((i) => i.accept === null)
+      ) {
+        return 1
+      }
+
+      // Caso: invites.length == 0
+      if (a.invites.length === 0 && b.invites.length > 0) {
+        return -1
+      } else if (b.invites.length === 0 && a.invites.length > 0) {
+        return 1
+      }
+
+      // Caso: algum invite.accept == false
+      if (
+        a.invites.some((i) => i.accept === false) &&
+        !b.invites.some((i) => i.accept === false)
+      ) {
+        return -1
+      } else if (
+        b.invites.some((i) => i.accept === false) &&
+        !a.invites.some((i) => i.accept === false)
+      ) {
+        return 1
+      }
+
+      return 0 // Se todas as condições anteriores não foram atendidas
     })
   }
 
   ngOnInit(): void {
+    this.errorService.error$.subscribe((error) => (this.error = error))
     this.getAllStudents()
+    this.sortStudents()
+  }
+
+  insertInvite(
+    vacancyStudentId: number,
+    inviteBasicData: IBasicInviteData,
+    inviteId: number,
+  ) {
+    const vacStuIdx = this.vacancy.vacancyStudents.findIndex(
+      (vacStu) => vacStu.vacancyStudentId === vacancyStudentId,
+    )
+    const invite: IInvite = {
+      inviteId: inviteId,
+      vacancyStudentId: vacancyStudentId,
+      accept: null,
+      deadline: inviteBasicData.deadline,
+      approved: null,
+      voteDate: inviteBasicData.voteDate,
+      voteNumber: inviteBasicData.voteNumber,
+    }
+    this.vacancy.vacancyStudents[vacStuIdx].invites.push(invite)
     this.sortStudents()
   }
 
@@ -175,8 +246,7 @@ export class VacancyComponent implements OnInit {
         this.isLoading = false
       },
       error: (error) => {
-        this.errorMessage = error.message
-        this.error = true
+        this.errorService.showError(error.message)
         this.isLoading = false
       },
     })
@@ -199,8 +269,7 @@ export class VacancyComponent implements OnInit {
         this.isLoading = false
       },
       error: (error) => {
-        this.errorMessage = error.message
-        this.error = true
+        this.errorService.showError(error.message)
         this.isLoading = false
       },
     })
@@ -220,8 +289,7 @@ export class VacancyComponent implements OnInit {
         this.isLoading = false
       },
       error: (error) => {
-        this.errorMessage = error.message
-        this.error = true
+        this.errorService.showError(error.message)
         this.isLoading = false
       },
     })
@@ -253,8 +321,7 @@ export class VacancyComponent implements OnInit {
         this.isLoading = false
       },
       error: (error) => {
-        this.errorMessage = error.message
-        this.error = true
+        this.errorService.showError(error.message)
         this.studentId = 0
         this.commentModal = false
         this.comment = ''
@@ -290,11 +357,63 @@ export class VacancyComponent implements OnInit {
           this.isLoading = false
         },
         error: (error) => {
-          this.errorMessage = error.message
-          this.error = true
+          this.errorService.showError(error.message)
           this.isLoading = false
         },
       })
+  }
+
+  createInvite(createInviteBasicData: IBasicInviteData) {
+    this.isLoading = true
+    const vacancyStudent = this.vacancy.vacancyStudents.find(
+      (vacancyStudent) => {
+        return vacancyStudent.vacancyStudentId === this.vacancyStudentId
+      },
+    )
+
+    if (!vacancyStudent) {
+      this.errorService.showError('Vaga ou estudantes não encontrados')
+      return
+    }
+    const createInviteData: CreateInviteDto = {
+      deadline: this.dataService.dateFormatter(createInviteBasicData.deadline),
+      voteDate: this.dataService.dateFormatter(createInviteBasicData.voteDate),
+      voteNumber: createInviteBasicData.voteNumber,
+      vacancyId: this.vacancy.vacancyId,
+      studentId: vacancyStudent.studentId,
+      vacancyStudentId: vacancyStudent.vacancyStudentId,
+    }
+
+    this.inviteService.createInvite(createInviteData).subscribe({
+      next: (res) => {
+        this.insertInvite(
+          vacancyStudent.vacancyStudentId,
+          createInviteBasicData,
+          res.inviteId,
+        )
+        this.doneMessage = 'Convite criado com sucesso.'
+        this.done = true
+        this.changeAlert.emit()
+        this.isLoading = false
+      },
+      error: (error) => {
+        this.errorService.showError(error.message)
+        this.isLoading = false
+      },
+    })
+
+    console.log(createInviteData)
+
+    this.vacancyStudentId = null
+    this.inviteModal = false
+    this.isLoading = false
+  }
+
+  inviteModal = false
+
+  showInviteModal(vacancyStudentId: number) {
+    this.inviteModal = true
+    this.vacancyStudentId = vacancyStudentId
   }
 
   getAllStudents() {
@@ -311,8 +430,7 @@ export class VacancyComponent implements OnInit {
           this.isLoading = false
         },
         error: (error) => {
-          this.errorMessage = error.message
-          this.error = true
+          this.errorService.showError(error.message)
           this.isLoading = false
         },
       })
@@ -425,8 +543,7 @@ export class VacancyComponent implements OnInit {
       this.resetAlert()
     } else if (func == 'edit') {
       if (this.index == null) {
-        this.errorMessage = 'Index não localizado. Impossível editar.'
-        this.error = true
+        this.errorService.showError('Index não localizado. Impossível editar.')
         this.resetAlert()
         return
       }
@@ -434,8 +551,7 @@ export class VacancyComponent implements OnInit {
       this.resetAlert()
     } else if (func == 'delete') {
       if (this.index == null) {
-        this.errorMessage = 'Index não localizado. Impossível deletar.'
-        this.error = true
+        this.errorService.showError('Index não localizado. Impossível deletar.')
         this.resetAlert()
         return
       }

@@ -104,6 +104,7 @@
                 $event.comments
               )
             "
+            (inviteEmiter)="showInviteModal(vacancyStudent.vacancyStudentId)"
           ></app-small-student-cards>
         </div>
       </div>
@@ -180,34 +181,11 @@
   </section>
 </div>
 
-<div *ngIf="error" class="error">
-  <div class="errorTitle">
-    <p>Atenção</p>
-  </div>
-  <div class="errorMessage">
-    <p>{{ errorMessage }}</p>
-  </div>
-  <img
-    class="closeIcon"
-    src="assets/icons/closeIcon.png"
-    alt="Fechar"
-    (click)="closeError()"
-  />
+<div *ngIf="inviteModal" class="inviteModal">
+  <app-invites (createInviteEvent)="createInvite($event)"></app-invites>
 </div>
-<div *ngIf="done" class="done">
-  <div class="doneTitle">
-    <p>Parabéns</p>
-  </div>
-  <div class="doneMessage">
-    <p>{{ doneMessage }}</p>
-  </div>
-  <img
-    class="closeIcon"
-    src="assets/icons/closeIcon.png"
-    alt="Fechar"
-    (click)="closeDone()"
-  />
-</div>
+
+<app-error-modal *ngIf="error"></app-error-modal>
 
 <div *ngIf="commentModal" class="commentModal">
   <label for="" class="inputLabel"

@@ -35,8 +35,10 @@ export interface IInvite {
   inviteId: number
   vacancyStudentId: number
   accept: boolean | null
-  deadline: Date
+  deadline: string
   approved: boolean | null
+  voteDate: string
+  voteNumber: string
 }
 
 export interface CreateVacancyStudentDto {
@@ -48,4 +50,13 @@ export interface CreateVacancyStudentDto {
 export interface UpdateVacancyStudentDto {
   vacancyStudentId: number
   comments: string
+}
+
+export interface CreateInviteDto {
+  vacancyStudentId: number
+  vacancyId: number
+  studentId: number
+  deadline: string
+  voteNumber: string
+  voteDate: string
 }
