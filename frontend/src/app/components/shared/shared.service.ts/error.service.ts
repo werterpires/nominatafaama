@@ -20,6 +20,9 @@ export class ErrorServices {
       case 'there is no correspondense between vacancy and representation':
         return 'Não é possível completar a ação porque essa vaga não é do campo que você representa hoje.'
         break
+      case 'Vacancy has open invites':
+        return 'Não é possível completar a ação porque essa vaga possui convites em aberto.'
+        break
       default:
         return 'Não foi possível completar a ação.'
     }

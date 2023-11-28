@@ -683,6 +683,7 @@ export class InvitesModel {
 
   async validateNotOpenInvites(vacancyId: number, inviteId: number = 0) {
     try {
+      console.log(vacancyId, inviteId)
       const invites = await this.knex('vacancies')
         .join(
           'vacancies_students',
@@ -697,9 +698,13 @@ export class InvitesModel {
         .select('invites.invite_id')
         .where('vacancies.vacancy_id', vacancyId)
         .andWhere({ 'invites.accept': null })
-        .andWhereNot({
-          'invites.invite_id': inviteId,
-          'invites.approved': false
+        .andWhereNot((builder) => {
+          builder.where('invites.invite_id', inviteId).andWhere((qb) => {
+            qb.where('invites.approved', false).orWhere(
+              'invites.approved',
+              null
+            )
+          })
         })
 
       if (invites.length > 0) {

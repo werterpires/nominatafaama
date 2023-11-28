@@ -21,7 +21,7 @@ export class InvitesService {
   ) {}
   async validateNotOpenInvites(vacancyId: number, inviteId?: number) {
     try {
-      const notOpenInvites = this.invitesModel.validateNotOpenInvites(
+      const notOpenInvites = await this.invitesModel.validateNotOpenInvites(
         vacancyId,
         inviteId
       )
