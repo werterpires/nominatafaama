@@ -88,9 +88,11 @@ import { OneRepresentationsToApproveComponent } from './components/approvals/one
 import { StudentsSpaceComponent } from './components/nominata/students-space/students-space.component'
 import { StudentCardsComponent } from './components/shared/student-cards/student-cards.component'
 import { VacancyComponent } from './components/vacancies/vacancy/vacancy.component'
-import { SmallStudentCardsComponent } from './components/shared/small-student-cards/small-student-cards.component';
-import { InvitesComponent } from './components/vacancies/invites/invites.component';
+import { SmallStudentCardsComponent } from './components/shared/small-student-cards/small-student-cards.component'
+import { InvitesComponent } from './components/vacancies/invites/invites.component'
 import { ErrorModalComponent } from './components/shared/error-modal/error-modal.component'
+import { InvitesToApproveComponent } from './components/approvals/invites-to_approve/invites-to-approve.component'
+import { OneInviteToApproveComponent } from './components/approvals/one-invite-to-approve/one-invite-to-approve.component'
 
 @NgModule({
   declarations: [
@@ -178,6 +180,8 @@ import { ErrorModalComponent } from './components/shared/error-modal/error-modal
     SmallStudentCardsComponent,
     InvitesComponent,
     ErrorModalComponent,
+    InvitesToApproveComponent,
+    OneInviteToApproveComponent,
   ],
   imports: [
     BrowserModule,
