@@ -5,6 +5,9 @@ import { DataService } from '../../shared/shared.service.ts/data.service'
 import { LoginService } from '../../shared/shared.service.ts/login.service'
 import { Router } from '@angular/router'
 import { InvitesToApproveService } from './invites-to-approve.service'
+import { ICompleteInvite } from '../../vacancies/invites/types'
+import { ErrorServices } from '../../shared/shared.service.ts/error.service'
+import { ApproveInviteDto } from './types'
 
 @Component({
   selector: 'app-invites-to-approve',
@@ -14,9 +17,9 @@ import { InvitesToApproveService } from './invites-to-approve.service'
 export class InvitesToApproveComponent implements OnInit {
   constructor(
     private invitesToApproveService: InvitesToApproveService,
-    private dataService: DataService,
     private loginService: LoginService,
     private router: Router,
+    private errorService: ErrorServices,
   ) {}
 
   @Input() permissions: IPermissions = {
@@ -35,9 +38,8 @@ export class InvitesToApproveComponent implements OnInit {
   done = false
   doneMessage = ''
   error = false
-  errorMessage = ''
 
-  allRegistries: IFieldRepresentation[] = []
+  allRegistries: ICompleteInvite[] = []
   user: IUserApproved | null = null
 
   ngOnInit() {
@@ -73,82 +75,76 @@ export class InvitesToApproveComponent implements OnInit {
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
     })
+    this.errorService.error$.subscribe((error) => {
+      this.error = error
+    })
     this.getAllRegistries()
-    console.log(this.permissions)
   }
 
   getAllRegistries() {
     this.isLoading = true
     this.invitesToApproveService.findAllRegistries().subscribe({
       next: (res) => {
-        console.log(res)
         this.allRegistries = res
-
+        console.log(this.allRegistries)
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
+        this.errorService.showError(err.message)
         this.isLoading = false
       },
     })
   }
 
-  approveRepresentation(
-    approveRadio: string,
-    rejectRadio: string,
-    representationID: number,
-    idx: number,
-  ) {
+  approveInvite(approveRadio: string, rejectRadio: string, idx: number) {
     this.isLoading = true
 
     const approveInput = document.getElementById(
       approveRadio,
     ) as HTMLInputElement
     const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
-    console.log(approveRadio, rejectRadio)
+
     const approveValue = approveInput.checked
     const rejectValue = rejectInput.checked
 
     if (approveValue == rejectValue) {
-      this.errorMessage = 'Você precisa selecionar uma das opções.'
-      this.error = true
+      this.errorService.showError('Você precisa selecionar uma opção')
       this.isLoading = false
       return
     }
+
     const approved = approveValue
+    const vacancyStudent = this.allRegistries[idx].vacancyStudent
 
-    const date = this.dataService.dateFormatter(
-      this.allRegistries[idx].repActiveValidate,
-    )
-    console.log(representationID)
-    this.invitesToApproveService
-      .approveRepresentation({
-        representationID,
-        repApproved: approved,
-        repActiveValidate: date,
-      })
-      .subscribe({
-        next: () => {
-          this.doneMessage = 'Ação concluída com sucesso.'
-          this.done = true
-          this.isLoading = false
-          if (approved) {
-            rejectInput.classList.remove('setted')
-            approveInput.classList.add('setted')
-          } else {
-            rejectInput.classList.add('setted')
-            approveInput.classList.remove('setted')
-          }
+    const approveInviteData: ApproveInviteDto = {
+      vacancyStudentId: vacancyStudent.vacancyStudentId,
+      vacancyId: vacancyStudent.vacancyId,
+      studentId: vacancyStudent.studentId,
+      approved,
+      deadline: this.allRegistries[idx].deadline,
+      inviteId: this.allRegistries[idx].inviteId,
+    }
 
-          this.ngOnInit()
-        },
-        error: (err) => {
-          this.errorMessage = err.message
-          this.error = true
-          this.isLoading = false
-        },
-      })
+    this.invitesToApproveService.approveInvite(approveInviteData).subscribe({
+      next: () => {
+        this.doneMessage = 'Ação concluída com sucesso.'
+        this.done = true
+        this.isLoading = false
+        if (approved) {
+          rejectInput.classList.remove('setted')
+          approveInput.classList.add('setted')
+        } else {
+          rejectInput.classList.add('setted')
+          approveInput.classList.remove('setted')
+        }
+
+        this.ngOnInit()
+      },
+      error: (err) => {
+        this.errorService.showError(err.message)
+        this.isLoading = false
+      },
+    })
   }
 
   closeError() {

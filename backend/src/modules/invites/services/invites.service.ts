@@ -74,8 +74,8 @@ export class InvitesService {
 
       const deadline = new Date(createInviteDto.deadline)
 
-      if (deadline <= new Date()) {
-        throw new Error('date is equal or less than today')
+      if (deadline <= new Date(new Date().setDate(new Date().getDate() + 7))) {
+        throw new Error('date is less than 7 days from now')
       }
 
       const voteDate = new Date(createInviteDto.voteDate)

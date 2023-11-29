@@ -11,6 +11,7 @@ import { OneStudentToApproveComponent } from './components/approvals/one-student
 import { ParameterizationComponent } from './components/parameterization/parameterization.component'
 import { RepresentationsToApproveComponent } from './components/approvals/representations-to_approve/representations-to-approve.component'
 import { VacanciesComponent } from './components/vacancies/vacancies.component'
+import { InvitesToApproveComponent } from './components/approvals/invites-to_approve/invites-to-approve.component'
 
 const routes: Routes = [
   { path: 'student/:studentid', component: StudentComponent },
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'approve/representations',
     component: RepresentationsToApproveComponent,
+  },
+  {
+    path: 'approve/invites',
+    component: InvitesToApproveComponent,
   },
   { path: 'login', component: LoginComponent },
   { path: 'logon', component: LogonComponent },

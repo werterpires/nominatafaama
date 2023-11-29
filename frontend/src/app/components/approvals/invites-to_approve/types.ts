@@ -1,5 +1,8 @@
-export interface ApproveRepresentaionDto {
-  representationID: number
-  repApproved: boolean
-  repActiveValidate: string
+export interface ApproveInviteDto {
+  vacancyStudentId: number
+  vacancyId: number
+  studentId: number
+  deadline: string
+  inviteId: number
+  approved: boolean
 }

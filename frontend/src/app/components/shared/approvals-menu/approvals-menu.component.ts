@@ -22,4 +22,8 @@ export class ApprovalsMenuComponent {
   choseRepresentations() {
     this.approvalType.emit('representations')
   }
+
+  choseInvites() {
+    this.approvalType.emit('invites')
+  }
 }

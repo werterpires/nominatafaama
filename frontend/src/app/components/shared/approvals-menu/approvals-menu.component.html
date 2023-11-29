@@ -22,4 +22,15 @@
   >
     Representantes de campo
   </button>
+  <button
+    *ngIf="
+      permissions.ministerial ||
+      permissions.direcao ||
+      permissions.administrador
+    "
+    class="loginMenuButton defaultButton"
+    (click)="choseInvites()"
+  >
+    Convites
+  </button>
 </div>

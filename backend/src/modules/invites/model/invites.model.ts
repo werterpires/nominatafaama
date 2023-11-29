@@ -262,7 +262,7 @@ export class InvitesModel {
           studentId: row.student_id,
           student,
           vacancyId: row.vacancy_id,
-          comments: row.comments,
+          comments: '',
           vacancy
         }
 
@@ -441,7 +441,7 @@ export class InvitesModel {
           studentId: row.student_id,
           student,
           vacancyId: row.vacancy_id,
-          comments: row.comments,
+          comments: '',
           vacancy
         }
 
@@ -653,7 +653,7 @@ export class InvitesModel {
           studentId: row.student_id,
           student,
           vacancyId: row.vacancy_id,
-          comments: row.comments,
+          comments: '',
           vacancy
         }
 
