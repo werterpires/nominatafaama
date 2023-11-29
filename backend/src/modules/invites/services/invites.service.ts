@@ -114,7 +114,10 @@ export class InvitesService {
       )
 
       //verifica se a vaga possui não possui convites em aberto
-      await this.validateNotOpenInvites(evaluateInviteDto.vacancyId)
+      await this.validateNotOpenInvites(
+        evaluateInviteDto.vacancyId,
+        evaluateInviteDto.inviteId
+      )
 
       //verfica se o Estudante ainda não aceitou outro convite.
       await this.vacaciesService.validateNotAlreadyAcceptsToStudent(
@@ -125,7 +128,10 @@ export class InvitesService {
         inviteId: evaluateInviteDto.inviteId,
         approved: evaluateInviteDto.approved
       }
-      await this.invitesModel.evaluateInvite(evaluateInviteData)
+      const evaluated = await this.invitesModel.evaluateInvite(
+        evaluateInviteData
+      )
+      return evaluated
     } catch (error) {
       console.error(
         'erro capturado no evaluateInvite no InvitesService:',

@@ -7,50 +7,49 @@ import { environment } from 'src/environments/environment'
 import { ApproveRepresentaionDto } from './types'
 import { IFieldRepresentation } from '../../records/representations/types'
 import { IFieldRep } from '../../records/field-reps/types'
+import { ICompleteInvite } from '../../vacancies/invites/types'
+import { ErrorServices } from '../../shared/shared.service.ts/error.service'
+import { ApproveInviteDto } from '../invites-to_approve/types'
 
 @Injectable({
   providedIn: 'root',
 })
 export class OneInviteToApproveService {
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private errorService: ErrorServices,
+  ) {}
 
-  approveRepresentation(approveData: ApproveRepresentaionDto) {
+  approveRepresentation(approveData: ApproveInviteDto) {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .put(environment.API + '/field-representations/evaluate', approveData, {
+      .put(environment.API + '/invites/evaluate', approveData, {
         headers: head_obj,
       })
       .pipe(
-        catchError(() => {
-          return throwError(
-            () => new Error('Não fo possível aprovar esse usuário'),
+        catchError((error) => {
+          throw new Error(
+            this.errorService.makeErrorMessage(error.error.message),
           )
         }),
       )
   }
 
-  findAllRegistries(repId: number): Observable<IFieldRepresentation[]> {
+  findAllRegistries(repId: number): Observable<ICompleteInvite[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<IFieldRepresentation[]>(
-        environment.API + '/field-representations/rep/' + repId,
-        {
-          headers: head_obj,
-        },
-      )
+      .get<ICompleteInvite[]>(environment.API + '/invites/rep/' + repId, {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
-          if (error.message.includes('pessoa com ID')) {
-            return []
-          } else {
-            console.log('Veja o erro completo', error)
-            return throwError(
-              () =>
-                new Error('Não foi possível encontrar os cursos cadastrados.'),
-            )
-          }
+          console.log('Veja o erro completo', error)
+          throw new Error(
+            this.errorService.makeErrorMessage(error.error.message),
+          )
         }),
       )
   }

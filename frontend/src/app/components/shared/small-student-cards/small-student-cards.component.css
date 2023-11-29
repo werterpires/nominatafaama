@@ -196,6 +196,17 @@ textarea:focus {
   overflow: hidden;
 }
 
-.notApproved {
-  box-shadow: 0 0 50px rgb(255 255 3 / 56%);
+.inotApproved {
+  border: 2px solid rgb(255 255 3);
+  box-shadow: 0 0 10px rgb(255 255 3 / 56%);
+}
+
+.iunapproved {
+  border: 2px solid rgb(0, 0, 0);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.56);
+}
+
+.iapproved {
+  border: 2px solid rgb(255, 142, 3);
+  box-shadow: 0 0 10px rgba(255, 142, 3, 0.81);
 }

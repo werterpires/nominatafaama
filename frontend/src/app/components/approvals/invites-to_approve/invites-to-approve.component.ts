@@ -141,6 +141,7 @@ export class InvitesToApproveComponent implements OnInit {
         this.ngOnInit()
       },
       error: (err) => {
+        console.log(err.message)
         this.errorService.showError(err.message)
         this.isLoading = false
       },

@@ -365,7 +365,11 @@ export class VacancyComponent implements OnInit {
 
   checkInvites(invites: IInvite[]) {
     if (invites.some((invite) => invite.approved === null)) {
-      return 'notApproved'
+      return 'inotApproved'
+    } else if (invites.some((invite) => invite.approved === true)) {
+      return 'iapproved'
+    } else if (invites.some((invite) => invite.approved === false)) {
+      return 'iunapproved'
     }
     return 'none'
   }

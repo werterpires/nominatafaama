@@ -117,7 +117,7 @@ export class VacanciesService {
         await this.vacanciesModel.validateNotApprovedInvitesToVacancy(vacancyId)
 
       if (!vacancyNotAswered) {
-        throw new Error('vacancy already answered')
+        throw new Error('vacancy already approved')
       }
     } catch (error) {
       throw error
@@ -162,7 +162,6 @@ export class VacanciesService {
         await this.vacanciesModel.validateSameFieldToVacancyAndRepresentations(
           validateData
         )
-      console.log(thereIsCorrespondense)
 
       if (!thereIsCorrespondense) {
         throw new Error(
@@ -336,7 +335,7 @@ export class VacanciesService {
       const activeFieldRepresentation = await this.findActiveRepresentation(
         currentUser.user_id
       )
-      console.log(activeFieldRepresentation)
+
       //Verifica se a vaga corresponde à representação ativa
       await this.validateSameFieldToVacancyAndRepresentations(
         activeFieldRepresentation.representationID,
@@ -361,7 +360,6 @@ export class VacanciesService {
     vacancyStudentId: number,
     currentUser: UserFromJwt
   ): Promise<boolean> {
-    console.log('vacancyStudentId', vacancyStudentId)
     try {
       //verifica se o usuário atual possui representações e se possui pele menos uma representação válida
       const activeFieldRepresentation = await this.findActiveRepresentation(

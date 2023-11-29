@@ -558,7 +558,7 @@ export class VacanciesModel {
         )
         .first('vacancies.vacancy_id')
         .where('vacancies.vacancy_id', vacancyId)
-        .andWhereNot('invites.approved', null)
+        .andWhere('invites.approved', true)
 
       if (vacanciesConsult) {
         return false

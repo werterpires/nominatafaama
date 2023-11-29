@@ -23,6 +23,12 @@ export class ErrorServices {
       case 'Vacancy has open invites':
         return 'Não é possível completar a ação porque essa vaga possui convites em aberto.'
         break
+      case 'date is less than 7 days from now':
+        return 'É necessário dar pelo menos 7 dias de prazo.'
+        break
+      case 'vacancy already approved':
+        return 'Não é possível completar essa ação porque a vaga já possui pelo menos um convite aprovado pela coordenação.'
+        break
       default:
         return 'Não foi possível completar a ação.'
     }

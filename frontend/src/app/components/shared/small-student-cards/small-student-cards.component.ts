@@ -52,6 +52,5 @@ export class SmallStudentCardsComponent {
 
   showTicket(show: boolean) {
     this.ticket = show
-    console.log(this.ticket)
   }
 }

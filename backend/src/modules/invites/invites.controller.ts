@@ -67,7 +67,11 @@ export class InvitesController {
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      this.invitesService.evaluateInvite(evaluateInviteDto, currentUser)
+      const evaluated = await this.invitesService.evaluateInvite(
+        evaluateInviteDto,
+        currentUser
+      )
+      return { evaluated }
     } catch (error) {
       console.error('erro capturado em evaluateInvite em Invitescontroller')
       throw new InternalServerErrorException(error.message)

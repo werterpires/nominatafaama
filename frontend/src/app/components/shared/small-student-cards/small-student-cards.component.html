@@ -1,7 +1,9 @@
 <div
   class="flex fixWidth"
   [ngClass]="{
-    notApproved: inviteState === 'notApproved'
+    inotApproved: inviteState === 'inotApproved',
+    iapproved: inviteState === 'iapproved',
+    iunapproved: inviteState === 'iunapproved'
   }"
   (mouseenter)="showTicket(true)"
   (mouseleave)="showTicket(false)"
@@ -82,7 +84,11 @@
     </div>
   </div>
   <div
-    *ngIf="ticket && inviteState !== 'notApproved' && commentsAllowed"
+    *ngIf="
+      ticket &&
+      (inviteState === 'iunapproved' || inviteState === 'none') &&
+      commentsAllowed
+    "
     class="actions"
   >
     <img
