@@ -131,14 +131,14 @@ export class InvitesModel {
           'repPeople.person_id'
         )
         .leftJoin(
-          'ministries',
+          'ministry_types',
           'vacancies.ministry_id',
-          'ministries.ministry_id'
+          'ministry_types.ministry_type_id'
         )
         .leftJoin(
           'hiring_status as vacHiring_status',
           'vacancies.hiring_status_id',
-          'hiring_status.hiring_status_id'
+          'vacHiring_status.hiring_status_id'
         )
         .leftJoin(
           'associations as vacAssociations',
@@ -148,7 +148,7 @@ export class InvitesModel {
         .leftJoin(
           'unions as vacUnions',
           'vacUnions.union_id',
-          'associations.union_id'
+          'vacAssociations.union_id'
         )
         .leftJoin('nominatas', 'vacancies.nominata_id', 'nominatas.nominata_id')
         .leftJoin(
@@ -174,13 +174,13 @@ export class InvitesModel {
         .leftJoin(
           'hiring_status as stHiring_status',
           'students.hiring_status_id',
-          'hiring_status.hiring_status_id'
+          'stHiring_status.hiring_status_id'
         )
         .select(
           'field_reps.rep_id',
           'field_reps.person_id',
           'repPeople.name as repName',
-          'repPeople.phone_number',
+          'field_reps.phone_number',
           'vacancies.vacancy_id',
           'vacancies.title',
           'vacancies.description',
@@ -189,7 +189,7 @@ export class InvitesModel {
           'vacancies.ministry_id',
           'vacancies.hiring_status_id',
           'vacancies.nominata_id',
-          'ministries.ministry_type_name',
+          'ministry_types.ministry_type_name',
           'vacHiring_status.hiring_status_name as vacHiring_status_name',
           'vacAssociations.association_name as vacAssociation_name',
           'vacAssociations.association_acronym as vacAssociation_acronym',
@@ -210,7 +210,7 @@ export class InvitesModel {
           'vacancies_students.comments',
           'invites.accept',
           'invites.deadline',
-          'invites.ivite_id',
+          'invites.invite_id',
           'invites.approved',
           'invites.vote_number',
           'invites.vote_date'
@@ -235,8 +235,8 @@ export class InvitesModel {
           hiringStatusId: row.hiring_status_id,
           nominataId: row.nominata_id,
 
-          ministry: row.ministry,
-          hiring_status: row.vacHiring_status,
+          ministry: row.ministry_type_name,
+          hiring_status: row.vacHiring_status_name,
           associationName: row.vacAssociation_name,
           unionName: row.vacUnion_name,
           associationAcronym: row.vacAssociation_acronym,
@@ -310,14 +310,14 @@ export class InvitesModel {
           'repPeople.person_id'
         )
         .leftJoin(
-          'ministries',
+          'ministry_types',
           'vacancies.ministry_id',
-          'ministries.ministry_id'
+          'ministry_types.ministry_type_id'
         )
         .leftJoin(
           'hiring_status as vacHiring_status',
           'vacancies.hiring_status_id',
-          'hiring_status.hiring_status_id'
+          'vacHiring_status.hiring_status_id'
         )
         .leftJoin(
           'associations as vacAssociations',
@@ -327,7 +327,7 @@ export class InvitesModel {
         .leftJoin(
           'unions as vacUnions',
           'vacUnions.union_id',
-          'associations.union_id'
+          'vacAssociations.union_id'
         )
         .leftJoin('nominatas', 'vacancies.nominata_id', 'nominatas.nominata_id')
         .leftJoin(
@@ -353,13 +353,13 @@ export class InvitesModel {
         .leftJoin(
           'hiring_status as stHiring_status',
           'students.hiring_status_id',
-          'hiring_status.hiring_status_id'
+          'stHiring_status.hiring_status_id'
         )
         .select(
           'field_reps.rep_id',
           'field_reps.person_id',
           'repPeople.name as repName',
-          'repPeople.phone_number',
+          'field_reps.phone_number',
           'vacancies.vacancy_id',
           'vacancies.title',
           'vacancies.description',
@@ -368,7 +368,7 @@ export class InvitesModel {
           'vacancies.ministry_id',
           'vacancies.hiring_status_id',
           'vacancies.nominata_id',
-          'ministries.ministry_type_name',
+          'ministry_types.ministry_type_name',
           'vacHiring_status.hiring_status_name as vacHiring_status_name',
           'vacAssociations.association_name as vacAssociation_name',
           'vacAssociations.association_acronym as vacAssociation_acronym',
@@ -389,7 +389,7 @@ export class InvitesModel {
           'vacancies_students.comments',
           'invites.accept',
           'invites.deadline',
-          'invites.ivite_id',
+          'invites.invite_id',
           'invites.approved',
           'invites.vote_date',
           'invites.vote_number'
@@ -522,14 +522,14 @@ export class InvitesModel {
           'repPeople.person_id'
         )
         .leftJoin(
-          'ministries',
+          'ministry_types',
           'vacancies.ministry_id',
-          'ministries.ministry_id'
+          'ministry_types.ministry_type_id'
         )
         .leftJoin(
           'hiring_status as vacHiring_status',
           'vacancies.hiring_status_id',
-          'hiring_status.hiring_status_id'
+          'vacHiring_status.hiring_status_id'
         )
         .leftJoin(
           'associations as vacAssociations',
@@ -539,7 +539,7 @@ export class InvitesModel {
         .leftJoin(
           'unions as vacUnions',
           'vacUnions.union_id',
-          'associations.union_id'
+          'vacAssociations.union_id'
         )
         .leftJoin('nominatas', 'vacancies.nominata_id', 'nominatas.nominata_id')
         .leftJoin(
@@ -565,13 +565,13 @@ export class InvitesModel {
         .leftJoin(
           'hiring_status as stHiring_status',
           'students.hiring_status_id',
-          'hiring_status.hiring_status_id'
+          'stHiring_status.hiring_status_id'
         )
         .select(
           'field_reps.rep_id',
           'field_reps.person_id',
           'repPeople.name as repName',
-          'repPeople.phone_number',
+          'field_reps.phone_number',
           'vacancies.vacancy_id',
           'vacancies.title',
           'vacancies.description',
@@ -580,7 +580,7 @@ export class InvitesModel {
           'vacancies.ministry_id',
           'vacancies.hiring_status_id',
           'vacancies.nominata_id',
-          'ministries.ministry_type_name',
+          'ministry_types.ministry_type_name',
           'vacHiring_status.hiring_status_name as vacHiring_status_name',
           'vacAssociations.association_name as vacAssociation_name',
           'vacAssociations.association_acronym as vacAssociation_acronym',
@@ -601,7 +601,7 @@ export class InvitesModel {
           'vacancies_students.comments',
           'invites.accept',
           'invites.deadline',
-          'invites.ivite_id',
+          'invites.invite_id',
           'invites.approved',
           'invites.vote_number',
           'invites.vote_date'

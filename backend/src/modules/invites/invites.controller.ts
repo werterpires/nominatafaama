@@ -89,7 +89,7 @@ export class InvitesController {
   }
 
   @Roles(ERoles.DIRECAO, ERoles.ADMINISTRACAO)
-  @Put('rep/:repId')
+  @Get('rep/:repId')
   async findAllRepInvites(@Param('repId') repId: string) {
     try {
       const invites = await this.invitesService.findAllRepInvites(+repId)
@@ -101,7 +101,7 @@ export class InvitesController {
   }
 
   @Roles(ERoles.DIRECAO, ERoles.ADMINISTRACAO)
-  @Put('notEvaluated')
+  @Get('notEvaluated')
   async findAllNotEvaluatedInvites() {
     try {
       const invites = await this.invitesService.findAllNotEvaluatedInvites()
@@ -115,7 +115,7 @@ export class InvitesController {
   }
 
   @Roles(ERoles.DIRECAO, ERoles.ADMINISTRACAO)
-  @Put('student/:studentId')
+  @Get('student/:studentId')
   async findAllStudentInvites(@Param('studentId') studentId: string) {
     try {
       const invites = await this.invitesService.findAllStudentInvites(
