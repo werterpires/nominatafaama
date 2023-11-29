@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions, IUserApproved } from '../../shared/container/types'
-import { IFieldRepresentation } from '../../records/representations/types'
 
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { LoginService } from '../../shared/shared.service.ts/login.service'
@@ -9,6 +8,8 @@ import { OneInviteToApproveService } from './one-invite-to-approve.service'
 import { IFieldRep } from '../../records/field-reps/types'
 import { ICompleteInvite } from '../../vacancies/invites/types'
 import { ErrorServices } from '../../shared/shared.service.ts/error.service'
+import { ApproveInviteDto } from '../invites-to_approve/types'
+import { InvitesToApproveService } from '../invites-to_approve/invites-to-approve.service'
 
 @Component({
   selector: 'app-one-invite-to-approve',
@@ -22,6 +23,7 @@ export class OneInviteToApproveComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private errorService: ErrorServices,
+    private invitesToApproveService: InvitesToApproveService,
   ) {}
 
   @Input() permissions: IPermissions = {
@@ -119,51 +121,56 @@ export class OneInviteToApproveComponent implements OnInit {
     })
   }
 
-  approveRepresentation(
-    approveRadio: string,
-    rejectRadio: string,
-    representationID: number,
-    idx: number,
-  ) {
-    // this.isLoading = true
-    // const approveInput = document.getElementById(
-    //   approveRadio,
-    // ) as HTMLInputElement
-    // const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
-    // console.log(approveRadio, rejectRadio)
-    // const approveValue = approveInput.checked
-    // const rejectValue = rejectInput.checked
-    // if (approveValue == rejectValue) {
-    // 	this.errorService.showError('Você precisa escolher uma opção.')
-    //   this.isLoading = false
-    //   return
-    // }
-    // const approved = approveValue
-    // this.inviteToApproveService
-    //   .approveRepresentation({
-    //     representationID,
-    //     repApproved: approved,
-    //   })
-    //   .subscribe({
-    //     next: () => {
-    //       this.doneMessage = 'Ação concluída com sucesso.'
-    //       this.done = true
-    //       this.isLoading = false
-    //       if (approved) {
-    //         rejectInput.classList.remove('setted')
-    //         approveInput.classList.add('setted')
-    //       } else {
-    //         rejectInput.classList.add('setted')
-    //         approveInput.classList.remove('setted')
-    //       }
-    //       this.ngOnInit()
-    //     },
-    //     error: (err) => {
-    //       this.errorMessage = err.message
-    //       this.error = true
-    //       this.isLoading = false
-    //     },
-    //   })
+  approveInvite(approveRadio: string, rejectRadio: string, idx: number) {
+    this.isLoading = true
+
+    const approveInput = document.getElementById(
+      approveRadio,
+    ) as HTMLInputElement
+    const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
+
+    const approveValue = approveInput.checked
+    const rejectValue = rejectInput.checked
+
+    if (approveValue == rejectValue) {
+      this.errorService.showError('Você precisa selecionar uma opção')
+      this.isLoading = false
+      return
+    }
+
+    const approved = approveValue
+    const vacancyStudent = this.allRegistries[idx].vacancyStudent
+
+    const approveInviteData: ApproveInviteDto = {
+      vacancyStudentId: vacancyStudent.vacancyStudentId,
+      vacancyId: vacancyStudent.vacancyId,
+      studentId: vacancyStudent.studentId,
+      approved,
+      deadline: this.allRegistries[idx].deadline,
+      inviteId: this.allRegistries[idx].inviteId,
+    }
+
+    this.invitesToApproveService.approveInvite(approveInviteData).subscribe({
+      next: () => {
+        this.doneMessage = 'Ação concluída com sucesso.'
+        this.done = true
+        this.isLoading = false
+        if (approved) {
+          rejectInput.classList.remove('setted')
+          approveInput.classList.add('setted')
+        } else {
+          rejectInput.classList.add('setted')
+          approveInput.classList.remove('setted')
+        }
+
+        this.ngOnInit()
+      },
+      error: (err) => {
+        console.log(err.message)
+        this.errorService.showError(err.message)
+        this.isLoading = false
+      },
+    })
   }
 
   closeError() {

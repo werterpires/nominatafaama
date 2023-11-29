@@ -21,22 +21,6 @@ export class OneInviteToApproveService {
     private errorService: ErrorServices,
   ) {}
 
-  approveRepresentation(approveData: ApproveInviteDto) {
-    const token = localStorage.getItem('access_token')
-    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-    return this.http
-      .put(environment.API + '/invites/evaluate', approveData, {
-        headers: head_obj,
-      })
-      .pipe(
-        catchError((error) => {
-          throw new Error(
-            this.errorService.makeErrorMessage(error.error.message),
-          )
-        }),
-      )
-  }
-
   findAllRegistries(repId: number): Observable<ICompleteInvite[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)

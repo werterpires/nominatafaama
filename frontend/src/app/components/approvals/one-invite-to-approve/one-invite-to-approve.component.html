@@ -153,12 +153,7 @@
             class="saveButton"
             type="button"
             (click)="
-              approveRepresentation(
-                'approveRepresent' + i,
-                'rejectRepresent' + i,
-                invite.inviteId,
-                i
-              )
+              approveInvite('approveRepresent' + i, 'rejectRepresent' + i, i)
             "
           >
             SALVAR
