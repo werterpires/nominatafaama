@@ -12,6 +12,7 @@ import { ParameterizationComponent } from './components/parameterization/paramet
 import { RepresentationsToApproveComponent } from './components/approvals/representations-to_approve/representations-to-approve.component'
 import { VacanciesComponent } from './components/vacancies/vacancies.component'
 import { InvitesToApproveComponent } from './components/approvals/invites-to_approve/invites-to-approve.component'
+import { CallsComponent } from './components/calls/calls.component'
 
 const routes: Routes = [
   { path: 'student/:studentid', component: StudentComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'cadastros', component: RecordsComponent },
   { path: 'parametrizacao', component: ParameterizationComponent },
   { path: 'vagas', component: VacanciesComponent },
+  { path: 'chamados', component: CallsComponent },
   { path: '', component: NominataComponent },
 ]
 
