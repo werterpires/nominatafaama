@@ -414,8 +414,8 @@ export class InvitesModel {
           hiringStatusId: row.hiring_status_id,
           nominataId: row.nominata_id,
 
-          ministry: row.ministry,
-          hiring_status: row.vacHiring_status,
+          ministry: row.ministry_type_name,
+          hiring_status: row.vacHiring_status_name,
           associationName: row.vacAssociation_name,
           unionName: row.vacUnion_name,
           associationAcronym: row.vacAssociation_acronym,
@@ -626,8 +626,8 @@ export class InvitesModel {
           hiringStatusId: row.hiring_status_id,
           nominataId: row.nominata_id,
 
-          ministry: row.ministry,
-          hiring_status: row.vacHiring_status,
+          ministry: row.ministry_type_name,
+          hiring_status: row.vacHiring_status_name,
           associationName: row.vacAssociation_name,
           unionName: row.vacUnion_name,
           associationAcronym: row.vacAssociation_acronym,
