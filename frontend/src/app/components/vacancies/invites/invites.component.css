@@ -8,3 +8,55 @@
   padding: 28px;
   transition: height 5s ease;
 }
+
+.notice {
+  font-family: 'Poppins';
+  background-color: #dde2e9;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.noticeTitle {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 36px;
+  color: #23435f;
+  margin-bottom: 1rem;
+}
+
+.noticeContent {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  color: #23435f;
+  margin-bottom: 1rem;
+}
+
+.noticeList {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 24px;
+  color: #23435f;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+/* codeium, sugira uma forma de não aparecer os números */
+.noticeListItem {
+  width: 30%;
+  border: #23435f solid 1px;
+  padding: 10px;
+  list-style-type: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+}

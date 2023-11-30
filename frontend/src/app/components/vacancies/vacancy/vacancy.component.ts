@@ -161,13 +161,37 @@ export class VacancyComponent implements OnInit {
 
       // Caso: algum invite.accept == null
       if (
-        a.invites.some((i) => i.accept === null) &&
-        !b.invites.some((i) => i.accept === null)
+        a.invites.some((i) => i.approved === true && i.accept === null) &&
+        !b.invites.some((i) => i.approved === true && i.accept === null)
       ) {
         return -1
       } else if (
-        b.invites.some((i) => i.accept === null) &&
-        !a.invites.some((i) => i.accept === null)
+        b.invites.some((i) => i.approved === true && i.accept === null) &&
+        !a.invites.some((i) => i.approved === true && i.accept === null)
+      ) {
+        return 1
+      }
+
+      if (
+        a.invites.some((i) => i.approved === null) &&
+        !b.invites.some((i) => i.approved === null)
+      ) {
+        return -1
+      } else if (
+        b.invites.some((i) => i.approved === null) &&
+        !a.invites.some((i) => i.approved === null)
+      ) {
+        return 1
+      }
+
+      if (
+        a.invites.some((i) => i.approved === false) &&
+        !b.invites.some((i) => i.approved === false)
+      ) {
+        return -1
+      } else if (
+        b.invites.some((i) => i.approved === false) &&
+        !a.invites.some((i) => i.approved === false)
       ) {
         return 1
       }
@@ -364,10 +388,26 @@ export class VacancyComponent implements OnInit {
   }
 
   checkInvites(invites: IInvite[]) {
-    if (invites.some((invite) => invite.approved === null)) {
-      return 'inotApproved'
-    } else if (invites.some((invite) => invite.approved === true)) {
+    if (
+      invites.some(
+        (invite) => invite.approved === true && invite.accept === true,
+      )
+    ) {
+      return 'accepted'
+    } else if (
+      invites.some(
+        (invite) => invite.approved === true && invite.accept === null,
+      )
+    ) {
       return 'iapproved'
+    } else if (invites.some((invite) => invite.approved === null)) {
+      return 'inotApproved'
+    } else if (
+      invites.some(
+        (invite) => invite.approved === true && invite.accept === false,
+      )
+    ) {
+      return 'rejected'
     } else if (invites.some((invite) => invite.approved === false)) {
       return 'iunapproved'
     }
@@ -421,8 +461,19 @@ export class VacancyComponent implements OnInit {
   }
 
   inviteModal = false
+  notice = false
 
   showInviteModal(vacancyStudentId: number) {
+    const studentsWithInvites = this.vacancy.vacancyStudents.find(
+      (vacStu) => vacStu.invites.length > 0,
+    )
+    if (studentsWithInvites) {
+      this.notice = false
+      console.log(this.notice)
+    } else {
+      this.notice = true
+      console.log(this.notice)
+    }
     this.inviteModal = true
     this.vacancyStudentId = vacancyStudentId
   }

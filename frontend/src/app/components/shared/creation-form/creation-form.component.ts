@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 
 @Component({
   selector: 'app-creation-form',
@@ -7,4 +7,6 @@ import { Component, EventEmitter, Output } from '@angular/core'
 })
 export class CreationFormComponent {
   @Output() save = new EventEmitter<boolean>()
+  @Output() closes = new EventEmitter<boolean>()
+  @Input() allowClose = false
 }

@@ -3,7 +3,9 @@
   [ngClass]="{
     inotApproved: inviteState === 'inotApproved',
     iapproved: inviteState === 'iapproved',
-    iunapproved: inviteState === 'iunapproved'
+    iunapproved: inviteState === 'iunapproved',
+    rejected: inviteState === 'rejected',
+    accepted: inviteState === 'accepted'
   }"
   (mouseenter)="showTicket(true)"
   (mouseleave)="showTicket(false)"
@@ -86,7 +88,9 @@
   <div
     *ngIf="
       ticket &&
-      (inviteState === 'iunapproved' || inviteState === 'none') &&
+      (inviteState === 'iunapproved' ||
+        inviteState === 'none' ||
+        inviteState === 'rejected') &&
       commentsAllowed
     "
     class="actions"

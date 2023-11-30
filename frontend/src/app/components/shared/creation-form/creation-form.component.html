@@ -3,6 +3,16 @@
     <ng-content></ng-content>
   </section>
   <section class="formEndButtons">
-    <button class="saveButton" type="button" (click)="save.emit(true)">SALVAR</button>
+    <button class="saveButton" type="button" (click)="save.emit(true)">
+      Salvar
+    </button>
+    <button
+      *ngIf="allowClose"
+      class="saveButton"
+      type="button"
+      (click)="closes.emit(true)"
+    >
+      Cancelar
+    </button>
   </section>
 </form>

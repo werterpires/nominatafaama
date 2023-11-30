@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { IBasicInviteData } from './types'
 import { ErrorServices } from '../../shared/shared.service.ts/error.service'
 
@@ -11,6 +11,9 @@ export class InvitesComponent implements OnInit {
   error = false
 
   @Output() createInviteEvent = new EventEmitter<IBasicInviteData>()
+  @Output() closeEvent = new EventEmitter<void>()
+
+  @Input() notice = true
 
   createInviteData: IBasicInviteData = {
     voteDate: '',
@@ -34,5 +37,9 @@ export class InvitesComponent implements OnInit {
       return
     }
     this.createInviteEvent.emit(this.createInviteData)
+  }
+
+  closeInvite() {
+    this.closeEvent.emit()
   }
 }

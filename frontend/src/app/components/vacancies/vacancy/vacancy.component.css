@@ -218,3 +218,46 @@ textarea:focus {
   justify-content: center;
   align-items: center;
 }
+
+.legend {
+  width: 15px;
+  height: 15px;
+}
+
+.inotApproved {
+  border: 2px solid rgb(255 255 3);
+  box-shadow: 0 0 10px rgb(255 255 3 / 56%);
+}
+
+.iunapproved {
+  border: 2px solid rgb(168 24 215 / 62%);
+  box-shadow: 0 0 10px rgb(168 24 215 / 62%);
+}
+
+.iapproved {
+  border: 2px solid rgb(255, 142, 3);
+  box-shadow: 0 0 10px rgba(255, 142, 3, 0.81);
+}
+
+.rejected {
+  border: 2px solid rgba(245, 77, 77, 0.686);
+  box-shadow: 0 0 10px rgba(245, 77, 77, 0.686);
+}
+
+.accepted {
+  border: 2px solid rgba(77, 245, 111, 0.686);
+  box-shadow: 0 0 10px rgba(77, 245, 111, 0.686);
+}
+
+.legendItem {
+  display: flex;
+  gap: 5px;
+  font-family: 'Poppins';
+  font-size: 11px;
+}
+
+.legendContainer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
