@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateInviteDto } from '../dto/create-invite.dto'
 import {
   AcceptInviteDto,
@@ -12,12 +12,14 @@ import { VacanciesModel } from 'src/modules/vacancies/model/vacancies.model'
 import { FieldRepresentationsModel } from 'src/modules/field-representations/model/field-representations.model'
 import { VacanciesService } from 'src/modules/vacancies/services/vacancies.service'
 import { isDate } from 'util/types'
+import { StudentsModel } from 'src/modules/students/model/students.model'
 
 @Injectable()
 export class InvitesService {
   constructor(
     private readonly invitesModel: InvitesModel,
-    private readonly vacaciesService: VacanciesService
+    private readonly vacaciesService: VacanciesService,
+    private readonly studentsModel: StudentsModel
   ) {}
   async validateNotOpenInvites(vacancyId: number, inviteId?: number) {
     try {
@@ -38,6 +40,17 @@ export class InvitesService {
       const approvedInvite = this.invitesModel.validateApprovedInvite(inviteId)
       if (!approvedInvite) {
         throw new Error('Invite not approved')
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async validateDeadline(inviteId) {
+    try {
+      const valideDeadline = this.invitesModel.validateDaeadLine(inviteId)
+      if (!valideDeadline) {
+        throw new Error('deadline expired')
       }
     } catch (error) {
       throw error
@@ -158,6 +171,10 @@ export class InvitesService {
       // verifica se o convite já foi aprovado
       await this.validateApprovedInvite(acceptInviteDto.inviteId)
 
+      // verifica se a data de inspiração não pasou
+      await this.validateDeadline(acceptInviteDto.inviteId)
+
+      //verifica se não há outro convite aberto (apenas no caso de aceite positivo)
       if (acceptInviteDto.accept) {
         await this.validateNotOpenInvites(
           acceptInviteDto.vacancyId,
@@ -165,9 +182,15 @@ export class InvitesService {
         )
       }
 
+      const hiringStatusId = await this.vacaciesService.findVacancyHiringStatus(
+        acceptInviteDto.vacancyId
+      )
+
       const acceptInviteData: IAcceptInvite = {
+        studentId: acceptInviteDto.studentId,
         inviteId: acceptInviteDto.inviteId,
-        accept: acceptInviteDto.accept
+        accept: acceptInviteDto.accept,
+        hiringStatusId
       }
       await this.invitesModel.acceptInvite(acceptInviteData)
     } catch (error) {
@@ -222,8 +245,16 @@ export class InvitesService {
     }
   }
 
-  async findAllStudentInvites(studentId: number) {
+  async findAllStudentInvites(currentUser: UserFromJwt) {
     try {
+      const student = await this.studentsModel.findStudentByUserId(
+        currentUser.user_id
+      )
+      if (!student) {
+        throw new NotFoundException('Estudante não encontrado')
+      }
+      const studentId = student.student_id
+
       const invites = await this.invitesModel.findAllStudentInvites(studentId)
       return invites
     } catch (error) {

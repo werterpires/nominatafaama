@@ -541,6 +541,18 @@ export class VacanciesModel {
       }
     }
   }
+  async findVacancyHiringStatus(vacancyId: number): Promise<number> {
+    try {
+      const vacancyConsult = await this.knex('vacancies')
+        .select('hiring_status_id')
+        .where('vacancy_id', vacancyId)
+        .first()
+      return vacancyConsult.hiring_status_id
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
   async validateNotApprovedInvitesToVacancy(
     vacancyId: number
   ): Promise<boolean> {
@@ -618,31 +630,36 @@ export class VacanciesModel {
           'people.name',
           'associations.association_acronym',
           'unions.union_acronym',
-          'hiring_status.hiring_status_name'
+          'hiring_status.hiring_status_name',
+          'invites.accept'
         )
         .where('nominatas_students.nominata_id', nominataId)
-        .whereNotExists(function () {
-          this.select('vacancy_student_id')
-            .from('invites')
-            .whereRaw(
-              'invites.vacancy_student_id = vacancies_students.vacancy_student_id'
-            )
-            .andWhere('invites.accept', true)
-        })
         .distinct()
 
-      const studentsList: IBasicStudent[] = studentsConsult.map((student) => {
-        return {
-          student_id: student.student_id,
-          user_id: student.user_id,
-          person_id: student.person_id,
-          name: student.name,
-          union_acronym: student.union_acronym,
-          association_acronym: student.association_acronym,
-          hiring_status_name: student.hiring_status_name,
-          small_alone_photo: ''
+      const studentsWithAcceptsIds = studentsConsult.map((student) => {
+        if (student.accept) {
+          return student.student_id
         }
       })
+
+      const studentsWhithNoAccepts = studentsConsult.filter((student) => {
+        return !studentsWithAcceptsIds.includes(student.student_id)
+      })
+
+      const studentsList: IBasicStudent[] = studentsWhithNoAccepts.map(
+        (student) => {
+          return {
+            student_id: student.student_id,
+            user_id: student.user_id,
+            person_id: student.person_id,
+            name: student.name,
+            union_acronym: student.union_acronym,
+            association_acronym: student.association_acronym,
+            hiring_status_name: student.hiring_status_name,
+            small_alone_photo: ''
+          }
+        }
+      )
 
       return studentsList
     } catch (error) {

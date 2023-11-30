@@ -148,10 +148,6 @@ export class InvitesToApproveComponent implements OnInit {
     })
   }
 
-  closeError() {
-    this.error = false
-  }
-
   closeDone() {
     this.done = false
   }

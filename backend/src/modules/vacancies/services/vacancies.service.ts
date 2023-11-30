@@ -124,6 +124,17 @@ export class VacanciesService {
     }
   }
 
+  async findVacancyHiringStatus(vacancyId: number): Promise<number> {
+    try {
+      const hiringStatusId = await this.vacanciesModel.findVacancyHiringStatus(
+        vacancyId
+      )
+      return hiringStatusId
+    } catch (error) {
+      throw error
+    }
+  }
+
   async validateNotAnswersToStudentAndVacancy(vacancyStudentId: number) {
     try {
       const notInviteAnswered =

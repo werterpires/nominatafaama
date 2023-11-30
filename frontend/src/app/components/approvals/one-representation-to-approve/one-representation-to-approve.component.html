@@ -45,7 +45,7 @@
           <label class="labelRadio">
             <input
               class="approvedRadio"
-              [id]="'approveRepresent' + i"
+              [id]="'oneapproveRepresent' + i"
               type="radio"
               name="status"
               [checked]="represent.repApproved"
@@ -55,7 +55,7 @@
           <label class="labelRadio">
             <input
               class="rejectedRadio"
-              [id]="'rejectRepresent' + i"
+              [id]="'onerejectRepresent' + i"
               type="radio"
               name="status"
               [checked]="!represent.repApproved"
@@ -68,8 +68,8 @@
             type="button"
             (click)="
               approveRepresentation(
-                'approveRepresent' + i,
-                'rejectRepresent' + i,
+                'oneapproveRepresent' + i,
+                'onerejectRepresent' + i,
                 represent.representationID,
                 i
               )

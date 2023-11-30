@@ -85,7 +85,11 @@ export class InvitesController {
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      this.invitesService.acceptInvite(acceptInviteDto, currentUser)
+      const accepted = await this.invitesService.acceptInvite(
+        acceptInviteDto,
+        currentUser
+      )
+      return { accepted }
     } catch (error) {
       console.error('erro capturado em acceptInvite em Invitescontroller')
       throw new InternalServerErrorException(error.message)
@@ -118,13 +122,14 @@ export class InvitesController {
     }
   }
 
-  @Roles(ERoles.DIRECAO, ERoles.ADMINISTRACAO)
-  @Get('student/:studentId')
-  async findAllStudentInvites(@Param('studentId') studentId: string) {
+  @Roles(ERoles.ESTUDANTE, ERoles.ADMINISTRACAO)
+  @Get('student/')
+  async findAllStudentInvites(@CurrentUser() currentUser: UserFromJwt) {
     try {
       const invites = await this.invitesService.findAllStudentInvites(
-        +studentId
+        currentUser
       )
+
       return invites
     } catch (error) {
       console.error(

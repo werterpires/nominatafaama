@@ -124,13 +124,16 @@ export class OneInviteToApproveComponent implements OnInit {
   approveInvite(approveRadio: string, rejectRadio: string, idx: number) {
     this.isLoading = true
 
+    console.log('paramentros', approveRadio, rejectRadio, idx)
     const approveInput = document.getElementById(
       approveRadio,
     ) as HTMLInputElement
     const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
-
+    console.log('inputs', rejectInput, approveInput)
     const approveValue = approveInput.checked
     const rejectValue = rejectInput.checked
+
+    console.log('valores', approveValue, rejectValue)
 
     if (approveValue == rejectValue) {
       this.errorService.showError('Você precisa selecionar uma opção')

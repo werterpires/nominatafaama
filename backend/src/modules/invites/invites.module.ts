@@ -6,8 +6,9 @@ import { VacanciesService } from '../vacancies/services/vacancies.service'
 import { NotificationsModule } from 'src/shared/notifications/notifications.module'
 import { VacanciesModel } from '../vacancies/model/vacancies.model'
 import { VacanciesModule } from '../vacancies/vacancies.module'
+import { StudentsModel } from '../students/model/students.model'
 
-const services = [InvitesService, InvitesModel]
+const services = [InvitesService, InvitesModel, StudentsModel]
 
 @Module({
   imports: [NotificationsModule, VacanciesModule],

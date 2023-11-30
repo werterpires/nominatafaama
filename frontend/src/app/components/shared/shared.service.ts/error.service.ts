@@ -29,6 +29,12 @@ export class ErrorServices {
       case 'vacancy already approved':
         return 'Não é possível completar essa ação porque a vaga já possui pelo menos um convite aprovado pela coordenação.'
         break
+      case 'vacancy already accepted':
+        return 'Não é possível completar essa ação porque a vaga já possui pelo menos um convite aceito.'
+        break
+      case 'student already accepted a vacancy':
+        return 'Não é possível completar essa ação porque o estudante já aceitou um convite.'
+        break
       default:
         return 'Não foi possível completar a ação.'
     }

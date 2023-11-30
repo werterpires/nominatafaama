@@ -21,7 +21,9 @@ export interface IEvaluateInvite {
 
 export interface IAcceptInvite {
   inviteId: number
+  studentId: number
   accept: boolean
+  hiringStatusId: number
 }
 
 export interface ICompleteInvite {

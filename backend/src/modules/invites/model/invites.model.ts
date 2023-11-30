@@ -93,17 +93,41 @@ export class InvitesModel {
 
   async acceptInvite(evaluateIviteData: IAcceptInvite): Promise<boolean> {
     try {
-      const { accept, inviteId } = evaluateIviteData
+      const { accept, inviteId, studentId, hiringStatusId } = evaluateIviteData
 
-      await this.knex('vacancies')
-        .update({
-          accept
-        })
-        .where('invite_id', inviteId)
-        .andWhere('accept', null)
-        .returning('invite')
+      this.knex.transaction(async (trx) => {
+        if (accept) {
+          await trx('invites')
+            .join(
+              'vacancies_students',
+              'invites.vacancy_student_id',
+              'vacancies_students.vacancy_student_id'
+            )
+            .update({
+              accept: false
+            })
+            .where('vacancies_students.student_id', studentId)
+            .andWhere('invites.approved', true)
+            .returning('invite')
+
+          await trx('students')
+            .update({ hiring_status_id: hiringStatusId })
+            .where('student_id', studentId)
+        } else {
+          await trx('students')
+            .update({ hiring_status_id: 1 })
+            .where('student_id', studentId)
+        }
+
+        await trx('invites')
+          .update({
+            accept
+          })
+          .where('invite_id', inviteId)
+          .returning('invite')
+      })
     } catch (error) {
-      console.error('erro capturado no evaluateInvite no InvitesModel:', error)
+      console.error('erro capturado no acceptInvite no InvitesModel:', error)
 
       throw error
     }
@@ -395,6 +419,7 @@ export class InvitesModel {
           'invites.vote_number'
         )
         .where('vacancies_students.student_id', studentId)
+        .andWhere('invites.approved', true)
 
       const invites: ICompleteInvite[] = invitesConsult.map((row) => {
         const rep = {
@@ -727,6 +752,22 @@ export class InvitesModel {
     } catch (error) {
       console.error(
         'erro capturado no validateApprovedInvite no InvitesModel:',
+        error
+      )
+      throw error
+    }
+  }
+
+  async validateDaeadLine(inviteId: number) {
+    try {
+      const deadline = await this.knex('invites')
+        .first('deadline')
+        .where('invite_id', inviteId)
+
+      return new Date(deadline.deadline) >= new Date()
+    } catch (error) {
+      console.error(
+        'erro capturado no validateDaeadLine no InvitesModel:',
         error
       )
       throw error
