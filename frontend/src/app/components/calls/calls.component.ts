@@ -6,6 +6,8 @@ import { IPermissions, IUserApproved } from '../shared/container/types'
 import { ICompleteInvite } from '../vacancies/invites/types'
 import { CallsService } from './calls.service'
 import { AcceptInviteDto } from './types'
+import { AlertServices } from '../shared/alert/alert.service'
+import { AlertFunctions } from '../shared/alert/types'
 
 @Component({
   selector: 'app-calls',
@@ -18,6 +20,7 @@ export class CallsComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private errorService: ErrorServices,
+    public alertService: AlertServices,
   ) {}
 
   @Input() permissions: IPermissions = {
@@ -95,13 +98,31 @@ export class CallsComponent implements OnInit {
     })
   }
 
-  acceptInvite(approveRadio: string, rejectRadio: string, idx: number) {
+  alertFunctions = {
+    acceptInvite: this.acceptInvite.bind(this),
+  }
+
+  handleAlert(func: string, index: number | null) {
+    this.alertFunctions['acceptInvite'](index)
+  }
+
+  acceptInvite(idx: number | null) {
     this.isLoading = true
+    console.log(this.done)
+    if (idx === null || idx === undefined) {
+      this.errorService.showError(
+        'Não foi possível aceitar/recusar o convite. Se o erro persistir, entre em contato contato com a administração do sistema.',
+      )
+      this.isLoading = false
+      return
+    }
 
     const approveInput = document.getElementById(
-      approveRadio,
+      'approveRepresent' + idx,
     ) as HTMLInputElement
-    const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
+    const rejectInput = document.getElementById(
+      'rejectRepresent' + idx,
+    ) as HTMLInputElement
 
     const approveValue = approveInput.checked
     const rejectValue = rejectInput.checked
@@ -113,6 +134,7 @@ export class CallsComponent implements OnInit {
     }
 
     const accepted = approveValue
+
     const vacancyStudent = this.allRegistries[idx].vacancyStudent
 
     const acceptInviteData: AcceptInviteDto = {
@@ -129,13 +151,13 @@ export class CallsComponent implements OnInit {
         this.doneMessage = 'Ação concluída com sucesso.'
         this.done = true
         this.isLoading = false
-        // if (accepted) {
-        //   rejectInput.classList.remove('setted')
-        //   approveInput.classList.add('setted')
-        // } else {
-        //   rejectInput.classList.add('setted')
-        //   approveInput.classList.remove('setted')
-        // }
+        if (accepted) {
+          rejectInput.classList.remove('setted')
+          approveInput.classList.add('setted')
+        } else {
+          rejectInput.classList.add('setted')
+          approveInput.classList.remove('setted')
+        }
 
         this.getAllRegistries()
       },

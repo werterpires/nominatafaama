@@ -138,7 +138,11 @@
               class="saveButton"
               type="button"
               (click)="
-                acceptInvite('approveRepresent' + i, 'rejectRepresent' + i, i)
+                alertService.showAlert(
+                  'Lembre-se que, ao recusar um convite, você poderá aceitá-lo até a data de expiração, contanto que o representante de campo não chame outro estudante. Se você aceitar, só poderá negar falando com o coordenador de campo.',
+                  'acceptInvite',
+                  i
+                )
               "
             >
               SALVAR
@@ -149,7 +153,9 @@
         </div>
       </section>
     </section>
-
+    <app-alert
+      (confirmEvent)="handleAlert($event.func, $event.index)"
+    ></app-alert>
     <app-error-modal *ngIf="error"></app-error-modal>
     <div *ngIf="done" class="done">
       <div class="doneTitle">
