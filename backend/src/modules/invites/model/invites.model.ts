@@ -95,9 +95,34 @@ export class InvitesModel {
     return true
   }
 
-  async evaluateInvite(evaluateIviteData: IEvaluateInvite): Promise<boolean> {
+  async evaluateInvite(
+    evaluateIviteData: IEvaluateInvite,
+    currentUser: UserFromJwt
+  ): Promise<boolean> {
     try {
       const { approved, inviteId } = evaluateIviteData
+
+      const oldData = await this.knex('invites')
+        .leftJoin(
+          'vacancies_students',
+          'invites.vacancy_student_id',
+          'vacancies_students.vacancy_student_id'
+        )
+        .leftJoin(
+          'students',
+          'vacancies_students.student_id',
+          'students.student_id'
+        )
+        .leftJoin('people', 'students.person_id', 'people.person_id')
+        .leftJoin(
+          'vacancies',
+          'vacancies_students.vacancy_id',
+          'vacancies.vacancy_id'
+        )
+        .leftJoin('field_reps', 'vacancies.rep_id', 'field_reps.rep_id')
+        .leftJoin('users', 'field_reps.person_id', 'users.person_id')
+        .where('invite_id', inviteId)
+        .first('invites.*', 'people.name', 'vacancies.*', 'users.user_id')
 
       await this.knex('invites')
         .update({
@@ -105,6 +130,20 @@ export class InvitesModel {
         })
         .where('invite_id', inviteId)
         .returning('invite')
+
+      await this.notificationsService.createNotification({
+        action: approved ? 'aprovou' : 'rejeitou',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          vaga: `${oldData.title}: ${oldData.description}`,
+          estudante: oldData.name
+        },
+        oldData: null,
+        notificationType: 13,
+        objectUserId: oldData.user_id,
+        table: 'invites'
+      })
     } catch (error) {
       console.error('erro capturado no evaluateInvite no InvitesModel:', error)
 

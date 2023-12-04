@@ -143,7 +143,8 @@ export class InvitesService {
         approved: evaluateInviteDto.approved
       }
       const evaluated = await this.invitesModel.evaluateInvite(
-        evaluateInviteData
+        evaluateInviteData,
+        currentUser
       )
       return evaluated
     } catch (error) {
