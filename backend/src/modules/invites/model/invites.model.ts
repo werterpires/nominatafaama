@@ -45,6 +45,29 @@ export class InvitesModel {
         vote_number: voteNumber
       })
 
+      const userIdConsult = await this.knex('users')
+        .join('students', 'users.person_id', 'students.person_id')
+        .first('user_id')
+        .where('students.student_id', createInviteData.studentId)
+
+      await this.notificationsService.createNotification({
+        action: 'inseriu',
+        agent_name: currentUser.name,
+        agentUserId: currentUser.user_id,
+        newData: {
+          vacancyStudentId,
+          accept,
+          approved,
+          deadline,
+          voteDate,
+          voteNumber
+        },
+        oldData: null,
+        notificationType: 12,
+        objectUserId: userIdConsult.user_id,
+        table: 'invites'
+      })
+
       return inviteId
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {

@@ -103,7 +103,8 @@ export class InvitesService {
         deadline,
         vacancyStudentId: createInviteDto.vacancyStudentId,
         voteDate,
-        voteNumber: createInviteDto.voteNumber
+        voteNumber: createInviteDto.voteNumber,
+        studentId: createInviteDto.studentId
       }
 
       const inviteId = await this.invitesModel.createInvite(

@@ -12,6 +12,7 @@ export interface ICreateInvite {
   approved: boolean | null
   voteDate: Date
   voteNumber: string
+  studentId: number
 }
 
 export interface IEvaluateInvite {
