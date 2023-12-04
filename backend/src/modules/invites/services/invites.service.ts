@@ -194,7 +194,7 @@ export class InvitesService {
         accept: acceptInviteDto.accept,
         hiringStatusId
       }
-      await this.invitesModel.acceptInvite(acceptInviteData)
+      await this.invitesModel.acceptInvite(acceptInviteData, currentUser)
     } catch (error) {
       console.error('erro capturado no acceptInvite no InvitesService:', error)
       throw error
