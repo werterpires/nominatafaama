@@ -433,13 +433,18 @@ export class NotificationsService {
         textOne = `O usuário ${notificationData.agent_name} inseriu dados em ${notificationData.table}: ${newDataToText}`
       } else if (notificationData.action === 'editou') {
         textOne = `O usuário ${notificationData.agent_name} editou dados em ${notificationData.table}: de ${oldDataToText}, passou a ser ${newDataToText}`
+        textTwo =
+          notificationData.objectUserId !== notificationData.agentUserId
+            ? `O Usuário ${notificationData.agent_name} editou dados em ${notificationData.table}: de ${oldDataToText}, passou a ser ${newDataToText}`
+            : ''
       } else if (notificationData.action === 'apagou') {
         textOne = `O usuário ${notificationData.agent_name} excluiu dados em ${notificationData.table}: ${oldDataToText}`
       }
 
-      let notificationText: string
-
-      notificationText = textOne
+      let notificationText: string | string[] =
+        notificationData.objectUserId !== notificationData.agentUserId
+          ? [textOne, textTwo]
+          : textOne
 
       return {
         agentUserId: notificationData.agentUserId,
