@@ -92,9 +92,10 @@ import { SmallStudentCardsComponent } from './components/shared/small-student-ca
 import { InvitesComponent } from './components/vacancies/invites/invites.component'
 import { ErrorModalComponent } from './components/shared/error-modal/error-modal.component'
 import { InvitesToApproveComponent } from './components/approvals/invites-to_approve/invites-to-approve.component'
-import { OneInviteToApproveComponent } from './components/approvals/one-invite-to-approve/one-invite-to-approve.component';
-import { CallsComponent } from './components/calls/calls.component';
+import { OneInviteToApproveComponent } from './components/approvals/one-invite-to-approve/one-invite-to-approve.component'
+import { CallsComponent } from './components/calls/calls.component'
 import { AlertComponent } from './components/shared/alert/alert.component'
+import { ApproveFormComponent } from './components/shared/approve-form/ApproveFormComponent'
 
 @NgModule({
   declarations: [
@@ -186,6 +187,7 @@ import { AlertComponent } from './components/shared/alert/alert.component'
     OneInviteToApproveComponent,
     CallsComponent,
     AlertComponent,
+    ApproveFormComponent,
   ],
   imports: [
     BrowserModule,
