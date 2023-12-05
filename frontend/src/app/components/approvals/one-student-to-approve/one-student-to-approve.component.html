@@ -11,15 +11,29 @@
       <p class="sectionTitle1">Perfil do fomando</p>
     </div>
     <section *ngIf="student.student !== null && student.student.student_id">
-      <div>
+      <app-approve-form
+        [registryId]="student.student.student_id"
+        [approved]="student.student.student_approved"
+        [table]="'students'"
+        (atualize)="atualizeStudent()"
+      >
         <div class="subSection">
           <span class="field">
             <p class="fieldTitle">Campo de origem</p>
-            <p class="fieldContent">
-              {{ student.student.union_acronym }}/{{
-                student.student.association_acronym
-              }}
-            </p>
+            <select
+              class="eFieldContent"
+              [(ngModel)]="student.student.union_acronym"
+              name=""
+              id=""
+            >
+              <option value="AMC">AMC</option>
+              <option value="USEB">USEB</option>
+              <option value="USE">USE</option>
+            </select>
+            <input
+              class="eFieldContent"
+              [(ngModel)]="student.student.union_acronym"
+            />
           </span>
           <span class="field">
             <p class="fieldTitle">Estado civil</p>
@@ -67,83 +81,13 @@
           </span>
         </div>
         <hr class="sectionDivisiion" />
-        <div
-          *ngIf="
-            student.relatedMinistries !== undefined &&
-            student.relatedMinistries !== null &&
-            student.relatedMinistries.length > 0
-          "
-          class="subSection"
-        ></div>
         <div class="subSection">
           <span class="field">
             <p class="fieldTitle">Mensagem do Formando</p>
             <p class="fieldContent">{{ student.student.student_mensage }}</p>
           </span>
         </div>
-        <div class="subSection">
-          <div class="alonePhoto">
-            <div
-              class="imageContainer"
-              [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
-            ></div>
-          </div>
-        </div>
-
-        <form class="formSection">
-          <label class="labelRadio">
-            <input
-              class="approvedRadio"
-              [checked]="student.student.student_approved"
-              #approveItem
-              type="radio"
-              name="status"
-            />
-            Aprovado
-          </label>
-          <label class="labelRadio">
-            <input
-              class="rejectedRadio"
-              [checked]="student.student.student_approved === false"
-              #rejectItem
-              [id]="'rejectStudent'"
-              type="radio"
-              name="status"
-            />
-            Desaprovado
-          </label>
-
-          <button
-            class="saveButton"
-            type="button"
-            (click)="
-              approve(
-                'students',
-                approveItem,
-                rejectItem,
-                student.student.student_id
-              )
-            "
-          >
-            SALVAR
-          </button>
-          <button
-            #saveButton
-            class="hidden"
-            type="button"
-            (click)="
-              approveAll(
-                'students',
-                approveItem,
-                rejectItem,
-                student.student.student_id
-              )
-            "
-          >
-            HIDDEN
-          </button>
-        </form>
-      </div>
+      </app-approve-form>
     </section>
   </section>
   <section class="sectionBox">

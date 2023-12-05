@@ -136,14 +136,6 @@ export class OneStudentToApproveComponent implements OnInit {
 
     console.log(this.student)
     console.log(this.evvangExpTypes, this.spEvvangExpTypes)
-
-    await this.getFile(this.student.photos?.alone_photo?.file.data, 'alone')
-    await this.getFile(this.student.photos?.spouse_photo?.file.data, 'spouse')
-    await this.getFile(this.student.photos?.family_photo?.file.data, 'family')
-    await this.getFile(
-      this.student.photos?.small_alone_photo?.file.data,
-      'small_alone',
-    )
   }
 
   async getOneStudent(userId: number) {
@@ -194,27 +186,6 @@ export class OneStudentToApproveComponent implements OnInit {
     })
   }
 
-  async getFile(data: any, photo: string) {
-    const blob1 = new Blob([new Uint8Array(data)], {
-      type: 'image/jpeg',
-    })
-    if (blob1 instanceof Blob) {
-      const reader = new FileReader()
-      reader.onload = (e: any) => {
-        if (photo == 'alone') {
-          this.alonePhoto = e.target.result
-        } else if (photo == 'spouse') {
-          this.spousePhoto = e.target.result
-        } else if (photo == 'family') {
-          this.familyPhoto = e.target.result
-        } else if (photo == 'small_alone') {
-          this.smallAllonePhoto = e.target.result
-        }
-      }
-      reader.readAsDataURL(blob1)
-    }
-  }
-
   approve(
     table: string,
     elementTrue: HTMLInputElement,
@@ -237,9 +208,9 @@ export class OneStudentToApproveComponent implements OnInit {
       id: id,
     }
     this.service.approveAny(data, table).subscribe({
-      next: (res) => {
+      next: () => {
         if (this.student.user) {
-          this.atualizeStudent(this.student.user.user_id)
+          this.atualizeStudent()
         }
         this.doneMessage = 'Aprovação feita com sucesso.'
         this.done = true
@@ -253,17 +224,22 @@ export class OneStudentToApproveComponent implements OnInit {
     })
   }
 
-  atualizeStudent(id: number) {
-    this.studentToApproveService.findOneRegistry(id).subscribe({
-      next: (res) => {
-        this.student = res
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
+  atualizeStudent() {
+    this.isLoading = true
+    if (!this.student.user?.user_id) return
+    this.studentToApproveService
+      .findOneRegistry(this.student.user.user_id)
+      .subscribe({
+        next: (res) => {
+          this.student = res
+          this.isLoading = false
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
   }
 
   approveAll(
@@ -298,18 +274,30 @@ export class OneStudentToApproveComponent implements OnInit {
   saveAll() {
     try {
       this.isLoading = true
+      // const buttons = document.querySelectorAll('.uuu')
+
+      // buttons.forEach((button) => {
+      //   const nativeButton = button as unknown as { nativeElement: HTMLElement }
+      //   console.log(nativeButton)
+      //   nativeButton.nativeElement.click()
+      //   console.log(nativeButton)
+      // })
+
+      return
       this.saveButtons.forEach((button) => {
         button.nativeElement.click()
       })
+
       if (this.student.user) {
-        this.atualizeStudent(this.student.user.user_id)
+        this.atualizeStudent()
       }
       this.getOneStudent(this.userId)
       this.doneMessage = 'Aprovação feita com sucesso.'
       this.done = true
       this.isLoading = false
-    } catch (error) {
-      this.errorMessage = this.errorMessage
+    } catch (error: any) {
+      console.log(error)
+      this.errorMessage = error.message ? error.message : ''
       this.error = true
       this.isLoading = false
     }
