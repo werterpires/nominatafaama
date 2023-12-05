@@ -1,0 +1,70 @@
+<form
+  (input)="saveButton.classList.remove('hidden')"
+  (submit)="editRegistry.emit({ id: registryId, saveButtonId: saveButton.id })"
+>
+  <section>
+    <ng-content></ng-content>
+  </section>
+  <section class="registryEndButtons">
+    <button type="submit">
+      <img
+        #saveButton
+        class="iconButton hidden"
+        src="assets/icons/saveIcon.svg"
+        alt="ícone para salvar registro"
+      />
+    </button>
+  </section>
+</form>
+
+<form class="formSection">
+  <label class="labelRadio">
+    <input
+      class="approvedRadio"
+      [checked]="approved"
+      #approveItem
+      type="radio"
+      name="status"
+    />
+    Aprovado
+  </label>
+  <label class="labelRadio">
+    <input
+      class="rejectedRadio"
+      [checked]="approved === false"
+      #rejectItem
+      [id]="'rejectStudent'"
+      type="radio"
+      name="status"
+    />
+    Desaprovado
+  </label>
+
+  <button
+    class="saveButton"
+    type="button"
+    (click)="approve(approveItem, rejectItem, registryId)"
+  >
+    SALVAR
+  </button>
+  <button #aaa class="hidden uuu" (click)="doNothing('deu certo')">
+    HIDDEN
+  </button>
+</form>
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
+<app-error-modal *ngIf="error"></app-error-modal>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>
