@@ -1,14 +1,26 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core'
 import { ApproveDto } from '../../approvals/one-student-to-approve/types'
 import { OneStudentToApproveService } from '../../approvals/one-student-to-approve/one-student-to-approve.service'
 import { ErrorServices } from '../shared.service.ts/error.service'
+import { ApproveFormServices } from './approve-form.service'
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-approve-form',
   templateUrl: './approve-form.component.html',
   styleUrls: ['./approve-form.component.css'],
 })
-export class ApproveFormComponent implements OnInit {
+export class ApproveFormComponent implements OnInit, OnDestroy {
   @Input() registryId!: number
   @Input() approved: boolean | null | undefined = false
   @Input() table!: string
@@ -19,21 +31,35 @@ export class ApproveFormComponent implements OnInit {
   }>()
 
   @Output() atualize = new EventEmitter<void>()
+  @ViewChild('approveItem') approveItem!: ElementRef
+  @ViewChild('rejectItem') rejectItem!: ElementRef
 
   isLoading = false
   doneMessage = ''
   done = false
   error = false
 
+  private saveAll!: Subscription
+
+  count = 0
+
   constructor(
     private service: OneStudentToApproveService,
     private errorService: ErrorServices,
+    private approveFormService: ApproveFormServices,
   ) {}
 
   ngOnInit() {
     this.errorService.error$.subscribe((error) => {
       this.error = error
     })
+    this.saveAll = this.approveFormService.approveAll$.subscribe(() => {
+      if (this.count) {
+        this.approveAll()
+      }
+      this.count += 1
+    })
+    this.approveFormService.addForm()
   }
 
   approve(
@@ -72,11 +98,41 @@ export class ApproveFormComponent implements OnInit {
     })
   }
 
-  closeDone() {
-    this.done = false
+  ngOnDestroy() {
+    this.saveAll.unsubscribe()
   }
 
-  doNothing(m: string) {
-    console.log(m)
+  approveAll() {
+    this.isLoading = true
+
+    let approve: boolean | null = null
+
+    if (this.rejectItem.nativeElement.checked) {
+      approve = false
+    } else {
+      approve = true
+    }
+
+    const data: ApproveDto = {
+      approve: approve,
+      id: this.registryId,
+    }
+
+    this.service.approveAny(data, this.table).subscribe({
+      next: () => {
+        this.doneMessage = 'Aprovação feita com sucesso.'
+        this.done = true
+        this.approveFormService.finishApprove()
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorService.showError(err.message)
+        this.isLoading = false
+      },
+    })
+  }
+
+  closeDone() {
+    this.done = false
   }
 }

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  OnDestroy,
+} from '@angular/core'
 import { IPermissions, IUserApproved } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { ICompleteStudent } from '../student-to-approve/types'
@@ -10,13 +17,15 @@ import { ViewChildren, QueryList, ElementRef } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { DatePipe } from '@angular/common'
 import { LoginService } from '../../shared/shared.service.ts/login.service'
+import { ApproveFormServices } from '../../shared/approve-form/approve-form.service'
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-one-student-to-approve',
   templateUrl: './one-student-to-approve.component.html',
   styleUrls: ['./one-student-to-approve.component.css'],
 })
-export class OneStudentToApproveComponent implements OnInit {
+export class OneStudentToApproveComponent implements OnInit, OnDestroy {
   @Input() permissions: IPermissions = {
     estudante: false,
     secretaria: false,
@@ -83,10 +92,13 @@ export class OneStudentToApproveComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private loginService: LoginService,
     private router: Router,
+    private approveFormService: ApproveFormServices,
   ) {}
 
   userId!: number
   user: IUserApproved | null = null
+
+  private atualizeStudentSub!: Subscription
 
   async ngOnInit() {
     this.loginService.user$.subscribe((user) => {
@@ -133,9 +145,11 @@ export class OneStudentToApproveComponent implements OnInit {
       }
     })
     this.getOneStudent(this.userId)
-
-    console.log(this.student)
-    console.log(this.evvangExpTypes, this.spEvvangExpTypes)
+    this.atualizeStudentSub = this.approveFormService
+      .atualizeStudentObservable()
+      .subscribe(() => {
+        this.atualizeStudent()
+      })
   }
 
   async getOneStudent(userId: number) {
@@ -175,7 +189,7 @@ export class OneStudentToApproveComponent implements OnInit {
             }
           })
         }
-        console.log(this.student, this.evvangExpTypes)
+
         this.isLoading = false
       },
       error: (err) => {
@@ -226,6 +240,7 @@ export class OneStudentToApproveComponent implements OnInit {
 
   atualizeStudent() {
     this.isLoading = true
+
     if (!this.student.user?.user_id) return
     this.studentToApproveService
       .findOneRegistry(this.student.user.user_id)
@@ -274,15 +289,10 @@ export class OneStudentToApproveComponent implements OnInit {
   saveAll() {
     try {
       this.isLoading = true
-      // const buttons = document.querySelectorAll('.uuu')
 
-      // buttons.forEach((button) => {
-      //   const nativeButton = button as unknown as { nativeElement: HTMLElement }
-      //   console.log(nativeButton)
-      //   nativeButton.nativeElement.click()
-      //   console.log(nativeButton)
-      // })
+      this.approveFormService.approveAll()
 
+      this.isLoading = false
       return
       this.saveButtons.forEach((button) => {
         button.nativeElement.click()
@@ -296,7 +306,6 @@ export class OneStudentToApproveComponent implements OnInit {
       this.done = true
       this.isLoading = false
     } catch (error: any) {
-      console.log(error)
       this.errorMessage = error.message ? error.message : ''
       this.error = true
       this.isLoading = false
@@ -347,5 +356,9 @@ export class OneStudentToApproveComponent implements OnInit {
 
   closeDone() {
     this.done = false
+  }
+
+  ngOnDestroy() {
+    this.atualizeStudentSub.unsubscribe()
   }
 }
