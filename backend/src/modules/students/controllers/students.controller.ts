@@ -99,7 +99,7 @@ export class StudentsController {
     return await this.studentsService.findAllStudents()
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
   @Put()
   async updateStudent(
     @Body() input: UpdateStudentDto,

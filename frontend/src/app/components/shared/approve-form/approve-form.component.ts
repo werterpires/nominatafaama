@@ -7,7 +7,6 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewChildren,
 } from '@angular/core'
 import { ApproveDto } from '../../approvals/one-student-to-approve/types'
 import { OneStudentToApproveService } from '../../approvals/one-student-to-approve/one-student-to-approve.service'

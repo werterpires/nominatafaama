@@ -1,1 +1,251 @@
-<p>student-approve works!</p>
+<div>
+  <app-approve-form
+    [approved]="student.student_approved"
+    [table]="'students'"
+    [registryId]="student.student_id"
+    (editRegistry)="editRegistry()"
+    (atualize)="atualizeEmitter.emit()"
+  >
+    <div class="subSection gap-2">
+      <label class="inputLabel">
+        Número de telefone<input
+          class="smallInput"
+          type="text"
+          name="studentPhoneNumberInput"
+          [(ngModel)]="student.phone_number"
+          (input)="
+            student.phone_number = dataService.formatarTelefone(
+              student.phone_number
+            )
+          "
+        />
+      </label>
+
+      <label class="inputLabel text-center">
+        É WhatsApp?
+        <input
+          type="checkbox"
+          name="studentIsWhatsCheck"
+          [(ngModel)]="student.is_whatsapp"
+        />
+      </label>
+    </div>
+    <div class="subSection gap-2">
+      <label class="inputLabel">
+        Email Alternativo<input
+          class="smallInput"
+          type="text"
+          name="studentAlternativeEmailInput"
+          [(ngModel)]="student.alternative_email"
+        />
+      </label>
+    </div>
+
+    <div class="subSection">
+      <label class="inputLabel">
+        União de origem
+        <select
+          class="smallInput"
+          name="unionSelect"
+          [(ngModel)]="student.union_acronym"
+          (change)="
+            student.origin_field_id = this.dataService.filterAssociation(
+              possibleAssociations,
+              allAssociations,
+              student.union_acronym,
+              true
+            )
+          "
+        >
+          <option
+            *ngFor="let union of allUnions"
+            [value]="union"
+            [selected]="student.union_acronym === union"
+          >
+            {{ union }}
+          </option>
+        </select>
+      </label>
+
+      <label class="inputLabel">
+        Associação/Missão de origem
+        <select
+          class="smallMediumInput"
+          name="studentSelect"
+          [(ngModel)]="student.origin_field_id"
+        >
+          <option
+            *ngFor="let association of possibleAssociations"
+            [value]="association.association_id"
+            [selected]="association.association_id === student.origin_field_id"
+          >
+            {{ association.association_name }}
+          </option>
+        </select>
+      </label>
+    </div>
+    <div class="subSection">
+      <label class="inputLabel w-full">
+        Justifique por que você acredita ser esse o seu campo de origem
+        <input
+          class="largeInput"
+          name="justificationInput"
+          [(ngModel)]="student.justification"
+        />
+      </label>
+    </div>
+
+    <div class="subSection">
+      <label class="inputLabel">
+        Estado civil
+        <select
+          class="smallInput"
+          name="maritalStateSelect"
+          [(ngModel)]="student.marital_status_id"
+        >
+          <option
+            *ngFor="let status of allMaritalStatus"
+            [value]="status.marital_status_type_id"
+          >
+            {{ status.marital_status_type_name }}
+          </option>
+        </select>
+      </label>
+      <label class="inputLabel">
+        Data de nascimento
+        <input
+          class="dateInput"
+          type="date"
+          name="birthDateInput"
+          [(ngModel)]="student.birth_date"
+        />
+      </label>
+    </div>
+    <div class="subSection">
+      <label class="inputLabel">
+        Estado de nascimento
+        <select
+          class="smallInput"
+          name="birthStateSelect"
+          [(ngModel)]="student.birth_state"
+          (change)="
+            student.birth_city = this.dataService.findCities(
+              student.birth_state,
+              allStates,
+              allBirthCities,
+              student.birth_city
+            )
+          "
+        >
+          <option
+            *ngFor="let state of allStates"
+            [value]="state.sigla"
+            [selected]="state.sigla === student.birth_state"
+          >
+            {{ state.nome }}
+          </option>
+        </select>
+      </label>
+      <label class="inputLabel">
+        Cidade de nascimento
+        <select
+          class="smallMediumInput"
+          name="birthCitySelect"
+          [(ngModel)]="student.birth_city"
+        >
+          <option
+            *ngFor="let city of allBirthCities"
+            [value]="city.nome"
+            [selected]="city.nome === student.birth_city"
+          >
+            {{ city.nome }}
+          </option>
+        </select>
+      </label>
+    </div>
+    <div class="subSection">
+      <label class="inputLabel">
+        Estado em que completou o ensino fundamental
+        <select
+          class="smallInput"
+          name="schoolStateSelect"
+          [(ngModel)]="student.primary_school_state"
+          (change)="
+            student.primary_school_city = this.dataService.findCities(
+              student.primary_school_state,
+              allStates,
+              allSchoolCities,
+              student.primary_school_city
+            )
+          "
+        >
+          <option
+            *ngFor="let state of allStates"
+            [value]="state.sigla"
+            [selected]="state.sigla === student.primary_school_state"
+          >
+            {{ state.nome }}
+          </option>
+        </select>
+      </label>
+      <label class="inputLabel">
+        Cidade em que completou o ensino fundamental
+        <select
+          class="smallMediumInput"
+          name="schoollCitySelect"
+          [(ngModel)]="student.primary_school_city"
+        >
+          <option *ngFor="let city of allSchoolCities" [value]="city.nome">
+            {{ city.nome }}
+          </option>
+        </select>
+      </label>
+    </div>
+
+    <div class="subSection">
+      <label class="inputLabel">
+        Data de batismo
+        <input
+          class="dateInput"
+          type="date"
+          name="baptismDateInput"
+          [(ngModel)]="student.baptism_date"
+        />
+      </label>
+      <label class="inputLabel">
+        IASD onde foi batizado
+        <input
+          class="smallMediumInput"
+          type="text"
+          name="baptimPlaceInput"
+          [(ngModel)]="student.baptism_place"
+        />
+      </label>
+    </div>
+    <div class="subSection">
+      <label class="inputLabel w-full">
+        Mensagem do estudante
+        <input
+          class="largeInput"
+          type="text"
+          name="studentMessageInput"
+          [(ngModel)]="student.student_mensage"
+        />
+      </label>
+    </div>
+  </app-approve-form>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{ doneMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeDone()"
+    />
+  </div>
+</div>

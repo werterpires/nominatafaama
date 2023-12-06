@@ -11,85 +11,16 @@
       <p class="sectionTitle1">Perfil do fomando</p>
     </div>
     <section *ngIf="student.student !== null && student.student.student_id">
-      <app-approve-form
-        [registryId]="student.student.student_id"
-        [approved]="student.student.student_approved"
-        [table]="'students'"
-        (atualize)="atualizeStudent()"
-      >
-        <div class="subSection">
-          <span class="field">
-            <p class="fieldTitle">Campo de origem</p>
-            <select
-              class="eFieldContent"
-              [(ngModel)]="student.student.union_acronym"
-              name=""
-              id=""
-            >
-              <option value="AMC">AMC</option>
-              <option value="USEB">USEB</option>
-              <option value="USE">USE</option>
-            </select>
-            <input
-              class="eFieldContent"
-              [(ngModel)]="student.student.union_acronym"
-            />
-          </span>
-          <span class="field">
-            <p class="fieldTitle">Estado civil</p>
-            <p class="fieldContent">
-              {{ student.student.marital_status_type_name }}
-            </p>
-          </span>
-          <span class="field">
-            <p class="fieldTitle">Data de nascimento</p>
-            <p class="fieldContent">
-              {{ formatDate(student.student.birth_date) }}
-            </p>
-          </span>
-          <span class="field">
-            <p class="fieldTitle">Naturalidade</p>
-            <p class="fieldContent">
-              {{ student.student.birth_city }}-{{ student.student.birth_state }}
-            </p>
-          </span>
-        </div>
-        <hr class="sectionDivisiion" />
-        <div class="subSection">
-          <span class="field">
-            <p class="fieldTitle">Batismo</p>
-            <p class="fieldContent">
-              {{ formatDate(student.student.baptism_date) }}
-            </p>
-            <p class="fieldContent">{{ student.student.baptism_place }}</p>
-          </span>
-          <span class="field">
-            <p class="fieldTitle">Tempo de batismo</p>
-            <p class="fieldContent">
-              {{ formateAge(student.student.baptism_date) }} Anos
-            </p>
-          </span>
-          <span class="field">
-            <p class="fieldTitle">Telefone</p>
-            <p class="fieldContent">
-              {{ formatarTelefone(student.student.phone_number) }}
-            </p>
-          </span>
-          <span class="field">
-            <p class="fieldTitle">E-mail</p>
-            <p class="fieldContent">{{ student.student.alternative_email }}</p>
-          </span>
-        </div>
-        <hr class="sectionDivisiion" />
-        <div class="subSection">
-          <span class="field">
-            <p class="fieldTitle">Mensagem do Formando</p>
-            <p class="fieldContent">{{ student.student.student_mensage }}</p>
-          </span>
-        </div>
-      </app-approve-form>
+      <app-student-approve
+        [student]="student.student"
+        [allAssociations]="allAssociations"
+        [allMaritalStatus]="allMaritalStatus"
+        [allStates]="allStates"
+        (atualizeEmitter)="atualizeStudent()"
+      ></app-student-approve>
     </section>
   </section>
+
   <section class="sectionBox">
     <div class="boxHead">
       <p class="sectionTitle1">Conheça {{ student.student?.person_name }}</p>
@@ -1164,14 +1095,6 @@
               class="subSection"
             ></div>
           </div>
-          <div class="subSectionSpousePhoto">
-            <div class="spousePhoto">
-              <div
-                class="imageContainer"
-                [ngStyle]="{ 'background-image': 'url(' + spousePhoto + ')' }"
-              ></div>
-            </div>
-          </div>
         </div>
 
         <form class="formSection">
@@ -2091,14 +2014,6 @@
 
         <hr class="sectionDivisiion" />
       </div>
-      <div class="subSection">
-        <div class="familyPhoto">
-          <div
-            class="imageContainer"
-            [ngStyle]="{ 'background-image': 'url(' + familyPhoto + ')' }"
-          ></div>
-        </div>
-      </div>
     </section>
   </section>
   <section
@@ -2193,20 +2108,7 @@
     </section>
   </section>
 
-  <div *ngIf="error" class="error">
-    <div class="errorTitle">
-      <p>Atenção</p>
-    </div>
-    <div class="errorMessage">
-      <p>{{ errorMessage }}</p>
-    </div>
-    <img
-      class="closeIcon"
-      src="assets/icons/closeIcon.png"
-      alt="Fechar"
-      (click)="closeError()"
-    />
-  </div>
+  <app-error-modal *ngIf="error"></app-error-modal>
   <div *ngIf="done" class="done">
     <div class="doneTitle">
       <p>Parabéns</p>

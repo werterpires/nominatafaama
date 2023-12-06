@@ -1,12 +1,14 @@
-<form
-  (input)="saveButton.classList.remove('hidden')"
-  (submit)="editRegistry.emit({ id: registryId, saveButtonId: saveButton.id })"
->
+<form (input)="saveButton.classList.remove('hidden')">
   <section>
     <ng-content></ng-content>
   </section>
   <section class="registryEndButtons">
-    <button type="submit">
+    <button
+      type="submit"
+      (click)="
+        editRegistry.emit({ id: registryId, saveButtonId: saveButton.id })
+      "
+    >
       <img
         #saveButton
         class="iconButton hidden"
@@ -45,7 +47,7 @@
     type="button"
     (click)="approve(approveItem, rejectItem, registryId)"
   >
-    SALVAR
+    Enviar Aprovação
   </button>
 </form>
 <div *ngIf="isLoading" class="loader1"></div>

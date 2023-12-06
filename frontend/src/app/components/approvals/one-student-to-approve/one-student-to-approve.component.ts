@@ -19,6 +19,13 @@ import { DatePipe } from '@angular/common'
 import { LoginService } from '../../shared/shared.service.ts/login.service'
 import { ApproveFormServices } from '../../shared/approve-form/approve-form.service'
 import { Subscription } from 'rxjs'
+import { AssociationService } from '../../parameterization/associations/associations.service'
+import { IAssociation } from '../../parameterization/associations/types'
+import { IMaritalStatus } from '../../parameterization/marital-status/types'
+import { MaritalStatusService } from '../../parameterization/marital-status/marital-status.service'
+import { ErrorServices } from '../../shared/shared.service.ts/error.service'
+import { IUF } from '../../shared/types'
+import { OthersServices } from '../../shared/shared.service.ts/others.service'
 
 @Component({
   selector: 'app-one-student-to-approve',
@@ -72,16 +79,15 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
   publicationTypes: string[] = []
   spPublicationTypes: string[] = []
 
+  allAssociations: IAssociation[] = []
+  allMaritalStatus: IMaritalStatus[] = []
+  allStates: IUF[] = []
+
   isLoading = false
   done = false
   doneMessage = ''
   error = false
-  errorMessage = ''
 
-  alonePhoto: SafeResourceUrl | null = null
-  spousePhoto: SafeResourceUrl | null = null
-  familyPhoto: SafeResourceUrl | null = null
-  smallAllonePhoto: SafeResourceUrl | null = null
   @ViewChildren('saveButton') saveButtons!: QueryList<ElementRef>
 
   constructor(
@@ -93,6 +99,10 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private router: Router,
     private approveFormService: ApproveFormServices,
+    private associationService: AssociationService,
+    private maritalStatusService: MaritalStatusService,
+    private errorService: ErrorServices,
+    private otherService: OthersServices,
   ) {}
 
   userId!: number
@@ -136,6 +146,9 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
     })
+    this.errorService.error$.subscribe((error) => {
+      this.error = error
+    })
 
     this.activatedRoute.paramMap.subscribe((params) => {
       const userId = params.get('userId')
@@ -145,11 +158,43 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
       }
     })
     this.getOneStudent(this.userId)
+    this.getAllAssociations()
+    this.getAllMaritalStatus()
+    this.getAllStates()
+
     this.atualizeStudentSub = this.approveFormService
       .atualizeStudentObservable()
       .subscribe(() => {
         this.atualizeStudent()
       })
+  }
+
+  getAllAssociations() {
+    this.associationService.findAllRegistries().subscribe((associations) => {
+      this.allAssociations = associations
+    })
+  }
+
+  getAllMaritalStatus() {
+    this.maritalStatusService.findAllRegistries().subscribe({
+      next: (maritalStatus) => {
+        this.allMaritalStatus = maritalStatus
+      },
+      error: (err) => {
+        this.errorService.showError(err.message)
+      },
+    })
+  }
+
+  getAllStates() {
+    this.otherService.findAllStates().subscribe({
+      next: (res) => {
+        this.allStates = res
+      },
+      error: (err) => {
+        this.errorService.showError(err.message)
+      },
+    })
   }
 
   async getOneStudent(userId: number) {
@@ -193,8 +238,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
+        this.errorService.showError(err.message)
         this.isLoading = false
       },
     })
@@ -231,8 +275,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
         this.isLoading = false
       },
       error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
+        this.errorService.showError(err.message)
         this.isLoading = false
       },
     })
@@ -250,8 +293,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
           this.isLoading = false
         },
         error: (err) => {
-          this.errorMessage = err.message
-          this.error = true
+          this.errorService.showError(err.message)
           this.isLoading = false
         },
       })
@@ -279,8 +321,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
     }
     this.service.approveAny(data, table).subscribe({
       error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
+        this.errorService.showError(err.message)
         this.isLoading = false
       },
     })
@@ -306,8 +347,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
       this.done = true
       this.isLoading = false
     } catch (error: any) {
-      this.errorMessage = error.message ? error.message : ''
-      this.error = true
+      this.errorService.showError(error.message)
       this.isLoading = false
     }
   }
@@ -344,14 +384,6 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
     }
 
     return formatedNumber
-  }
-
-  goBack() {
-    this.seeAll.emit()
-  }
-
-  closeError() {
-    this.error = false
   }
 
   closeDone() {
