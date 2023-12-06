@@ -111,7 +111,6 @@ export class UsersApprovesComponent implements OnInit {
           !roles.includes('direção') &&
           !roles.includes('administrador')
         ) {
-          console.log(roles)
           this.router.navigate(['nominata'])
         }
 
@@ -280,7 +279,7 @@ export class UsersApprovesComponent implements OnInit {
       approveRadio,
     ) as HTMLInputElement
     const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
-    console.log(approveRadio, rejectRadio)
+
     const approveValue = approveInput.checked
     const rejectValue = rejectInput.checked
 

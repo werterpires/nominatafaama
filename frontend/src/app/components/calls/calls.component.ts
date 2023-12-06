@@ -108,7 +108,7 @@ export class CallsComponent implements OnInit {
 
   acceptInvite(idx: number | null) {
     this.isLoading = true
-    console.log(this.done)
+
     if (idx === null || idx === undefined) {
       this.errorService.showError(
         'Não foi possível aceitar/recusar o convite. Se o erro persistir, entre em contato contato com a administração do sistema.',
@@ -162,7 +162,6 @@ export class CallsComponent implements OnInit {
         this.getAllRegistries()
       },
       error: (err) => {
-        console.log(err.message)
         this.errorService.showError(err.message)
         this.isLoading = false
       },

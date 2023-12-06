@@ -86,7 +86,7 @@ export class InvitesToApproveComponent implements OnInit {
     this.invitesToApproveService.findAllRegistries().subscribe({
       next: (res) => {
         this.allRegistries = res
-        console.log(this.allRegistries)
+
         this.isLoading = false
       },
       error: (err) => {
@@ -141,7 +141,6 @@ export class InvitesToApproveComponent implements OnInit {
         this.ngOnInit()
       },
       error: (err) => {
-        console.log(err.message)
         this.errorService.showError(err.message)
         this.isLoading = false
       },

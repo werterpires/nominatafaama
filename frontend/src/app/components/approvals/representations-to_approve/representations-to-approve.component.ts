@@ -81,7 +81,6 @@ export class RepresentationsToApproveComponent implements OnInit {
     this.isLoading = true
     this.representationsToApproveService.findAllRegistries().subscribe({
       next: (res) => {
-        console.log(res)
         this.allRegistries = res
 
         this.isLoading = false
@@ -106,7 +105,7 @@ export class RepresentationsToApproveComponent implements OnInit {
       approveRadio,
     ) as HTMLInputElement
     const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
-    console.log(approveRadio, rejectRadio)
+
     const approveValue = approveInput.checked
     const rejectValue = rejectInput.checked
 
@@ -121,7 +120,7 @@ export class RepresentationsToApproveComponent implements OnInit {
     const date = this.dataService.dateFormatter(
       this.allRegistries[idx].repActiveValidate,
     )
-    console.log(representationID)
+
     this.representationsToApproveService
       .approveRepresentation({
         representationID,
