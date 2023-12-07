@@ -26,6 +26,8 @@ import { MaritalStatusService } from '../../parameterization/marital-status/mari
 import { ErrorServices } from '../../shared/shared.service.ts/error.service'
 import { IUF } from '../../shared/types'
 import { OthersServices } from '../../shared/shared.service.ts/others.service'
+import { IMinistryType } from '../../parameterization/minstry-types/types'
+import { MinistryTypesService } from '../../parameterization/minstry-types/ministry-types.service'
 
 @Component({
   selector: 'app-one-student-to-approve',
@@ -82,6 +84,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
   allAssociations: IAssociation[] = []
   allMaritalStatus: IMaritalStatus[] = []
   allStates: IUF[] = []
+  ministryTypeList: IMinistryType[] = []
 
   isLoading = false
   done = false
@@ -103,6 +106,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
     private maritalStatusService: MaritalStatusService,
     private errorService: ErrorServices,
     private otherService: OthersServices,
+    private ministryTypeService: MinistryTypesService,
   ) {}
 
   userId!: number
@@ -161,6 +165,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
     this.getAllAssociations()
     this.getAllMaritalStatus()
     this.getAllStates()
+    this.getAllMinistryTypes()
 
     this.atualizeStudentSub = this.approveFormService
       .atualizeStudentObservable()
@@ -169,13 +174,13 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
       })
   }
 
-  getAllAssociations() {
+  async getAllAssociations() {
     this.associationService.findAllRegistries().subscribe((associations) => {
       this.allAssociations = associations
     })
   }
 
-  getAllMaritalStatus() {
+  async getAllMaritalStatus() {
     this.maritalStatusService.findAllRegistries().subscribe({
       next: (maritalStatus) => {
         this.allMaritalStatus = maritalStatus
@@ -186,10 +191,21 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
     })
   }
 
-  getAllStates() {
+  async getAllStates() {
     this.otherService.findAllStates().subscribe({
       next: (res) => {
         this.allStates = res
+      },
+      error: (err) => {
+        this.errorService.showError(err.message)
+      },
+    })
+  }
+
+  async getAllMinistryTypes() {
+    this.ministryTypeService.findAllRegistries().subscribe({
+      next: (res) => {
+        this.ministryTypeList = res
       },
       error: (err) => {
         this.errorService.showError(err.message)

@@ -38,6 +38,11 @@
             notRated: ministry.related_ministry_approved === null
           }"
         >
+          <app-related-ministry-approve
+            [ministry]="ministry"
+            [ministryTypeList]="ministryTypeList"
+          >
+          </app-related-ministry-approve>
           <div>
             <span class="fieldContent">
               {{ ministry.ministry_type_name }}

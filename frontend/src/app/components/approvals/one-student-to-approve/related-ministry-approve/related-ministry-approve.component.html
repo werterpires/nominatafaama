@@ -1,0 +1,52 @@
+<div>
+  <app-approve-form
+    [approved]="ministry.related_ministry_approved"
+    [table]="'related_ministries'"
+    [registryId]="ministry.related_ministry_id"
+    (atualize)="atualizeEmitter.emit()"
+    (editRegistry)="editRegistry()"
+  >
+    <div class="subSection">
+      <label class="w-full">
+        Ministérios da Iasd com os quais se identifica
+        <span *ngIf="ministry.priority === 1">Prioridade alta</span>
+        <span *ngIf="ministry.priority === 2">Segunda prioridade</span>
+        <span *ngIf="ministry.priority === 3">Terceira prioridade</span>
+        <select
+          class="smallInput"
+          name="degreeSelect"
+          [(ngModel)]="ministry.ministry_type_id"
+        >
+          <option
+            *ngFor="let ministrytype of ministryTypeList"
+            [value]="ministrytype.ministry_type_id"
+            [disabled]="
+              ministrytype.used === true &&
+              ministry.ministry_type_id !== ministrytype.ministry_type_id
+            "
+          >
+            {{ ministrytype.ministry_type_name }}
+          </option>
+        </select>
+      </label>
+    </div>
+  </app-approve-form>
+
+  <app-error-modal *ngIf="error"></app-error-modal>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{ doneMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeDone()"
+    />
+  </div>
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+</div>
