@@ -16,6 +16,7 @@
     </span>
 
     <button
+      *ngIf="new"
       #addIcon
       [ngClass]="{ hidden: !showBox || allRegistries.length > 1 }"
       (click)="showForm = true"
@@ -71,6 +72,12 @@
           registry.ordination_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'ordinations'"
+      [approve]="approve"
+      [approved]="registry.ordination_approved"
+      [registryIdToApprove]="registry.ordination_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

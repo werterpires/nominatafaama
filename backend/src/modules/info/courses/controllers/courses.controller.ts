@@ -6,20 +6,17 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
-} from '@nestjs/common';
-import { CoursesService } from '../services/courses.service';
-import {
-  NotFoundException,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
-import { ERoles } from 'src/shared/auth/types/roles.enum';
-import { UserFromJwt } from 'src/shared/auth/types/types';
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
-import { CreateCourseDto } from '../dto/create-course.dto';
-import { UpdateCourseDto } from '../dto/update-course.dto';
-import { ICourse } from '../types/types';
+  UseGuards
+} from '@nestjs/common'
+import { CoursesService } from '../services/courses.service'
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { CreateCourseDto } from '../dto/create-course.dto'
+import { UpdateCourseDto } from '../dto/update-course.dto'
+import { ICourse } from '../types/types'
 
 @Controller('courses')
 export class CoursesController {
@@ -33,19 +30,19 @@ export class CoursesController {
     @Param('personType') personType: string
   ) {
     try {
-      const user_id = currentUser.user_id;
+      const user_id = currentUser.user_id
       if (personType !== 'student' && personType !== 'spouse') {
-        throw new Error('End point inválido.');
+        throw new Error('End point inválido.')
       }
       const course = await this.coursesService.createCourse(
         input,
         user_id,
         personType,
         currentUser
-      );
-      return course;
+      )
+      return course
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -56,23 +53,50 @@ export class CoursesController {
     @Param('personType') personType: string
   ): Promise<ICourse[]> {
     try {
-      const user_id = user.user_id;
+      const user_id = user.user_id
       if (personType !== 'student' && personType !== 'spouse') {
-        throw new Error('End point inválido.');
+        throw new Error('End point inválido.')
       }
       const courses = await this.coursesService.findCoursesByPersonId(
         user_id,
         personType
-      );
+      )
 
       if (!courses) {
         throw new NotFoundException(
           `No courses found for person with id fornecido.`
-        );
+        )
       }
-      return courses;
+      return courses
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Get('approve/:personType/:userId')
+  async findCoursesByPersonIdToApprove(
+    @CurrentUser() user: UserFromJwt,
+    @Param('personType') personType: string,
+    @Param('userId') userId: string
+  ): Promise<ICourse[]> {
+    try {
+      if (personType !== 'student' && personType !== 'spouse') {
+        throw new Error('End point inválido.')
+      }
+      const courses = await this.coursesService.findCoursesByPersonId(
+        +userId,
+        personType
+      )
+
+      if (!courses) {
+        throw new NotFoundException(
+          `No courses found for person with id fornecido.`
+        )
+      }
+      return courses
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -80,13 +104,13 @@ export class CoursesController {
   @Get(':id')
   async findCourseById(@Param('id') id: number): Promise<ICourse> {
     try {
-      const course = await this.coursesService.findCourseById(id);
+      const course = await this.coursesService.findCourseById(id)
       if (!course) {
-        throw new NotFoundException(`No course found with id ${id}.`);
+        throw new NotFoundException(`No course found with id ${id}.`)
       }
-      return course;
+      return course
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -94,14 +118,14 @@ export class CoursesController {
   @Get()
   async findAllCourses(): Promise<ICourse[]> {
     try {
-      const courses = await this.coursesService.findAllCourses();
-      return courses;
+      const courses = await this.coursesService.findAllCourses()
+      return courses
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
   @Put()
   async updateCourseById(
     @Body() input: UpdateCourseDto,
@@ -111,10 +135,10 @@ export class CoursesController {
       const updatedCourse = await this.coursesService.updateCourseById(
         input,
         currentUser
-      );
-      return updatedCourse;
+      )
+      return updatedCourse
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -128,10 +152,10 @@ export class CoursesController {
       const message = await this.coursesService.deleteCourseById(
         id,
         currentUser
-      );
-      return { message };
+      )
+      return { message }
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 }

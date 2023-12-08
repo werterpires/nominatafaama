@@ -15,11 +15,14 @@ import {
 export class SpPastEclExpService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IPastEclExp[]> {
+  findAllRegistries(userId: number | null): Observable<IPastEclExp[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/past-ecl-exps/approve/spouse/' + userId
+      : '/past-ecl-exps/person/spouse'
     return this.http
-      .get<IPastEclExp[]>(environment.API + '/past-ecl-exps/person/spouse', {
+      .get<IPastEclExp[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

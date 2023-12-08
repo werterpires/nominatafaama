@@ -170,7 +170,8 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
     this.atualizeStudentSub = this.approveFormService
       .atualizeStudentObservable()
       .subscribe(() => {
-        this.atualizeStudent()
+        console.log('recarregando')
+        location.reload()
       })
   }
 

@@ -351,7 +351,6 @@ export class RelatedMinistriesModel {
         await trx.commit()
 
         const personUndOthers = await this.knex('people')
-
           .leftJoin(
             'related_ministries',
             'people.person_id',
@@ -367,6 +366,15 @@ export class RelatedMinistriesModel {
           .andWhere('ministry_types.ministry_type_id', '=', ministry_type_id)
           .first()
 
+        let userIdAlt
+        if (!approved.user_id) {
+          userIdAlt = await this.knex('spouses')
+            .leftJoin('students', 'spouses.student_id', 'students.student_id')
+            .leftJoin('users', 'students.person_id', 'users.person_id')
+            .where('spouses.person_id', person_id)
+            .first('users.user_id')
+        }
+
         await this.notificationsService.createNotification({
           action: 'editou',
           agent_name: currentUser.name,
@@ -377,7 +385,7 @@ export class RelatedMinistriesModel {
             pessoa: personUndOthers?.name
           },
           notificationType: 4,
-          objectUserId: approved.user_id,
+          objectUserId: approved.user_id || userIdAlt.user_id,
           oldData: {
             ministerio: approved?.ministry_type_name,
             prioridade: approved.priority,

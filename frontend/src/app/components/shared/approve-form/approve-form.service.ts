@@ -16,14 +16,27 @@ export class ApproveFormServices {
 
   addForm(): void {
     this.activeApproveFormsNumber += 1
+    console.log('forms ativos:', this.activeApproveFormsNumber)
+  }
+
+  removeForm(): void {
+    this.activeApproveFormsNumber -= 1
+    console.log('forms ativos:', this.activeApproveFormsNumber)
   }
 
   finishApprove(): void {
     this.concluedApprovesNumber += 1
+    console.log('forms concluídos:', this.concluedApprovesNumber)
 
     if (this.concluedApprovesNumber === this.activeApproveFormsNumber) {
       this.atualizeStudent$.next()
       this.concluedApprovesNumber = 0
+      console.log(
+        'Salvou tudo: forms concluídos:',
+        this.concluedApprovesNumber,
+        'forms ativos:',
+        this.activeApproveFormsNumber,
+      )
     }
   }
 

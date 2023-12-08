@@ -15,16 +15,18 @@ import {
 export class ProfessionalExperiencesService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IProfessionalExperience[]> {
+  findAllRegistries(
+    userId: number | null,
+  ): Observable<IProfessionalExperience[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/professional-experiences/approve/student/' + userId
+      : '/professional-experiences/person/student'
     return this.http
-      .get<IProfessionalExperience[]>(
-        environment.API + '/professional-experiences/person/student',
-        {
-          headers: head_obj,
-        },
-      )
+      .get<IProfessionalExperience[]>(environment.API + url, {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

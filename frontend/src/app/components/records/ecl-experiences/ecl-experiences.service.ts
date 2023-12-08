@@ -11,11 +11,14 @@ import { IEclExperience, UpdateEclExperiencesDto } from './types'
 export class EclExperiencesService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IEclExperience[]> {
+  findAllRegistries(userId: number | null): Observable<IEclExperience[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/ecl-experiences/approve/student/' + userId
+      : '/ecl-experiences/person/'
     return this.http
-      .get<IEclExperience[]>(environment.API + '/ecl-experiences/person/', {
+      .get<IEclExperience[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

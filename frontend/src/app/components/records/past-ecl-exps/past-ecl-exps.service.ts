@@ -11,11 +11,14 @@ import { CreatePastEclExpDto, IPastEclExp, UpdatePastEclExpDto } from './types'
 export class PastEclExpService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IPastEclExp[]> {
+  findAllRegistries(userId: number | null): Observable<IPastEclExp[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/past-ecl-exps/approve/student/' + userId
+      : '/past-ecl-exps/person/student'
     return this.http
-      .get<IPastEclExp[]>(environment.API + '/past-ecl-exps/person/student', {
+      .get<IPastEclExp[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

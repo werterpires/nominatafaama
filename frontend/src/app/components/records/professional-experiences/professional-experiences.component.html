@@ -15,7 +15,12 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+    <button
+      *ngIf="new"
+      #addIcon
+      [ngClass]="{ hidden: !showBox }"
+      (click)="showForm = true"
+    >
       Adicionar nova experiência profissional
     </button>
   </div>
@@ -73,6 +78,12 @@
           registry.experience_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'professional_experiences'"
+      [approve]="approve"
+      [approved]="registry.experience_approved"
+      [registryIdToApprove]="registry.experience_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

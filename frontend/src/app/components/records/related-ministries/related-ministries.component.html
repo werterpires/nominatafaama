@@ -17,7 +17,7 @@
   </div>
   <section
     class="formCreationWrapper"
-    *ngIf="allRegistries.length < 1 && showBox"
+    *ngIf="allRegistries.length < 1 && showBox && new"
   >
     <app-creation-form
       (save)="showAlert('create', 'Confirmar a criação deste item?', 0)"
@@ -45,7 +45,7 @@
   </section>
   <section
     class="formCreationWrapper"
-    *ngIf="allRegistries.length === 1 && showBox"
+    *ngIf="allRegistries.length === 1 && showBox && new"
   >
     <app-creation-form
       (save)="showAlert('create', 'Confirmar a criação deste item?', 1)"
@@ -72,7 +72,7 @@
   </section>
   <section
     class="formCreationWrapper"
-    *ngIf="allRegistries.length === 2 && showBox"
+    *ngIf="allRegistries.length === 2 && showBox && new"
   >
     <app-creation-form
       (save)="showAlert('create', 'Confirmar a criação deste item?', 2)"
@@ -100,6 +100,12 @@
   <section *ngIf="showBox" class="registriesWrapper">
     <app-update-form
       (editRegistry)="showAlert('edit', 'Confirmar a edição este item?', i)"
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'related_ministries'"
+      [approve]="approve"
+      [approved]="registry.related_ministry_approved"
+      [registryIdToApprove]="registry.related_ministry_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

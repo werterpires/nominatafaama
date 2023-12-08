@@ -2,3 +2,14 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.approveSection {
+  margin-bottom: 30px;
+  padding: 5px;
+  background-color: #23456217;
+  font-family: 'Poppins';
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: #23435f;
+}

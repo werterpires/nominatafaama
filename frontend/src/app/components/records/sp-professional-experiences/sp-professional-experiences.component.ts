@@ -16,6 +16,11 @@ import { SpProfessionalExperiencesService } from './sp-professional-experiences.
 export class SpProfessionalExperiencesComponent implements OnInit {
   @Input() permissions!: IPermissions
 
+  @Input() del = true
+  @Input() new = true
+  @Input() approve = false
+  @Input() userId: number | null = null
+
   allRegistries: IProfessionalExperience[] = []
   title = 'Experiências profissionais do Cônjuge'
   createRegistryData: CreateProfessionalExperienceDto = {
@@ -103,7 +108,7 @@ export class SpProfessionalExperiencesComponent implements OnInit {
 
   getAllRegistries() {
     this.isLoading = true
-    this.service.findAllRegistries().subscribe({
+    this.service.findAllRegistries(this.userId).subscribe({
       next: (res) => {
         this.allRegistries = res
         this.isLoading = false

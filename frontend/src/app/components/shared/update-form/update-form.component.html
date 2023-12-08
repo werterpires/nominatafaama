@@ -1,30 +1,42 @@
-<form
-  class="registryWrapper"
-  (input)="saveButton.classList.remove('hidden')"
-  (submit)="editRegistry.emit({ id: registryId, saveButtonId: saveButton.id })"
-  (mouseover)="del ? deleteButton.classList.remove('hidden') : ''"
-  (mouseout)="deleteButton.classList.add('hidden')"
->
-  <section class="formCreation">
-    <ng-content></ng-content>
-  </section>
-  <section class="registryEndButtons">
-    <button type="submit">
-      <img
-        #saveButton
-        class="iconButton hidden"
-        src="assets/icons/saveIcon.svg"
-        alt="ícone para salvar registro"
-      />
-    </button>
-    <button type="button">
-      <img
-        #deleteButton
-        class="iconButton hidden"
-        src="assets/icons/delete.svg"
-        alt="ícone para deletar registro"
-        (click)="deleteRegistry.emit(registryId)"
-      />
-    </button>
-  </section>
-</form>
+<div [ngClass]="{ gray: approve }">
+  <form
+    class="registryWrapper"
+    (input)="saveButton.classList.remove('hidden')"
+    (submit)="
+      editRegistry.emit({ id: registryId, saveButtonId: saveButton.id })
+    "
+    (mouseover)="del ? deleteButton.classList.remove('hidden') : ''"
+    (mouseout)="deleteButton.classList.add('hidden')"
+  >
+    <section class="formCreation">
+      <ng-content></ng-content>
+    </section>
+    <section class="registryEndButtons">
+      <button type="submit">
+        <img
+          #saveButton
+          class="iconButton hidden"
+          src="assets/icons/saveIcon.svg"
+          alt="ícone para salvar registro"
+        />
+      </button>
+      <button type="button">
+        <img
+          #deleteButton
+          class="iconButton hidden"
+          src="assets/icons/delete.svg"
+          alt="ícone para deletar registro"
+          (click)="deleteRegistry.emit(registryId)"
+        />
+      </button>
+    </section>
+  </form>
+  <div *ngIf="approve">
+    <app-approve-form
+      [registryId]="registryIdToApprove"
+      [approved]="approved"
+      [table]="table"
+      (atualize)="atualize.emit()"
+    ></app-approve-form>
+  </div>
+</div>

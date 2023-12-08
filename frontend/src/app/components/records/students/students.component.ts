@@ -32,6 +32,11 @@ export class StudentsComponent implements OnInit {
   @ViewChild('phoneNumberInput') phoneNumberInput!: ElementRef
 
   @Input() permissions!: IPermissions
+  @Input() del = false
+
+  @Input() approve = false
+  @Input() userId: number | null = null
+
   registry: IStudent = {
     person_name: '',
     phone_number: '',
@@ -191,7 +196,7 @@ export class StudentsComponent implements OnInit {
       hiring_status_description: '',
       primary_school_state: '',
     }
-    this.studentServices.findRegistry().subscribe({
+    this.studentServices.findRegistry(this.userId).subscribe({
       next: (res) => {
         if (res && res.student_id) {
           this.registry = res

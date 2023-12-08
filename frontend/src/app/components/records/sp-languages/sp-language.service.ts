@@ -15,11 +15,14 @@ import {
 export class SpLanguageService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<ILanguage[]> {
+  findAllRegistries(userId: number | null): Observable<ILanguage[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/languages/approve/spouse/' + userId
+      : '/languages/person/spouse'
     return this.http
-      .get<ILanguage[]>(environment.API + '/languages/person/spouse', {
+      .get<ILanguage[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

@@ -19,6 +19,11 @@ import { ValidateService } from '../../shared/shared.service.ts/validate.service
 export class StudentAcademicFormationsComponent implements OnInit {
   @Input() permissions!: IPermissions
 
+  @Input() del = true
+  @Input() new = true
+  @Input() approve = false
+  @Input() userId: number | null = null
+
   allRegistries: IStAcademicFormation[] = []
   allDegrees: IAcademicDegree[] = []
 
@@ -120,7 +125,7 @@ export class StudentAcademicFormationsComponent implements OnInit {
 
   getAllRegistries() {
     this.isLoading = true
-    this.service.findAllRegistries().subscribe({
+    this.service.findAllRegistries(this.userId).subscribe({
       next: (res) => {
         this.allRegistries = res
         this.allDegrees = []

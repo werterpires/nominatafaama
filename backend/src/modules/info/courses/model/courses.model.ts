@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { Knex } from 'knex';
-import { InjectModel } from 'nest-knexjs';
-import { ICreateCourse, ICourse, IUpdateCourse } from '../types/types';
-import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
-import { UserFromJwt } from 'src/shared/auth/types/types';
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+import { ICreateCourse, ICourse, IUpdateCourse } from '../types/types'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class CoursesModel {
-  @InjectModel() private readonly knex: Knex;
+  @InjectModel() private readonly knex: Knex
   constructor(private notificationsService: NotificationsService) {}
 
   async createCourse(
@@ -21,8 +21,8 @@ export class CoursesModel {
         begin_date,
         conclusion_date,
         person_id,
-        course_approved,
-      } = createCourseData;
+        course_approved
+      } = createCourseData
 
       await this.knex('courses')
         .insert({
@@ -31,14 +31,14 @@ export class CoursesModel {
           begin_date,
           conclusion_date,
           person_id,
-          course_approved,
+          course_approved
         })
-        .returning('course_id');
+        .returning('course_id')
 
       const personUndOthers = await this.knex('people')
         .where('people.person_id', person_id)
         .select('people.name')
-        .first();
+        .first()
 
       await this.notificationsService.createNotification({
         action: 'inseriu',
@@ -53,38 +53,38 @@ export class CoursesModel {
           data_conclusao: await this.notificationsService.formatDate(
             createCourseData.conclusion_date
           ),
-          pessoa: personUndOthers?.name,
+          pessoa: personUndOthers?.name
         },
         notificationType: 4,
         objectUserId: currentUser.user_id,
         oldData: null,
-        table: 'Cursos',
-      });
+        table: 'Cursos'
+      })
 
-      return true;
+      return true
     } catch (error) {
-      console.error(error);
+      console.error(error)
       if (error.code === 'ER_DUP_ENTRY') {
-        throw new Error('Course already exists');
+        throw new Error('Course already exists')
       } else {
-        throw new Error(error.sqlMessage);
+        throw new Error(error.sqlMessage)
       }
     }
   }
 
   async findCourseById(id: number): Promise<ICourse | null> {
-    let course: ICourse | null = null;
-    let sentError: Error | null = null;
+    let course: ICourse | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         const result = await trx
           .table('courses')
           .where('course_id', '=', id)
-          .first();
+          .first()
 
         if (!result) {
-          throw new Error('Course not found');
+          throw new Error('Course not found')
         }
 
         course = {
@@ -96,54 +96,54 @@ export class CoursesModel {
           person_id: result.person_id,
           course_approved: result.course_approved,
           created_at: result.created_at,
-          updated_at: result.updated_at,
-        };
+          updated_at: result.updated_at
+        }
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.message);
-        await trx.rollback();
-        throw error;
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return course;
+    return course
   }
 
   async findCoursesByPersonId(personId: number): Promise<ICourse[]> {
-    let courseList: ICourse[] = [];
-    let sentError: Error | null = null;
+    let courseList: ICourse[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         courseList = await trx
           .table('courses')
           .where('person_id', '=', personId)
-          .select('*');
+          .select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return courseList;
+    return courseList
   }
 
   async findApprovedCoursesByPersonId(personId: number): Promise<ICourse[]> {
-    let courseList: ICourse[] = [];
-    let sentError: Error | null = null;
+    let courseList: ICourse[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -151,81 +151,81 @@ export class CoursesModel {
           .table('courses')
           .where('person_id', '=', personId)
           .andWhere('course_approved', '=', true)
-          .select('*');
+          .select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return courseList;
+    return courseList
   }
 
   async findAllCourses(): Promise<ICourse[]> {
-    let courseList: ICourse[] = [];
-    let sentError: Error | null = null;
+    let courseList: ICourse[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
-        courseList = await trx.table('courses').select('*');
+        courseList = await trx.table('courses').select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return courseList;
+    return courseList
   }
 
   async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null;
-    let sentError: Error | null = null;
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
 
     try {
       const studentResult = await this.knex
         .table('courses')
         .join('users', 'users.person_id', 'courses.person_id')
         .select('users.person_id')
-        .whereNull('course_approved');
+        .whereNull('course_approved')
 
       const spouseResult = await this.knex
         .table('courses')
         .join('spouses', 'spouses.person_id', 'courses.person_id')
         .join('students', 'students.student_id', 'spouses.student_id')
         .select('students.person_id')
-        .whereNull('courses.course_approved');
+        .whereNull('courses.course_approved')
 
       personIds = [...studentResult, ...spouseResult].map((row) => ({
-        person_id: row.person_id,
-      }));
+        person_id: row.person_id
+      }))
     } catch (error) {
-      console.error('Erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
-    return personIds;
+    return personIds
   }
 
   async updateCourseById(
     updateCourse: IUpdateCourse,
     currentUser: UserFromJwt
   ): Promise<ICourse> {
-    let updatedCourse: ICourse | null = null;
-    let sentError: Error | null = null;
+    let updatedCourse: ICourse | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -236,15 +236,16 @@ export class CoursesModel {
           begin_date,
           conclusion_date,
           person_id,
-          course_approved,
-        } = updateCourse;
+          course_approved
+        } = updateCourse
 
         let approved = await trx('courses')
+          .leftJoin('users', 'users.person_id', 'courses.person_id')
           .first('*')
-          .where('course_id', course_id);
+          .where('course_id', course_id)
 
         if (approved.course_approved == true) {
-          throw new Error('Registro já aprovado');
+          throw new Error('Registro já aprovado')
         }
 
         await trx('courses').where('course_id', course_id).update({
@@ -253,15 +254,24 @@ export class CoursesModel {
           begin_date,
           conclusion_date,
           person_id,
-          course_approved,
-        });
+          course_approved
+        })
 
-        await trx.commit();
+        await trx.commit()
 
         const personUndOthers = await this.knex('people')
           .where('people.person_id', person_id)
           .select('people.name')
-          .first();
+          .first()
+
+        let userIdAlt
+        if (!approved.user_id) {
+          userIdAlt = await this.knex('spouses')
+            .leftJoin('students', 'spouses.student_id', 'students.student_id')
+            .leftJoin('users', 'students.person_id', 'users.person_id')
+            .where('spouses.person_id', person_id)
+            .first('users.user_id')
+        }
 
         await this.notificationsService.createNotification({
           action: 'editou',
@@ -274,10 +284,10 @@ export class CoursesModel {
             data_conclusao: await this.notificationsService.formatDate(
               conclusion_date
             ),
-            pessoa: personUndOthers?.name,
+            pessoa: personUndOthers?.name
           },
           notificationType: 4,
-          objectUserId: currentUser.user_id,
+          objectUserId: approved.user_id || userIdAlt.user_id,
           oldData: {
             curso: approved.course_area,
             instituição: approved.institution,
@@ -287,52 +297,52 @@ export class CoursesModel {
             data_conclusao: await this.notificationsService.formatDate(
               approved.conclusion_date
             ),
-            pessoa: personUndOthers?.name,
+            pessoa: personUndOthers?.name
           },
-          table: 'Cursos',
-        });
+          table: 'Cursos'
+        })
 
-        updatedCourse = await this.findCourseById(course_id);
+        updatedCourse = await this.findCourseById(course_id)
       } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return updatedCourse!;
+    return updatedCourse!
   }
 
   async deleteCourseById(
     id: number,
     currentUser: UserFromJwt
   ): Promise<string> {
-    let sentError: Error | null = null;
-    let message: string = '';
+    let sentError: Error | null = null
+    let message: string = ''
 
     await this.knex.transaction(async (trx) => {
       try {
-        let approved = await trx('courses').first('*').where('course_id', id);
+        let approved = await trx('courses').first('*').where('course_id', id)
 
         if (!approved) {
-          throw new Error('Course not found');
+          throw new Error('Course not found')
         }
 
         if (approved.course_approved == true) {
-          throw new Error('Registro já aprovado');
+          throw new Error('Registro já aprovado')
         }
 
-        await trx('courses').where('course_id', id).del();
+        await trx('courses').where('course_id', id).del()
 
-        await trx.commit();
+        await trx.commit()
         const personUndOthers = await this.knex('people')
           .where('people.person_id', approved.person_id)
           .select('people.name')
-          .first();
+          .first()
 
         await this.notificationsService.createNotification({
           action: 'apagou',
@@ -350,22 +360,22 @@ export class CoursesModel {
             data_conclusao: await this.notificationsService.formatDate(
               approved.conclusion_date
             ),
-            pessoa: personUndOthers?.name,
+            pessoa: personUndOthers?.name
           },
-          table: 'Cursos',
-        });
+          table: 'Cursos'
+        })
       } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    message = 'Course deleted successfully.';
-    return message;
+    message = 'Course deleted successfully.'
+    return message
   }
 }

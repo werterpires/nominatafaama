@@ -66,6 +66,20 @@ export class StudentsController {
     }
   }
 
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Get('approve/:userId')
+  async getStudentByIdToApprove(
+    @CurrentUser() user: UserFromJwt,
+    @Param('userId') userId: string
+  ) {
+    try {
+      const student = await this.studentsService.findStudentByIdToEdit(+userId)
+      return student
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('marital-status')
   async getStudentMaritalStatus(@CurrentUser() user: UserFromJwt) {
@@ -116,7 +130,7 @@ export class StudentsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Put('active')
   async turnActiveStudentsFalse(
     @Body() activeCpfs: StringArray,

@@ -6,16 +6,16 @@ import {
   InternalServerErrorException,
   Param,
   Post,
-  Put,
-} from '@nestjs/common';
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
-import { ERoles } from 'src/shared/auth/types/roles.enum';
-import { UserFromJwt } from 'src/shared/auth/types/types';
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
-import { CreateSpouseDto } from '../dto/create-spouse.dto';
-import { UpdateSpouseDto } from '../dto/update-spouse.dto';
-import { SpousesService } from '../services/spouses.service';
-import { ISpouse } from '../types/types';
+  Put
+} from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { CreateSpouseDto } from '../dto/create-spouse.dto'
+import { UpdateSpouseDto } from '../dto/update-spouse.dto'
+import { SpousesService } from '../services/spouses.service'
+import { ISpouse } from '../types/types'
 
 @Controller('spouses')
 export class SpousesController {
@@ -27,28 +27,42 @@ export class SpousesController {
     @Body() input: CreateSpouseDto,
     @CurrentUser() currentUser: UserFromJwt
   ) {
-    const id = currentUser.user_id;
+    const id = currentUser.user_id
     try {
       const spouse = await this.spousesService.createSpouse(
         input,
         id,
         currentUser
-      );
-      return spouse;
+      )
+      return spouse
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('edit')
   async findSpouseById(@CurrentUser() user: UserFromJwt): Promise<ISpouse> {
-    const id = user.user_id;
+    const id = user.user_id
     try {
-      const spouse = await this.spousesService.findSpouseByUserId(id);
-      return spouse;
+      const spouse = await this.spousesService.findSpouseByUserId(id)
+      return spouse
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Get('approve//:userId')
+  async findSpouseByIdToApprove(
+    @CurrentUser() user: UserFromJwt
+  ): Promise<ISpouse> {
+    const id = user.user_id
+    try {
+      const spouse = await this.spousesService.findSpouseByUserId(id)
+      return spouse
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -59,15 +73,15 @@ export class SpousesController {
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      const id = currentUser.user_id;
+      const id = currentUser.user_id
       const updatedSpouse = await this.spousesService.updateSpouseById(
         input,
         id,
         currentUser
-      );
-      return updatedSpouse;
+      )
+      return updatedSpouse
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -81,10 +95,10 @@ export class SpousesController {
       const message = await this.spousesService.deleteSpouseById(
         id,
         currentUser
-      );
-      return { message };
+      )
+      return { message }
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 }

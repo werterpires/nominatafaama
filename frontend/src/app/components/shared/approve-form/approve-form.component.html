@@ -1,24 +1,3 @@
-<form (input)="saveButton.classList.remove('hidden')">
-  <section>
-    <ng-content></ng-content>
-  </section>
-  <section class="registryEndButtons">
-    <button
-      type="submit"
-      (click)="
-        editRegistry.emit({ id: registryId, saveButtonId: saveButton.id })
-      "
-    >
-      <img
-        #saveButton
-        class="iconButton hidden"
-        src="assets/icons/saveIcon.svg"
-        alt="ícone para salvar registro"
-      />
-    </button>
-  </section>
-</form>
-
 <form class="formSection">
   <label class="labelRadio">
     <input

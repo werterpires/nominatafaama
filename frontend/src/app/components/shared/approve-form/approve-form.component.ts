@@ -24,11 +24,6 @@ export class ApproveFormComponent implements OnInit, OnDestroy {
   @Input() approved: boolean | null | undefined = false
   @Input() table!: string
 
-  @Output() editRegistry = new EventEmitter<{
-    id: number
-    saveButtonId: string
-  }>()
-
   @Output() atualize = new EventEmitter<void>()
   @ViewChild('approveItem') approveItem!: ElementRef
   @ViewChild('rejectItem') rejectItem!: ElementRef
@@ -98,6 +93,7 @@ export class ApproveFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.approveFormService.removeForm()
     this.saveAll.unsubscribe()
   }
 
@@ -119,6 +115,7 @@ export class ApproveFormComponent implements OnInit, OnDestroy {
 
     this.service.approveAny(data, this.table).subscribe({
       next: () => {
+        console.log('aprovacao:', approve, this.registryId, this.table)
         this.doneMessage = 'Aprovação feita com sucesso.'
         this.done = true
         this.approveFormService.finishApprove()

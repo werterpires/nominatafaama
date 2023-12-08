@@ -40,6 +40,7 @@
           />
         </div>
       </section>
+
       <section class="registryEndButtons">
         <button class="iconButton" type="submit">
           <img
@@ -51,6 +52,18 @@
         </button>
       </section>
     </form>
+    <section *ngIf="approve">
+      <div *ngFor="let registry of allRegistriesWithChecks">
+        <div *ngIf="registry.ecl_exp_id" class="approveSection">
+          <label>{{ registry.ecl_exp_type_name }}</label>
+          <app-approve-form
+            [approved]="registry.approved"
+            [registryId]="registry.ecl_exp_id || 0"
+            [table]="'ecl_experiences'"
+          ></app-approve-form>
+        </div>
+      </div>
+    </section>
   </section>
 </section>
 

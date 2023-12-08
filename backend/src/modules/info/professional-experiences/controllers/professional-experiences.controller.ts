@@ -6,20 +6,17 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
-} from '@nestjs/common';
-import { ProfessionalExperiencesService } from '../services/professional-experiences.service';
-import {
-  NotFoundException,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
-import { ERoles } from 'src/shared/auth/types/roles.enum';
-import { UserFromJwt } from 'src/shared/auth/types/types';
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
-import { CreateProfessionalExperienceDto } from '../dto/create-professional-experience.dto';
-import { UpdateProfessionalExperienceDto } from '../dto/update-professional-experience.dto';
-import { IProfessionalExperience } from '../types/types';
+  UseGuards
+} from '@nestjs/common'
+import { ProfessionalExperiencesService } from '../services/professional-experiences.service'
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { CreateProfessionalExperienceDto } from '../dto/create-professional-experience.dto'
+import { UpdateProfessionalExperienceDto } from '../dto/update-professional-experience.dto'
+import { IProfessionalExperience } from '../types/types'
 
 @Controller('professional-experiences')
 export class ProfessionalExperiencesController {
@@ -33,9 +30,9 @@ export class ProfessionalExperiencesController {
     @Param('personType') personType: string
   ) {
     try {
-      const user_id = currentUser.user_id;
+      const user_id = currentUser.user_id
       if (personType !== 'student' && personType !== 'spouse') {
-        throw new Error('End point inválido.');
+        throw new Error('End point inválido.')
       }
       const experience =
         await this.experiencesService.createProfessionalExperience(
@@ -43,10 +40,10 @@ export class ProfessionalExperiencesController {
           user_id,
           personType,
           currentUser
-        );
-      return experience;
+        )
+      return experience
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -57,24 +54,52 @@ export class ProfessionalExperiencesController {
     @Param('personType') personType: string
   ): Promise<IProfessionalExperience[]> {
     try {
-      const user_id = user.user_id;
+      const user_id = user.user_id
       if (personType !== 'student' && personType !== 'spouse') {
-        throw new Error('End point inválido.');
+        throw new Error('End point inválido.')
       }
       const experiences =
         await this.experiencesService.findProfessionalExperiencesByPersonId(
           user_id,
           personType
-        );
+        )
 
       if (!experiences) {
         throw new NotFoundException(
           `No professional experiences found for person with provided id.`
-        );
+        )
       }
-      return experiences;
+      return experiences
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Get('approve/:personType/:userId')
+  async findProfessionalExperiencesByPersonIdToApprove(
+    @CurrentUser() user: UserFromJwt,
+    @Param('personType') personType: string,
+    @Param('userId') userId: string
+  ): Promise<IProfessionalExperience[]> {
+    try {
+      if (personType !== 'student' && personType !== 'spouse') {
+        throw new Error('End point inválido.')
+      }
+      const experiences =
+        await this.experiencesService.findProfessionalExperiencesByPersonId(
+          +userId,
+          personType
+        )
+
+      if (!experiences) {
+        throw new NotFoundException(
+          `No professional experiences found for person with provided id.`
+        )
+      }
+      return experiences
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -85,15 +110,15 @@ export class ProfessionalExperiencesController {
   ): Promise<IProfessionalExperience> {
     try {
       const experience =
-        await this.experiencesService.findProfessionalExperienceById(id);
+        await this.experiencesService.findProfessionalExperienceById(id)
       if (!experience) {
         throw new NotFoundException(
           `No professional experience found with id ${id}.`
-        );
+        )
       }
-      return experience;
+      return experience
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -102,14 +127,14 @@ export class ProfessionalExperiencesController {
   async findAllProfessionalExperiences(): Promise<IProfessionalExperience[]> {
     try {
       const experiences =
-        await this.experiencesService.findAllProfessionalExperiences();
-      return experiences;
+        await this.experiencesService.findAllProfessionalExperiences()
+      return experiences
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
   @Put()
   async updateProfessionalExperienceById(
     @Body() input: UpdateProfessionalExperienceDto,
@@ -120,10 +145,10 @@ export class ProfessionalExperiencesController {
         await this.experiencesService.updateProfessionalExperienceById(
           input,
           currentUser
-        );
-      return updatedExperience;
+        )
+      return updatedExperience
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -138,10 +163,10 @@ export class ProfessionalExperiencesController {
         await this.experiencesService.deleteProfessionalExperienceById(
           id,
           currentUser
-        );
-      return { message };
+        )
+      return { message }
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
   }
 }

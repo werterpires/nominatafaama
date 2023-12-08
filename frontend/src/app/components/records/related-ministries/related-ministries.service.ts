@@ -15,16 +15,16 @@ import {
 export class RelatedMinistriesService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IRelatedMinistry[]> {
+  findAllRegistries(userId: number | null): Observable<IRelatedMinistry[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/related-ministries/approve/student/' + userId
+      : '/related-ministries/person/student'
     return this.http
-      .get<IRelatedMinistry[]>(
-        environment.API + '/related-ministries/person/student',
-        {
-          headers: head_obj,
-        },
-      )
+      .get<IRelatedMinistry[]>(environment.API + url, {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

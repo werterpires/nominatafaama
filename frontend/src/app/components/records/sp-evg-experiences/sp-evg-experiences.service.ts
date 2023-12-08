@@ -15,16 +15,18 @@ import {
 export class SpEvgExperiencesService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IEvangelisticExperience[]> {
+  findAllRegistries(
+    userId: number | null,
+  ): Observable<IEvangelisticExperience[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/evangelistic-experiences/approve/spouse/' + userId
+      : '/evangelistic-experiences/person/spouse'
     return this.http
-      .get<IEvangelisticExperience[]>(
-        environment.API + '/evangelistic-experiences/person/spouse',
-        {
-          headers: head_obj,
-        },
-      )
+      .get<IEvangelisticExperience[]>(environment.API + url, {
+        headers: head_obj,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
