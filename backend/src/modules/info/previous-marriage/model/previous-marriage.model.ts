@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { Knex } from 'knex';
-import { InjectModel } from 'nest-knexjs';
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreatePreviousMarriage,
   IPreviousMarriage,
-  IUpdatePreviousMarriage,
-} from '../types/types';
-import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
-import { UserFromJwt } from 'src/shared/auth/types/types';
+  IUpdatePreviousMarriage
+} from '../types/types'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class PreviousMarriagesModel {
-  @InjectModel() private readonly knex: Knex;
+  @InjectModel() private readonly knex: Knex
   constructor(private notificationsService: NotificationsService) {}
 
   async createPreviousMarriage(
@@ -20,15 +20,15 @@ export class PreviousMarriagesModel {
   ): Promise<boolean> {
     try {
       const { marriage_end_date, previous_marriage_approved, student_id } =
-        createPreviousMarriageData;
+        createPreviousMarriageData
 
       const [previous_marriage_id] = await this.knex('previous_marriages')
         .insert({
           student_id,
           marriage_end_date,
-          previous_marriage_approved,
+          previous_marriage_approved
         })
-        .returning('previous_marriage_id');
+        .returning('previous_marriage_id')
 
       await this.notificationsService.createNotification({
         action: 'inseriu',
@@ -37,41 +37,41 @@ export class PreviousMarriagesModel {
         newData: {
           data_fim: await this.notificationsService.formatDate(
             marriage_end_date
-          ),
+          )
         },
         notificationType: 4,
         objectUserId: currentUser.user_id,
         oldData: null,
-        table: 'Casamentos prévios',
-      });
+        table: 'Casamentos prévios'
+      })
     } catch (error) {
-      console.error(error);
+      console.error(error)
 
       if (error.code === 'ER_DUP_ENTRY') {
-        throw new Error('Previous marriage already exists');
+        throw new Error('Previous marriage already exists')
       } else {
-        throw new Error(error.sqlMessage);
+        throw new Error(error.sqlMessage)
       }
     }
 
-    return true;
+    return true
   }
 
   async findPreviousMarriageById(
     id: number
   ): Promise<IPreviousMarriage | null> {
-    let previousMarriage: IPreviousMarriage | null = null;
-    let sentError: Error | null = null;
+    let previousMarriage: IPreviousMarriage | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         const result = await trx
           .table('previous_marriages')
           .where('previous_marriage_id', '=', id)
-          .first();
+          .first()
 
         if (!result) {
-          throw new Error('Previous marriage not found');
+          throw new Error('Previous marriage not found')
         }
 
         previousMarriage = {
@@ -80,109 +80,107 @@ export class PreviousMarriagesModel {
           student_id: result.student_id,
           previous_marriage_approved: result.previous_marriage_approved,
           created_at: result.created_at,
-          updated_at: result.updated_at,
-        };
+          updated_at: result.updated_at
+        }
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.message);
-        await trx.rollback();
-        throw error;
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return previousMarriage;
+    return previousMarriage
   }
 
   async findPreviousMarriagesByStudentId(
     studentId: number
   ): Promise<IPreviousMarriage[]> {
-    let previousMarriageList: IPreviousMarriage[] = [];
-    let sentError: Error | null = null;
+    let previousMarriageList: IPreviousMarriage[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         previousMarriageList = await trx
           .table('previous_marriages')
           .where('student_id', '=', studentId)
-          .select('*');
+          .select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return previousMarriageList;
+    return previousMarriageList
   }
 
   async findApprovedPreviousMarriagesByStudentId(
     studentId: number
   ): Promise<IPreviousMarriage[]> {
-    let previousMarriageList: IPreviousMarriage[] = [];
-    let sentError: Error | null = null;
+    let previousMarriageList: IPreviousMarriage[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         previousMarriageList = await trx
           .table('previous_marriages')
           .where('student_id', '=', studentId)
-          .select('*');
+          .select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return previousMarriageList;
+    return previousMarriageList
   }
 
   async findAllPreviousMarriages(): Promise<IPreviousMarriage[]> {
-    let previousMarriageList: IPreviousMarriage[] = [];
-    let sentError: Error | null = null;
+    let previousMarriageList: IPreviousMarriage[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
-        previousMarriageList = await trx
-          .table('previous_marriages')
-          .select('*');
+        previousMarriageList = await trx.table('previous_marriages').select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return previousMarriageList;
+    return previousMarriageList
   }
 
   async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null;
-    let sentError: Error | null = null;
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
 
     try {
       const studentResult = await this.knex
@@ -193,25 +191,25 @@ export class PreviousMarriagesModel {
           'previous_marriages.student_id'
         )
         .select('students.person_id')
-        .whereNull('previous_marriages.previous_marriage_approved');
+        .whereNull('previous_marriages.previous_marriage_approved')
 
       personIds = [...studentResult].map((row) => ({
-        person_id: row.person_id,
-      }));
+        person_id: row.person_id
+      }))
     } catch (error) {
-      console.error('Erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
-    return personIds;
+    return personIds
   }
 
   async updatePreviousMarriageById(
     updatePreviousMarriage: IUpdatePreviousMarriage,
     currentUser: UserFromJwt
   ): Promise<IPreviousMarriage> {
-    let updatedPreviousMarriage: IPreviousMarriage | null = null;
-    let sentError: Error | null = null;
+    let updatedPreviousMarriage: IPreviousMarriage | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -219,20 +217,22 @@ export class PreviousMarriagesModel {
           previous_marriage_id,
           marriage_end_date,
           student_id,
-          previous_marriage_approved,
-        } = updatePreviousMarriage;
+          previous_marriage_approved
+        } = updatePreviousMarriage
 
         let approved = await trx('previous_marriages')
           .leftJoin(
-            'people',
-            'people.person_id',
+            'students',
+            'students.student_id',
             'previous_marriages.student_id'
           )
+          .leftJoin('people', 'people.person_id', 'students.person_id')
+          .leftJoin('users', 'people.person_id', 'users.person_id')
           .first('*')
-          .where('previous_marriage_id', previous_marriage_id);
+          .where('previous_marriage_id', previous_marriage_id)
 
         if (approved.previous_marriage_approved == true) {
-          throw new Error('Registro já aprovado');
+          throw new Error('Registro já aprovado')
         }
 
         await trx('previous_marriages')
@@ -240,10 +240,11 @@ export class PreviousMarriagesModel {
           .update({
             marriage_end_date,
             student_id,
-            previous_marriage_approved,
-          });
+            previous_marriage_approved
+          })
 
-        await trx.commit();
+        await trx.commit()
+
         await this.notificationsService.createNotification({
           action: 'editou',
           agent_name: currentUser.name,
@@ -251,41 +252,41 @@ export class PreviousMarriagesModel {
           newData: {
             data_fim: await this.notificationsService.formatDate(
               marriage_end_date
-            ),
+            )
           },
           notificationType: 4,
-          objectUserId: currentUser.user_id,
+          objectUserId: approved.user_id,
           oldData: {
             data_fim: await this.notificationsService.formatDate(
               approved.marriage_end_date
-            ),
+            )
           },
-          table: 'Casamentos prévios',
-        });
+          table: 'Casamentos prévios'
+        })
 
         updatedPreviousMarriage = await this.findPreviousMarriageById(
           previous_marriage_id
-        );
+        )
       } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return updatedPreviousMarriage!;
+    return updatedPreviousMarriage!
   }
 
   async deletePreviousMarriageById(
     id: number,
     currentUser: UserFromJwt
   ): Promise<string> {
-    let sentError: Error | null = null;
-    let message: string = '';
+    let sentError: Error | null = null
+    let message: string = ''
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -296,19 +297,19 @@ export class PreviousMarriagesModel {
             'previous_marriages.student_id'
           )
           .first('*')
-          .where('previous_marriage_id', id);
+          .where('previous_marriage_id', id)
 
         if (!approved) {
-          throw new Error('Previous marriage not found');
+          throw new Error('Previous marriage not found')
         }
 
         if (approved.previous_marriage_approved == true) {
-          throw new Error('Registro já aprovado');
+          throw new Error('Registro já aprovado')
         }
 
-        await trx('previous_marriages').where('previous_marriage_id', id).del();
+        await trx('previous_marriages').where('previous_marriage_id', id).del()
 
-        await trx.commit();
+        await trx.commit()
         await this.notificationsService.createNotification({
           action: 'apagou',
           agent_name: currentUser.name,
@@ -319,22 +320,22 @@ export class PreviousMarriagesModel {
           oldData: {
             data_fim: await this.notificationsService.formatDate(
               approved.marriage_end_date
-            ),
+            )
           },
-          table: 'Casamentos prévios',
-        });
+          table: 'Casamentos prévios'
+        })
       } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    message = 'Previous marriage deleted successfully.';
-    return message;
+    message = 'Previous marriage deleted successfully.'
+    return message
   }
 }

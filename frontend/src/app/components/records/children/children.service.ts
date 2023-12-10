@@ -11,11 +11,12 @@ import { CreateChildDto, IChild, UpdateChildDto } from './types'
 export class ChildrenService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IChild[]> {
+  findAllRegistries(userId: number | null): Observable<IChild[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId ? '/children/approve/' + userId : '/children/'
     return this.http
-      .get<IChild[]>(environment.API + '/children', {
+      .get<IChild[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

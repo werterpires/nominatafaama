@@ -71,6 +71,15 @@ export class ApprovalsModel {
           'student_id'
         )
 
+        console.log(
+          'table',
+          table,
+          'hasPersonId',
+          hasPersonId,
+          'hasStudentId',
+          hasStudentId
+        )
+
         let personAndOthers
 
         if (hasPersonId && hasStudentId) {
@@ -96,7 +105,9 @@ export class ApprovalsModel {
         } else {
           personAndOthers = null
         }
+
         let userIdAlt
+
         if (!personAndOthers.user_id) {
           userIdAlt = await this.knex('spouses')
             .leftJoin('students', 'spouses.student_id', 'students.student_id')
@@ -104,9 +115,6 @@ export class ApprovalsModel {
             .where('spouses.person_id', personAndOthers.person_id)
             .first('users.user_id')
         }
-
-        console.log(hasPersonId, hasStudentId, personAndOthers)
-        console.log(userIdAlt.user_id)
 
         await this.notificationsService.createNotification({
           notificationType: 5,
@@ -123,6 +131,7 @@ export class ApprovalsModel {
         })
       } catch (error) {
         console.error(`Erro capturado na ApprovalsModel approveAny: ${error}`)
+        console.log('Erro capturado na ApprovalsModel approveAny: ', error)
         await trx.rollback()
 
         sentError = new Error(error.message)

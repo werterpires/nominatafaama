@@ -372,7 +372,7 @@ export class SpousesModel {
           .leftJoin('students', 'spouses.student_id', 'students.student_id')
           .leftJoin('users', 'students.person_id', 'users.person_id')
           .where('spouse_id', spouse_id)
-          .select('*')
+          .select('spouses.*', 'people.*', 'users.*')
           .first()
 
         if (approved.spouse_approved === true) {

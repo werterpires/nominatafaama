@@ -80,442 +80,95 @@
     ></app-publications>
 
     <!-- ------------------------------------------------------------------ -->
-
-    <app-sp-related-ministries
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
+    <div
+      *ngIf="
+        dataService.maritalStatusName === 'Casado' ||
+        dataService.maritalStatusName === 'Noivo'
+      "
     >
-    </app-sp-related-ministries>
-
-    <app-sp-academic-formations
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
-    ></app-sp-academic-formations>
-    <app-ps-courses
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
-    ></app-ps-courses>
-    <app-sp-languages
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
-    ></app-sp-languages>
-    <app-sp-professional-experiences
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
-    ></app-sp-professional-experiences>
-    <app-sp-past-ecl-exp
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
-    ></app-sp-past-ecl-exp>
-    <app-sp-endowments
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
-    ></app-sp-endowments>
-    <app-sp-evg-experiences
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
-    ></app-sp-evg-experiences>
-    <app-sp-publications
-      [userId]="userId"
-      [del]="false"
-      [new]="false"
-      [approve]="true"
-    ></app-sp-publications>
-  </div>
-
-  <!-- <section
-    *ngIf="
-      student.student?.marital_status_type_name === 'Casado' ||
-      student.student?.marital_status_type_name === 'Noivo'
-    "
-    class="sectionBox"
-  >
-    <div class="boxHead">
-      <p class="sectionTitle1">Informações do cônjuge</p>
-    </div>
-    <section>
-      <div
-        *ngIf="student.spouse !== null"
-        [ngClass]="{
-          approved: student.spouse.spouse_approved === true,
-          unapproved: student.spouse.spouse_approved === false,
-          notRated: student.spouse.spouse_approved === null
-        }"
+      <app-spouses
+        [userId]="userId"
+        [del]="false"
+        [approve]="true"
+      ></app-spouses>
+      <app-sp-related-ministries
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
       >
-        <div class="flexSpaceBetween">
-          <div class="sidePhotoField">
-            <p class="weightFieldTitle">{{ student.spouse.person_name }}</p>
-            <hr class="sectionDivisiion" />
-            <div class="subSection">
-              <span class="field">
-                <p class="fieldTitle">Campo de origem</p>
-                <p class="fieldContent">
-                  {{ student.spouse.union_acronym }}/{{
-                    student.spouse.association_acronym
-                  }}
-                </p>
-              </span>
-              <span class="field">
-                <p class="fieldTitle">Justificativa</p>
-                <p class="fieldContent">
-                  {{ student.spouse.justification }}
-                </p>
-              </span>
-            </div>
-            <div class="subSection">
-              <span class="field">
-                <p class="fieldTitle">Naturalidade</p>
-                <p class="fieldContent">
-                  {{ student.spouse.birth_city }}-{{
-                    student.spouse.birth_state
-                  }}
-                </p>
-              </span>
-              <span class="field">
-                <p class="fieldTitle">Ensino fundamental</p>
-                <p class="fieldContent">
-                  {{ student.spouse.primary_school_city }}-{{
-                    student.spouse.primary_school_state
-                  }}
-                </p>
-              </span>
-            </div>
-            <div class="subSection">
-              <span class="field">
-                <p class="fieldTitle">Data de nascimento</p>
-                <p class="fieldContent">
-                  {{ formatDate(student.spouse.birth_date) }}
-                </p>
-              </span>
-              <span class="field">
-                <p class="fieldTitle">Idade</p>
-                <p class="fieldContent">
-                  {{ formateAge(student.spouse.birth_date) }} anos
-                </p>
-              </span>
-            </div>
-            <div class="subSection">
-              <span class="field">
-                <p class="fieldTitle">Batismo</p>
-                <p class="fieldContent">
-                  {{ formatDate(student.spouse.baptism_date) }}
-                </p>
-                <p class="fieldContent">{{ student.spouse.baptism_place }}</p>
-              </span>
-              <span class="field">
-                <p class="fieldTitle">Tempo de batismo</p>
-                <p class="fieldContent">
-                  {{ formateAge(student.spouse.baptism_date) }} anos
-                </p>
-              </span>
-            </div>
-            <div class="subSection">
-              <span class="field">
-                <p class="fieldTitle">Telefone</p>
-                <p class="fieldContent">
-                  {{ formatarTelefone(student.spouse.phone_number) }}
-                </p>
-              </span>
-              <span class="field">
-                <p class="fieldTitle">E-mail</p>
-                <p class="fieldContent">
-                  {{ student.spouse.alternative_email }}
-                </p>
-              </span>
-            </div>
-            <div class="subSection" *ngIf="student.spouse.civil_marriage_date">
-              <span class="field">
-                <p class="fieldTitle">Data de casamento</p>
-                <p class="fieldContent">
-                  {{ formatDate(student.spouse.civil_marriage_date) }}
-                </p>
-              </span>
-              <span class="field">
-                <p class="fieldTitle">Local de casamento</p>
-                <p class="fieldContent">
-                  {{ student.spouse.civil_marriage_city }}-{{
-                    student.spouse.civil_marriage_state
-                  }}
-                </p>
-              </span>
-            </div>
-            <div class="subSection" *ngIf="student.spouse.civil_marriage_date">
-              <span class="field">
-                <p class="fieldTitle">Cartório do casamento</p>
-                <p class="fieldContent">
-                  {{ student.spouse.registry }}
-                </p>
-              </span>
-              <span class="field">
-                <p class="fieldTitle">Registro do casamento</p>
-                <p class="fieldContent">{{ student.spouse.registry_number }}</p>
-              </span>
-            </div>
-            <div
-              *ngIf="
-                student.relatedMinistries !== undefined &&
-                student.relatedMinistries !== null &&
-                student.relatedMinistries.length > 0
-              "
-              class="subSection"
-            ></div>
-          </div>
-        </div>
+      </app-sp-related-ministries>
 
-        <form class="formSection">
-          <label class="labelRadio">
-            <input
-              class="approvedRadio"
-              [checked]="student.spouse.spouse_approved"
-              #approveItem
-              type="radio"
-              name="status"
-            />
-            Aprovado
-          </label>
-          <label class="labelRadio">
-            <input
-              class="rejectedRadio"
-              [checked]="student.spouse.spouse_approved === false"
-              #rejectItem
-              [id]="'rejectStudent'"
-              type="radio"
-              name="status"
-            />
-            Desaprovado
-          </label>
-
-          <button
-            class="saveButton"
-            type="button"
-            (click)="
-              approve(
-                'spouses',
-                approveItem,
-                rejectItem,
-                student.spouse.spouse_id
-              )
-            "
-          >
-            SALVAR
-          </button>
-          <button
-            #saveButton
-            class="hidden"
-            type="button"
-            (click)="
-              approveAll(
-                'spouses',
-                approveItem,
-                rejectItem,
-                student.spouse.spouse_id
-              )
-            "
-          >
-            HIDDEN
-          </button>
-        </form>
-      </div>
-    </section>
-  </section>
-  <section *ngIf="student.children !== null" class="sectionBox">
-    <div class="boxHead">
-      <p class="sectionTitle1">Informação dos filhos</p>
+      <app-sp-academic-formations
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-sp-academic-formations>
+      <app-ps-courses
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-ps-courses>
+      <app-sp-languages
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-sp-languages>
+      <app-sp-professional-experiences
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-sp-professional-experiences>
+      <app-sp-past-ecl-exp
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-sp-past-ecl-exp>
+      <app-sp-endowments
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-sp-endowments>
+      <app-sp-evg-experiences
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-sp-evg-experiences>
+      <app-sp-publications
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-sp-publications>
     </div>
-    <section>
-      <div>
-        <div
-          class="subSection"
-          *ngFor="let child of student.children; let i = index"
-          class="field"
-          [ngClass]="{
-            approved: child.child_approved === true,
-            unapproved: child.child_approved === false,
-            notRated: child.child_approved === null
-          }"
-        >
-          <div>
-            <p class="fieldContent wWeight">
-              {{ child.name }}
-            </p>
-            <p class="fieldContent">
-              <span *ngIf="formateAge(child.child_birth_date) === 1">
-                {{ formateAge(child.child_birth_date) }} ano,
-              </span>
-              <span *ngIf="formateAge(child.child_birth_date) > 1">
-                {{ formateAge(child.child_birth_date) }} anos,
-              </span>
-              <span *ngIf="formateAge(child.child_birth_date) > 1"
-                >menos de 1 ano,
-              </span>
-              {{ child.marital_status_type_name }},
-              {{ child.study_grade }}
-            </p>
-            <form class="formSection">
-              <label class="labelRadio">
-                <input
-                  class="approvedRadio"
-                  #approveItem
-                  [checked]="child.child_approved"
-                  [id]="'approveFormation' + i"
-                  type="radio"
-                  name="status"
-                  checked
-                />
-                Aprovado
-              </label>
-              <label class="labelRadio">
-                <input
-                  #rejectItem
-                  class="rejectedRadio"
-                  #rejectFormation{{i}}
-                  [checked]="child.child_approved === false"
-                  [id]="'rejectFormation' + i"
-                  type="radio"
-                  name="status"
-                />
-                Desaprovado
-              </label>
+    <app-children
+      [userId]="userId"
+      [del]="false"
+      [new]="false"
+      [approve]="true"
+    ></app-children>
 
-              <button
-                class="saveButton"
-                type="button"
-                (click)="
-                  approve('children', approveItem, rejectItem, child.child_id)
-                "
-              >
-                SALVAR
-              </button>
-              <button
-                #saveButton
-                class="hidden"
-                type="button"
-                (click)="
-                  approveAll(
-                    'children',
-                    approveItem,
-                    rejectItem,
-                    child.child_id
-                  )
-                "
-              >
-                HIDDEN
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <hr class="sectionDivisiion" />
-      </div>
-    </section>
-  </section>
-  <section
-    *ngIf="
-      student.student &&
-      (student.student.marital_status_type_name === 'Divorciado' ||
-        student.student.marital_status_type_name === 'Viúvo') &&
-      student.previousMarriage !== null
-    "
-    class="sectionBox"
-  >
-    <div class="boxHead">
-      <p class="sectionTitle1">Informação do último casamento</p>
+    <div
+      *ngIf="
+        dataService.maritalStatusName === 'Divorciado' ||
+        dataService.maritalStatusName === 'Viúvo'
+      "
+    >
+      <app-previous-marriage
+        [userId]="userId"
+        [del]="false"
+        [new]="false"
+        [approve]="true"
+      ></app-previous-marriage>
     </div>
-    <section>
-      <div>
-        <div
-          class="subSection"
-          *ngFor="let marriage of student.previousMarriage; let i = index"
-          class="field"
-          [ngClass]="{
-            approved: marriage.previous_marriage_approved === true,
-            unapproved: marriage.previous_marriage_approved === false,
-            notRated: marriage.previous_marriage_approved === null
-          }"
-        >
-          <div>
-            <p class="fieldContent wWeight">
-              Foi casado até: {{ formatDate(marriage.marriage_end_date) }}
-            </p>
-            <form class="formSection">
-              <label class="labelRadio">
-                <input
-                  class="approvedRadio"
-                  #approveItem
-                  [checked]="marriage.previous_marriage_approved"
-                  [id]="'approveFormation' + i"
-                  type="radio"
-                  name="status"
-                  checked
-                />
-                Aprovado
-              </label>
-              <label class="labelRadio">
-                <input
-                  #rejectItem
-                  class="rejectedRadio"
-                  #rejectFormation{{i}}
-                  [checked]="marriage.previous_marriage_approved === false"
-                  [id]="'rejectFormation' + i"
-                  type="radio"
-                  name="status"
-                />
-                Desaprovado
-              </label>
-
-              <button
-                class="saveButton"
-                type="button"
-                (click)="
-                  approve(
-                    'previous_marriages',
-                    approveItem,
-                    rejectItem,
-                    marriage.previous_marriage_id
-                  )
-                "
-              >
-                SALVAR
-              </button>
-              <button
-                #saveButton
-                class="hidden"
-                type="button"
-                (click)="
-                  approveAll(
-                    'previous_marriages',
-                    approveItem,
-                    rejectItem,
-                    marriage.previous_marriage_id
-                  )
-                "
-              >
-                HIDDEN
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <hr class="sectionDivisiion" />
-      </div>
-    </section>
-  </section> -->
+  </div>
 
   <app-error-modal *ngIf="error"></app-error-modal>
   <div *ngIf="done" class="done">

@@ -24,6 +24,9 @@ export class SpousesComponent implements OnInit {
   ) {}
   @ViewChild('phoneNumberInput') phoneNumberInput!: ElementRef
   @Input() permissions!: IPermissions
+  @Input() del = false
+  @Input() approve = false
+  @Input() userId: number | null = null
 
   possibleAssociantions!: IAssociation[]
   allAssociations: IAssociation[] = []
@@ -162,7 +165,7 @@ export class SpousesComponent implements OnInit {
 
   getAllRegistries() {
     this.isLoading = true
-    this.service.findRegistryById().subscribe({
+    this.service.findRegistryById(this.userId).subscribe({
       next: (res) => {
         if (res?.spouse_id > 0) {
           this.registry = res
@@ -565,19 +568,21 @@ export class SpousesComponent implements OnInit {
       spouse_id: this.registry.spouse_id,
     }
 
-    this.service.updateRegistry(newRegistry as IUpdateSpouse).subscribe({
-      next: () => {
-        this.doneMessage = 'Registro editado com sucesso.'
-        this.ngOnInit()
-        this.done = true
-        this.isLoading = false
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
+    this.service
+      .updateRegistry(newRegistry as IUpdateSpouse, this.userId)
+      .subscribe({
+        next: () => {
+          this.doneMessage = 'Registro editado com sucesso.'
+          this.ngOnInit()
+          this.done = true
+          this.isLoading = false
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
   }
 
   formatarCPF(type: string) {

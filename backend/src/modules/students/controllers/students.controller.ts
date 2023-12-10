@@ -94,6 +94,21 @@ export class StudentsController {
     }
   }
 
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Get('marital-status/:userId')
+  async getStudentMaritalStatusToApprove(
+    @CurrentUser() user: UserFromJwt,
+    @Param('userId') userId: string
+  ) {
+    try {
+      const maritalStatus =
+        await this.studentsService.findStudentMaritalStatusById(+userId)
+      return maritalStatus
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
   @IsPublic()
   @Get(':studentId')
   async getOneStudent(@Param('studentId') studentId: string) {

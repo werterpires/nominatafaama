@@ -28,21 +28,4 @@ export class OneStudentToApproveService {
         }),
       )
   }
-
-  findOneRegistry(userId: number): Observable<ICompleteStudent> {
-    const token = localStorage.getItem('access_token')
-    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-    return this.http
-      .get<ICompleteStudent>(environment.API + `/approvals/${userId}`, {
-        headers: head_obj,
-      })
-      .pipe(
-        catchError((error) => {
-          console.log('Veja o erro completo', error)
-          return throwError(
-            () => new Error('Não foi possível encontrar as linguagens.'),
-          )
-        }),
-      )
-  }
 }

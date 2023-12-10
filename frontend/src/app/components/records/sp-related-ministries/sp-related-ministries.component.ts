@@ -23,7 +23,7 @@ export class SpRelatedMinistriesComponent implements OnInit {
 
   allRegistries: IRelatedMinistry[] = []
   ministryTypeList: Array<IMinistryType> = []
-  title = 'Ministérios de interesse'
+  title = 'Ministérios de interesse do Cônjuge'
   createRegistryData: CreateRelatedMinistryDto[] = [
     {
       ministry_type_id: 0,

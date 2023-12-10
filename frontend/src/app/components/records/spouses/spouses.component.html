@@ -266,6 +266,16 @@
       *ngIf="registry"
       (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
       [del]="false"
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'spouses'"
+      [approve]="approve"
+      [approved]="registry.spouse_approved"
+      [registryIdToApprove]="registry.spouse_id"
+      [ngClass]="{
+        approved: registry.spouse_approved,
+        unapproved: !registry.spouse_approved
+      }"
     >
       <div class="subSection">
         <label class="inputLabel">

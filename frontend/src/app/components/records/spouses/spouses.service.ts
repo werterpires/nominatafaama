@@ -27,20 +27,19 @@ export class SpouseService {
       )
   }
 
-  findRegistryById(): Observable<ISpouse> {
+  findRegistryById(userId: number | null): Observable<ISpouse> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
-    return this.http
-      .get<ISpouse>(environment.API + '/spouses/edit', { headers })
-      .pipe(
-        catchError((error) => {
-          console.log('Veja o erro completo', error)
-          return throwError(
-            () =>
-              new Error('Não foi possível encontrar os cônjuges cadastrados.'),
-          )
-        }),
-      )
+    const url = userId ? '/spouses/approve/' + userId : '/spouses/edit'
+    return this.http.get<ISpouse>(environment.API + url, { headers }).pipe(
+      catchError((error) => {
+        console.log('Veja o erro completo', error)
+        return throwError(
+          () =>
+            new Error('Não foi possível encontrar os cônjuges cadastrados.'),
+        )
+      }),
+    )
   }
 
   createRegistry(createSpouseData: ICreateSpouse): Observable<ISpouse> {
@@ -60,11 +59,15 @@ export class SpouseService {
       )
   }
 
-  updateRegistry(updateSpouseData: IUpdateSpouse): Observable<ISpouse> {
+  updateRegistry(
+    updateSpouseData: IUpdateSpouse,
+    userId: number | null,
+  ): Observable<ISpouse> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
+    const url = userId ? '/spouses/approve/' + userId : '/spouses/'
     return this.http
-      .put<ISpouse>(environment.API + '/spouses', updateSpouseData, {
+      .put<ISpouse>(environment.API + url, updateSpouseData, {
         headers,
       })
       .pipe(
