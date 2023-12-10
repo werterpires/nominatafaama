@@ -94,7 +94,7 @@ export class StudentsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
   @Get('marital-status/:userId')
   async getStudentMaritalStatusToApprove(
     @CurrentUser() user: UserFromJwt,

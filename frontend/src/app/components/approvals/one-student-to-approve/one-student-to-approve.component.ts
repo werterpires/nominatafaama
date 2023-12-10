@@ -116,7 +116,7 @@ export class OneStudentToApproveComponent implements OnInit, OnDestroy {
 
   getMaritalStatus() {
     this.isLoading = true
-    this.recordsService.getStudentMaritalStatus().subscribe({
+    this.recordsService.getStudentMaritalStatus(this.userId).subscribe({
       next: (res) => {
         if (res) {
           console.log(res)
