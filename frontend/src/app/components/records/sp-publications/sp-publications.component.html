@@ -15,7 +15,12 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+    <button
+      *ngIf="new"
+      #addIcon
+      [ngClass]="{ hidden: !showBox }"
+      (click)="showForm = true"
+    >
       Adicionar nova Publicação
     </button>
   </div>
@@ -76,6 +81,12 @@
           registry.publication_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'publications'"
+      [approve]="approve"
+      [approved]="registry.publication_approved"
+      [registryIdToApprove]="registry.publication_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

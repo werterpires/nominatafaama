@@ -1,0 +1,48 @@
+<form class="formSection">
+  <label class="labelRadio">
+    <input
+      class="approvedRadio"
+      [checked]="approved"
+      #approveItem
+      type="radio"
+      name="status"
+    />
+    Aprovado
+  </label>
+  <label class="labelRadio">
+    <input
+      class="rejectedRadio"
+      [checked]="approved === false"
+      #rejectItem
+      [id]="'rejectStudent'"
+      type="radio"
+      name="status"
+    />
+    Desaprovado
+  </label>
+
+  <button
+    class="saveButton"
+    type="button"
+    (click)="approve(approveItem, rejectItem, registryId)"
+  >
+    Enviar Aprovação
+  </button>
+</form>
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>
+<app-error-modal *ngIf="error"></app-error-modal>
+<div *ngIf="done" class="done">
+  <div class="doneTitle">
+    <p>Parabéns</p>
+  </div>
+  <div class="doneMessage">
+    <p>{{ doneMessage }}</p>
+  </div>
+  <img
+    class="closeIcon"
+    src="assets/icons/closeIcon.png"
+    alt="Fechar"
+    (click)="closeDone()"
+  />
+</div>

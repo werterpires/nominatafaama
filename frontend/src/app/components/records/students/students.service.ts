@@ -11,22 +11,19 @@ import { environment } from 'src/environments/environment'
 export class StudentService {
   constructor(private http: HttpClient) {}
 
-  findRegistry(): Observable<IStudent> {
+  findRegistry(userId: number | null): Observable<IStudent> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
-    return this.http
-      .get<IStudent>(environment.API + '/students/edit', { headers })
-      .pipe(
-        catchError((error) => {
-          console.log('Veja o erro completo', error)
-          return throwError(
-            () =>
-              new Error(
-                'Não foi possível encontrar os estudantes cadastrados.',
-              ),
-          )
-        }),
-      )
+    const url = userId ? '/students/approve/' + userId : '/students/edit'
+    return this.http.get<IStudent>(environment.API + url, { headers }).pipe(
+      catchError((error) => {
+        console.log('Veja o erro completo', error)
+        return throwError(
+          () =>
+            new Error('Não foi possível encontrar os estudantes cadastrados.'),
+        )
+      }),
+    )
   }
 
   createStudent(createStudentData: ICreateStudent): Observable<IStudent> {

@@ -6,8 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { ToastrModule } from 'ngx-toastr'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
-import { ApprovesComponent } from './components/approves/approves.component'
-import { UsersApprovesComponent } from './components/approves/users-approves/users-approves.component'
+// import { ApprovesComponent } from './components/approves/approves.component'
+import { UsersApprovesComponent } from './components/approvals/users-approves/users-approves.component'
 import { LoginComponent } from './components/login/login.component'
 import { LogonComponent } from './components/logon/logon.component'
 import { NominataComponent } from './components/nominata/nominata.component'
@@ -18,10 +18,10 @@ import { EndowmentTypesComponent } from './components/parameterization/endowment
 import { EvangExpTypesComponent } from './components/parameterization/evang-exp-types/evang-exp-types.component'
 import { EvgExperiencesComponent } from './components/records/evg-experiences/evg-experiences.component'
 import { SpEvgExperiencesComponent } from './components/records/sp-evg-experiences/sp-evg-experiences.component'
-import { HiringStatusComponent } from './components/records/hiring-status/hiring-status.component'
-import { LanguageTypesComponent } from './components/records/language-types/language-types.component'
+import { HiringStatusComponent } from './components/parameterization/hiring-status/hiring-status.component'
+import { LanguageTypesComponent } from './components/parameterization/language-types/language-types.component'
 import { LanguagesComponent } from './components/records/languages/languages.component'
-import { MaritalStatusComponent } from './components/records/marital-status/marital-status.component'
+import { MaritalStatusComponent } from './components/parameterization/marital-status/marital-status.component'
 import { MinistryTypesComponent } from './components/parameterization/minstry-types/ministry-types.component'
 import { PublicationTypesComponent } from './components/parameterization/publication-types/publication-types.component'
 import { RecordsComponent } from './components/records/records.component'
@@ -30,6 +30,7 @@ import { SpousesComponent } from './components/records/spouses/spouses.component
 import { StudentAcademicFormationsComponent } from './components/records/student-academic-formations/student-academic-formations.component'
 import { StudentsComponent } from './components/records/students/students.component'
 import { ProfessorsComponent } from './components/records/professors/professors.component'
+import { FieldRepsComponent } from './components/records/field-reps/field-reps.component'
 import { UnionsComponent } from './components/records/unions/unions.component'
 import { ConfirmationDialogComponent } from './components/shared/confirmation-dialog/confirmation-dialog.component'
 import { ContainerComponent } from './components/shared/container/container.component'
@@ -78,9 +79,23 @@ import { ScrollToAnchorDirective } from './components/nominata/scroll-to-anchor.
 import { VacanciesComponent } from './components/vacancies/vacancies.component'
 import { ModalVacancyComponent } from './components/modal-vacancy/modal-vacancy.component'
 import { ModalTermComponent } from './components/modal-term/modal-term.component'
-import { UnactiveComponent } from './components/parameterization/unactive/unactive.component';
-import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component';
+import { UnactiveComponent } from './components/parameterization/unactive/unactive.component'
+import { AlertModalComponent } from './components/shared/alert-modal/alert-modal.component'
 import { NotificationsComponent } from './components/shared/notifications/notifications.component'
+import { RepresentationsComponent } from './components/records/representations/representations.component'
+import { RepresentationsToApproveComponent } from './components/approvals/representations-to_approve/representations-to-approve.component'
+import { OneRepresentationsToApproveComponent } from './components/approvals/one-representation-to-approve/one-representation-to-approve.component'
+import { StudentsSpaceComponent } from './components/nominata/students-space/students-space.component'
+import { StudentCardsComponent } from './components/shared/student-cards/student-cards.component'
+import { VacancyComponent } from './components/vacancies/vacancy/vacancy.component'
+import { SmallStudentCardsComponent } from './components/shared/small-student-cards/small-student-cards.component'
+import { InvitesComponent } from './components/vacancies/invites/invites.component'
+import { ErrorModalComponent } from './components/shared/error-modal/error-modal.component'
+import { InvitesToApproveComponent } from './components/approvals/invites-to_approve/invites-to-approve.component'
+import { OneInviteToApproveComponent } from './components/approvals/one-invite-to-approve/one-invite-to-approve.component'
+import { CallsComponent } from './components/calls/calls.component'
+import { AlertComponent } from './components/shared/alert/alert.component'
+import { ApproveFormComponent } from './components/shared/approve-form/approve-form.component'
 
 @NgModule({
   declarations: [
@@ -91,7 +106,6 @@ import { NotificationsComponent } from './components/shared/notifications/notifi
     NominataComponent,
     RecordsComponent,
     MaritalStatusComponent,
-    ApprovesComponent,
     LogonComponent,
     UsersApprovesComponent,
     UnionsComponent,
@@ -145,6 +159,7 @@ import { NotificationsComponent } from './components/shared/notifications/notifi
     UsersComponent,
     ParameterizationComponent,
     ProfessorsComponent,
+    FieldRepsComponent,
     NominatasComponent,
     NominatasStudentsComponent,
     NominatasProfessorsComponent,
@@ -159,6 +174,20 @@ import { NotificationsComponent } from './components/shared/notifications/notifi
     UnactiveComponent,
     AlertModalComponent,
     NotificationsComponent,
+    RepresentationsComponent,
+    RepresentationsToApproveComponent,
+    OneRepresentationsToApproveComponent,
+    StudentsSpaceComponent,
+    StudentCardsComponent,
+    VacancyComponent,
+    SmallStudentCardsComponent,
+    InvitesComponent,
+    ErrorModalComponent,
+    InvitesToApproveComponent,
+    OneInviteToApproveComponent,
+    CallsComponent,
+    AlertComponent,
+    ApproveFormComponent,
   ],
   imports: [
     BrowserModule,

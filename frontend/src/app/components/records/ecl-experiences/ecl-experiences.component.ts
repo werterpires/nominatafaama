@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { EclExpTypesService } from '../../parameterization/ecl-exp-types/ecl-exp-types.service'
-import { IEclExperienceList } from '../../parameterization/ecl-exp-types/types'
+import {
+  IEclExpType,
+  IEclExperienceList,
+} from '../../parameterization/ecl-exp-types/types'
 import { EclExperiencesService } from './ecl-experiences.service'
 import { IEclExperience, UpdateEclExperiencesDto } from './types'
 
@@ -12,10 +15,13 @@ import { IEclExperience, UpdateEclExperiencesDto } from './types'
 })
 export class EclExperiencesComponent implements OnInit {
   @Input() permissions!: IPermissions
+  @Input() approve = false
+  @Input() userId: number | null = null
 
   allRegistries: IEclExperience[] = []
   title = 'Experiências Eclesiásticas (durante o Salt)'
   allRegistriesWithChecks: IEclExperienceList[] = []
+  allTypes: IEclExpType[] = []
 
   showBox = false
   isLoading = false
@@ -82,35 +88,36 @@ export class EclExperiencesComponent implements OnInit {
     this.allRegistries = []
     this.allRegistriesWithChecks = []
     this.eclExptypesService.findAllRegistries().subscribe({
-      next: (res) => {
-        this.service.findAllRegistries().subscribe({
-          next: (ress) => {
+      next: (resType) => {
+        this.allTypes = resType
+        this.service.findAllRegistries(this.userId).subscribe({
+          next: (ressEcl) => {
+            this.allRegistries = ressEcl
             this.allRegistriesWithChecks.splice(0)
-            res.forEach((registry) => {
+            resType.forEach((registryType) => {
               this.allRegistriesWithChecks.push({
-                ...registry,
-                checked: !!ress.find(
-                  (reg) => reg.ecl_exp_type_id == registry.ecl_exp_type_id,
+                ...registryType,
+                checked: !!ressEcl.find(
+                  (regEcl) =>
+                    regEcl.ecl_exp_type_id == registryType.ecl_exp_type_id,
                 ),
-                approved: !!ress.find((reg) => {
-                  if (
-                    reg.ecl_exp_type_id == registry.ecl_exp_type_id &&
-                    reg.ecl_exp_approved == true
-                  ) {
-                    return true
-                  } else if (
-                    reg.ecl_exp_type_id == registry.ecl_exp_type_id &&
-                    reg.ecl_exp_approved == false
-                  ) {
-                    return false
-                  } else {
+                approved: ((): null | boolean => {
+                  // Utilize uma variável local para manter o escopo de registryType
+                  const specificRegistry = ressEcl.find(
+                    (someEcl) =>
+                      someEcl.ecl_exp_type_id == registryType.ecl_exp_type_id,
+                  )
+                  if (!specificRegistry) {
                     return null
                   }
-                }),
+                  return specificRegistry.ecl_exp_approved
+                })(),
               })
             })
+            this.addIds()
             this.isLoading = false
           },
+
           error: (err) => {
             this.errorMessage = err.message
             this.error = true
@@ -125,6 +132,16 @@ export class EclExperiencesComponent implements OnInit {
         this.error = true
         this.isLoading = false
       },
+    })
+  }
+
+  addIds() {
+    let AtualRegistry
+    this.allRegistriesWithChecks.forEach((registry) => {
+      AtualRegistry = this.allRegistries.find(
+        (reg) => reg.ecl_exp_type_id == registry.ecl_exp_type_id,
+      )
+      registry.ecl_exp_id = AtualRegistry?.ecl_exp_id
     })
   }
 
@@ -143,7 +160,7 @@ export class EclExperiencesComponent implements OnInit {
     }
 
     this.service.updateRegistry(newRegistry).subscribe({
-      next: (res) => {
+      next: () => {
         this.doneMessage =
           'Todos os registros passíveis de edição foram editados com sucesso.'
         this.ngOnInit()

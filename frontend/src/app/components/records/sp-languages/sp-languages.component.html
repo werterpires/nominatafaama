@@ -20,6 +20,7 @@
       [ngClass]="{ hidden: !showBox }"
       src="assets/icons/addIcon.png"
       (click)="showForm = true"
+      *ngIf="new"
     >
       Adicionar novo Idioma
     </button>
@@ -95,6 +96,12 @@
           registry.language_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'languages'"
+      [approve]="approve"
+      [approved]="registry.language_approved"
+      [registryIdToApprove]="registry.language_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

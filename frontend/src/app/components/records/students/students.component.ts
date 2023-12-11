@@ -3,10 +3,10 @@ import { IPermissions } from '../../shared/container/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { OthersServices } from '../../shared/shared.service.ts/others.service'
 import { ICity, IUF } from '../../shared/types'
-import { HiringStatusService } from '../hiring-status/hiring_status.service'
-import { IHiringStatus } from '../hiring-status/types'
-import { MaritalStatusService } from '../marital-status/marital-status.service'
-import { IMaritalStatus } from '../marital-status/types'
+import { HiringStatusService } from '../../parameterization/hiring-status/hiring_status.service'
+import { IHiringStatus } from '../../parameterization/hiring-status/types'
+import { MaritalStatusService } from '../../parameterization/marital-status/marital-status.service'
+import { IMaritalStatus } from '../../parameterization/marital-status/types'
 import { StudentService } from './students.service'
 import { ICreateStudent, IStudent, IUpdateStudent } from './types'
 import { OnInit, ElementRef, ViewChild } from '@angular/core'
@@ -32,6 +32,11 @@ export class StudentsComponent implements OnInit {
   @ViewChild('phoneNumberInput') phoneNumberInput!: ElementRef
 
   @Input() permissions!: IPermissions
+  @Input() del = false
+
+  @Input() approve = false
+  @Input() userId: number | null = null
+
   registry: IStudent = {
     person_name: '',
     phone_number: '',
@@ -191,7 +196,7 @@ export class StudentsComponent implements OnInit {
       hiring_status_description: '',
       primary_school_state: '',
     }
-    this.studentServices.findRegistry().subscribe({
+    this.studentServices.findRegistry(this.userId).subscribe({
       next: (res) => {
         if (res && res.student_id) {
           this.registry = res

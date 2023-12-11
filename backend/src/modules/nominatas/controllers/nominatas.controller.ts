@@ -126,6 +126,16 @@ export class NominatasController {
     }
   }
 
+  @IsPublic()
+  @Get('short')
+  async findAllNominataYears() {
+    try {
+      return await this.nominatasService.findAllNominatasYears()
+    } catch (error) {
+      throw error
+    }
+  }
+
   @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Get('students/')
   async findAllStudents(): Promise<ISinteticStudent[]> {

@@ -16,6 +16,7 @@
     </span>
 
     <button
+      *ngIf="new"
       #addIcon
       [ngClass]="{ hidden: !showBox }"
       src="assets/icons/addIcon.png"
@@ -79,7 +80,13 @@
           registry.course_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
       [registryId]="i"
+      [table]="'courses'"
+      [approve]="approve"
+      [approved]="registry.course_approved"
+      [registryIdToApprove]="registry.course_id"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{
         approved: registry.course_approved,

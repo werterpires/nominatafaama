@@ -11,11 +11,14 @@ import { environment } from 'src/environments/environment'
 export class StCoursesService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<ICourse[]> {
+  findAllRegistries(userId: number | null): Observable<ICourse[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/courses/approve/student/' + userId
+      : '/courses/person/student'
     return this.http
-      .get<ICourse[]>(environment.API + '/courses/person/student', {
+      .get<ICourse[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

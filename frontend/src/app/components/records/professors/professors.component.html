@@ -35,6 +35,7 @@
     <app-update-form
       (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
       *ngIf="registry.professor_id"
+      [del]="false"
     >
       <label class="inputLabel w-full">
         Titulação:

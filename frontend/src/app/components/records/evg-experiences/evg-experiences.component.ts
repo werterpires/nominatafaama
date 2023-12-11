@@ -17,6 +17,10 @@ import {
 })
 export class EvgExperiencesComponent implements OnInit {
   @Input() permissions!: IPermissions
+  @Input() del = true
+  @Input() new = true
+  @Input() approve = false
+  @Input() userId: number | null = null
 
   allRegistries: IEvangelisticExperience[] = []
   allTypes: IEvangExpType[] = []
@@ -107,7 +111,7 @@ export class EvgExperiencesComponent implements OnInit {
 
   getAllRegistries() {
     this.isLoading = true
-    this.service.findAllRegistries().subscribe({
+    this.service.findAllRegistries(this.userId).subscribe({
       next: (res) => {
         this.allRegistries = res
         this.allTypes = []

@@ -15,11 +15,14 @@ import {
 export class PreviousMarriageService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IPreviousMarriage[]> {
+  findAllRegistries(userId: number | null): Observable<IPreviousMarriage[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/previous-marriages/approve/' + userId
+      : '/previous-marriages/'
     return this.http
-      .get<IPreviousMarriage[]>(environment.API + '/previous-marriages/', {
+      .get<IPreviousMarriage[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

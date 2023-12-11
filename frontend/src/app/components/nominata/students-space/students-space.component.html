@@ -1,0 +1,134 @@
+<div class="oneStudentSpaceHeader">
+  <p class="oneStudentSpaceTitle" id="students">Formandos</p>
+  <img src="assets/icons/barra.svg" alt="" />
+</div>
+<form action="" id="searchForm">
+  <select
+    name="unionSelect"
+    id=""
+    class="searchConrols"
+    [(ngModel)]="searchedUnion"
+    (change)="filterStudents(true)"
+  >
+    <option value="">Todas as uniões</option>
+    <option *ngFor="let union of unions" [value]="union">
+      {{ union }}
+    </option>
+  </select>
+  <select
+    name="associationSelect"
+    class="searchConrols"
+    id=""
+    [(ngModel)]="searchedAssociation"
+    (change)="filterStudents()"
+  >
+    <option value="">Todas as associações</option>
+    <option *ngFor="let association of associations" [value]="association">
+      {{ association }}
+    </option>
+  </select>
+  <input
+    type="text"
+    name="searchedStudentInput"
+    class="searchConrols"
+    placeholder="Pesquisar por nome"
+    [(ngModel)]="searchedStudent"
+    (input)="filterStudents()"
+  />
+  <button
+    *ngIf="
+      (permissions.administrador || permissions.representacao) && !onlyfavs
+    "
+    (click)="filterStudents(false, true)"
+    id="cleanSearchButton"
+  >
+    Favoritos
+  </button>
+
+  <button
+    *ngIf="(permissions.administrador || permissions.representacao) && onlyfavs"
+    (click)="filterStudents(false, false)"
+    id="cleanSearchButton"
+  >
+    Todos
+  </button>
+
+  <button (click)="cleanFilters()" id="cleanSearchButton">
+    Limpar filtros
+  </button>
+</form>
+<section class="perfilList">
+  <!-- <div *ngFor="let student of studentsToList; index as i">
+    <div (click)="selectStudent(student.student_id.toString())">
+      <div class="smallAlonePhoto">
+        <div
+          class="imageContainer withFavorite"
+          [ngStyle]="{
+            'background-image':
+              'url(' +
+              urlBase +
+              '/student-photos/student/' +
+              student.student_id +
+              '/small_alone_photo)'
+          }"
+        >
+          <img
+            *ngIf="
+              (permissions.representacao || permissions.administrador) &&
+              !favorites.includes(student.student_id)
+            "
+            src="assets/icons/notFavorite.svg"
+            alt="figura de uma estrela"
+            class="favoriteIcon"
+            (click)="setFav(student.student_id); $event.stopPropagation()"
+          />
+          <img
+            *ngIf="
+              (permissions.representacao || permissions.administrador) &&
+              favorites.includes(student.student_id)
+            "
+            src="assets/icons/favorite.svg"
+            alt="figura de uma estrela"
+            class="favoriteIcon"
+            (click)="setNotFav(student.student_id); $event.stopPropagation()"
+          />
+        </div>
+      </div>
+      <div class="studentDatacontainer">
+        <div class="hiringStatusSpace">
+          <div
+            [ngClass]="{
+              disponivelIndicator: student.hiring_status_name === 'Disponível',
+              contratadoIndicator: student.hiring_status_name === 'Contratado',
+              chamadoIndicator: student.hiring_status_name === 'Chamado'
+            }"
+          ></div>
+          <span class="hiringStatusText">{{ student.hiring_status_name }}</span>
+          <span *ngIf="student.hiringField" class="hiringStatusText"> - </span>
+          <span class="hiringStatusText">{{
+            student.hiringField?.union_acronym
+          }}</span>
+          <span *ngIf="student.hiringField" class="hiringStatusText">/</span
+          ><span class="hiringStatusText">{{
+            student.hiringField?.association_acronym
+          }}</span>
+        </div>
+        <p class="nominataStudentName">{{ student.name }}</p>
+        <p class="studentCompData">
+          {{ student.union_acronym }}/{{ student.association_acronym }}
+        </p>
+      </div>
+    </div>
+  </div> -->
+  <div *ngFor="let student of studentsToList; index as i">
+    <div (click)="selectStudent(student.student_id.toString())">
+      <app-student-cards
+        [student]="student"
+        [permissions]="permissions"
+        [fav]="favorites.includes(student.student_id)"
+        (setFavEmiter)="favoriteStudent($event)"
+      >
+      </app-student-cards>
+    </div>
+  </div>
+</section>

@@ -287,6 +287,13 @@ a {
   margin-left: 5px;
 }
 
+.favoriteIcon {
+  position: fixed;
+  top: 100px;
+  right: 10px;
+  z-index: 4;
+}
+
 @media (max-width: 480px) {
   .headSection {
     padding: 10% 5% 10% 5%;
@@ -461,88 +468,3 @@ a {
     min-height: unset;
   }
 }
-
-/* @media (min-width: 769px) and (max-width: 1024px) {
-	.headSection {
-    padding: 10% 5% 10% 5%;
-  }
-
-  .oneStudentName {
-    font-size: 24px;
-  }
-
-  .normalSection {
-    margin: 24px 5% 24px 5%;
-    flex-direction: column;
-    gap: 3vh;
-  }
-
-  .oneStudentField {
-    width: 34vw;
-  }
-
-  .oneStudentFieldTitle {
-    margin-bottom: 2%;
-  }
-
-  .oneStudentFieldContent {
-    word-wrap: break-word;
-  }
-
-  .oneStudentSpaceHeader {
-    display: block;
-  }
-
-  .oneStudentSpaceTitle {
-    font-size: 18px;
-    margin-bottom: 0px;
-  }
-
-  .separatorBar {
-    margin-bottom: 10vw;
-  }
-
-  .whiteSpace {
-    display: none;
-  }
-
-  .download {
-  }
-
-  .curriculumSpace {
-    padding: 8%;
-  }
-
-  .oneStudentDinamicField {
-    width: 100%;
-    min-width: 34vw;
-    margin-bottom: 0px;
-  }
-
-  .oneStudentSubSpaceTitle {
-    font-size: 16px;
-  }
-
-  .macroReference {
-    width: 100%;
-  }
-
-  .subWhiteSpace {
-    padding: 5%;
-  }
-
-  .dinamicNormalSection {
-    row-gap: 24px;
-  }
-
-  .separatorHr {
-    display: none;
-  }
-
-  .familyPhoto {
-    min-width: unset;
-    width: 100%;
-    height: 110vw;
-    min-height: unset;
-  }
-} */

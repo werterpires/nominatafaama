@@ -10,6 +10,10 @@ import { OrdinationsService } from './ordinations.service'
 })
 export class OrdinationsComponent implements OnInit {
   @Input() permissions!: IPermissions
+  @Input() del = true
+  @Input() new = true
+  @Input() approve = false
+  @Input() userId: number | null = null
 
   allRegistries: IOrdination[] = []
   title = 'Ordenações Recebidas pelo formando'
@@ -97,7 +101,7 @@ export class OrdinationsComponent implements OnInit {
 
   getAllRegistries() {
     this.isLoading = true
-    this.service.findAllRegistries().subscribe({
+    this.service.findAllRegistries(this.userId).subscribe({
       next: (res) => {
         this.allRegistries = res
         this.filterTypes()

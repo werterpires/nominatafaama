@@ -15,11 +15,14 @@ import {
 export class SpEndowmentsService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IEndowment[]> {
+  findAllRegistries(userId: number | null): Observable<IEndowment[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/endowments/approve/spouse/' + userId
+      : '/endowments/person/spouse'
     return this.http
-      .get<IEndowment[]>(environment.API + '/endowments/person/spouse', {
+      .get<IEndowment[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

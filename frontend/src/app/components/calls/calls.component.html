@@ -1,0 +1,178 @@
+<app-container>
+  <div class="sectionBoxes">
+    <section *ngIf="permissions.estudante" class="sectionBox">
+      <div class="boxHead">
+        <p class="sectionTitle1">Convites ainda não respondidos</p>
+      </div>
+      <section *ngIf="allRegistries.length > 0">
+        <div *ngFor="let invite of allRegistries; let i = index">
+          <section class="informationArea">
+            <p class="informationTitle">Dados da vaga</p>
+            <div class="subSection">
+              <span class="field">
+                <p class="fieldTitle">Título da vaga:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.vacancy.title }}
+                </p>
+              </span>
+              <span class="field">
+                <p class="fieldTitle">Nominata:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.vacancy.nominataYear }}
+                </p>
+              </span>
+            </div>
+            <div class="subSection">
+              <span class="field">
+                <p class="fieldTitle">Representante de campo:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.vacancy.rep.personName }}
+                </p>
+              </span>
+              <span class="field">
+                <p class="fieldTitle">Campo:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.vacancy.associationAcronym }} /
+                  {{ invite.vacancyStudent.vacancy.unionAcronym }}
+                </p>
+              </span>
+            </div>
+            <div class="subSection">
+              <span class="field">
+                <p class="fieldTitle">Descrição:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.vacancy.description }}
+                </p>
+              </span>
+            </div>
+            <div class="subSection">
+              <span class="field">
+                <p class="fieldTitle">Tipo de contratação:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.vacancy.hiring_status }}
+                </p>
+              </span>
+              <span class="field">
+                <p class="fieldTitle">Ministério:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.vacancy.ministry }}
+                </p>
+              </span>
+            </div>
+          </section>
+          <section class="informationArea">
+            <p class="informationTitle">Dados do estudante</p>
+            <div class="subSection">
+              <span class="field">
+                <p class="fieldTitle">Estudante:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.student.name }}
+                </p>
+              </span>
+              <span class="field">
+                <p class="fieldTitle">Campo de origem:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.student.association_acronym }} /
+                  {{ invite.vacancyStudent.student.union_acronym }}
+                </p>
+              </span>
+            </div>
+            <div class="subSection">
+              <span class="field">
+                <p class="fieldTitle">Atual status de contratação:</p>
+                <p class="fieldContent">
+                  {{ invite.vacancyStudent.student.hiring_status_name }}
+                </p>
+              </span>
+            </div>
+          </section>
+          <section class="informationArea">
+            <p class="informationTitle">Dados do convite</p>
+            <div class="subSection">
+              <span class="field">
+                <p class="fieldTitle">Número do voto:</p>
+                <p class="fieldContent">
+                  {{ invite.voteNumber }}
+                </p>
+              </span>
+              <span class="field">
+                <p class="fieldTitle">Data do voto</p>
+                <p class="fieldContent">
+                  {{ invite.voteDate }}
+                </p>
+              </span>
+            </div>
+            <div class="subSection">
+              <span class="field">
+                <p class="fieldTitle">Prazo para resposta do estudante:</p>
+                <p class="fieldContent">
+                  {{ invite.deadline }}
+                </p>
+              </span>
+            </div>
+          </section>
+
+          <form class="formSection">
+            <label class="labelRadio">
+              <input
+                class="approvedRadio"
+                [id]="'approveRepresent' + i"
+                type="radio"
+                name="status"
+                [checked]="invite.accept"
+              />
+              Aprovado
+            </label>
+            <label class="labelRadio">
+              <input
+                class="rejectedRadio"
+                [id]="'rejectRepresent' + i"
+                type="radio"
+                name="status"
+                [checked]="invite.accept === false"
+              />
+              Desaprovado
+            </label>
+
+            <button
+              class="saveButton"
+              type="button"
+              (click)="
+                alertService.showAlert(
+                  'Lembre-se que, ao recusar um convite, você poderá aceitá-lo até a data de expiração, contanto que o representante de campo não chame outro estudante. Se você aceitar, só poderá negar falando com o coordenador de campo.',
+                  'acceptInvite',
+                  i
+                )
+              "
+            >
+              SALVAR
+            </button>
+          </form>
+
+          <hr class="sectionDivisiion" />
+        </div>
+      </section>
+    </section>
+    <app-alert
+      (confirmEvent)="handleAlert($event.func, $event.index)"
+    ></app-alert>
+    <app-error-modal *ngIf="error"></app-error-modal>
+    <div *ngIf="done" class="done">
+      <div class="doneTitle">
+        <p>Parabéns</p>
+      </div>
+      <div class="doneMessage">
+        <p>{{ doneMessage }}</p>
+      </div>
+      <img
+        class="closeIcon"
+        src="assets/icons/closeIcon.png"
+        alt="Fechar"
+        (click)="closeDone()"
+      />
+    </div>
+
+    <div *ngIf="isLoading" class="loader1"></div>
+    <div *ngIf="isLoading" class="loader2"></div>
+  </div>
+</app-container>

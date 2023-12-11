@@ -16,9 +16,8 @@ export class SendEmailService {
     this.removeNotifications.start
   }
 
-  sendNotifications = cron.schedule('0 0 10,13,16,19 * * *', async () => {
+  sendNotifications = cron.schedule('0 0 17 * * *', async () => {
     try {
-      console.log(new Date())
       const notSentNotifications =
         await this.notificationsModel.findUserSentNotifications(false)
 
@@ -65,17 +64,11 @@ export class SendEmailService {
         notificationsTypes.forEach((type) => {
           notificationsToSend.forEach((notification) => {
             if (notification.notification_type === type) {
-              emailText =
-                emailText +
-                `
-${notification.notification_text}`
+              emailText = emailText + `\n ${notification.notification_text}`
               userNotificationsIds.push(notification.user_notification_id)
             }
           })
-          emailText =
-            emailText +
-            `
-					`
+          emailText = emailText + `\n`
         })
 
         let sent = this.sendEmail(user.email, emailText)

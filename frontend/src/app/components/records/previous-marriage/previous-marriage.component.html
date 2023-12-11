@@ -16,6 +16,7 @@
     </span>
 
     <img
+      *ngIf="new"
       #addIcon
       class="addIcon"
       [ngClass]="{ hidden: !showBox }"
@@ -50,6 +51,12 @@
           registry.previous_marriage_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'previous_marriages'"
+      [approve]="approve"
+      [approved]="registry.previous_marriage_approved"
+      [registryIdToApprove]="registry.previous_marriage_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

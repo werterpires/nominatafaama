@@ -1,0 +1,54 @@
+<div class="createInviteModal">
+  <div *ngIf="notice" class="notice">
+    <p class="noticeTitle">Atenção</p>
+    <p class="noticeContent">
+      Se esse é o primeiro chamado que faz nesse sistema, considere os itens
+      abaixo:
+    </p>
+    <ol class="noticeList">
+      <li class="noticeListItem">
+        Antes de chegar a um estudante, o convite passará pela coordenação do
+        Salt ou pelo ministerial para ser aprovado.
+      </li>
+      <li class="noticeListItem">
+        A vaga não poderá ser editada após a aprovação ou reprovação de pelo
+        menos um convite. Esse é um bom momento para revisá-la.
+      </li>
+      <li class="noticeListItem">
+        Um convite nunca pode ser editado. caso seja necessário, peça ao
+        coordenador ou ministerial para reprová-lo e faça um novo convite com os
+        dados corretos.
+      </li>
+      <li class="noticeListItem">
+        Todos os dados da vaga aparecerão para os possíveis aprovadores e para o
+        estdante. Apenas os comentários que você fez sobre o estudante são
+        estritamente confidenciais.
+      </li>
+      <li class="noticeListItem">
+        Você só poderá fazer outro convite para essa vaga caso ele não seja
+        aprovado ou caso o estudante rejeite.
+      </li>
+    </ol>
+  </div>
+  <app-creation-form
+    [allowClose]="true"
+    (closes)="closeInvite()"
+    (save)="createInvite()"
+  >
+    <div class="subSection">
+      <label for=""
+        >Data do voto
+        <input [(ngModel)]="createInviteData.voteDate" type="date" />
+      </label>
+      <label for=""
+        >Número do voto
+        <input [(ngModel)]="createInviteData.voteNumber" type="text" />
+      </label>
+      <label for=""
+        >Prazo para resposta do convite
+        <input [(ngModel)]="createInviteData.deadline" type="date" />
+      </label>
+    </div>
+  </app-creation-form>
+  <app-error-modal *ngIf="error"></app-error-modal>
+</div>

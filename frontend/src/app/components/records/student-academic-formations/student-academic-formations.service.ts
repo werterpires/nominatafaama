@@ -16,14 +16,14 @@ import { environment } from 'src/environments/environment'
 export class StudentAcademicFormationsService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  findAllRegistries(): Observable<IStAcademicFormation[]> {
+  findAllRegistries(userId: number | null): Observable<IStAcademicFormation[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/academic-formations/approve/student/' + userId
+      : '/academic-formations/student'
     return this.http
-      .get<IStAcademicFormation[]>(
-        environment.API + '/academic-formations/student',
-        { headers: head_obj },
-      )
+      .get<IStAcademicFormation[]>(environment.API + url, { headers: head_obj })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

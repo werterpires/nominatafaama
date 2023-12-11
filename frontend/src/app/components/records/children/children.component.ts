@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { CreateChildDto, IChild, UpdateChildDto } from './types'
-import { IMaritalStatus } from '../marital-status/types'
+import { IMaritalStatus } from '../../parameterization/marital-status/types'
 import { ChildrenService } from './children.service'
-import { MaritalStatusService } from '../marital-status/marital-status.service'
+import { MaritalStatusService } from '../../parameterization/marital-status/marital-status.service'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { IPermissions } from '../../shared/container/types'
 import { ValidateService } from '../../shared/shared.service.ts/validate.services'
@@ -14,6 +14,10 @@ import { ValidateService } from '../../shared/shared.service.ts/validate.service
 })
 export class ChildrenComponent implements OnInit {
   @Input() permissions!: IPermissions
+  @Input() del = true
+  @Input() new = true
+  @Input() approve = false
+  @Input() userId: number | null = null
 
   allRegistries: IChild[] = []
   allTypes: IMaritalStatus[] = []
@@ -106,7 +110,7 @@ export class ChildrenComponent implements OnInit {
 
   getAllRegistries() {
     this.isLoading = true
-    this.service.findAllRegistries().subscribe({
+    this.service.findAllRegistries(this.userId).subscribe({
       next: (res) => {
         this.allRegistries = res
         this.formatarCPFs()

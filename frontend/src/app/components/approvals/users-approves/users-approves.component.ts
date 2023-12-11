@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import {
   IPermissions,
   IRole,
@@ -15,7 +15,7 @@ import { Router } from '@angular/router'
   templateUrl: './users-approves.component.html',
   styleUrls: ['./users-approves.component.css'],
 })
-export class UsersApprovesComponent {
+export class UsersApprovesComponent implements OnInit {
   constructor(
     private userServices: UsersServices,
     private usersApprovesServices: UserApprovesService,
@@ -111,7 +111,6 @@ export class UsersApprovesComponent {
           !roles.includes('direção') &&
           !roles.includes('administrador')
         ) {
-          console.log(roles)
           this.router.navigate(['nominata'])
         }
 
@@ -124,7 +123,7 @@ export class UsersApprovesComponent {
       this.permissions.estudante = roles.includes('estudante')
       this.permissions.secretaria = roles.includes('secretaria')
       this.permissions.direcao = roles.includes('direção')
-      this.permissions.representacao = roles.includes('representacao')
+      this.permissions.representacao = roles.includes('representante de campo')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
       this.permissions.ministerial = roles.includes('ministerial')
@@ -280,7 +279,7 @@ export class UsersApprovesComponent {
       approveRadio,
     ) as HTMLInputElement
     const rejectInput = document.getElementById(rejectRadio) as HTMLInputElement
-    console.log(approveRadio, rejectRadio)
+
     const approveValue = approveInput.checked
     const rejectValue = rejectInput.checked
 

@@ -12,6 +12,11 @@ import { IPermissions } from '../../shared/container/types'
 export class StCoursesComponent implements OnInit {
   @Input() permissions!: IPermissions
 
+  @Input() del = true
+  @Input() new = true
+  @Input() approve = false
+  @Input() userId: number | null = null
+
   allRegistries: ICourse[] = []
   title = 'Cursos e Capacitações'
   createRegistryData: ICreateCourse = {
@@ -97,7 +102,7 @@ export class StCoursesComponent implements OnInit {
 
   getAllRegistries() {
     this.isLoading = true
-    this.service.findAllRegistries().subscribe({
+    this.service.findAllRegistries(this.userId).subscribe({
       next: (res) => {
         this.allRegistries = res
         this.isLoading = false

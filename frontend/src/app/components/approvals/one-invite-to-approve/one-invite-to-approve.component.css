@@ -1,0 +1,15 @@
+.informationArea {
+  margin: 10px;
+  padding: 10px;
+  background-color: #0d336224;
+  border-radius: 5px;
+}
+.informationTitle {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 36px;
+  color: #23435f;
+  margin-bottom: 1rem;
+}

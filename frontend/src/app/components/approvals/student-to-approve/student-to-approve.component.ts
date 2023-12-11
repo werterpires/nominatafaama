@@ -83,7 +83,7 @@ export class StudentToApproveComponent {
       this.permissions.estudante = roles.includes('estudante')
       this.permissions.secretaria = roles.includes('secretaria')
       this.permissions.direcao = roles.includes('direção')
-      this.permissions.representacao = roles.includes('representacao')
+      this.permissions.representacao = roles.includes('representante de campo')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
       this.permissions.ministerial = roles.includes('ministerial')

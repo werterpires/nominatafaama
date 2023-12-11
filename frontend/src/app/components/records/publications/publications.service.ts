@@ -15,11 +15,14 @@ import {
 export class PublicationsService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IPublication[]> {
+  findAllRegistries(userId: number | null): Observable<IPublication[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/publications/approve/student/' + userId
+      : '/publications/person/student'
     return this.http
-      .get<IPublication[]>(environment.API + '/publications/person/student', {
+      .get<IPublication[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

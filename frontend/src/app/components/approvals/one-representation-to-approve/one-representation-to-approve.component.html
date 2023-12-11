@@ -1,0 +1,118 @@
+<div class="sectionBoxes">
+  <section *ngIf="permissions.administrador" class="sectionBox">
+    <div class="boxHead">
+      <p class="sectionTitle1">Selecionar representações</p>
+    </div>
+    <form class="formSearch" action="">
+      <label class="inputLabel" for="">
+        Busque um representante específico pelo nome:
+        <select
+          class="searchInput"
+          name="searchRepresent"
+          id=""
+          [(ngModel)]="selectedRep"
+          (change)="getAllRegistries()"
+        >
+          <option *ngFor="let rep of allReps" [value]="rep.repId">
+            {{ rep.personName }}
+          </option>
+        </select>
+      </label>
+    </form>
+    <section *ngIf="allRegistries.length > 0">
+      <div *ngFor="let represent of allRegistries; let i = index">
+        <div class="subSection">
+          <span class="field">
+            <p class="fieldTitle">Campo:</p>
+            <p class="fieldContent">{{ represent.representedField }}</p>
+          </span>
+          <span class="field">
+            <p class="fieldTitle">Função:</p>
+            <p class="fieldContent">
+              {{ represent.functionn }}
+            </p>
+          </span>
+        </div>
+        <label class="field">
+          <p class="fieldTitle">Validade</p>
+          <input
+            class="inputLabel"
+            type="date"
+            [(ngModel)]="allRegistries[i].repActiveValidate"
+        /></label>
+
+        <form class="formSection">
+          <label class="labelRadio">
+            <input
+              class="approvedRadio"
+              [id]="'oneapproveRepresent' + i"
+              type="radio"
+              name="status"
+              [checked]="represent.repApproved"
+            />
+            Aprovado
+          </label>
+          <label class="labelRadio">
+            <input
+              class="rejectedRadio"
+              [id]="'onerejectRepresent' + i"
+              type="radio"
+              name="status"
+              [checked]="!represent.repApproved"
+            />
+            Desaprovado
+          </label>
+
+          <button
+            class="saveButton"
+            type="button"
+            (click)="
+              approveRepresentation(
+                'oneapproveRepresent' + i,
+                'onerejectRepresent' + i,
+                represent.representationID,
+                i
+              )
+            "
+          >
+            SALVAR
+          </button>
+        </form>
+
+        <hr class="sectionDivisiion" />
+      </div>
+    </section>
+  </section>
+
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeError()"
+    />
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{ doneMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeDone()"
+    />
+  </div>
+
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+</div>

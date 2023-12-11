@@ -4,6 +4,7 @@ import { DataService } from '../shared/shared.service.ts/data.service'
 import { LoginService } from '../shared/shared.service.ts/login.service'
 import { Router } from '@angular/router'
 import { RecordsService } from './records.service'
+import { ErrorServices } from '../shared/shared.service.ts/error.service'
 
 @Component({
   selector: 'app-records',
@@ -24,6 +25,8 @@ export class RecordsComponent {
   }
 
   user: IUserApproved | null = null
+
+  error = false
 
   ngOnInit(): void {
     this.loginService.user$.subscribe((user) => {
@@ -47,11 +50,14 @@ export class RecordsComponent {
       this.permissions.estudante = roles.includes('estudante')
       this.permissions.secretaria = roles.includes('secretaria')
       this.permissions.direcao = roles.includes('direção')
-      this.permissions.representacao = roles.includes('representacao')
+      this.permissions.representacao = roles.includes('representante de campo')
       this.permissions.administrador = roles.includes('administrador')
       this.permissions.docente = roles.includes('docente')
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
+    })
+    this.errorService.error$.subscribe((error) => {
+      this.error = error
     })
     this.getMaritalStatus()
   }
@@ -65,9 +71,7 @@ export class RecordsComponent {
         }
       },
       error: (err) => {
-        // this.errorMessage = err.message;
-        // this.error = true;
-        // this.isLoading = false;
+        this.errorService.showError(err.message)
       },
     })
   }
@@ -76,5 +80,6 @@ export class RecordsComponent {
     private loginService: LoginService,
     private router: Router,
     private service: RecordsService,
+    private errorService: ErrorServices,
   ) {}
 }

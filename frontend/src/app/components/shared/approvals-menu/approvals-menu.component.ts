@@ -18,4 +18,12 @@ export class ApprovalsMenuComponent {
   choseStudents() {
     this.approvalType.emit('students')
   }
+
+  choseRepresentations() {
+    this.approvalType.emit('representations')
+  }
+
+  choseInvites() {
+    this.approvalType.emit('invites')
+  }
 }

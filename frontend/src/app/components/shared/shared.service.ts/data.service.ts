@@ -3,6 +3,11 @@ import { ICompleteStudent } from '../../approvals/student-to-approve/types'
 import { INominata } from '../../parameterization/nominatas/types'
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { ThisReceiver } from '@angular/compiler'
+import { IAssociation } from '../../parameterization/associations/types'
+import { ICity, IUF } from '../types'
+import { OthersServices } from './others.service'
+import { IStudent } from '../../records/students/types'
+import { ErrorServices } from './error.service'
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +20,11 @@ export class DataService {
   alonePhoto: SafeResourceUrl | null = null
   spousePhoto: SafeResourceUrl | null = null
   familyPhoto: SafeResourceUrl | null = null
+
+  constructor(
+    private otherService: OthersServices,
+    private errorService: ErrorServices,
+  ) {}
 
   receiveStudent(
     student: ICompleteStudent,
@@ -41,5 +51,75 @@ export class DataService {
     return `${
       objectDate.getUTCMonth() + 1
     }/${objectDate.getUTCDate()}/${objectDate.getUTCFullYear()}`
+  }
+  formatarTelefone(phoneNumber: string) {
+    console.log(phoneNumber)
+    let formatedNumber = ''
+    phoneNumber = phoneNumber.replace(/\D/g, '')
+
+    if (phoneNumber.length > 0) {
+      formatedNumber = '(' + phoneNumber.substring(0, 2) + ') '
+    }
+    if (phoneNumber.length > 2) {
+      formatedNumber += phoneNumber.substring(2, 6) + '-'
+    }
+    if (phoneNumber.length > 7) {
+      formatedNumber += phoneNumber.substring(6, 10)
+    }
+    if (phoneNumber.length == 11) {
+      formatedNumber = phoneNumber.replace(
+        /(\d{2})(\d{5})(\d{4})/,
+        '($1) $2-$3',
+      )
+    }
+    console.log(formatedNumber)
+    return formatedNumber
+  }
+
+  filterAssociation(
+    possibleAssociantions: IAssociation[],
+    allAssociations: IAssociation[],
+    unionAcronym: string,
+    change?: boolean,
+  ) {
+    possibleAssociantions.splice(0, possibleAssociantions.length)
+    const filtered = allAssociations.filter((association) => {
+      return association.union_acronym == unionAcronym
+    })
+    possibleAssociantions.push(...filtered)
+
+    if (change) {
+      return possibleAssociantions[0].association_id
+    }
+    return 0
+  }
+
+  findCities(
+    sigla: string,
+    allStates: IUF[],
+    citiesArray: ICity[],
+    atualCity: string,
+  ) {
+    const state = allStates.find((state) => state.sigla === sigla)
+    let cityToReturn = ''
+    if (state) {
+      this.otherService.findAllCities(state.id).subscribe({
+        next: (res) => {
+          citiesArray.splice(0, citiesArray.length)
+          citiesArray.push(...res)
+          if (!citiesArray.find((cit) => cit.nome === atualCity)) {
+            cityToReturn = ''
+          }
+          cityToReturn = atualCity
+        },
+        error: (err) => {
+          this.errorService.showError(err.message)
+        },
+      })
+      return cityToReturn
+    } else {
+      console.error('State Id not found.')
+      return atualCity
+    }
   }
 }

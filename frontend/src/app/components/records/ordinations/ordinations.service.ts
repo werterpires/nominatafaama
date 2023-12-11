@@ -11,11 +11,14 @@ import { CreateOrdinationDto, IOrdination, UpdateOrdinationDto } from './types'
 export class OrdinationsService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IOrdination[]> {
+  findAllRegistries(userId: number | null): Observable<IOrdination[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/ordinations/approve/student/' + userId
+      : '/ordinations/person/student'
     return this.http
-      .get<IOrdination[]>(environment.API + '/ordinations/person/student', {
+      .get<IOrdination[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

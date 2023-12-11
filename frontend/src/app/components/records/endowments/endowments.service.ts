@@ -11,11 +11,14 @@ import { CreateEndowmentDto, IEndowment, UpdateEndowmentDto } from './types'
 export class EndowmentsService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<IEndowment[]> {
+  findAllRegistries(userId: number | null): Observable<IEndowment[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/endowments/approve/student/' + userId
+      : '/endowments/person/student'
     return this.http
-      .get<IEndowment[]>(environment.API + '/endowments/person/student', {
+      .get<IEndowment[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

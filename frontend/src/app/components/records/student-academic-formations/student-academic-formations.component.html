@@ -19,6 +19,7 @@
       [ngClass]="{ hidden: !showBox }"
       src="assets/icons/addIcon.png"
       (click)="showForm = true"
+      *ngIf="new"
     >
       Adicionar nova formação acadêmica
     </button>
@@ -96,6 +97,12 @@
           registry.formation_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'academic_formations'"
+      [approve]="approve"
+      [approved]="registry.academic_formation_approved"
+      [registryIdToApprove]="registry.formation_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

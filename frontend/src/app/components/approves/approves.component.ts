@@ -1,22 +1,22 @@
-import { Component, Input } from '@angular/core'
-import { IPermissions } from '../shared/container/types'
+// import { Component, Input } from '@angular/core'
+// import { IPermissions } from '../shared/container/types'
 
-@Component({
-  selector: 'app-approves',
-  templateUrl: './approves.component.html',
-  styleUrls: ['./approves.component.css'],
-})
-export class ApprovesComponent {
-  @Input() permissions!: IPermissions
-  @Input() approvalType!: string
-  router: any
-  selectedOne = false
+// @Component({
+//   selector: 'app-approves',
+//   templateUrl: './approves.component.html',
+//   styleUrls: ['./approves.component.css'],
+// })
+// export class ApprovesComponent {
+//   @Input() permissions!: IPermissions
+//   @Input() approvalType!: string
+//   router: any
+//   selectedOne = false
 
-  onStudentSelected() {
-    this.selectedOne = true
-  }
+//   onStudentSelected() {
+//     this.selectedOne = true
+//   }
 
-  onSeeAllSelected() {
-    this.selectedOne = false
-  }
-}
+//   onSeeAllSelected() {
+//     this.selectedOne = false
+//   }
+// }

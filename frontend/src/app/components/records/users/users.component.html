@@ -19,10 +19,11 @@
     <app-update-form
       (editRegistry)="showAlert('edit')"
       *ngIf="registry.user_id"
+      [del]="false"
     >
       <div class="subSection gap-2">
         <label class="inputLabel">
-          Nome<input
+          Nomde<input
             #nameInput
             class="smallInput"
             type="text"

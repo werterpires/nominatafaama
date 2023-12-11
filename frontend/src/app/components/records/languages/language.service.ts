@@ -11,11 +11,14 @@ import { ICreateLanguageDto, ILanguage, IUpdateLanguageDto } from './types'
 export class LanguageService {
   constructor(private http: HttpClient) {}
 
-  findAllRegistries(): Observable<ILanguage[]> {
+  findAllRegistries(userId: number | null): Observable<ILanguage[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/languages/approve/student/' + userId
+      : '/languages/person/student'
     return this.http
-      .get<ILanguage[]>(environment.API + '/languages/person/student', {
+      .get<ILanguage[]>(environment.API + url, {
         headers: head_obj,
       })
       .pipe(

@@ -1,0 +1,12 @@
+<div *ngIf="alert" class="alert">
+  <div class="alertTitle">
+    <p>Alerta</p>
+  </div>
+  <div class="alertMessage">
+    <p>{{ alertMessage }}</p>
+  </div>
+  <div class="alertButtons">
+    <button (click)="confirm()">Continuar</button>
+    <button (click)="closeAlert()">Cancelar</button>
+  </div>
+</div>

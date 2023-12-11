@@ -12,6 +12,10 @@ import { EndowmentTypesService } from '../../parameterization/endowment-types/en
 })
 export class EndowmentsComponent implements OnInit {
   @Input() permissions!: IPermissions
+  @Input() del = true
+  @Input() new = true
+  @Input() approve = false
+  @Input() userId: number | null = null
 
   allRegistries: IEndowment[] = []
   endowmentTypeList: Array<IEndowmentType> = []
@@ -100,7 +104,7 @@ export class EndowmentsComponent implements OnInit {
     this.isLoading = true
     this.allRegistries = []
     this.endowmentTypeList = []
-    this.service.findAllRegistries().subscribe({
+    this.service.findAllRegistries(this.userId).subscribe({
       next: (res) => {
         this.allRegistries = res
         this.getAllEndowmentTypes()

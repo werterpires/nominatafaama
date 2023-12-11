@@ -185,7 +185,6 @@ export class NotificationsModel {
           'people.name'
         )
         .orderBy('users_notifications.created_at', 'asc')
-        .limit(10)
 
       return notifications
     } catch (error) {

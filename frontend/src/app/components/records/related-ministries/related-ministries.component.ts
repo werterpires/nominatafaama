@@ -17,6 +17,11 @@ import { MinistryTypesService } from '../../parameterization/minstry-types/minis
 export class RelatedMinistriesComponent implements OnInit {
   @Input() permissions!: IPermissions
 
+  @Input() del = false
+  @Input() new = true
+  @Input() approve = false
+  @Input() userId: number | null = null
+
   allRegistries: IRelatedMinistry[] = []
   ministryTypeList: Array<IMinistryType> = []
   title = 'Ministérios de interesse'
@@ -117,7 +122,7 @@ export class RelatedMinistriesComponent implements OnInit {
 
   getAllRegistries() {
     this.isLoading = true
-    this.service.findAllRegistries().subscribe({
+    this.service.findAllRegistries(this.userId).subscribe({
       next: (res) => {
         this.allRegistries = res
         this.ministryTypeList = []

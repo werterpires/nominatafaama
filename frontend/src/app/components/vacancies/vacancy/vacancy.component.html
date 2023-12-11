@@ -1,0 +1,242 @@
+<div class="vacancyModal">
+  <section class="vacancyContainer">
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeError()"
+    />
+    <app-update-form
+      (editRegistry)="
+        showAlert('edit', 'Confirmar a edição este item?', vacancy.vacancyId)
+      "
+      (deleteRegistry)="
+        showAlert(
+          'delete',
+          'Confirmar a exclusão deste item?',
+          vacancy.vacancyId
+        )
+      "
+      [registryId]="vacancy.vacancyId"
+    >
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">Título</p>
+          <input
+            class="fieldContent"
+            [id]="'titleInput'"
+            name="titleInput"
+            [(ngModel)]="vacancy.title"
+          />
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Descrição</p>
+          <input
+            class="fieldContent"
+            [id]="'descriptionInput'"
+            name="descriptionInput"
+            [(ngModel)]="vacancy.description"
+          />
+        </span>
+      </div>
+
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">Ministério</p>
+          <select
+            name="ministrySelect"
+            id="ministrySelect"
+            [(ngModel)]="vacancy.ministryId"
+          >
+            <option
+              *ngFor="let ministry of allMinistries"
+              [value]="ministry.ministry_type_id"
+              [selected]="vacancy.ministryId === ministry.ministry_type_id"
+            >
+              {{ ministry.ministry_type_name }}
+            </option>
+          </select>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Tipo de contratação</p>
+          <select
+            name="hiringSelect"
+            id="hiringSelect"
+            [(ngModel)]="vacancy.hiringStatusId"
+          >
+            <option
+              *ngFor="let status of allHiringStatus"
+              [value]="status.hiring_status_id"
+              [selected]="vacancy.hiringStatusId === status.hiring_status_id"
+            >
+              {{ status.hiring_status_name }}
+            </option>
+          </select>
+        </span>
+      </div>
+    </app-update-form>
+    <div class="hidden">
+      <button #addIcon src="assets/icons/addIcon.png">
+        Adicionar estudante à vaga
+      </button>
+    </div>
+
+    <div class="legendContainer">
+      <div class="legendItem">
+        <div class="legend accepted"></div>
+        <p>Convite aceito</p>
+      </div>
+      <div class="legendItem">
+        <div class="legend iapproved"></div>
+        <p>Convite aprovado</p>
+      </div>
+      <div class="legendItem">
+        <div class="legend inotApproved"></div>
+        <p>Convite não avaliado</p>
+      </div>
+      <div class="legendItem">
+        <div class="legend iunapproved"></div>
+        <p>Convite desaprovado</p>
+      </div>
+      <div class="legendItem">
+        <div class="legend rejected"></div>
+        <p>Convite recusado</p>
+      </div>
+    </div>
+    <div class="vacancyStudents">
+      <div
+        class="studentsInVacancy"
+        (drop)="onDropInVacancy($event)"
+        (dragover)="onDragOver($event)"
+      >
+        <div *ngFor="let vacancyStudent of vacancy.vacancyStudents">
+          <app-small-student-cards
+            class="studentCards"
+            [inviteState]="checkInvites(vacancyStudent.invites)"
+            [student]="vacancyStudent.student"
+            [comments]="vacancyStudent.comments"
+            [draggable]="
+              (vacancyStudent.invites[0] &&
+                vacancyStudent.invites[0].accept === null) ||
+              !vacancyStudent.invites[0]
+            "
+            [commentsAllowed]="true"
+            (dragstart)="onVacancyDragStart($event, vacancyStudent)"
+            (editEmiter)="
+              editVacancyStudent(
+                vacancyStudent.vacancyStudentId,
+                $event.comments
+              )
+            "
+            (inviteEmiter)="showInviteModal(vacancyStudent.vacancyStudentId)"
+          ></app-small-student-cards>
+        </div>
+      </div>
+      <div
+        class="studentsNotInVacancy"
+        (drop)="onDropOutVacancy($event)"
+        (dragover)="onDragOver($event)"
+      >
+        <form action="" id="searchForm">
+          <select
+            name="unionSelect"
+            id=""
+            class="searchConrols"
+            [(ngModel)]="searchedUnion"
+            (change)="filterStudents(true)"
+          >
+            <option value="">Todas as uniões</option>
+            <option *ngFor="let union of unions" [value]="union">
+              {{ union }}
+            </option>
+          </select>
+          <select
+            name="associationSelect"
+            class="searchConrols"
+            id=""
+            [(ngModel)]="searchedAssociation"
+            (change)="filterStudents()"
+          >
+            <option value="">Todas as associações</option>
+            <option
+              *ngFor="let association of associations"
+              [value]="association"
+            >
+              {{ association }}
+            </option>
+          </select>
+          <input
+            type="text"
+            name="searchedStudentInput"
+            class="searchConrols"
+            placeholder="Pesquisar por nome"
+            [(ngModel)]="searchedStudent"
+            (input)="filterStudents()"
+          />
+          <button
+            *ngIf="!onlyfavs"
+            (click)="filterStudents(false, true)"
+            id="cleanSearchButton"
+          >
+            Favoritos
+          </button>
+
+          <button
+            *ngIf="onlyfavs"
+            (click)="filterStudents(false, false)"
+            id="cleanSearchButton"
+          >
+            Todos
+          </button>
+
+          <button (click)="cleanFilters()" id="cleanSearchButton">
+            Limpar filtros
+          </button>
+        </form>
+        <app-small-student-cards
+          class="studentCards"
+          *ngFor="let student of studentsToList"
+          [student]="student"
+          draggable="true"
+          (dragstart)="onStudentDragStart($event, student)"
+        ></app-small-student-cards>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div *ngIf="inviteModal" class="inviteModal">
+  <app-invites
+    [notice]="notice"
+    (closeEvent)="inviteModal = false"
+    (createInviteEvent)="createInvite($event)"
+  ></app-invites>
+</div>
+
+<app-error-modal *ngIf="error"></app-error-modal>
+
+<div *ngIf="commentModal" class="commentModal">
+  <label for="" class="inputLabel"
+    >Se quiser, você pode escrever um comentário sobre o estudante antes de
+    adicioná-lo à vaga.</label
+  >
+  <input
+    type="text"
+    class="commentInput"
+    [(ngModel)]="comment"
+    placeholder="Exemplo: Estudante recomendado por Pedro e João; possui pós em matemática..."
+  />
+
+  <button (click)="addStudent()">Ok</button>
+</div>
+
+<app-alert-modal
+  *ngIf="alert"
+  class="alert"
+  [alertMessage]="this.alertMessage"
+  [func]="this.func"
+  (continue)="confirm($event)"
+></app-alert-modal>
+
+<div *ngIf="isLoading" class="loader1"></div>
+<div *ngIf="isLoading" class="loader2"></div>

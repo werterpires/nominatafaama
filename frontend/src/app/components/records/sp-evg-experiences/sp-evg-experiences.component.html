@@ -15,7 +15,12 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+    <button
+      *ngIf="new"
+      #addIcon
+      [ngClass]="{ hidden: !showBox }"
+      (click)="showForm = true"
+    >
       Adicionar nova Experiência evangelística
     </button>
   </div>
@@ -77,6 +82,12 @@
           registry.evang_exp_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'evangelistic_experiences'"
+      [approve]="approve"
+      [approved]="registry.evang_exp_approved"
+      [registryIdToApprove]="registry.evang_exp_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

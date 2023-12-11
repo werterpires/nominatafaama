@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { Knex } from 'knex';
-import { InjectModel } from 'nest-knexjs';
+import { Injectable } from '@nestjs/common'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
 import {
   ICreateProfessionalExperience,
   IProfessionalExperience,
-  IUpdateProfessionalExperience,
-} from '../types/types';
-import { NotificationsService } from 'src/shared/notifications/services/notifications.service';
-import { UserFromJwt } from 'src/shared/auth/types/types';
+  IUpdateProfessionalExperience
+} from '../types/types'
+import { NotificationsService } from 'src/shared/notifications/services/notifications.service'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class ProfessionalExperiencesModel {
-  @InjectModel() private readonly knex: Knex;
+  @InjectModel() private readonly knex: Knex
   constructor(private notificationsService: NotificationsService) {}
 
   async createProfessionalExperience(
@@ -25,8 +25,8 @@ export class ProfessionalExperiencesModel {
         job_begin_date,
         job_end_date,
         person_id,
-        experience_approved,
-      } = createExperienceData;
+        experience_approved
+      } = createExperienceData
 
       await this.knex('professional_experiences')
         .insert({
@@ -35,14 +35,14 @@ export class ProfessionalExperiencesModel {
           job_begin_date,
           job_end_date,
           person_id,
-          experience_approved,
+          experience_approved
         })
-        .returning('experience_id');
+        .returning('experience_id')
 
       const person = await this.knex('people')
         .where('people.person_id', person_id)
         .select('people.name')
-        .first();
+        .first()
 
       await this.notificationsService.createNotification({
         action: 'inseriu',
@@ -57,21 +57,21 @@ export class ProfessionalExperiencesModel {
           data_conclusao: await this.notificationsService.formatDate(
             createExperienceData.job_end_date
           ),
-          pessoa: person?.name,
+          pessoa: person?.name
         },
         notificationType: 4,
         objectUserId: currentUser.user_id,
         oldData: null,
-        table: 'Experiências profissionais',
-      });
+        table: 'Experiências profissionais'
+      })
 
-      return true;
+      return true
     } catch (error) {
-      console.error(error);
+      console.error(error)
       if (error.code === 'ER_DUP_ENTRY') {
-        throw new Error('Professional experience already exists');
+        throw new Error('Professional experience already exists')
       } else {
-        throw new Error(error.sqlMessage);
+        throw new Error(error.sqlMessage)
       }
     }
   }
@@ -79,18 +79,18 @@ export class ProfessionalExperiencesModel {
   async findProfessionalExperienceById(
     id: number
   ): Promise<IProfessionalExperience | null> {
-    let experience: IProfessionalExperience | null = null;
-    let sentError: Error | null = null;
+    let experience: IProfessionalExperience | null = null
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         const result = await trx
           .table('professional_experiences')
           .where('experience_id', '=', id)
-          .first();
+          .first()
 
         if (!result) {
-          throw new Error('Professional experience not found');
+          throw new Error('Professional experience not found')
         }
 
         experience = {
@@ -102,58 +102,58 @@ export class ProfessionalExperiencesModel {
           person_id: result.person_id,
           experience_approved: result.experience_approved,
           created_at: result.created_at,
-          updated_at: result.updated_at,
-        };
+          updated_at: result.updated_at
+        }
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.message);
-        await trx.rollback();
-        throw error;
+        console.error(error)
+        sentError = new Error(error.message)
+        await trx.rollback()
+        throw error
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return experience;
+    return experience
   }
 
   async findProfessionalExperiencesByPersonId(
     personId: number
   ): Promise<IProfessionalExperience[]> {
-    let experienceList: IProfessionalExperience[] = [];
-    let sentError: Error | null = null;
+    let experienceList: IProfessionalExperience[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
         experienceList = await trx
           .table('professional_experiences')
           .where('person_id', '=', personId)
-          .select('*');
+          .select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return experienceList;
+    return experienceList
   }
 
   async findApprovedProfessionalExperiencesByPersonId(
     personId: number
   ): Promise<IProfessionalExperience[]> {
-    let experienceList: IProfessionalExperience[] = [];
-    let sentError: Error | null = null;
+    let experienceList: IProfessionalExperience[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -161,58 +161,56 @@ export class ProfessionalExperiencesModel {
           .table('professional_experiences')
           .where('person_id', '=', personId)
           .andWhere('experience_approved', '=', true)
-          .select('*');
+          .select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return experienceList;
+    return experienceList
   }
 
   async findAllProfessionalExperiences(): Promise<IProfessionalExperience[]> {
-    let experienceList: IProfessionalExperience[] = [];
-    let sentError: Error | null = null;
+    let experienceList: IProfessionalExperience[] = []
+    let sentError: Error | null = null
 
     await this.knex.transaction(async (trx) => {
       try {
-        experienceList = await trx
-          .table('professional_experiences')
-          .select('*');
+        experienceList = await trx.table('professional_experiences').select('*')
 
-        await trx.commit();
+        await trx.commit()
       } catch (error) {
-        console.error(error);
-        sentError = new Error(error.sqlMessage);
-        await trx.rollback();
+        console.error(error)
+        sentError = new Error(error.sqlMessage)
+        await trx.rollback()
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return experienceList;
+    return experienceList
   }
 
   async findAllNotApprovedPersonIds(): Promise<{ person_id: number }[] | null> {
-    let personIds: { person_id: number }[] | null = null;
-    let sentError: Error | null = null;
+    let personIds: { person_id: number }[] | null = null
+    let sentError: Error | null = null
 
     try {
       const studentResult = await this.knex
         .table('professional_experiences')
         .join('users', 'users.person_id', 'professional_experiences.person_id')
         .select('users.person_id')
-        .whereNull('experience_approved');
+        .whereNull('experience_approved')
 
       const spouseResult = await this.knex
         .table('professional_experiences')
@@ -223,25 +221,25 @@ export class ProfessionalExperiencesModel {
         )
         .join('students', 'students.student_id', 'spouses.student_id')
         .select('students.person_id')
-        .whereNull('professional_experiences.experience_approved');
+        .whereNull('professional_experiences.experience_approved')
 
       personIds = [...studentResult, ...spouseResult].map((row) => ({
-        person_id: row.person_id,
-      }));
+        person_id: row.person_id
+      }))
     } catch (error) {
-      console.error('Erro capturado na model: ', error);
-      sentError = new Error(error.message);
+      console.error('Erro capturado na model: ', error)
+      sentError = new Error(error.message)
     }
 
-    return personIds;
+    return personIds
   }
 
   async updateProfessionalExperienceById(
     updateExperience: IUpdateProfessionalExperience,
     currentUser: UserFromJwt
   ): Promise<IProfessionalExperience> {
-    let updatedExperience: IProfessionalExperience | null = null;
-    let sentError: Error | null = null;
+    let updatedExperience: IProfessionalExperience | null = null
+    let sentError: Error | null = null
     await this.knex.transaction(async (trx) => {
       try {
         const {
@@ -251,8 +249,8 @@ export class ProfessionalExperiencesModel {
           job_begin_date,
           job_end_date,
           person_id,
-          experience_approved,
-        } = updateExperience;
+          experience_approved
+        } = updateExperience
 
         let approved = await trx('professional_experiences')
           .leftJoin(
@@ -260,11 +258,16 @@ export class ProfessionalExperiencesModel {
             'people.person_id',
             'professional_experiences.person_id'
           )
+          .leftJoin(
+            'users',
+            'users.person_id',
+            'professional_experiences.person_id'
+          )
           .first('*')
-          .where('experience_id', experience_id);
+          .where('experience_id', experience_id)
 
         if (approved.experience_approved == true) {
-          throw new Error('Registro já aprovado');
+          throw new Error('Registro já aprovado')
         }
 
         await trx('professional_experiences')
@@ -274,16 +277,23 @@ export class ProfessionalExperiencesModel {
             job_institution,
             job_begin_date,
             job_end_date,
-            person_id,
-            experience_approved,
-          });
+            experience_approved
+          })
 
-        await trx.commit();
+        await trx.commit()
 
         const person = await this.knex('people')
           .where('people.person_id', person_id)
           .select('people.name')
-          .first();
+          .first()
+        let userIdAlt
+        if (!approved.user_id) {
+          userIdAlt = await this.knex('spouses')
+            .leftJoin('students', 'spouses.student_id', 'students.student_id')
+            .leftJoin('users', 'students.person_id', 'users.person_id')
+            .where('spouses.person_id', person_id)
+            .first('users.user_id')
+        }
 
         await this.notificationsService.createNotification({
           action: 'editou',
@@ -298,10 +308,10 @@ export class ProfessionalExperiencesModel {
             data_conclusao: await this.notificationsService.formatDate(
               job_end_date
             ),
-            pessoa: person?.name,
+            pessoa: person?.name
           },
           notificationType: 4,
-          objectUserId: currentUser.user_id,
+          objectUserId: approved.user_id || userIdAlt.user_id,
           oldData: {
             trabalho: approved.job,
             instituicao: approved.job_institution,
@@ -311,33 +321,33 @@ export class ProfessionalExperiencesModel {
             data_conclusao: await this.notificationsService.formatDate(
               approved.job_end_date
             ),
-            pessoa: person?.name,
+            pessoa: person?.name
           },
-          table: 'Experiências profissionais',
-        });
+          table: 'Experiências profissionais'
+        })
 
         updatedExperience = await this.findProfessionalExperienceById(
           experience_id
-        );
+        )
       } catch (error) {
-        await trx.rollback();
-        sentError = new Error(error.message);
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    return updatedExperience!;
+    return updatedExperience!
   }
 
   async deleteProfessionalExperienceById(
     id: number,
     currentUser: UserFromJwt
   ): Promise<string> {
-    let sentError: Error | null = null;
-    let message: string = '';
+    let sentError: Error | null = null
+    let message: string = ''
 
     await this.knex.transaction(async (trx) => {
       try {
@@ -348,19 +358,19 @@ export class ProfessionalExperiencesModel {
             'professional_experiences.person_id'
           )
           .first('*')
-          .where('experience_id', id);
+          .where('experience_id', id)
 
         if (!approved) {
-          throw new Error('Professional experience not found');
+          throw new Error('Professional experience not found')
         }
 
         if (approved.experience_approved == true) {
-          throw new Error('Registro já aprovado');
+          throw new Error('Registro já aprovado')
         }
 
-        await trx('professional_experiences').where('experience_id', id).del();
+        await trx('professional_experiences').where('experience_id', id).del()
 
-        await trx.commit();
+        await trx.commit()
         await this.notificationsService.createNotification({
           action: 'apagou',
           agent_name: currentUser.name,
@@ -377,22 +387,22 @@ export class ProfessionalExperiencesModel {
             data_conclusao: await this.notificationsService.formatDate(
               approved.job_end_date
             ),
-            pessoa: approved.name,
+            pessoa: approved.name
           },
-          table: 'Experiências profissionais',
-        });
+          table: 'Experiências profissionais'
+        })
       } catch (error) {
-        console.error(error);
-        await trx.rollback();
-        sentError = new Error(error.message);
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.message)
       }
-    });
+    })
 
     if (sentError) {
-      throw sentError;
+      throw sentError
     }
 
-    message = 'Professional experience deleted successfully.';
-    return message;
+    message = 'Professional experience deleted successfully.'
+    return message
   }
 }

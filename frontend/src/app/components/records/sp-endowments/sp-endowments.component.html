@@ -15,7 +15,12 @@
       <p class="sectionTitle1">{{ title }}</p>
     </span>
 
-    <button #addIcon [ngClass]="{ hidden: !showBox }" (click)="showForm = true">
+    <button
+      *ngIf="new"
+      #addIcon
+      [ngClass]="{ hidden: !showBox }"
+      (click)="showForm = true"
+    >
       Adicionar nova investidura
     </button>
   </div>
@@ -52,6 +57,12 @@
           registry.endowment_id
         )
       "
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'endowments'"
+      [approve]="approve"
+      [approved]="registry.endowment_approved"
+      [registryIdToApprove]="registry.endowment_id"
       [registryId]="i"
       *ngFor="let registry of allRegistries; index as i"
       [ngClass]="{

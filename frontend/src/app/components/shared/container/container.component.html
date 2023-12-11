@@ -94,20 +94,17 @@
               permissions.isApproved
             "
             class="menuOption"
-            (click)="choseOption('vagas')"
+            (click)="navigate('vagas')"
           >
             <a>Vagas</a>
           </li>
           <li
             *ngIf="
-              (permissions.administrador ||
-                permissions.representacao ||
-                permissions.direcao ||
-                permissions.ministerial) &&
+              (permissions.administrador || permissions.estudante) &&
               permissions.isApproved
             "
             class="menuOption"
-            (click)="choseOption('chamados')"
+            (click)="navigate('chamados')"
           >
             <a>Chamados</a>
           </li>

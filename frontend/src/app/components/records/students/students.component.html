@@ -243,6 +243,12 @@
     <app-update-form
       (editRegistry)="showAlert('edit', 'Confirmar a edição este item?')"
       *ngIf="registry.student_id"
+      (atualize)="ngOnInit()"
+      [del]="del"
+      [table]="'students'"
+      [approve]="approve"
+      [approved]="registry.student_approved"
+      [registryIdToApprove]="registry.student_id"
     >
       <div class="subSection gap-2">
         <label class="inputLabel">

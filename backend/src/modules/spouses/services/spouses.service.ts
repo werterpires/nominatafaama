@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { PeopleServices } from 'src/modules/people/dz_services/people.service';
-import { StudentsService } from 'src/modules/students/services/students.service';
-import { UsersService } from 'src/modules/users/dz_services/users.service';
-import { CreateSpouseDto } from '../dto/create-spouse.dto';
-import { UpdateSpouseDto } from '../dto/update-spouse.dto';
-import { SpousesModel } from '../model/spouses.model';
-import { ICreateSpouse, ISpouse, IUpdateSpouse } from '../types/types';
-import { UserFromJwt } from 'src/shared/auth/types/types';
+import { Injectable } from '@nestjs/common'
+import { PeopleServices } from 'src/modules/people/dz_services/people.service'
+import { StudentsService } from 'src/modules/students/services/students.service'
+import { UsersService } from 'src/modules/users/dz_services/users.service'
+import { CreateSpouseDto } from '../dto/create-spouse.dto'
+import { UpdateSpouseDto } from '../dto/update-spouse.dto'
+import { SpousesModel } from '../model/spouses.model'
+import { ICreateSpouse, ISpouse, IUpdateSpouse } from '../types/types'
+import { UserFromJwt } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class SpousesService {
@@ -23,18 +23,16 @@ export class SpousesService {
     currentUser: UserFromJwt
   ): Promise<void> {
     try {
-      const { student_id } = await this.studentService.findStudentByIdToEdit(
-        id
-      );
+      const { student_id } = await this.studentService.findStudentByIdToEdit(id)
 
-      const birthDate = new Date(dto.birth_date);
-      const baptismDate = new Date(dto.baptism_date);
+      const birthDate = new Date(dto.birth_date)
+      const baptismDate = new Date(dto.baptism_date)
 
-      let civilMarryDate;
+      let civilMarryDate
       if (dto.civil_marriage_date != null) {
-        civilMarryDate = new Date(dto.civil_marriage_date);
+        civilMarryDate = new Date(dto.civil_marriage_date)
       } else {
-        civilMarryDate = null;
+        civilMarryDate = null
       }
       const spouse: ICreateSpouse = {
         phone_number: dto.phone_number,
@@ -56,21 +54,21 @@ export class SpousesService {
         cpf: dto.cpf,
         primary_school_state: dto.primary_school_state,
         student_id: student_id,
-        civil_marriage_state: dto.civil_marriage_state,
-      };
+        civil_marriage_state: dto.civil_marriage_state
+      }
 
-      await this.spousesModel.createSpouse(spouse, currentUser);
+      await this.spousesModel.createSpouse(spouse, currentUser)
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
   async findSpouseByUserId(id: number): Promise<ISpouse> {
     try {
-      const spouse = await this.spousesModel.findSpouseByUserId(id);
-      return spouse as ISpouse;
+      const spouse = await this.spousesModel.findSpouseByUserId(id)
+      return spouse as ISpouse
     } catch (error) {
-      throw new Error(`Failed to find spouse with id ${id}: ${error.message}`);
+      throw new Error(`Failed to find spouse with id ${id}: ${error.message}`)
     }
   }
 
@@ -79,48 +77,48 @@ export class SpousesService {
     id: number,
     currentUser: UserFromJwt
   ): Promise<ISpouse> {
-    let updatedSpouse: ISpouse | null = null;
-    let sentError: Error | null = null;
-
-    const birthDate = new Date(input.birth_date);
-    const baptismDate = new Date(input.baptism_date);
-
-    let civilMarryDate;
-    if (input.civil_marriage_date != null) {
-      civilMarryDate = new Date(input.civil_marriage_date);
-    } else {
-      civilMarryDate = null;
-    }
-
-    const { student_id } = await this.studentService.findStudentByIdToEdit(id);
-
-    const updateData: IUpdateSpouse = {
-      ...input,
-      birth_date: birthDate,
-      baptism_date: baptismDate,
-      civil_marriage_date: civilMarryDate,
-      student_id: student_id,
-      spouse_approved: null,
-    };
-
+    let updatedSpouse: ISpouse | null = null
+    let sentError: Error | null = null
     try {
+      const birthDate = new Date(input.birth_date)
+      const baptismDate = new Date(input.baptism_date)
+
+      let civilMarryDate
+      if (input.civil_marriage_date != null) {
+        civilMarryDate = new Date(input.civil_marriage_date)
+      } else {
+        civilMarryDate = null
+      }
+
+      const { student_id } = await this.studentService.findStudentByIdToEdit(id)
+
+      const updateData: IUpdateSpouse = {
+        ...input,
+        birth_date: birthDate,
+        baptism_date: baptismDate,
+        civil_marriage_date: civilMarryDate,
+        student_id: student_id,
+        spouse_approved: null
+      }
+
       updatedSpouse = await this.spousesModel.updateSpouseById(
         updateData,
         currentUser
-      );
+      )
     } catch (error) {
-      sentError = new Error(error.message);
+      console.error('erro capturado no updateSpouseById', error)
+      sentError = new Error(error.message)
     }
 
     if (sentError !== null) {
-      throw sentError;
+      throw sentError
     }
 
     if (updatedSpouse === null) {
-      throw new Error('Failed to update spouse');
+      throw new Error('Failed to update spouse')
     }
 
-    return updatedSpouse;
+    return updatedSpouse
   }
 
   async deleteSpouseById(
@@ -128,10 +126,10 @@ export class SpousesService {
     currentUser: UserFromJwt
   ): Promise<string> {
     try {
-      const message = await this.spousesModel.deleteSpouseById(id, currentUser);
-      return message;
+      const message = await this.spousesModel.deleteSpouseById(id, currentUser)
+      return message
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 }

@@ -14,13 +14,13 @@ export class UserApprovesService {
 
   approveUser(approveData: ApproveUserDto) {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put(environment.API + '/users/approve', approveData, {
         headers: head_obj,
       })
       .pipe(
-        catchError((error) => {
+        catchError(() => {
           return throwError(
             () => new Error('Não fo possível aprovar esse usuário'),
           )

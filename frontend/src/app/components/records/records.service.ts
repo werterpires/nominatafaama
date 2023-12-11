@@ -10,16 +10,18 @@ import { environment } from 'src/environments/environment'
 export class RecordsService {
   constructor(private http: HttpClient) {}
 
-  getStudentMaritalStatus(): Observable<{
+  getStudentMaritalStatus(userId?: number): Observable<{
     marital_status_type_name: string
   } | null> {
     const token = localStorage.getItem('access_token')
     const headers = new HttpHeaders().set('Authorization', `bearer ${token}`)
+    const url = userId
+      ? `/students/marital-status/${userId}`
+      : `/students/marital-status`
     return this.http
-      .get<{ marital_status_type_name: string } | null>(
-        environment.API + '/students/marital-status',
-        { headers },
-      )
+      .get<{ marital_status_type_name: string } | null>(environment.API + url, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

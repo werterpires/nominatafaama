@@ -504,6 +504,7 @@ export class StudentsModel {
 
         const approved = await trx('students')
           .leftJoin('people', 'students.person_id', 'people.person_id')
+          .leftJoin('users', 'people.person_id', 'users.person_id')
           .first('*')
           .where('students.student_id', student_id)
 
@@ -539,7 +540,7 @@ export class StudentsModel {
             pessoa: approved.name
           },
           notificationType: 4,
-          objectUserId: currentUser.user_id,
+          objectUserId: approved.user_id,
           oldData: {
             pessoa: '(conferir na página do estudante)'
           },

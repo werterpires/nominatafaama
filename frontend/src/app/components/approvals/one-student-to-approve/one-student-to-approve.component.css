@@ -1,0 +1,33 @@
+.eFieldContent {
+  outline: none;
+  padding: 0;
+  border: none;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #23435f;
+}
+
+input,
+select {
+  outline: none;
+  padding: 0;
+  border: none;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #23435f;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+label {
+  margin-top: 20px;
+}

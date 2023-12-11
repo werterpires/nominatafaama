@@ -3,11 +3,11 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core'
-import { IPermissions } from '../shared/container/types'
-import { ICompleteUser } from '../approvals/student-to-approve/types'
+import { IPermissions, IUserApproved } from '../shared/container/types'
 import { DataService } from '../shared/shared.service.ts/data.service'
 import { DomSanitizer } from '@angular/platform-browser'
 import { NominataService } from './nominata.service'
@@ -15,14 +15,25 @@ import { IBasicProfessor, IBasicStudent, ICompleteNominata } from './types'
 import { DatePipe } from '@angular/common'
 import { Router } from '@angular/router'
 import { environment } from 'src/environments/environment'
+import { LoginService } from '../shared/shared.service.ts/login.service'
 
 @Component({
   selector: 'app-nominata',
   templateUrl: './nominata.component.html',
   styleUrls: ['./nominata.component.css'],
 })
-export class NominataComponent {
-  @Input() permissions!: IPermissions
+export class NominataComponent implements OnInit {
+  @Input() permissions: IPermissions = {
+    estudante: false,
+    secretaria: false,
+    direcao: false,
+    representacao: false,
+    administrador: false,
+    docente: false,
+    ministerial: false,
+    design: false,
+    isApproved: false,
+  }
   @Output() selectOne: EventEmitter<void> = new EventEmitter<void>()
   @Output() toStudent = new EventEmitter<{
     option: string
@@ -64,13 +75,41 @@ export class NominataComponent {
 
   constructor(
     private service: NominataService,
-    private dataService: DataService,
-    private sanitizer: DomSanitizer,
+    private loginService: LoginService,
     public datePipe: DatePipe,
     private router: Router,
   ) {}
 
+  user: IUserApproved | null = null
+
   ngOnInit() {
+    this.loginService.user$.subscribe((user) => {
+      if (user === 'wait') {
+        return
+      }
+
+      let roles: Array<string> = []
+
+      if (typeof user !== 'string' && user) {
+        this.user = user
+
+        roles = this.user.roles.map((role) => role.role_name.toLowerCase())
+
+        this.permissions.isApproved = this.user.user_approved
+      } else {
+        this.user = null
+        this.router.navigate(['nominata'])
+        this.permissions.isApproved = false
+      }
+      this.permissions.estudante = roles.includes('estudante')
+      this.permissions.secretaria = roles.includes('secretaria')
+      this.permissions.direcao = roles.includes('direção')
+      this.permissions.representacao = roles.includes('representante de campo')
+      this.permissions.administrador = roles.includes('administrador')
+      this.permissions.docente = roles.includes('docente')
+      this.permissions.ministerial = roles.includes('ministerial')
+      this.permissions.design = roles.includes('design')
+    })
     this.getAllRegistries()
   }
 
@@ -118,6 +157,10 @@ export class NominataComponent {
               return 0
             }
           })
+
+          if (this.Registry.professors) {
+            this.findDirector(this.Registry.professors, this.Registry.director)
+          }
         }
 
         this.Registry.students?.forEach((student) => {
@@ -156,7 +199,7 @@ export class NominataComponent {
           })
         }
 
-        this.Registry.professors?.forEach((professor) => {
+        this.Registry.professors?.forEach(() => {
           // const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
           //   type: 'image/jpeg',
           // })
@@ -169,9 +212,6 @@ export class NominataComponent {
           // } else {
           //   this.showForm = true
           // }
-          if (this.Registry && this.Registry.professors) {
-            this.findDirector(this.Registry.professors, this.Registry?.director)
-          }
         })
 
         if (this.Registry.events) {
@@ -311,21 +351,9 @@ export class NominataComponent {
     return this.datePipe.transform(date, 'dd/MM/yyyy')
   }
 
-  // getOneStudent(userId: number) {
-  //   this.isLoading = true
-  //   this.service.findOneRegistry(userId).subscribe({
-  //     next: async (res) => {
-  //       this.dataService.selectedStudent = res
-  //       this.selectOne.emit()
-  //       this.isLoading = false
-  //     },
-  //     error: (err) => {
-  //       this.errorMessage = err.message
-  //       this.error = true
-  //       this.isLoading = false
-  //     },
-  //   })
-  // }
+  setFavorite(studentId: number, fav: boolean) {
+    console.log(fav)
+  }
 
   selectStudent(studentId: string) {
     this.router.navigate(['student/' + studentId])

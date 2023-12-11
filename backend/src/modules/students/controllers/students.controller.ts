@@ -66,6 +66,20 @@ export class StudentsController {
     }
   }
 
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Get('approve/:userId')
+  async getStudentByIdToApprove(
+    @CurrentUser() user: UserFromJwt,
+    @Param('userId') userId: string
+  ) {
+    try {
+      const student = await this.studentsService.findStudentByIdToEdit(+userId)
+      return student
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
   @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
   @Get('marital-status')
   async getStudentMaritalStatus(@CurrentUser() user: UserFromJwt) {
@@ -74,6 +88,21 @@ export class StudentsController {
     try {
       const maritalStatus =
         await this.studentsService.findStudentMaritalStatusById(userId)
+      return maritalStatus
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Get('marital-status/:userId')
+  async getStudentMaritalStatusToApprove(
+    @CurrentUser() user: UserFromJwt,
+    @Param('userId') userId: string
+  ) {
+    try {
+      const maritalStatus =
+        await this.studentsService.findStudentMaritalStatusById(+userId)
       return maritalStatus
     } catch (error) {
       throw new InternalServerErrorException(error.message)
@@ -99,7 +128,7 @@ export class StudentsController {
     return await this.studentsService.findAllStudents()
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
   @Put()
   async updateStudent(
     @Body() input: UpdateStudentDto,
@@ -116,7 +145,7 @@ export class StudentsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
   @Put('active')
   async turnActiveStudentsFalse(
     @Body() activeCpfs: StringArray,

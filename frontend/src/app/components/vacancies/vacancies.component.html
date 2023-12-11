@@ -1,1 +1,140 @@
-<p>vacancies works!</p>
+<app-container>
+  <div class="sectionBoxes">
+    <section class="sectionBox">
+      <div class="boxHead">
+        <button
+          #addIcon
+          src="assets/icons/addIcon.png"
+          (click)="showForm = true"
+        >
+          Adicionar nova vaga
+        </button>
+      </div>
+      <select
+        name="nominataSelect"
+        id="nominataSelect"
+        [(ngModel)]="selectedNominata"
+        (change)="getAllVacancies()"
+      >
+        <option
+          *ngFor="let nominata of allNominatas"
+          [value]="nominata.nominataId"
+          [selected]="nominata.nominataId === 5"
+        >
+          {{ nominata.year }}
+        </option>
+      </select>
+      <section class="formCreationWrapper" *ngIf="showForm">
+        <app-creation-form
+          (save)="showAlert('create', 'Confirmar a criação deste item?')"
+        >
+          <div class="subSection">
+            <label class="inputLabel">
+              Título<input
+                class="smallMediumInput"
+                type="text"
+                name="titleInput"
+                [(ngModel)]="createRegistryData.title"
+              />
+            </label>
+            <label class="inputLabel">
+              Descrição<input
+                class="mediumInput"
+                type="text"
+                name="descriptionInput"
+                [(ngModel)]="createRegistryData.description"
+              />
+            </label>
+          </div>
+          <div class="subSection">
+            <label class="inputLabel">
+              Tipo de ministério
+              <select
+                class="smallInput"
+                name="ministrySelect"
+                [(ngModel)]="createRegistryData.ministryId"
+              >
+                <option
+                  *ngFor="let ministry of allMinistries"
+                  [value]="ministry.ministry_type_id"
+                >
+                  {{ ministry.ministry_type_name }}
+                </option>
+              </select>
+            </label>
+            <label class="inputLabel">
+              Tipo de contratação
+              <select
+                class="smallInput"
+                name="hiringStatusSelect"
+                [(ngModel)]="createRegistryData.hiringStatusId"
+              >
+                <option
+                  *ngFor="let status of allHiringStatus"
+                  [value]="status.hiring_status_id"
+                >
+                  {{ status.hiring_status_name }}
+                </option>
+              </select>
+            </label>
+          </div>
+        </app-creation-form>
+      </section>
+      <div *ngIf="allVacancies.length > 0">
+        <div *ngFor="let vacancy of allVacancies">
+          <p class="sectionTitle1" (click)="selectVacancy(vacancy.vacancyId)">
+            {{ vacancy.title }}
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div *ngIf="selectedVacancy">
+    <app-vacancy
+      [vacancy]="selectedVacancy"
+      [allHiringStatus]="allHiringStatus"
+      [allMinistries]="allMinistries"
+      (changeAlert)="ngOnInit()"
+    ></app-vacancy>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <div class="errorTitle">
+      <p>Atenção</p>
+    </div>
+    <div class="errorMessage">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeError()"
+    />
+  </div>
+  <div *ngIf="done" class="done">
+    <div class="doneTitle">
+      <p>Parabéns</p>
+    </div>
+    <div class="doneMessage">
+      <p>{{ doneMessage }}</p>
+    </div>
+    <img
+      class="closeIcon"
+      src="assets/icons/closeIcon.png"
+      alt="Fechar"
+      (click)="closeDone()"
+    />
+  </div>
+  <app-alert-modal
+    *ngIf="alert"
+    class="alert"
+    [alertMessage]="this.alertMessage"
+    [func]="this.func"
+    (continue)="confirm($event)"
+  ></app-alert-modal>
+
+  <div *ngIf="isLoading" class="loader1"></div>
+  <div *ngIf="isLoading" class="loader2"></div>
+</app-container>

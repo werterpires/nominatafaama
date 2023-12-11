@@ -16,14 +16,14 @@ import {
 export class SpAcademicFormationsService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  findAllRegistries(): Observable<ISpAcademicFormation[]> {
+  findAllRegistries(userId: number | null): Observable<ISpAcademicFormation[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const url = userId
+      ? '/academic-formations/approve/student/' + userId
+      : '/academic-formations/spouse'
     return this.http
-      .get<ISpAcademicFormation[]>(
-        environment.API + '/academic-formations/spouse',
-        { headers: head_obj },
-      )
+      .get<ISpAcademicFormation[]>(environment.API + url, { headers: head_obj })
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)
