@@ -1,13 +1,19 @@
-<!-- <div class="pdfContainer" #pdfContainer>
+<div class="pdfContainer" #pdfContainer *ngIf="student && student.student">
   <div class="pdfAlonePhotoContainer">
     <div
       class="pdfAlonePhoto"
-      [ngStyle]="{ 'background-image': 'url(' + alonePhoto + ')' }"
+      [ngStyle]="{
+        'background-image':
+          'url(' +
+          urlBase +
+          '/student-photos/student/' +
+          student.student.student_id +
+          '/alone_photo)'
+      }"
     ></div>
   </div>
 
   <div
-    *ngIf="student.student"
     class="pdfPage"
     #pdfPage
     style="background-image: url('assets/img/capturac.png')"
@@ -32,4 +38,4 @@
   <div class="pdfPage">Essa é a segunda página do pdf</div>
 </div>
 
-<button (click)="printPDF()">Baixar PDF</button> -->
+<button>Baixar PDF</button>

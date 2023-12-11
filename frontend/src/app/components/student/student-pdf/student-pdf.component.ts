@@ -1,9 +1,10 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Component, ElementRef, Input, ViewChild } from '@angular/core'
 // import { jsPDF } from 'jspdf'
 import { DataService } from '../../shared/shared.service.ts/data.service'
 import { ICompleteStudent } from '../../approvals/student-to-approve/types'
 import { DatePipe } from '@angular/common'
 import { SafeResourceUrl } from '@angular/platform-browser'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'app-student-pdf',
@@ -18,25 +19,16 @@ export class StudentPdfComponent {
   spousePhoto: SafeResourceUrl | null = null
   familyPhoto: SafeResourceUrl | null = null
 
-  student!: ICompleteStudent
+  @Input() student!: ICompleteStudent
   constructor(private dataService: DataService, public datePipe: DatePipe) {}
 
+  urlBase = environment.API
   ngOnInit() {
     console.log('joaqui')
     this.student = this.dataService.sendStudent()
     this.alonePhoto = this.dataService.sendAlonePhoto()
     console.log(this.student)
   }
-
-  // printPDF() {
-  //   let pdf = new jsPDF('l', 'pt', 'a4')
-
-  //   pdf.html(this.pdfContainer.nativeElement, {
-  //     callback: (pdf) => {
-  //       pdf.save('Teste.pdf')
-  //     },
-  //   })
-  // }
 
   formatDate(date: string) {
     return this.datePipe.transform(date, 'dd/MM/yyyy')
