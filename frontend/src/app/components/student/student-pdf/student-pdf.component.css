@@ -1,7 +1,18 @@
+ul {
+  padding-left: 20px;
+}
+li {
+  text-align: left;
+}
+
+ol {
+  margin: 0;
+}
+
 .pdfContainer {
   position: relative;
   z-index: 5;
-  margin-left: 20px;
+
   overflow: hidden;
 }
 
@@ -11,10 +22,8 @@ button {
 }
 
 .pdfPage {
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  width: 100%;
-  height: auto;
+  width: 100vw;
+  height: 70.7vw;
   font-weight: bold;
   font-style: italic;
   text-decoration: underline;
@@ -23,66 +32,299 @@ button {
   text-align: center;
   line-height: 1.5;
 
-  height: 595.0625px;
-  width: 841.5883px;
+  border: 1px dashed black;
 
   overflow: hidden;
-  margin-bottom: 25px;
-  background-size: cover; /* Controla como a imagem é dimensionada */
-  background-position: center; /* Controla a posição da imagem */
+
+  background-size: cover;
+  background-position: center;
   position: relative;
   z-index: 7;
+  font-family: 'myriad-pro', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: #0e2f52;
 }
 
-.p1QuadradoBranco {
-  background-color: white;
-  transform: rotate(45deg);
-  width: 224.6612px;
-  height: 224.6612px;
-  position: relative;
+.pdfPage span,
+.informationGroup {
+  position: absolute;
   z-index: 10;
-  left: 41.5px;
-  bottom: 119px;
-}
-
-.p1QuadradoDeBaixo {
-  background-color: transparent;
-  transform: rotate(53.1deg);
-  width: 510.884px;
-  height: 510.884px;
-  position: relative;
-  z-index: 11;
-  left: 319px;
-  bottom: 418.5px;
-  border: white 13px solid;
-}
-
-.p1QuadradoDeCima {
-  background-color: transparent;
-  transform: rotate(45deg);
-  width: 510.884px;
-  height: 510.884px;
-  position: relative;
-  z-index: 11;
-  left: 312px;
-  bottom: 480px;
-  border: white 13px solid;
 }
 
 .pdfAlonePhoto {
-  width: 736px;
-  height: 403px;
-
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  width: 77.1vw;
+  position: absolute;
+  right: -89px;
+  z-index: 8;
 }
 
-.pdfAlonePhotoContainer {
+.backgroundImg {
+  width: 100vw;
   position: absolute;
-  left: 237px;
-  top: 0px;
-  width: 605px;
-  height: 403px;
+  left: 0;
+  z-index: 9;
+}
+
+.contentText {
+  position: absolute;
+  z-index: 10;
+}
+
+#pdfName {
+  top: 43.37vw;
+  left: 8.36vw;
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+#pdfFirstName {
+  font-size: 3.65vw;
+  text-transform: uppercase;
+}
+
+.pdfLastName {
+  font-size: 1.74vw;
+  text-transform: uppercase;
+  margin-bottom: 0.67vw;
+}
+
+#pdfField {
+  font-size: 1.74vw;
+  line-height: 1.9vw;
+  top: 47.73vw;
+  left: 8.36vw;
+}
+
+.pdfIcon {
+  width: 3.65vw;
+}
+
+.pdfInformation {
+  display: flex;
+
+  align-items: center;
+  gap: 1vw;
+  max-width: 40vw;
+  text-align: left;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+#pdfBirth {
+  font-size: 1.74vw;
+  line-height: 1.9vw;
+  top: 52.61vw;
+  left: 8.36vw;
+}
+
+.pdfInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+#pdfAge {
+  line-height: 10px;
+}
+
+#pdfMaritalStatus {
+  font-size: 1.74vw;
+  line-height: 1.9vw;
+  top: 57.83vw;
+  left: 8.36vw;
+}
+
+#pdfBirthCity {
+  font-size: 1.74vw;
+  line-height: 1.9vw;
+  top: 62.61vw;
+  left: 8.36vw;
+}
+
+#pdfPhone {
+  font-size: 1.74vw;
+  line-height: 1.9vw;
+  top: 52.61vw;
+  left: 57.31vw;
+}
+
+#pdfEmail {
+  font-size: 1.74vw;
+  line-height: 1.9vw;
+  top: 57.83vw;
+  left: 57.31vw;
+}
+
+.pdfFamilyPhoto {
+  width: 10.1vw;
+  position: absolute;
+  left: 0vw;
+  width: 36vw;
+  z-index: 8;
+}
+
+.pdfIconBig {
+  width: 4.7vw;
+}
+
+#baptism {
+  width: 40.31vw;
+  height: 8.95vw;
+  overflow: hidden;
+  top: 5.03vw;
+  left: 54.64vw;
+}
+
+#ministries {
+  width: 40.31vw;
+  height: 9.4vw;
+  top: 15.34vw;
+  left: 54.64vw;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 1vw;
+}
+
+.blueLine {
+  width: 100%;
+  height: 0.78vw;
+}
+
+.groupTitle {
+  font-size: 1.79vw;
+  line-height: 2vw;
+  text-transform: uppercase;
+}
+
+.pdfIconSmall {
+  width: 3.24vw;
+}
+section {
+  border: black 1px dashed;
+}
+
+.infoContent {
+  font-size: 1.7vw;
+  font-family: 'myriad-pro-condensed', sans-serif;
+  color: #231f20;
+  margin-left: 0.5vw;
+}
+
+.sectionBodyFlexCenter {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.ministriesList {
+  margin-top: 0.5vw;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 70%;
+  gap: 0.1vw;
+}
+
+#message {
+  top: 14.1vw;
+  left: 29.22vw;
+  width: 20.49vw;
+  height: 11.53vw;
+}
+
+#pdfEclExperiences {
+  top: 26.53vw;
+  left: 36.17vw;
+  width: 58vw;
+  height: 41.54vw;
+  overflow: hidden;
+}
+
+.twoSideContent {
+  width: 46%;
+  text-align: left;
+}
+
+.twoSidesContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1vw;
+}
+
+.sideHeader {
+  display: flex;
+  gap: -0.1vw;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.sideTitle {
+  height: 1.9vw;
+  width: 80%;
+  position: relative;
+  right: 1vw;
+
+  background: linear-gradient(124deg, #0e2f52, #1ba4dd);
+
+  text-align: center;
+  font-size: 1.23vw;
+  line-height: 2vw;
+  text-transform: uppercase;
+  color: white;
+}
+
+#pdfMessage {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  max-width: 40vw;
+  font-size: 1vw;
+  text-align: center;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+.twoBlocksContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1vw;
+}
+
+#pdfFormation {
+  width: 27.21vw;
+  height: 20.77vw;
+  top: 26.53vw;
+  left: 5.59vw;
+  overflow: hidden;
+}
+
+.twoBlockContent {
+  display: flex;
+  align-items: flex-start;
+}
+
+.languageList {
+  display: flex;
+}
+
+#pdfCourses {
+  width: 27.21vw;
+  height: 20.77vw;
+  top: 47.2vw;
+  left: 5.59vw;
   overflow: hidden;
 }
