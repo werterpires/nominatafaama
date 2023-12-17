@@ -40,80 +40,81 @@ export class StudentPdfComponent implements OnInit, AfterViewInit {
     public datePipe: DatePipe,
   ) {}
 
-  fontSizeDown() {
-    const parentElement = document.querySelector('#pdfCourses')
+  async formatAndGeneratePdf() {
+    await this.fontSizeDown()
+    this.generatePDF()
+  }
 
-    if (!parentElement) return
-    let hasOverflowY = this.getIsOverflow(parentElement)
-    let contador = 0
-    while (hasOverflowY && contador < 100) {
-      contador++
-      const infos = parentElement.querySelectorAll('.infoContent')
-      const computedStyle = window.getComputedStyle(infos[0])
-      console.log(computedStyle.getPropertyValue('font-size'))
-      const currentFontSize = parseFloat(
-        computedStyle.getPropertyValue('font-size'),
-      )
-      console.log(currentFontSize * 0.98)
-      const newSize = currentFontSize * 0.99
+  async fontSizeDown() {
+    const parentElements = document.querySelectorAll('.informationGroup')
 
-      infos.forEach((info) => {
-        const infoElement = info as HTMLElement
-        infoElement.style.fontSize = `${newSize}px`
-      })
-      console.log(contador)
-      hasOverflowY = this.getIsOverflow(parentElement)
-    }
-    if (!hasOverflowY) return
+    if (!parentElements) return
+
+    parentElements.forEach((parentElement) => {
+      let hasOverflowY = this.getIsOverflow(parentElement)
+      if (!hasOverflowY) return
+      let contador = 0
+      while (hasOverflowY && contador < 300) {
+        contador++
+        const infos = parentElement.querySelectorAll('.infoContent')
+        const computedStyle = window.getComputedStyle(infos[0])
+
+        const currentFontSize = parseFloat(
+          computedStyle.getPropertyValue('font-size'),
+        )
+
+        const newSize = currentFontSize * 0.99
+
+        infos.forEach((info) => {
+          const infoElement = info as HTMLElement
+          infoElement.style.fontSize = `${newSize}px`
+        })
+
+        hasOverflowY = this.getIsOverflow(parentElement)
+      }
+    })
+
+    return true
   }
 
   getIsOverflow(element: Element) {
-    console.log(element.scrollHeight, element.clientHeight)
     return element.scrollHeight > element.clientHeight
   }
 
   generatePDF() {
-    const pdfContainer = document.querySelector('.pdfContainer')
-    console.log(pdfContainer)
-    if (!pdfContainer) return
-    const options = {
-      margin: [0, 0],
-      filename: this.student.student?.person_name || 'curriculo',
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: {
-        backgroundColor: null,
-        scale: 2,
-        width: window.innerWidth,
-        y: 27.25,
-      },
-      jsPDF: { format: 'a2', orientation: 'landscape' },
-    }
-    console.log(options)
-    html2pdf().from(pdfContainer).set(options).save()
+    try {
+      const pdfContainer = document.querySelector('.pdfContainer')
 
-    // console.log(options)
-    // const pdf = new html2pdf()
-    // console.log('pdf:', pdf)
-    // console.log('pdfPages:', this.pdfPages)
-    // this.pdfPages.forEach((element, index) => {
-    //   const content = element.nativeElement
-    //   console.log('content', content, 'index', index)
-    //   if (index !== 0) {
-    //     console.log('content com indice != 0', content)
-    //     pdf.addPage()
-    //   }
-    //   console.log(pdf)
-    //   pdf.from(content.innerHTML).then(() => {
-    //     if (index === this.pdfPages.length - 1) {
-    //       pdf.save(options.filename)
-    //     }
-    //   })
-    // })
+      if (!pdfContainer) return
+
+      const rect = pdfContainer?.getBoundingClientRect()
+
+      const options = {
+        margin: [0, 0],
+        filename: this.student.student?.person_name || 'curriculo',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: {
+          backgroundColor: null,
+          scale: 2,
+          width: 1122.515625,
+
+          y: rect.y * -1,
+
+          allowTaint: true,
+          useCORS: true,
+          proxy: environment.API,
+        },
+        jsPDF: { format: 'a2', orientation: 'landscape' },
+      }
+
+      html2pdf().from(pdfContainer).set(options).save()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   ngAfterViewInit(): void {
     this.renderer.listen('window', 'load', (e) => {
-      console.log(e)
       this.fontSizeDown()
     })
   }
@@ -121,9 +122,6 @@ export class StudentPdfComponent implements OnInit, AfterViewInit {
   urlBase = environment.API
   ngOnInit() {
     this.student = this.dataService.sendStudent()
-
-    console.log(this.student)
-    console.log('joaqui')
   }
 
   formatDate(date: string) {
