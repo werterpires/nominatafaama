@@ -197,15 +197,16 @@
 
           <div class="sideBody">
             <ul>
-              <li *ngFor="let language of student.languages" class="">
-                <p class="infoContent">
-                  {{ language.language.toUpperCase() }} -
-                  {{ !language.fluent && language.read ? 'Lê bem' : '' }}
-                  {{ !language.fluent && language.write ? 'Escreve bem' : '' }}
-                  {{ !language.fluent && language.speak ? 'Fala bem' : '' }}
-                  {{ !language.fluent && language.understand ? 'Entende' : '' }}
-                  {{ language.fluent ? 'Fluente' : '' }}
-                </p>
+              <li
+                *ngFor="let language of student.languages"
+                class="infoContent"
+              >
+                {{ language.language.toUpperCase() }} -
+                {{ !language.fluent && language.read ? 'Lê bem' : '' }}
+                {{ !language.fluent && language.write ? 'Escreve bem' : '' }}
+                {{ !language.fluent && language.speak ? 'Fala bem' : '' }}
+                {{ !language.fluent && language.understand ? 'Entende' : '' }}
+                {{ language.fluent ? 'Fluente' : '' }}
               </li>
             </ul>
           </div>
