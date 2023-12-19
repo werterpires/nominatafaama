@@ -140,7 +140,11 @@
         <p>{{ student.student.student_mensage }}</p>
       </span>
     </section>
-    <section class="informationGroup" id="ministries">
+    <section
+      *ngIf="student.relatedMinistries && student.relatedMinistries.length > 0"
+      class="informationGroup"
+      id="ministries"
+    >
       <div class="sectionHeader">
         <div class="blueContainer">
           <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -166,7 +170,11 @@
         </ol>
       </div>
     </section>
-    <section class="informationGroup" id="pdfFormation">
+    <section
+      *ngIf="student.academicFormations"
+      class="informationGroup"
+      id="pdfFormation"
+    >
       <div class="sectionHeader">
         <div class="blueContainer">
           <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -229,7 +237,7 @@
         </div>
       </div>
     </section>
-    <section class="informationGroup" id="pdfCourses">
+    <section *ngIf="student.courses" class="informationGroup" id="pdfCourses">
       <div class="sectionHeader">
         <div class="blueContainer">
           <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -258,7 +266,11 @@
         </div>
       </div>
     </section>
-    <section class="informationGroup" id="pdfEclExperiences">
+    <section
+      *ngIf="student.eclExperiences || student.pastEclExps"
+      class="informationGroup"
+      id="pdfEclExperiences"
+    >
       <div class="sectionHeader">
         <div class="blueContainer">
           <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -274,7 +286,7 @@
         </div>
       </div>
       <div class="twoSidesContainer">
-        <div class="twoSideContent">
+        <div *ngIf="student.pastEclExps" class="twoSideContent">
           <div class="twoSideTitle">
             <img
               class="pdfIconBig"
@@ -297,7 +309,7 @@
             </ul>
           </div>
         </div>
-        <div class="twoSideContent">
+        <div *ngIf="student.eclExperiences" class="twoSideContent">
           <div class="twoSideTitle">
             <img
               class="pdfIconBig"
@@ -339,7 +351,11 @@
       alt=""
     />
     <div class="informationPage">
-      <section class="element" id="pdfEvangExps">
+      <section
+        *ngIf="student.evangelisticExperiences"
+        class="element"
+        id="pdfEvangExps"
+      >
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -370,7 +386,11 @@
           </div>
         </div>
       </section>
-      <section class="element" id="pdfPublications">
+      <section
+        *ngIf="student.publications"
+        class="element"
+        id="pdfPublications"
+      >
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -403,7 +423,7 @@
           </div>
         </div>
       </section>
-      <section class="element" id="pdfOrdinations">
+      <section *ngIf="student.ordinations" class="element" id="pdfOrdinations">
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -434,7 +454,7 @@
           </div>
         </div>
       </section>
-      <section class="element" id="pdfEndowments">
+      <section *ngIf="student.endowments" class="element" id="pdfEndowments">
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -463,7 +483,11 @@
           </div>
         </div>
       </section>
-      <section class="element" id="pdfProfExps">
+      <section
+        *ngIf="student.professionalExperiences"
+        class="element"
+        id="pdfProfExps"
+      >
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -497,7 +521,7 @@
       </section>
     </div>
   </div>
-  <div class="pdfPage" *ngIf="student && student.spouse">
+  <div class="pdfPage" *ngIf="student.spouse">
     <img
       class="pdfSpousePhoto"
       #alonePhoto
@@ -594,7 +618,11 @@
         <p class="infoContent">{{ student.spouse.alternative_email }}</p>
       </div>
     </span>
-    <section class="informationGroup" id="pdfSpFormation">
+    <section
+      *ngIf="student.spAcademicFormations"
+      class="informationGroup"
+      id="pdfSpFormation"
+    >
       <div class="sectionHeader">
         <div class="blueContainer">
           <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -657,7 +685,11 @@
         </div>
       </div>
     </section>
-    <section class="informationGroup" id="pdfSpCourses">
+    <section
+      *ngIf="student.spCourses"
+      class="informationGroup"
+      id="pdfSpCourses"
+    >
       <div class="sectionHeader">
         <div class="blueContainer">
           <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -686,7 +718,11 @@
         </div>
       </div>
     </section>
-    <section class="informationGroup" id="pdfSpEclExperiences">
+    <section
+      *ngIf="student.spPastEclExps"
+      class="informationGroup"
+      id="pdfSpEclExperiences"
+    >
       <div class="sectionHeader">
         <div class="blueContainer">
           <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -736,7 +772,11 @@
       alt=""
     />
     <div class="informationPage">
-      <section class="element" id="pdfEvangExps">
+      <section
+        *ngIf="student.spEvangelisticExperiences"
+        class="element"
+        id="pdfEvangExps"
+      >
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -767,7 +807,11 @@
           </div>
         </div>
       </section>
-      <section class="element" id="pdfPublications">
+      <section
+        *ngIf="student.spPublications"
+        class="element"
+        id="pdfPublications"
+      >
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -801,7 +845,7 @@
         </div>
       </section>
 
-      <section class="element" id="pdfEndowments">
+      <section *ngIf="student.spEndowments" class="element" id="pdfEndowments">
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -830,7 +874,11 @@
           </div>
         </div>
       </section>
-      <section class="element" id="pdfProfExps">
+      <section
+        *ngIf="student.spProfessionalExperiences"
+        class="element"
+        id="pdfProfExps"
+      >
         <div class="sectionHeader">
           <div class="blueContainer">
             <img class="blueLine" src="assets/img/blueLine.png" alt="" />
