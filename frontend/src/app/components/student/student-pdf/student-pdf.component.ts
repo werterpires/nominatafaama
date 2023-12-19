@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   Input,
@@ -15,6 +14,8 @@ import { ICompleteStudent } from '../../approvals/student-to-approve/types'
 import { DatePipe } from '@angular/common'
 import { SafeResourceUrl } from '@angular/platform-browser'
 import { environment } from 'src/environments/environment'
+import { IEvangelisticExperience } from '../../records/evg-experiences/types'
+import { IPublication } from '../../records/publications/types'
 // import { jsPDF } from 'jspdf'
 
 declare const html2pdf: any
@@ -24,7 +25,7 @@ declare const html2pdf: any
   templateUrl: './student-pdf.component.html',
   styleUrls: ['./student-pdf.component.css'],
 })
-export class StudentPdfComponent implements OnInit, AfterViewInit {
+export class StudentPdfComponent implements OnInit {
   @ViewChildren('pdfPage') pdfPages!: QueryList<ElementRef>
   @ViewChild('pdfContainer') pdfContainer!: ElementRef
   @ViewChild('background1') background1!: ElementRef
@@ -34,11 +35,20 @@ export class StudentPdfComponent implements OnInit, AfterViewInit {
   familyPhoto: SafeResourceUrl | null = null
 
   @Input() student!: ICompleteStudent
+  @Input() evvangExpTypes: string[] = []
+  @Input() spEvvangExpTypes: string[] = []
+  @Input() publicationTypes: string[] = []
+  @Input() spPublicationTypes: string[] = []
   constructor(
     private renderer: Renderer2,
     private dataService: DataService,
     public datePipe: DatePipe,
   ) {}
+
+  ngOnInit(): void {
+    this.classifyEvangTypes()
+    this.classifyPublicationsTypes()
+  }
 
   async formatAndGeneratePdf() {
     await this.fontSizeDown()
@@ -46,28 +56,44 @@ export class StudentPdfComponent implements OnInit, AfterViewInit {
   }
 
   async fontSizeDown() {
-    const parentElements = document.querySelectorAll('.informationGroup')
+    const parentElements = document.querySelectorAll(
+      '.informationGroup, .informationPage',
+    )
 
     if (!parentElements) return
 
     parentElements.forEach((parentElement) => {
       let hasOverflowY = this.getIsOverflow(parentElement)
+
       if (!hasOverflowY) return
       let contador = 0
       while (hasOverflowY && contador < 300) {
         contador++
         const infos = parentElement.querySelectorAll('.infoContent')
+
         const computedStyle = window.getComputedStyle(infos[0])
 
         const currentFontSize = parseFloat(
           computedStyle.getPropertyValue('font-size'),
         )
 
+        const currentLetterSpacing = parseFloat(
+          computedStyle.getPropertyValue('letter-spacing'),
+        )
+
+        const currentLineHeight = parseFloat(
+          computedStyle.getPropertyValue('line-height'),
+        )
+
         const newSize = currentFontSize * 0.99
+        const newLetterSpacing = currentLetterSpacing * 0.98
+        const newLineHeight = currentLineHeight * 0.98
 
         infos.forEach((info) => {
           const infoElement = info as HTMLElement
           infoElement.style.fontSize = `${newSize}px`
+          infoElement.style.letterSpacing = `${newLetterSpacing}px`
+          infoElement.style.lineHeight = `${newLineHeight}px`
         })
 
         hasOverflowY = this.getIsOverflow(parentElement)
@@ -78,7 +104,10 @@ export class StudentPdfComponent implements OnInit, AfterViewInit {
   }
 
   getIsOverflow(element: Element) {
-    return element.scrollHeight > element.clientHeight
+    return (
+      element.scrollHeight > element.clientHeight ||
+      element.scrollWidth > element.clientWidth
+    )
   }
 
   generatePDF() {
@@ -113,30 +142,47 @@ export class StudentPdfComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.renderer.listen('window', 'load', (e) => {
-      this.fontSizeDown()
+  urlBase = environment.API
+
+  expByTypes: { [key: string]: IEvangelisticExperience[] } = {}
+  pubByTypes: { [key: string]: IPublication[] } = {}
+
+  classifyEvangTypes() {
+    this.expByTypes = {}
+    this.student.evangelisticExperiences?.forEach((exp) => {
+      if (!this.expByTypes[exp.evang_exp_type_name]) {
+        this.expByTypes[exp.evang_exp_type_name] = []
+      }
+      this.expByTypes[exp.evang_exp_type_name].push(exp)
     })
   }
 
-  urlBase = environment.API
-  ngOnInit() {
-    this.student = this.dataService.sendStudent()
+  classifyPublicationsTypes() {
+    this.pubByTypes = {}
+    this.student.publications?.forEach((pub) => {
+      if (!this.pubByTypes[pub.publication_type]) {
+        this.pubByTypes[pub.publication_type] = []
+      }
+      this.pubByTypes[pub.publication_type].push(pub)
+    })
   }
 
-  formatDate(date: string) {
+  formatDate(date: string | null) {
+    if (!date) {
+      return 'em andamento'
+    }
     return this.datePipe.transform(date, 'dd/MM/yyyy')
   }
 
   formatConclusionYear(date: string | null) {
     if (date == null) {
-      return 'Não concluído'
+      return 'em andamento'
     }
     const today = new Date()
     const inputDate = new Date(date)
 
     if (inputDate > today) {
-      return 'Não concluído'
+      return 'em andamento'
     }
 
     return this.datePipe.transform(date, 'yyyy')

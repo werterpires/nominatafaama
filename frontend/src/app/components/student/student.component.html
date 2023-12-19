@@ -870,4 +870,10 @@
     />
   </ng-container>
 </app-container> -->
-<app-student-pdf [student]="student"></app-student-pdf>
+<div *ngIf="student.student">
+  <app-student-pdf
+    [student]="student"
+    [evvangExpTypes]="evvangExpTypes"
+    [publicationTypes]="publicationTypes"
+  ></app-student-pdf>
+</div>

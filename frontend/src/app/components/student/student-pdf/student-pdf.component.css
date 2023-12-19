@@ -63,6 +63,7 @@ button {
 
 .backgroundImg {
   width: 297mm;
+  height: 210mm;
   position: absolute;
   left: 0;
   z-index: 9;
@@ -196,6 +197,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 2.97mm;
+  overflow: hidden;
 }
 
 .blueLine {
@@ -275,7 +277,7 @@ button {
 
 .sideTitle {
   height: 5.64mm;
-  width: 80%;
+
   position: relative;
   right: 2.97mm;
 
@@ -330,4 +332,50 @@ button {
   top: 140.18mm;
   left: 16.6mm;
   overflow: hidden;
+}
+
+.finalButtons {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 20;
+}
+
+.informationPage {
+  column-count: 3; /* Defina o número desejado de colunas */
+  column-gap: 20mm; /* Adicione um espaço entre as colunas se desejar */
+  position: absolute;
+  z-index: 10;
+  padding: 10mm 16mm;
+  height: 210mm;
+  width: 297mm;
+}
+
+.element {
+  width: 100%;
+  /* break-inside: avoid-column; */
+}
+
+.informationPage .element:not(:first-child) {
+  margin-top: 10mm;
+}
+
+#pdfEvangExps {
+  /* top: 78.79mm;
+  left: 107.42mm; */
+  /* width: 100%; */
+  /* height: 123.37mm; */
+  /* overflow: hidden;
+  break-inside: avoid; */
+}
+
+.columnContent {
+  break-inside: avoid;
+}
+
+.subTitlePdf {
+  margin-top: 5mm;
 }

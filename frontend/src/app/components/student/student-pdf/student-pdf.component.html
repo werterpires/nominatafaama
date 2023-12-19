@@ -251,7 +251,7 @@
       </div>
       <div class="twoSidesContainer">
         <div class="twoSideContent">
-          <div class="sideHeader">
+          <div class="subTitlePdf">
             <img
               class="pdfIconBig"
               src="assets/icons/pdfPrayIcon.svg"
@@ -274,7 +274,7 @@
           </div>
         </div>
         <div class="twoSideContent">
-          <div class="sideHeader">
+          <div class="subTitlePdf">
             <img
               class="pdfIconBig"
               src="assets/icons/pdfEducationIcon.svg"
@@ -296,11 +296,169 @@
       </div>
     </section>
   </div>
-  <div class="pdfPage">Essa é a segunda página do pdf</div>
+  <div class="pdfPage" #pdfPage>
+    <img
+      class="pdfFamilyPhoto"
+      #alonePhoto
+      [src]="
+        urlBase +
+        '/student-photos/student/' +
+        student.student.student_id +
+        '/family_photo'
+      "
+      alt=""
+    />
+    <img
+      class="backgroundImg"
+      #background1
+      src="assets/img/pg3alt.png"
+      alt=""
+    />
+    <div class="informationPage">
+      <section class="element" id="pdfEvangExps">
+        <div class="sectionHeader">
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+          <img
+            class="pdfIconBig"
+            src="assets/icons/pdfChurchIcon.svg"
+            alt="Figura de homem na água"
+          />
+          <p class="groupTitle">Experiências Evangelísticas</p>
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+        </div>
+
+        <div class="columnContent" *ngFor="let expType of evvangExpTypes">
+          <div class="subTitlePdf">
+            <p class="sideTitle">{{ expType }}</p>
+          </div>
+
+          <div class="sideBody">
+            <ul>
+              <li *ngFor="let exp of expByTypes[expType]" class="infoContent">
+                {{ exp.project }}, {{ exp.place }},
+                {{ formatConclusionYear(exp.exp_end_date) }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="element" id="pdfPublications">
+        <div class="sectionHeader">
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+          <img
+            class="pdfIconBig"
+            src="assets/icons/pdfChurchIcon.svg"
+            alt="Figura de homem na água"
+          />
+          <p class="groupTitle">Publicações</p>
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+        </div>
+
+        <div class="columnContent" *ngFor="let pubType of publicationTypes">
+          <div class="subTitlePdf">
+            <p class="sideTitle">{{ pubType }}</p>
+          </div>
+
+          <div class="sideBody">
+            <ul>
+              <li
+                *ngFor="let publication of pubByTypes[pubType]"
+                class="infoContent"
+              >
+                {{ publication.reference }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="element" id="pdfOrdinations">
+        <div class="sectionHeader">
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+          <img
+            class="pdfIconBig"
+            src="assets/icons/pdfChurchIcon.svg"
+            alt="Figura de homem na água"
+          />
+          <p class="groupTitle">Ordenações</p>
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+        </div>
+
+        <div class="columnContent">
+          <div class="sideBody">
+            <ul>
+              <li
+                *ngFor="let ordination of student.ordinations"
+                class="infoContent"
+              >
+                {{ ordination.ordination_name }}, {{ ordination.place }} ({{
+                  ordination.year
+                }})
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="element" id="pdfEndowments">
+        <div class="sectionHeader">
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+          <img
+            class="pdfIconBig"
+            src="assets/icons/pdfChurchIcon.svg"
+            alt="Figura de homem na água"
+          />
+          <p class="groupTitle">Investiduras</p>
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+        </div>
+
+        <div class="columnContent">
+          <div class="sideBody">
+            <ul>
+              <li
+                *ngFor="let endowment of student.endowments"
+                class="infoContent"
+              >
+                {{ endowment.endowment_type_name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="element" id="pdfProfExps">
+        <div class="sectionHeader">
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+          <img
+            class="pdfIconBig"
+            src="assets/icons/pdfChurchIcon.svg"
+            alt="Figura de homem na água"
+          />
+          <p class="groupTitle">Experiências profissionais</p>
+          <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+        </div>
+
+        <div class="columnContent">
+          <div class="sideBody">
+            <ul>
+              <li
+                *ngFor="let exp of student.professionalExperiences"
+                class="infoContent"
+              >
+                {{ exp.job }}, {{ exp.job_institution }} ({{
+                  formatDate(exp.job_begin_date)
+                }}
+                - {{ formatDate(exp.job_end_date) }})
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
   <div class="pdfPage">Essa é a terceira página do pdf</div>
   <div class="pdfPage">Essa é a quarta página do pdf</div>
 </div>
+<div class="finalButtons">
+  <button (click)="fontSizeDown()">Diminuir fontes</button>
+  <button (click)="formatAndGeneratePdf()">Baixar PDF</button>
+</div>
 
-<button (click)="fontSizeDown()">Diminuir fontes</button>
-<button (click)="formatAndGeneratePdf()">Baixar PDF</button>
 <script src="html2pdf.bundle.min.js"></script>
