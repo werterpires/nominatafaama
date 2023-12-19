@@ -1,8 +1,21 @@
+ul {
+  padding-left: 5mm;
+  margin: 0px;
+}
+li {
+  text-align: left;
+}
+
+ol {
+  margin: 0;
+}
+
 .pdfContainer {
   position: relative;
   z-index: 5;
-  margin-left: 20px;
+
   overflow: hidden;
+  width: 297mm;
 }
 
 button {
@@ -11,10 +24,8 @@ button {
 }
 
 .pdfPage {
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  width: 100%;
-  height: auto;
+  width: 297mm;
+  height: 209.9mm;
   font-weight: bold;
   font-style: italic;
   text-decoration: underline;
@@ -23,66 +34,457 @@ button {
   text-align: center;
   line-height: 1.5;
 
-  height: 595.0625px;
-  width: 841.5883px;
-
   overflow: hidden;
-  margin-bottom: 25px;
-  background-size: cover; /* Controla como a imagem é dimensionada */
-  background-position: center; /* Controla a posição da imagem */
+
+  background-size: cover;
+  background-position: center;
   position: relative;
   z-index: 7;
+  font-family: 'myriad-pro', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: #0e2f52;
 }
 
-.p1QuadradoBranco {
-  background-color: white;
-  transform: rotate(45deg);
-  width: 224.6612px;
-  height: 224.6612px;
-  position: relative;
+.pdfPage span,
+.informationGroup {
+  position: absolute;
   z-index: 10;
-  left: 41.5px;
-  bottom: 119px;
-}
-
-.p1QuadradoDeBaixo {
-  background-color: transparent;
-  transform: rotate(53.1deg);
-  width: 510.884px;
-  height: 510.884px;
-  position: relative;
-  z-index: 11;
-  left: 319px;
-  bottom: 418.5px;
-  border: white 13px solid;
-}
-
-.p1QuadradoDeCima {
-  background-color: transparent;
-  transform: rotate(45deg);
-  width: 510.884px;
-  height: 510.884px;
-  position: relative;
-  z-index: 11;
-  left: 312px;
-  bottom: 480px;
-  border: white 13px solid;
 }
 
 .pdfAlonePhoto {
-  width: 736px;
-  height: 403px;
-
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  width: 228.98mm;
+  position: absolute;
+  right: -89px;
+  z-index: 8;
 }
 
-.pdfAlonePhotoContainer {
+.backgroundImg {
+  width: 297mm;
+  height: 209.9mm;
   position: absolute;
-  left: 237px;
-  top: 0px;
-  width: 605px;
-  height: 403px;
+  left: 0;
+  z-index: 9;
+}
+
+.contentText {
+  position: absolute;
+  z-index: 10;
+}
+
+#pdfName {
+  top: 128.8mm;
+  left: 24.82mm;
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+#pdfFirstName {
+  font-size: 10.84mm;
+  text-transform: uppercase;
+}
+
+.pdfLastName {
+  font-size: 5.16mm;
+  text-transform: uppercase;
+  margin-bottom: 1.98mm;
+}
+
+#pdfField {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 141.75mm;
+  left: 24.82mm;
+}
+
+.pdfIcon {
+  width: 10.84mm;
+}
+
+.pdfInformation {
+  display: flex;
+
+  align-items: center;
+  gap: 2.97mm;
+  max-width: 118.8mm;
+  text-align: left;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.pdfInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+#pdfBirth {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 156.25mm;
+  left: 24.82mm;
+}
+
+#pdfAge {
+  line-height: 10px;
+}
+
+#pdfMaritalStatus {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 171.75mm;
+  left: 24.82mm;
+}
+
+#pdfBirthCity {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 185.95mm;
+  left: 24.82mm;
+}
+
+#pdfPhone {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 156.25mm;
+  left: 170.21mm;
+}
+
+#pdfEmail {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 171.75mm;
+  left: 170.21mm;
+}
+
+.pdfFamilyPhoto {
+  position: absolute;
+  left: 0mm;
+  width: 106.92mm;
+  z-index: 8;
+}
+
+.pdfSpousePhoto {
+  position: absolute;
+  left: 0mm;
+  width: 87mm;
+
+  z-index: 8;
+}
+
+.pdfIconBig {
+  width: 13.95mm;
+}
+
+#baptism {
+  width: 119.72mm;
+  height: 26.58mm;
+  overflow: hidden;
+  top: 15.74mm;
+  left: 162.28mm;
+}
+
+#ministries {
+  width: 119.72mm;
+  height: 27.91mm;
+  top: 45.55mm;
+  left: 162.28mm;
+
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 2.97mm;
+  overflow: hidden;
+}
+
+.blueLine {
+  width: 100%;
+  height: 2.31mm;
+}
+
+.groupTitle {
+  font-size: 5.31mm;
+  line-height: 5.94mm;
+  text-transform: uppercase;
+}
+
+.pdfIconSmall {
+  width: 9.62mm;
+}
+
+.infoContent {
+  font-size: 5.04mm;
+  font-family: 'myriad-pro-condensed', sans-serif;
+  color: #231f20;
+  margin-left: 1.48mm;
+}
+
+.sectionBodyFlexCenter {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.ministriesList {
+  margin-top: 1.48mm;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 70%;
+  gap: 0.297mm;
+}
+
+#message {
+  top: 41.87mm;
+  left: 86.78mm;
+  width: 60.85mm;
+  height: 34.24mm;
+}
+
+#pdfEclExperiences {
+  top: 78.79mm;
+  left: 107.42mm;
+  width: 172.26mm;
+  height: 123.37mm;
+  overflow: hidden;
+}
+
+.twoSideContent {
+  width: 46%;
+  text-align: left;
+}
+
+.twoSidesContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 2.97mm;
+}
+
+.sideHeader {
+  display: flex;
+  gap: -0.297mm;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.sideTitle {
+  height: 5.64mm;
+  width: 100%;
+  position: relative;
+  right: 2.97mm;
+  background: linear-gradient(124deg, #0e2f52, #1ba4dd);
+  text-align: center;
+  font-size: 3.65mm;
+  line-height: 5.94mm;
+  text-transform: uppercase;
+  color: white;
+}
+
+.middleTitle {
+  height: 5.64mm;
+  width: 100%;
+  position: relative;
+
+  background: linear-gradient(124deg, #0e2f52, #1ba4dd);
+  text-align: center;
+  font-size: 3.65mm;
+  line-height: 5.94mm;
+  text-transform: uppercase;
+  color: white;
+}
+
+#pdfMessage {
+  display: flex;
+  align-items: center;
+  gap: 2.97mm;
+  max-width: 118.8mm;
+  font-size: 2.97mm;
+  text-align: center;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+.twoBlocksContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2.97mm;
+}
+
+#pdfFormation {
+  width: 80.81mm;
+  height: 61.68mm;
+  top: 78.79mm;
+  left: 16.6mm;
+  overflow: hidden;
+}
+
+.twoBlockContent {
+  display: flex;
+  align-items: flex-start;
+}
+
+.languageList {
+  display: flex;
+}
+
+#pdfCourses {
+  width: 80.81mm;
+  height: 61.68mm;
+  top: 140.18mm;
+  left: 16.6mm;
+  overflow: hidden;
+}
+
+.finalButtons {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 20;
+}
+
+.informationPage {
+  column-count: 3; /* Defina o número desejado de colunas */
+  column-gap: 20mm; /* Adicione um espaço entre as colunas se desejar */
+  position: absolute;
+  z-index: 10;
+  padding: 10mm 16mm;
+  height: 209.9mm;
+  width: 297mm;
+}
+
+.element {
+  width: 100%;
+  /* break-inside: avoid-column; */
+}
+
+.informationPage .element:not(:first-child) {
+  margin-top: 10mm;
+}
+
+#pdfEvangExps {
+  /* top: 78.79mm;
+  left: 107.42mm; */
+  /* width: 100%; */
+  /* height: 123.37mm; */
+  /* overflow: hidden;
+  break-inside: avoid; */
+}
+
+.columnContent {
+  break-inside: avoid;
+}
+
+.subTitlePdf {
+  margin-top: 5mm;
+}
+
+#pdfSpouseName {
+  top: 17.28mm;
+  left: 105.7mm;
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+#pdfSpouseFirstName {
+  font-size: 10.84mm;
+  text-transform: uppercase;
+}
+
+.pdfSpouseLastName {
+  font-size: 5.16mm;
+  text-transform: uppercase;
+  margin-bottom: 1.98mm;
+}
+
+#pdfSpouseField {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 30.58mm;
+  left: 105.7mm;
+}
+
+#pdfSpouseBirth {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 39.57mm;
+  left: 98.82mm;
+}
+
+#pdfSpouseAge {
+  line-height: 10px;
+}
+
+#pdfSpouseBirthCity {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 39.57mm;
+  left: 207.2mm;
+}
+
+#pdfSpousePhone {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 50.57mm;
+  left: 98.82mm;
+}
+
+#pdfSpouseEmail {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 61.57mm;
+  left: 98.82mm;
+}
+
+#pdfSpouseBaptismCity {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 50.57mm;
+  left: 207.2mm;
+  word-break: normal;
+}
+
+#pdfSpFormation {
+  width: 80.81mm;
+  height: 61.68mm;
+  top: 78.79mm;
+  left: 58.6mm;
+  overflow: hidden;
+}
+
+#pdfSpCourses {
+  width: 80.81mm;
+  height: 61.68mm;
+  top: 140.18mm;
+  left: 58.6mm;
+  overflow: hidden;
+}
+
+.twoSideTitle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+#pdfSpEclExperiences {
+  top: 78.79mm;
+  left: 152.42mm;
+  width: 127.26mm;
+  height: 123.37mm;
   overflow: hidden;
 }

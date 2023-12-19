@@ -1,4 +1,4 @@
-<app-container>
+<app-container *ngIf="!pdf">
   <section class="studentSectionBox">
     <div class="headSection">
       <div
@@ -195,6 +195,17 @@
                 *ngIf="student.user && student.user.cpf"
                 [href]="curriculumLink"
                 ><span>Baixar currículo</span>
+                <img
+                  class="downloadIcon"
+                  src="assets/icons/download.svg"
+                  alt=""
+                />
+              </a>
+              <a
+                class="download"
+                *ngIf="student.user && student.user.cpf"
+                (click)="pdf = !pdf"
+                ><span>Baixar pdf</span>
                 <img
                   class="downloadIcon"
                   src="assets/icons/download.svg"
@@ -594,7 +605,7 @@
                         urlBase +
                         '/student-photos/student/' +
                         student.student.student_id +
-                        '/family_photo)'
+                        '/spouse_photo)'
                     }"
                   ></div>
                 </div>
@@ -870,3 +881,13 @@
     />
   </ng-container>
 </app-container>
+<div *ngIf="student.student && pdf">
+  <app-student-pdf
+    [student]="student"
+    [evvangExpTypes]="evvangExpTypes"
+    [publicationTypes]="publicationTypes"
+    [spEvvangExpTypes]="spEvvangExpTypes"
+    [spPublicationTypes]="spPublicationTypes"
+    (done)="pdf = false"
+  ></app-student-pdf>
+</div>
