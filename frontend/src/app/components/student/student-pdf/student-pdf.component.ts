@@ -1,8 +1,10 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   QueryList,
   Renderer2,
   ViewChild,
@@ -39,6 +41,8 @@ export class StudentPdfComponent implements OnInit {
   @Input() spEvvangExpTypes: string[] = []
   @Input() publicationTypes: string[] = []
   @Input() spPublicationTypes: string[] = []
+
+  @Output() done = new EventEmitter<void>()
   constructor(
     private renderer: Renderer2,
     private dataService: DataService,
@@ -149,6 +153,7 @@ export class StudentPdfComponent implements OnInit {
       }
 
       html2pdf().from(pdfContainer).set(options).save()
+      this.done.emit()
     } catch (error) {
       console.log(error)
     }

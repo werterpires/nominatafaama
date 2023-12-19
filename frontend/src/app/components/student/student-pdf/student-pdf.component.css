@@ -25,7 +25,7 @@ button {
 
 .pdfPage {
   width: 297mm;
-  height: 210mm;
+  height: 209.9mm;
   font-weight: bold;
   font-style: italic;
   text-decoration: underline;
@@ -33,8 +33,6 @@ button {
 
   text-align: center;
   line-height: 1.5;
-
-  border: 1px dashed black;
 
   overflow: hidden;
 
@@ -63,7 +61,7 @@ button {
 
 .backgroundImg {
   width: 297mm;
-  height: 210mm;
+  height: 209.9mm;
   position: absolute;
   left: 0;
   z-index: 9;
@@ -221,9 +219,6 @@ button {
 .pdfIconSmall {
   width: 9.62mm;
 }
-section {
-  border: black 1px dashed;
-}
 
 .infoContent {
   font-size: 5.04mm;
@@ -368,7 +363,7 @@ section {
   position: absolute;
   z-index: 10;
   padding: 10mm 16mm;
-  height: 210mm;
+  height: 209.9mm;
   width: 297mm;
 }
 

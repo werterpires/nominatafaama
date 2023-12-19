@@ -35,14 +35,14 @@ export class StudentComponent implements OnInit {
     isApproved: false,
   }
   @ViewChild('whiteSpace') whiteSpaceElement!: ElementRef
-  @ViewChild('pdfPage') pdfPage!: ElementRef
-  @ViewChild('pdfContainer') pdfContainer!: ElementRef
 
   isLoading = false
   done = false
   doneMessage = ''
   error = false
   errorMessage = ''
+
+  pdf = false
 
   student: ICompleteStudent = {
     student: null,
@@ -376,19 +376,6 @@ export class StudentComponent implements OnInit {
 
     return formatedNumber
   }
-
-  // printPDF() {
-  //   let pdf = new jsPDF('l', 'pt', 'a4')
-  //   pdf.addFont('Myriad Pro Regular', 'normal', 'normal')
-
-  //   pdf.setFont('Myriad Pro Regular')
-  //   pdf.html(this.pdfContainer.nativeElement, {
-  //     margin: 0,
-  //     callback: (pdf) => {
-  //       pdf.save('Teste.pdf')
-  //     },
-  //   })
-  // }
 
   closeError() {
     this.error = false
