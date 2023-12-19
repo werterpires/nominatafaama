@@ -46,8 +46,18 @@ export class StudentPdfComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.classifyEvangTypes()
-    this.classifyPublicationsTypes()
+    this.expByTypes = this.classifyEvangTypes(
+      this.student.evangelisticExperiences || [],
+    )
+    this.spExpByTypes = this.classifyEvangTypes(
+      this.student.spEvangelisticExperiences || [],
+    )
+    this.pubByTypes = this.classifyPublicationsTypes(
+      this.student.publications || [],
+    )
+    this.spPubByTypes = this.classifyPublicationsTypes(
+      this.student.spPublications || [],
+    )
   }
 
   async formatAndGeneratePdf() {
@@ -64,6 +74,7 @@ export class StudentPdfComponent implements OnInit {
 
     parentElements.forEach((parentElement) => {
       let hasOverflowY = this.getIsOverflow(parentElement)
+      console.log(parentElement, hasOverflowY)
 
       if (!hasOverflowY) return
       let contador = 0
@@ -111,6 +122,7 @@ export class StudentPdfComponent implements OnInit {
   }
 
   generatePDF() {
+    console.log('começando a gerar pdf')
     try {
       const pdfContainer = document.querySelector('.pdfContainer')
 
@@ -145,26 +157,32 @@ export class StudentPdfComponent implements OnInit {
   urlBase = environment.API
 
   expByTypes: { [key: string]: IEvangelisticExperience[] } = {}
+  spExpByTypes: { [key: string]: IEvangelisticExperience[] } = {}
   pubByTypes: { [key: string]: IPublication[] } = {}
+  spPubByTypes: { [key: string]: IPublication[] } = {}
 
-  classifyEvangTypes() {
-    this.expByTypes = {}
-    this.student.evangelisticExperiences?.forEach((exp) => {
-      if (!this.expByTypes[exp.evang_exp_type_name]) {
-        this.expByTypes[exp.evang_exp_type_name] = []
+  classifyEvangTypes(exps: IEvangelisticExperience[]) {
+    const xpByType: { [key: string]: IEvangelisticExperience[] } = {}
+
+    exps.forEach((exp) => {
+      if (!xpByType[exp.evang_exp_type_name]) {
+        xpByType[exp.evang_exp_type_name] = []
       }
-      this.expByTypes[exp.evang_exp_type_name].push(exp)
+      xpByType[exp.evang_exp_type_name].push(exp)
     })
+
+    return xpByType
   }
 
-  classifyPublicationsTypes() {
-    this.pubByTypes = {}
-    this.student.publications?.forEach((pub) => {
-      if (!this.pubByTypes[pub.publication_type]) {
-        this.pubByTypes[pub.publication_type] = []
+  classifyPublicationsTypes(publications: IPublication[]) {
+    const pubByTypes: { [key: string]: IPublication[] } = {}
+    publications.forEach((pub) => {
+      if (!pubByTypes[pub.publication_type]) {
+        pubByTypes[pub.publication_type] = []
       }
-      this.pubByTypes[pub.publication_type].push(pub)
+      pubByTypes[pub.publication_type].push(pub)
     })
+    return pubByTypes
   }
 
   formatDate(date: string | null) {
