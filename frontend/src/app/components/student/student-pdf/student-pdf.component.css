@@ -116,18 +116,18 @@ button {
   word-break: break-all;
 }
 
-#pdfBirth {
-  font-size: 5.16mm;
-  line-height: 5.64mm;
-  top: 156.25mm;
-  left: 24.82mm;
-}
-
 .pdfInfo {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+}
+
+#pdfBirth {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 156.25mm;
+  left: 24.82mm;
 }
 
 #pdfAge {
@@ -163,10 +163,17 @@ button {
 }
 
 .pdfFamilyPhoto {
-  width: 29.99mm;
   position: absolute;
   left: 0mm;
   width: 106.92mm;
+  z-index: 8;
+}
+
+.pdfSpousePhoto {
+  position: absolute;
+  left: 0mm;
+  width: 87mm;
+
   z-index: 8;
 }
 
@@ -214,9 +221,9 @@ button {
 .pdfIconSmall {
   width: 9.62mm;
 }
-/* section {
+section {
   border: black 1px dashed;
-} */
+}
 
 .infoContent {
   font-size: 5.04mm;
@@ -277,12 +284,23 @@ button {
 
 .sideTitle {
   height: 5.64mm;
-
+  width: 100%;
   position: relative;
   right: 2.97mm;
+  background: linear-gradient(124deg, #0e2f52, #1ba4dd);
+  text-align: center;
+  font-size: 3.65mm;
+  line-height: 5.94mm;
+  text-transform: uppercase;
+  color: white;
+}
+
+.middleTitle {
+  height: 5.64mm;
+  width: 100%;
+  position: relative;
 
   background: linear-gradient(124deg, #0e2f52, #1ba4dd);
-
   text-align: center;
   font-size: 3.65mm;
   line-height: 5.94mm;
@@ -378,4 +396,100 @@ button {
 
 .subTitlePdf {
   margin-top: 5mm;
+}
+
+#pdfSpouseName {
+  top: 17.28mm;
+  left: 105.7mm;
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+#pdfSpouseFirstName {
+  font-size: 10.84mm;
+  text-transform: uppercase;
+}
+
+.pdfSpouseLastName {
+  font-size: 5.16mm;
+  text-transform: uppercase;
+  margin-bottom: 1.98mm;
+}
+
+#pdfSpouseField {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 30.58mm;
+  left: 105.7mm;
+}
+
+#pdfSpouseBirth {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 39.57mm;
+  left: 98.82mm;
+}
+
+#pdfSpouseAge {
+  line-height: 10px;
+}
+
+#pdfSpouseBirthCity {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 39.57mm;
+  left: 207.2mm;
+}
+
+#pdfSpousePhone {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 50.57mm;
+  left: 98.82mm;
+}
+
+#pdfSpouseEmail {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 61.57mm;
+  left: 98.82mm;
+}
+
+#pdfSpouseBaptismCity {
+  font-size: 5.16mm;
+  line-height: 5.64mm;
+  top: 50.57mm;
+  left: 207.2mm;
+  word-break: normal;
+}
+
+#pdfSpFormation {
+  width: 80.81mm;
+  height: 61.68mm;
+  top: 78.79mm;
+  left: 58.6mm;
+  overflow: hidden;
+}
+
+#pdfSpCourses {
+  width: 80.81mm;
+  height: 61.68mm;
+  top: 140.18mm;
+  left: 58.6mm;
+  overflow: hidden;
+}
+
+.twoSideTitle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+#pdfSpEclExperiences {
+  top: 78.79mm;
+  left: 152.42mm;
+  width: 127.26mm;
+  height: 123.37mm;
+  overflow: hidden;
 }

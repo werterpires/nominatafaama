@@ -251,7 +251,7 @@
       </div>
       <div class="twoSidesContainer">
         <div class="twoSideContent">
-          <div class="subTitlePdf">
+          <div class="twoSideTitle">
             <img
               class="pdfIconBig"
               src="assets/icons/pdfPrayIcon.svg"
@@ -274,7 +274,7 @@
           </div>
         </div>
         <div class="twoSideContent">
-          <div class="subTitlePdf">
+          <div class="twoSideTitle">
             <img
               class="pdfIconBig"
               src="assets/icons/pdfEducationIcon.svg"
@@ -329,7 +329,7 @@
 
         <div class="columnContent" *ngFor="let expType of evvangExpTypes">
           <div class="subTitlePdf">
-            <p class="sideTitle">{{ expType }}</p>
+            <p class="middleTitle">{{ expType }}</p>
           </div>
 
           <div class="sideBody">
@@ -356,7 +356,7 @@
 
         <div class="columnContent" *ngFor="let pubType of publicationTypes">
           <div class="subTitlePdf">
-            <p class="sideTitle">{{ pubType }}</p>
+            <p class="middleTitle">{{ pubType }}</p>
           </div>
 
           <div class="sideBody">
@@ -453,7 +453,225 @@
       </section>
     </div>
   </div>
-  <div class="pdfPage">Essa é a terceira página do pdf</div>
+  <div class="pdfPage" *ngIf="student && student.spouse">
+    <img
+      class="pdfSpousePhoto"
+      #alonePhoto
+      [src]="
+        urlBase +
+        '/student-photos/student/' +
+        student.student.student_id +
+        '/spouse_photo'
+      "
+      alt=""
+    />
+    <img class="backgroundImg" #background1 src="assets/img/pg4.png" alt="" />
+    <span id="pdfSpouseName">
+      <p id="pdfSpouseFirstName">
+        {{ student.spouse.person_name.split(' ')[0] }}
+      </p>
+      <p
+        *ngFor="let surnmae of student.spouse.person_name.split(' ').slice(1)"
+        class="pdfSpouseLastName"
+      >
+        {{ surnmae }}
+      </p>
+    </span>
+    <span id="pdfSpouseField">
+      <p>
+        {{ student.spouse.association_name }} -
+        {{ student.spouse.union_acronym }}
+      </p>
+    </span>
+    <span id="pdfSpouseBirth" class="pdfInformation">
+      <img
+        class="pdfIconSmall"
+        src="assets/icons/pdfBirthIcon.svg"
+        alt="figura de estrela"
+      />
+      <div class="infoContent">
+        <p id="pdfSpouseBirthDate">
+          {{ formatDate(student.spouse.birth_date) }}
+        </p>
+        <p id="pdfSpouseAge">
+          {{ formateAge(student.spouse.birth_date) }} anos
+        </p>
+      </div>
+    </span>
+    <span class="pdfInformation" id="pdfSpouseBirthCity">
+      <img
+        class="pdfIconSmall"
+        src="assets/icons/pdfBirthCityIcon.svg"
+        alt="Figura de um alfinete de localização"
+      />
+      <p class="infoContent">
+        {{ student.spouse.birth_city }}-{{ student.spouse.birth_state }}
+      </p>
+    </span>
+    <span class="pdfInformation" id="pdfSpouseBaptismCity">
+      <img
+        class="pdfIconSmall"
+        src="assets/icons/pdfBaptismIcon.svg"
+        alt="Figura de um homem na água"
+      />
+      <p class="infoContent">
+        {{ student.spouse.baptism_place }} -
+        {{ formatDate(student.spouse.baptism_date) }} (Há
+        {{ formateAge(student.spouse.baptism_date) }} anos)
+      </p>
+    </span>
+    <span class="pdfInformation" id="pdfSpouseBirthCity">
+      <img
+        class="pdfIconSmall"
+        src="assets/icons/pdfBirthCityIcon.svg"
+        alt="Figura de um alfinete de localização"
+      />
+      <p class="infoContent">
+        {{ student.spouse.birth_city }}-{{ student.spouse.birth_state }}
+      </p>
+    </span>
+    <span class="pdfInformation" id="pdfSpousePhone">
+      <img
+        class="pdfIconSmall"
+        src="assets/icons/pdfPhoneIcon.svg"
+        alt="Figura de um telefone"
+      />
+      <p class="infoContent">
+        {{ formatarTelefone(student.spouse.phone_number) }}
+      </p>
+    </span>
+    <span class="pdfInformation" id="pdfSpouseEmail">
+      <img
+        class="pdfIconSmall"
+        src="assets/icons/pdfEmailIcon.svg"
+        alt="Figura de um email"
+      />
+      <div class="pdfInfo">
+        <p class="infoContent">{{ student.spouse.alternative_email }}</p>
+      </div>
+    </span>
+    <section class="informationGroup" id="pdfSpFormation">
+      <div class="sectionHeader">
+        <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+        <img
+          class="pdfIconBig"
+          src="assets/icons/pdfGraduationIcon.svg"
+          alt="Figura de homem na água"
+        />
+        <p class="groupTitle">Formação</p>
+        <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+      </div>
+      <div class="twoBlocksContainer">
+        <div class="twoBlockContent">
+          <img
+            class="pdfIconSmall"
+            src="assets/icons/pdfFormationIcon.svg"
+            alt="Figura de um calendário"
+          />
+
+          <div class="sideBody">
+            <ul>
+              <li
+                *ngFor="let formation of student.spAcademicFormations"
+                class="infoContent"
+              >
+                {{ formation.degree_name }} em {{ formation.course_area }},
+                {{ formation.institution }} ({{
+                  formatConclusionYear(formation.begin_date)
+                }}
+                - {{ formatConclusionYear(formation.conclusion_date) }})
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="twoBlockContent">
+          <img
+            class="pdfIconSmall"
+            src="assets/icons/pdfGlobeIcon.svg"
+            alt="Figura de um calendário"
+          />
+
+          <div class="sideBody">
+            <ul>
+              <li
+                *ngFor="let language of student.spLanguages"
+                class="infoContent"
+              >
+                {{ language.language.toUpperCase() }} -
+                {{ !language.fluent && language.read ? 'Lê bem' : '' }}
+                {{ !language.fluent && language.write ? 'Escreve bem' : '' }}
+                {{ !language.fluent && language.speak ? 'Fala bem' : '' }}
+                {{ !language.fluent && language.understand ? 'Entende' : '' }}
+                {{ language.fluent ? 'Fluente' : '' }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="informationGroup" id="pdfSpCourses">
+      <div class="sectionHeader">
+        <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+        <img
+          class="pdfIconBig"
+          src="assets/icons/pdfGraduationIcon.svg"
+          alt="Figura de homem na água"
+        />
+        <p class="groupTitle">Capacitações</p>
+        <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+      </div>
+      <div class="twoBlocksContainer">
+        <div class="twoBlockContent">
+          <div class="sideBody">
+            <ul>
+              <li *ngFor="let course of student.spCourses" class="infoContent">
+                {{ course.course_area }}, {{ course.institution }} ({{
+                  formatConclusionYear(course.conclusion_date)
+                }})
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="informationGroup" id="pdfSpEclExperiences">
+      <div class="sectionHeader">
+        <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+        <img
+          class="pdfIconBig"
+          src="assets/icons/pdfChurchIcon.svg"
+          alt="Figura de homem na água"
+        />
+        <p class="groupTitle">Experiências eclesiásticas</p>
+        <img class="blueLine" src="assets/img/blueLine.png" alt="" />
+      </div>
+      <div class="twoSidesContainer">
+        <div>
+          <div class="twoSideTitle">
+            <img
+              class="pdfIconBig"
+              src="assets/icons/pdfPrayIcon.svg"
+              alt="Figura de um calendário"
+            />
+            <p class="sideTitle">Antes do Salt</p>
+          </div>
+          <div class="sideBody">
+            <ul>
+              <li
+                *ngFor="let experience of student.spPastEclExps"
+                class="infoContent"
+              >
+                {{ experience.function }}, {{ experience.place }} ({{
+                  formatConclusionYear(experience.past_exp_begin_date)
+                }}
+                - {{ formatConclusionYear(experience.past_exp_end_date) }})
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
   <div class="pdfPage">Essa é a quarta página do pdf</div>
 </div>
 <div class="finalButtons">
