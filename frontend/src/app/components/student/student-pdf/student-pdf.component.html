@@ -171,7 +171,7 @@
       </div>
     </section>
     <section
-      *ngIf="student.academicFormations"
+      *ngIf="student.academicFormations || student.languages"
       class="informationGroup"
       id="pdfFormation"
     >
@@ -190,7 +190,7 @@
         </div>
       </div>
       <div class="twoBlocksContainer">
-        <div class="twoBlockContent">
+        <div class="twoBlockContent" *ngIf="student.academicFormations">
           <img
             class="pdfIconSmall"
             src="assets/icons/pdfFormationIcon.svg"
@@ -212,7 +212,7 @@
             </ul>
           </div>
         </div>
-        <div class="twoBlockContent">
+        <div class="twoBlockContent" *ngIf="student.languages">
           <img
             class="pdfIconSmall"
             src="assets/icons/pdfGlobeIcon.svg"
@@ -237,7 +237,15 @@
         </div>
       </div>
     </section>
-    <section *ngIf="student.courses" class="informationGroup" id="pdfCourses">
+    <section
+      *ngIf="student.courses"
+      class="informationGroup"
+      [id]="
+        student.academicFormations || student.languages
+          ? 'pdfCourses'
+          : 'pdfFormation'
+      "
+    >
       <div class="sectionHeader">
         <div class="blueContainer">
           <img class="blueLine" src="assets/img/blueLine.png" alt="" />
@@ -619,7 +627,7 @@
       </div>
     </span>
     <section
-      *ngIf="student.spAcademicFormations"
+      *ngIf="student.spAcademicFormations || student.spLanguages"
       class="informationGroup"
       id="pdfSpFormation"
     >
@@ -638,7 +646,7 @@
         </div>
       </div>
       <div class="twoBlocksContainer">
-        <div class="twoBlockContent">
+        <div class="twoBlockContent" *ngIf="student.spAcademicFormations">
           <img
             class="pdfIconSmall"
             src="assets/icons/pdfFormationIcon.svg"
@@ -660,7 +668,7 @@
             </ul>
           </div>
         </div>
-        <div class="twoBlockContent">
+        <div class="twoBlockContent" *ngIf="student.spLanguages">
           <img
             class="pdfIconSmall"
             src="assets/icons/pdfGlobeIcon.svg"
@@ -688,7 +696,11 @@
     <section
       *ngIf="student.spCourses"
       class="informationGroup"
-      id="pdfSpCourses"
+      [id]="
+        student.spAcademicFormations || student.spLanguages
+          ? 'pdfSpCourses'
+          : 'pdfSpFormation'
+      "
     >
       <div class="sectionHeader">
         <div class="blueContainer">
@@ -764,7 +776,7 @@
       </div>
     </section>
   </div>
-  <div class="pdfPage" #pdfPage>
+  <div class="pdfPage" *ngIf="student.spouse" #pdfPage>
     <img
       class="backgroundImg"
       #background1

@@ -44,6 +44,7 @@ button {
   font-weight: 700;
   font-style: normal;
   color: #0e2f52;
+  overflow-wrap: break-word;
 }
 
 .pdfPage span,
@@ -291,7 +292,6 @@ button {
 }
 
 .middleTitle {
-  height: 5.64mm;
   width: 100%;
   position: relative;
 
@@ -325,7 +325,7 @@ button {
 #pdfFormation {
   width: 80.81mm;
   height: 61.68mm;
-  top: 78.79mm;
+  top: 82.79mm;
   left: 16.6mm;
   overflow: hidden;
 }
@@ -342,7 +342,7 @@ button {
 #pdfCourses {
   width: 80.81mm;
   height: 61.68mm;
-  top: 140.18mm;
+  top: 142.18mm;
   left: 16.6mm;
   overflow: hidden;
 }
@@ -360,6 +360,7 @@ button {
 .informationPage {
   column-count: 3; /* Defina o número desejado de colunas */
   column-gap: 20mm; /* Adicione um espaço entre as colunas se desejar */
+  column-fill: auto;
   position: absolute;
   z-index: 10;
   padding: 10mm 16mm;
@@ -487,4 +488,10 @@ button {
   width: 127.26mm;
   height: 123.37mm;
   overflow: hidden;
+}
+
+#pdfProfExps,
+#pdfEndowments,
+#pdfOrdinations {
+  break-inside: avoid;
 }
