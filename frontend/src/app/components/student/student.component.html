@@ -864,7 +864,13 @@
 
   <div *ngIf="isLoading === true" class="loader1"></div>
   <div *ngIf="isLoading === true" class="loader2"></div>
-  <ng-container *ngIf="student.student">
+  <ng-container
+    *ngIf="
+      student.student &&
+      permissions &&
+      (permissions.administrador || permissions.representacao)
+    "
+  >
     <img
       *ngIf="!favorites.includes(student.student.student_id)"
       src="assets/icons/notFavorite.svg"
