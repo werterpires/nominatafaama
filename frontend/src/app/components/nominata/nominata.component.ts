@@ -351,10 +351,6 @@ export class NominataComponent implements OnInit {
     return this.datePipe.transform(date, 'dd/MM/yyyy')
   }
 
-  setFavorite(studentId: number, fav: boolean) {
-    console.log(fav)
-  }
-
   selectStudent(studentId: string) {
     this.router.navigate(['student/' + studentId])
     // this.toStudent.emit({ option: 'student', studentId: studentId })
