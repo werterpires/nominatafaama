@@ -85,7 +85,10 @@ export class StudentsSpaceComponent implements OnInit {
       })
       this.studentsToList = this.students
     }
-    this.getAllFavs()
+
+    if (this.permissions.representacao || this.permissions.administrador) {
+      this.getAllFavs()
+    }
   }
 
   getAllFavs() {
