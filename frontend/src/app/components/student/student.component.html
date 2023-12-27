@@ -2,13 +2,14 @@
   <section class="studentSectionBox">
     <div class="headSection">
       <div
+        *ngIf="student.student"
         class="oneStudentPhoto"
         [ngStyle]="{
           'background-image':
             'url(' +
             urlBase +
             '/student-photos/student/' +
-            student.student?.student_id +
+            student.student.student_id +
             '/small_alone_photo)'
         }"
       ></div>
