@@ -95,7 +95,8 @@ import { InvitesToApproveComponent } from './components/approvals/invites-to_app
 import { OneInviteToApproveComponent } from './components/approvals/one-invite-to-approve/one-invite-to-approve.component'
 import { CallsComponent } from './components/calls/calls.component'
 import { AlertComponent } from './components/shared/alert/alert.component'
-import { ApproveFormComponent } from './components/shared/approve-form/approve-form.component'
+import { ApproveFormComponent } from './components/shared/approve-form/approve-form.component';
+import { StudentInviteComponent } from './components/student/student-invite/student-invite.component'
 
 @NgModule({
   declarations: [
@@ -188,6 +189,7 @@ import { ApproveFormComponent } from './components/shared/approve-form/approve-f
     CallsComponent,
     AlertComponent,
     ApproveFormComponent,
+    StudentInviteComponent,
   ],
   imports: [
     BrowserModule,

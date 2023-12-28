@@ -1,0 +1,15 @@
+#inviteContainer {
+  width: 290mm;
+  height: 210mm;
+  padding: 2.63mm;
+  background: linear-gradient(to bottom, #debc50, #fef6b8, #debc50);
+}
+
+#inviteHeader {
+  height: 88mm;
+  width: 284.72mm;
+  background: var(
+    --01,
+    linear-gradient(180deg, #202c3d 5.58%, #223a52 43.15%, #244c6c 111.37%)
+  );
+}
