@@ -13,3 +13,10 @@
     linear-gradient(180deg, #202c3d 5.58%, #223a52 43.15%, #244c6c 111.37%)
   );
 }
+
+#graduationSquare {
+  width: 108px;
+  height: 121px;
+  position: absolute;
+  left: 50mm;
+}
