@@ -18,5 +18,19 @@
   width: 108px;
   height: 121px;
   position: absolute;
-  left: 50mm;
+  left: 28mm;
+}
+
+#faamaLogo {
+  width: 92px;
+  position: absolute;
+  left: 30.2mm;
+  top: 10mm;
+}
+
+#inviteTitle {
+  font-size: 64px;
+  font-family: Monotype Corsiva;
+  font-weight: 400;
+  word-wrap: break-word;
 }
