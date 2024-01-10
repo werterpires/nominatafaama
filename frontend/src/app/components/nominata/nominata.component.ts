@@ -43,6 +43,8 @@ export class NominataComponent implements OnInit {
   @ViewChild('directorText') directorText!: ElementRef
   @ViewChild('readMore') readMore!: ElementRef
 
+  invite = false
+
   Registry: ICompleteNominata | null = null
   nominataYear: string =
     new Date().getMonth() > 6

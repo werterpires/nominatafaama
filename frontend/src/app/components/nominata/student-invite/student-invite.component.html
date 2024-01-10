@@ -1,0 +1,49 @@
+<div id="inviteContainer">
+  <img src="assets/icons/graduationSquare.svg" id="graduationSquare" alt="" />
+  <img src="assets/img/faamaLogo.png" id="faamaLogo" alt="logo da FAAMA" />
+  <div id="inviteHeader">
+    <div id="inviteTitle">
+      <p id="inviteTitleText">Formatura Teologia {{ year }}</p>
+    </div>
+    <section id="infortions">
+      <div id="rightSide">
+        <div id="biblicalText">
+          Disse-lhes: Grande é a messe, mas poucos são os operários. Rogai ao
+          Senhor da messe que mande operários para a sua messe. Lc 10:2
+        </div>
+        <div id="inviteText">
+          Neste momento especial, sinto-me feliz em convidá-lo/a para as
+          solenidades de minha Formatura em Teologia pela FAAMA
+        </div>
+      </div>
+      <div id="leftSide">
+        <div *ngFor="let event of events" class="event">
+          <p class="eventTitle">
+            {{ event.event_title }}
+          </p>
+
+          <div class="eventPlace">
+            <span> {{ event.event_place }} </span>
+          </div>
+
+          <div class="eventTime">
+            <span>
+              {{ formatDate(event.event_date) }} às {{ event.event_time }}
+            </span>
+            <span> {{ event.event_address }} </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div
+    id="invitePhoto"
+    *ngIf="nominataId && urlBase"
+    [ngStyle]="{
+      'background-image':
+        'url(' + urlBase + '/nominatas/photo/' + nominataId + ')'
+    }"
+  ></div>
+</div>
+<button id="generatePDF" (click)="generatePDF()">Gerar convite</button>
+<script src="html2pdf.bundle.min.js"></script>

@@ -126,7 +126,6 @@ export class StudentPdfComponent implements OnInit {
   }
 
   generatePDF() {
-    console.log('começando a gerar pdf')
     try {
       const pdfContainer = document.querySelector('.pdfContainer')
 
