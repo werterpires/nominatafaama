@@ -256,7 +256,7 @@ export class NotificationsModel {
           .where(
             'created_at',
             '<',
-            this.knex.raw('DATE_SUB(NOW(), INTERVAL 10 DAY)')
+            this.knex.raw('DATE_SUB(NOW(), INTERVAL 4 YEAR)')
           )
 
         await trx('notifications')
