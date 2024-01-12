@@ -2,79 +2,78 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { ERoles } from 'src/shared/auth/types/roles.enum';
-import { AuthRequest } from 'src/shared/auth/types/types';
+  Injectable
+} from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { AuthRequest } from 'src/shared/auth/types/types'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<ERoles[]>('roles', [
       context.getHandler(),
-      context.getClass(),
-    ]);
+      context.getClass()
+    ])
 
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!requiredRoles) {
-      return true;
+      return true
     }
 
     const restrictRoles = this.reflector.getAllAndOverride<ERoles[]>(
       'restrictRoles',
       [context.getHandler(), context.getClass()]
-    );
+    )
 
-    const request = context.switchToHttp().getRequest<AuthRequest>();
-    const user = request.user;
-    const userId = Number(request.params.id);
-    const approved = user.user_approved;
+    const request = context.switchToHttp().getRequest<AuthRequest>()
+    const user = request.user
+    const userId = Number(request.params.id)
+    const approved = user.user_approved
 
-    const userRoles: string[] = [];
-    let matchUserRoles: string[] = [];
+    const userRoles: string[] = []
+    let matchUserRoles: string[] = []
 
     user.roles.forEach((role) => {
-      userRoles.push(role.role_name);
-    });
+      userRoles.push(role.role_name)
+    })
 
     requiredRoles.forEach((role) => {
       if (userRoles.includes(role)) {
-        matchUserRoles.push(role);
+        matchUserRoles.push(role)
       }
-    });
+    })
 
     if (!approved) {
       throw new ForbiddenException(
         'Seu usuário deve ser aprovado antes de executar essa ação.'
-      );
+      )
     }
 
     if (matchUserRoles.length < 1) {
       throw new ForbiddenException(
         'Você não tem um papel válido para acessar esse recurso'
-      );
+      )
     }
 
     if (restrictRoles !== undefined) {
       restrictRoles.forEach((role) => {
-        matchUserRoles = matchUserRoles.filter((r) => r !== role);
-      });
+        matchUserRoles = matchUserRoles.filter((r) => r !== role)
+      })
     }
 
     if (matchUserRoles.length > 0) {
-      return true;
+      return true
     }
 
     if (userId !== user.user_id) {
       throw new ForbiddenException(
         'Esse recurso só pode ser acessado pelo próprio usuário'
-      );
+      )
     }
 
-    return true;
+    return true
   }
 }

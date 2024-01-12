@@ -7,7 +7,7 @@ import {
   ViewChild,
 } from '@angular/core'
 import { IPermissions, IUserApproved } from '../shared/container/types'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { StudentService } from './student.service'
 import { ICompleteStudent } from '../approvals/student-to-approve/types'
 import { DatePipe } from '@angular/common'
@@ -116,7 +116,6 @@ export class StudentComponent implements OnInit {
   }
 
   curriculumLink!: string
-  router: any
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -125,6 +124,7 @@ export class StudentComponent implements OnInit {
     private dataService: DataService,
     private loginService: LoginService,
     private studentsSpaceService: StudentsSpaceService,
+    private router: Router,
   ) {}
 
   @Input() studentId!: number
@@ -153,7 +153,7 @@ export class StudentComponent implements OnInit {
         this.permissions.isApproved = this.user.user_approved
       } else {
         this.user = null
-        this.router.navigate(['nominata'])
+
         this.permissions.isApproved = false
       }
       this.permissions.estudante = roles.includes('estudante')
@@ -237,7 +237,9 @@ export class StudentComponent implements OnInit {
       },
     })
 
-    this.getAllFavs()
+    if (this.permissions.administrador || this.permissions.representacao) {
+      this.getAllFavs()
+    }
     this.isLoading = false
   }
 

@@ -16,7 +16,7 @@ export class ValidateService {
   cpfRegex = /^\d{11}$/
   phoneNumberRegex = /^(\d{2})?(\d{4,5})\d{4}$/
 
-  urlRegex: RegExp = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
+  urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
 
   dateRegex = /^\d{4}-\d{2}-\d{2}$/
 

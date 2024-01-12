@@ -1,4 +1,4 @@
-<app-container>
+<app-container *ngIf="!invite">
   <div class="sectionDataList">
     <section #sectionBox ngClass="sectionBoxAll">
       <div
@@ -126,6 +126,10 @@
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
       ></iframe>
+
+      <button *ngIf="permissions.estudante" (click)="invite = true">
+        Gerar convite
+      </button>
     </section>
 
     <div *ngIf="isLoading" class="loader1"></div>
@@ -203,3 +207,12 @@
     </div>
   </footer>
 </app-container>
+<div *ngIf="Registry && invite">
+  <app-student-invite
+    [events]="Registry.events"
+    [urlBase]="urlBase"
+    [nominataId]="Registry.nominata_id"
+    [year]="Registry.year"
+    (done)="invite = false"
+  ></app-student-invite>
+</div>

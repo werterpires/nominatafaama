@@ -1,0 +1,174 @@
+:root {
+  --blue: linear-gradient(
+    180deg,
+    #202c3d 5.58%,
+    #223a52 43.15%,
+    #244c6c 111.37%
+  );
+  --horizontalGold: linear-gradient(to right, #debc50, #fef6b8, #debc50);
+}
+
+#inviteContainer {
+  width: 297mm;
+  height: 209.8mm;
+  padding: 2.63mm;
+  background: linear-gradient(to bottom, #debc50, #fef6b8, #debc50);
+  overflow: hidden;
+}
+
+#inviteHeader {
+  height: 88mm;
+  width: 291.72mm;
+  background: linear-gradient(
+    180deg,
+    #202c3d 5.58%,
+    #223a52 43.15%,
+    #244c6c 111.37%
+  );
+}
+
+#graduationSquare {
+  width: 28.575mm;
+  height: 121px;
+  position: absolute;
+  left: 28mm;
+}
+
+#faamaLogo {
+  width: 92px;
+  position: absolute;
+  left: 30.2mm;
+  top: 10mm;
+}
+
+#inviteTitle {
+  width: 237.795mm;
+  position: absolute;
+  left: 56.575mm;
+  top: 14mm;
+  display: flex;
+  justify-content: center;
+  font-size: 64px;
+  font-family: Monotype Corsiva;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+#inviteTitleText {
+  color: #e5c866;
+}
+
+#infortions {
+  position: absolute;
+  top: 40mm;
+  left: 10mm;
+  display: flex;
+  gap: 15mm;
+  width: 277mm;
+}
+
+#rightSide {
+  display: flex;
+  flex-direction: column;
+  gap: 5mm;
+  flex: 1;
+}
+
+#biblicalText {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  font-family: 'monotype corsiva', sans-serif;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+#inviteText {
+  font-size: 14px;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 300;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  word-wrap: break-word;
+  color: white;
+}
+
+#leftSide {
+  display: flex;
+  gap: 5mm;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  flex: 2;
+}
+
+.event {
+  flex: 1;
+  padding: 0mm 2mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 41mm;
+}
+
+.event:not(:last-child) {
+  border-right: 1mm solid;
+  border-image: linear-gradient(to bottom, #debc50, #fef6b8, #debc50) 1;
+  padding-right: 10px; /* Ajuste conforme necessário */
+}
+
+.eventTitle {
+  color: white;
+  font-size: 18px;
+  font-family: Archivo;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  word-wrap: break-word;
+  text-transform: uppercase;
+}
+
+.eventTime {
+  color: #f0f0f0;
+  font-size: 14px;
+  font-family: Archivo;
+  font-weight: 300;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  word-wrap: break-word;
+}
+
+.eventPlace {
+  color: #f0f0f0;
+  font-size: 14px;
+  font-family: Archivo;
+  font-weight: 300;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  word-wrap: break-word;
+  text-transform: uppercase;
+}
+
+.eventAddress {
+  color: #f0f0f0;
+  font-size: 14px;
+  font-family: Archivo;
+  font-weight: 300;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  word-wrap: break-word;
+}
+
+#invitePhoto {
+  height: 116mm;
+  width: 291.72mm;
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+#generatePDF {
+  position: fixed;
+  right: 10mm;
+  top: 10mm;
+}

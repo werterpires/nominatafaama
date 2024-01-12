@@ -43,6 +43,8 @@ export class NominataComponent implements OnInit {
   @ViewChild('directorText') directorText!: ElementRef
   @ViewChild('readMore') readMore!: ElementRef
 
+  invite = false
+
   Registry: ICompleteNominata | null = null
   nominataYear: string =
     new Date().getMonth() > 6
@@ -349,10 +351,6 @@ export class NominataComponent implements OnInit {
 
   formatDate(date: string) {
     return this.datePipe.transform(date, 'dd/MM/yyyy')
-  }
-
-  setFavorite(studentId: number, fav: boolean) {
-    console.log(fav)
   }
 
   selectStudent(studentId: string) {
