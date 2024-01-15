@@ -174,7 +174,6 @@ export class LogonComponent {
         this.allUserTerms.forEach((term) => {
           term.dividedText = term.text.split('\n')
         })
-        console.log('termos ativos que serão mostrados:', this.allUserTerms)
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -187,60 +186,6 @@ export class LogonComponent {
   logon() {
     this.isLoading = true
 
-    // const isValidEmail = this.validateService.validateEmailData(
-    //   this.logonData.principalEmail,
-    // )
-    // if (!isValidEmail) {
-    //   this.errorMessage = 'Digite um email válido para prosseguir com o logon'
-    //   this.error = true
-    //   this.isLoading = false
-    //   return
-    // }
-    // const isValidPass = this.validateService.validatePasswordData(
-    //   this.logonData.passwordHash,
-    // )
-    // if (!isValidPass) {
-    //   this.errorMessage =
-    //     'A senha deve conter pelo menos 8 caracteres, sendo´pelo menos uma letra minúscula, pelo menos uma letra maiúscula, pelo menos um símbolo e pelo menos um número.'
-    //   this.error = true
-    //   this.isLoading = false
-    //   return
-    // }
-
-    // const isValidName = this.validateService.validateNameData(
-    //   this.logonData.name,
-    // )
-    // if (!isValidName) {
-    //   this.errorMessage =
-    //     'O nome deve conter pelo menos 2 palavras (Nome e Sobrenome) com pelo menos 2 letras em cada um.'
-    //   this.error = true
-    //   this.isLoading = false
-    //   return
-    // }
-    // this.logonData.cpf = this.logonData.cpf.replace(/[^\d]/g, '')
-    // const isValidCpf = this.validateService.validateCpfData(this.logonData.cpf)
-    // if (!isValidCpf) {
-    //   this.errorMessage = 'Por favor, insira um CPF válido.'
-    //   this.error = true
-    //   this.isLoading = false
-    //   return
-    // }
-
-    // const isConfirmedPass = this.logonData.passwordHash === this.confirmPassword
-    // if (!isConfirmedPass) {
-    //   this.errorMessage = 'As duas senhas digitadas não conferem.'
-    //   this.error = true
-    //   this.isLoading = false
-    //   return
-    // }
-
-    // const isConfirmedEmail = this.logonData.principalEmail === this.confirmEmail
-    // if (!isConfirmedEmail) {
-    //   this.errorMessage = 'Os dois Emails digitados não conferem.'
-    //   this.error = true
-    //   this.isLoading = false
-    //   return
-    // }
     const roles: ItermUser[] = []
 
     for (let i = 0; i < this.logonData.rolesId.length; i++) {

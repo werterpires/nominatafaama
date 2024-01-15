@@ -1,14 +1,11 @@
-import { HttpClient } from '@angular/common/http'
-import { EventEmitter, Injectable, Output } from '@angular/core'
-import { Router } from '@angular/router'
+import { Injectable } from '@angular/core'
+
 import { BehaviorSubject } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlertServices {
-  constructor(private http: HttpClient, private router: Router) {}
-
   private alertSubject = new BehaviorSubject<boolean>(false)
   private alertMessageSubject = new BehaviorSubject<string>('')
   private funcSubject = new BehaviorSubject<string>('')
