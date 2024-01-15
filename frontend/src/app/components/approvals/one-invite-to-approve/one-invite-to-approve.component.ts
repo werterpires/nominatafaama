@@ -160,8 +160,6 @@ export class OneInviteToApproveComponent implements OnInit {
           rejectInput.classList.add('setted')
           approveInput.classList.remove('setted')
         }
-
-        this.ngOnInit()
       },
       error: (err) => {
         this.errorService.showError(err.message)

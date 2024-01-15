@@ -162,8 +162,6 @@ export class OneRepresentationsToApproveComponent implements OnInit {
             rejectInput.classList.add('setted')
             approveInput.classList.remove('setted')
           }
-
-          this.ngOnInit()
         },
         error: (err) => {
           this.errorMessage = err.message
