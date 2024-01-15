@@ -9,6 +9,7 @@ import { UserApprovesService } from './users-approves.service'
 import { IUser } from '../../records/users/types'
 import { LoginService } from '../../shared/shared.service.ts/login.service'
 import { Router } from '@angular/router'
+import { UsersAprovesTypes } from './types'
 
 @Component({
   selector: 'app-users-approves',
@@ -84,6 +85,25 @@ export class UsersApprovesComponent implements OnInit {
     ministerial: false,
     design: false,
     isApproved: false,
+  }
+
+  users: UsersAprovesTypes = {
+    adm: false,
+    dir: false,
+    min: false,
+    rep: false,
+    sec: false,
+    doc: false,
+    est: false,
+    des: false,
+  }
+
+  choseUsers(userType: string) {
+    //tornar false todos os users usando um loop
+    for (const type in this.users) {
+      this.users[type] = false
+    }
+    this.users[userType] = true
   }
 
   user: IUserApproved | null = null

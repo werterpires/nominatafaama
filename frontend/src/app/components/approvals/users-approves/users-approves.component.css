@@ -1,0 +1,32 @@
+.sideBar {
+  position: absolute;
+  top: 156px;
+  background: #234461;
+  padding: 20px;
+  border-radius: 0px 10px 10px 0px;
+  color: white;
+}
+
+.ulSideBar {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ulSideBar li {
+  width: fit-content;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+  cursor: pointer;
+  list-style-type: none;
+  transition: 0.3s all ease;
+}
+
+.ulSideBar li:hover {
+  scale: 1.1;
+}
