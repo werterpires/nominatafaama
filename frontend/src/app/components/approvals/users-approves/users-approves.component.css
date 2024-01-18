@@ -30,3 +30,8 @@
 .ulSideBar li:hover {
   scale: 1.1;
 }
+
+.sectionBox {
+  height: 80vh;
+  overflow: auto;
+}
