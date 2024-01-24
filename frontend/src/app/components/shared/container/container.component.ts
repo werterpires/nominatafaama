@@ -48,6 +48,8 @@ export class ContainerComponent implements OnInit {
   menu = false
   isMobile = false
 
+  notif = false
+
   choseOption(chosenOption: string): void {
     Object.keys(this.options).forEach((option: string) => {
       this.options[option as keyof IOptions] = false
@@ -85,15 +87,14 @@ export class ContainerComponent implements OnInit {
       this.permissions.docente = roles.includes('docente')
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
+      this.findAtLestOneNotificaton()
     })
-
-    this.findAtLestOneNotificaton()
   }
 
   findAtLestOneNotificaton() {
     this.containerService.existsAtLeastOneNotification().subscribe({
       next: (res) => {
-        console.log('chegada das notif:', res)
+        this.notif = res
       },
       error: (err) => {
         console.log(err)

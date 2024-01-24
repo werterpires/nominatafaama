@@ -135,10 +135,21 @@
           </li>
           <li *ngIf="permissions.isApproved" class="menuOption">
             <img
+              *ngIf="!notif"
               class="menuIcon"
-              src="assets/icons/notificationIcon.png"
+              src="assets/icons/notificationIcon.svg"
               alt="Ícone de notificação"
-              (click)="notifications = !notifications"
+              (click)="
+                notifications = !notifications; findAtLestOneNotificaton()
+              "
+            />
+            <img
+              *ngIf="notif"
+              class="menuIcon"
+              src="assets/icons/notificationOnIcon.svg"
+              (click)="
+                notifications = !notifications; findAtLestOneNotificaton()
+              "
             />
           </li>
         </ul>
