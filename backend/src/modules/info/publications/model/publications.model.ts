@@ -444,7 +444,6 @@ export class PublicationsModel {
         await trx('publications').where('publication_id', id).del()
 
         await trx.commit()
-        console.log(approved)
 
         await this.notificationsService.createNotification({
           action: 'apagou',

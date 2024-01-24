@@ -83,7 +83,6 @@ export class RelatedMinistriesController {
     @Param('userId') userId: string
   ): Promise<IRelatedMinistry[]> {
     try {
-      console.log(personType)
       if (personType !== 'student' && personType !== 'spouse') {
         throw new Error('End point inválido.')
       }

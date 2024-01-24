@@ -119,14 +119,12 @@ export class SendEmailService {
           console.error('Erro ao enviar email: ', error)
           return false
         } else {
-          console.log('Email enviado:', info.response)
           return true
         }
       })
 
       return true
     } catch (error) {
-      console.log('erro ao enviar email:', error)
       throw error
     }
   }

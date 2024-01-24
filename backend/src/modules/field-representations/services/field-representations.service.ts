@@ -159,7 +159,7 @@ export class FieldRepresentationsService {
   ): Promise<IFieldRepresentation> {
     let updatedFieldRepresentation: IFieldRepresentation | null = null
     let sentError: Error | null = null
-    console.log(evaluateDTO)
+
     try {
       const evaluateData: IEvaluateFieldRepresentation = {
         ...evaluateDTO,

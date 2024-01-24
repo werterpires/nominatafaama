@@ -114,7 +114,6 @@ export class FieldRepresentationsController {
     @Body() input: EvaluateFieldRepresentationDto,
     @CurrentUser() currentUser: UserFromJwt
   ) {
-    console.log('aqui')
     try {
       const updatedFieldRep =
         await this.fieldRepresentationsService.evaluateFieldRepresentationById(

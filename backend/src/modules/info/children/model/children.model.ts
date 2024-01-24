@@ -32,8 +32,6 @@ export class ChildrenModel {
           .insert({ name, cpf })
           .returning('person_id')
 
-        console.log(personId)
-
         await trx('children')
           .insert({
             child_birth_date,

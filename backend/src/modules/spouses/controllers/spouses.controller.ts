@@ -73,7 +73,6 @@ export class SpousesController {
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      console.log(input)
       const id = currentUser.user_id
       const updatedSpouse = await this.spousesService.updateSpouseById(
         input,
@@ -94,8 +93,6 @@ export class SpousesController {
     @Param('userId') userId: string
   ) {
     try {
-      console.log(input)
-
       const updatedSpouse = await this.spousesService.updateSpouseById(
         input,
         +userId,

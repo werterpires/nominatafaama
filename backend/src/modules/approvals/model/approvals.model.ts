@@ -71,15 +71,6 @@ export class ApprovalsModel {
           'student_id'
         )
 
-        console.log(
-          'table',
-          table,
-          'hasPersonId',
-          hasPersonId,
-          'hasStudentId',
-          hasStudentId
-        )
-
         let personAndOthers
 
         if (hasPersonId && hasStudentId) {
@@ -131,7 +122,7 @@ export class ApprovalsModel {
         })
       } catch (error) {
         console.error(`Erro capturado na ApprovalsModel approveAny: ${error}`)
-        console.log('Erro capturado na ApprovalsModel approveAny: ', error)
+
         await trx.rollback()
 
         sentError = new Error(error.message)
