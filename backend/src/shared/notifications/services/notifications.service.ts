@@ -1271,24 +1271,16 @@ export class NotificationsService {
       throw new Error(error.message)
     }
   }
-
-  sendNotification() {
-    console.log('Olha a hora')
-  }
-
-  findAll() {
-    return `This action returns all notifications`
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} notification`
-  }
-
-  update(id: number, updateNotificationDto: UpdateNotificationDto) {
-    return `This action updates a #${id} notification`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} notification`
+  async findAtLeastOneNotification(userId: number): Promise<boolean> {
+    try {
+      const notifications = await this.notificationsModel.findUserNotifications(
+        userId,
+        false
+      )
+      return notifications.length > 0
+    } catch (error) {
+      console.error(error.message)
+      throw new Error(error.message)
+    }
   }
 }

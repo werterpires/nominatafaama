@@ -1,20 +1,25 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { LoginService } from '../shared.service.ts/login.service'
 import { IOptions, IPermissions, IUserApproved } from './types'
 import { Router } from '@angular/router'
+import { ContainerService } from './container.service'
 
 @Component({
   selector: 'app-container',
   templateUrl: './container.component.html',
   styleUrls: ['./container.component.css'],
 })
-export class ContainerComponent {
+export class ContainerComponent implements OnInit {
   loginMenu = false
   approvalMenu = false
   notifications = false
   studentId!: number
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+    private containerService: ContainerService,
+  ) {}
   permissions: IPermissions = {
     estudante: false,
     secretaria: false,
@@ -81,26 +86,20 @@ export class ContainerComponent {
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
     })
+
+    this.findAtLestOneNotificaton()
   }
-  // ngOnInit(): void {
-  //   this.loginService.user$.subscribe((user) => {
-  //     let roles: Array<string> = []
-  //     if (user) {
-  //       this.user = user
-  //       roles = this.user.roles.map((role) => role.role_name.toLowerCase())
-  //       this.permissions.isApproved = this.user.user_approved
-  //     } else {
-  //       this.user = null
-  //       this.permissions.isApproved = false
-  //     }
-  //     this.permissions.estudante = roles.includes('estudante')
-  //     this.permissions.secretaria = roles.includes('secretaria')
-  //     this.permissions.direcao = roles.includes('direção')
-  //     this.permissions.representacao = roles.includes('representante de campo')
-  //     this.permissions.administrador = roles.includes('administrador')
-  //     this.permissions.docente = roles.includes('docente')
-  //   })
-  // }
+
+  findAtLestOneNotificaton() {
+    this.containerService.existsAtLeastOneNotification().subscribe({
+      next: (res) => {
+        console.log('chegada das notif:', res)
+      },
+      error: (err) => {
+        console.log(err)
+      },
+    })
+  }
 
   changeApprovalType(approvaltype: string) {
     this.navigate('approve/' + approvaltype)
