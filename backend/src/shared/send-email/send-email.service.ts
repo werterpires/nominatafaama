@@ -18,6 +18,7 @@ export class SendEmailService {
 
   sendNotifications = cron.schedule('0 0 17 * * *', async () => {
     try {
+      console.log('começando o processo')
       const notSentNotifications =
         await this.notificationsModel.findUserSentNotifications(false)
 
@@ -64,11 +65,12 @@ export class SendEmailService {
         notificationsTypes.forEach((type) => {
           notificationsToSend.forEach((notification) => {
             if (notification.notification_type === type) {
-              emailText = emailText + `\n ${notification.notification_text}`
+              emailText =
+                emailText + `<p> ${notification.notification_text}</p>`
               userNotificationsIds.push(notification.user_notification_id)
             }
           })
-          emailText = emailText + `\n`
+          emailText = emailText + `<br>`
         })
 
         let sent = this.sendEmail(user.email, emailText)
@@ -109,8 +111,8 @@ export class SendEmailService {
     		</head>
     		<div style="background-color: #202c3d; color: white; font-family: 'Poppins', sans-serif; padding: 20px; border-radius: 10px">
     			<h1 style="text-align: center; text-transform: uppercase">Notificações Nominata</h1>
-    			<p>Algumas ações executadas no sistema de Nominatas da Faama podem ser de seu interesse.</p> </hr>
-    			<span>${emailText}</span> </hr>
+    			<p>Algumas ações executadas no sistema de Nominatas da Faama podem ser de seu interesse.</p> 
+    			${emailText} 
 
     		</div>`
       }
