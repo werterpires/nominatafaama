@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { CreateSendEmailDto } from './dto/create-send-email.dto'
 import { UpdateSendEmailDto } from './dto/update-send-email.dto'
 import * as cron from 'node-cron'
 import { NotificationsModel } from '../notifications/model/notifications.model'
@@ -8,12 +7,14 @@ import {
   IcompleteNotification
 } from '../notifications/types/types'
 import * as Nodemailer from 'nodemailer'
+import { InvitesModel } from 'src/modules/invites/model/invites.model'
 
 @Injectable()
 export class SendEmailService {
-  constructor(private notificationsModel: NotificationsModel) {
+  constructor(private notificationsModel: NotificationsModel, private InvitesModel: InvitesModel) {
     this.sendNotifications.start
     this.removeNotifications.start
+		this.recuseInvites.start
   }
 
   sendNotifications = cron.schedule('0 0 17 * * *', async () => {
@@ -90,6 +91,17 @@ export class SendEmailService {
       await this.notificationsModel.deleteNotification()
     } catch (error) {}
   })
+
+	recuseInvites = cron.schedule('0 0 4 * * *', async () => {
+		try {
+	
+			await this.InvitesModel.editPendingInvites()
+		
+		} catch (error) {
+			console.error(error)
+			
+		}
+	})
 
   sendEmail(userEmail: string, emailText: string) {
     try {
