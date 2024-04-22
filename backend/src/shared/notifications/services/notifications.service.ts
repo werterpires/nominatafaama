@@ -18,110 +18,91 @@ export class NotificationsService {
     notificationData: INotificationData
   ): Promise<boolean> {
     try {
-      let createdNotification: boolean = false
-      if (notificationData.notificationType === 1) {
-        const createNotification = await this.createNotificationTypeOne(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 2) {
-        const createNotification = await this.createNotificationTypeTwo(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 3) {
-        const createNotification = await this.createNotificationTypeThree(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 4) {
-        const createNotification = await this.createNotificationTypeFour(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 5) {
-        const createNotification = await this.createNotificationTypeFive(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 6) {
-        const createNotification = await this.createNotificationTypeSix(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 7) {
-        const createNotification = await this.createNotificationTypeSeven(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 8) {
-        const createNotification = await this.createNotificationTypeEight(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 9) {
-        const createNotification = await this.createNotificationTypeNine(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 10) {
-        const createNotification = await this.createNotificationTypeTen(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 11) {
-        const createNotification = await this.createNotificationTypeEleven(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 12) {
-        const createNotification = await this.createNotificationTypeTwelve(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 13) {
-        const createNotification = await this.createNotificationTypeThirteen(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
-      } else if (notificationData.notificationType === 14) {
-        const createNotification = await this.createNotificationTypeFourteen(
-          notificationData
-        )
-        createdNotification = await this.notificationsModel.createNotification(
-          createNotification
-        )
+      const notificationType = notificationData.notificationType
+      let createNotification: ICreateNotification
+
+      switch (notificationType) {
+        case 1:
+          createNotification = await this.createNotificationTypeOne(
+            notificationData
+          )
+          break
+        case 2:
+          createNotification = await this.createNotificationTypeTwo(
+            notificationData
+          )
+          break
+        case 3:
+          createNotification = await this.createNotificationTypeThree(
+            notificationData
+          )
+          break
+        case 4:
+          createNotification = await this.createNotificationTypeFour(
+            notificationData
+          )
+          break
+        case 5:
+          createNotification = await this.createNotificationTypeFive(
+            notificationData
+          )
+          break
+        case 6:
+          createNotification = await this.createNotificationTypeSix(
+            notificationData
+          )
+          break
+        case 7:
+          createNotification = await this.createNotificationTypeSeven(
+            notificationData
+          )
+          break
+        case 8:
+          createNotification = await this.createNotificationTypeEight(
+            notificationData
+          )
+          break
+        case 9:
+          createNotification = await this.createNotificationTypeNine(
+            notificationData
+          )
+          break
+        case 10:
+          createNotification = await this.createNotificationTypeTen(
+            notificationData
+          )
+          break
+        case 11:
+          createNotification = await this.createNotificationTypeEleven(
+            notificationData
+          )
+          break
+        case 12:
+          createNotification = await this.createNotificationTypeTwelve(
+            notificationData
+          )
+          break
+        case 13:
+          createNotification = await this.createNotificationTypeThirteen(
+            notificationData
+          )
+          break
+        case 14:
+          createNotification = await this.createNotificationTypeFourteen(
+            notificationData
+          )
+          break
+        case 15:
+          createNotification = await this.createNotificationTypeFifteen(
+            notificationData
+          )
+          break
+        default:
+          throw new Error(`Invalid notification type: ${notificationType}`)
       }
 
-      return createdNotification
+      return this.notificationsModel.createNotification(createNotification)
     } catch (error) {
-      console.error(error)
       throw error
     }
   }
