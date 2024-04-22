@@ -1176,6 +1176,68 @@ export class NotificationsService {
     }
   }
 
+  async createNotificationTypeFifteen(
+    notificationData: INotificationData
+  ): Promise<ICreateNotification> {
+    try {
+      if (
+        notificationData.newData === null ||
+        notificationData.objectUserId === null
+      ) {
+        throw new Error('newData is null')
+      }
+
+      let notifiedUsersIds = await this.notificationsModel.findUserIdsByRoles([
+        'direção',
+        'ministerial'
+      ])
+
+      notifiedUsersIds.push(notificationData.objectUserId)
+
+      let newDataToText: string = ''
+      if (notificationData.newData) {
+        newDataToText = Object.entries(notificationData.newData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`
+          })
+          .join(', ')
+      }
+
+      let oldDataToText: string = ''
+      if (notificationData.oldData) {
+        oldDataToText = Object.entries(notificationData.oldData)
+          .map(([prop, value]) => {
+            return `${prop}: ${value}`
+          })
+          .join(', ')
+      }
+
+      const objectName = await this.getUserNameByUserId(
+        notificationData.objectUserId
+      )
+
+      const textOne = `O convite de ${objectName}: ${newDataToText} feito a ${notificationData.agent_name} recusado porque ultrapassou o tempo de expiração.`
+      const textTwo = `Seu convite feito a ${notificationData.agent_name} foi recusado porque ultrapassou o tempo de expiração.`
+
+      return {
+        agentUserId: notificationData.agentUserId,
+        notificationType: notificationData.notificationType,
+        action: notificationData.action,
+        table: notificationData.table,
+        oldData: notificationData.oldData,
+        newData: notificationData.newData,
+        objectUserId: notificationData.objectUserId,
+        sent: false,
+        read: false,
+        notificationText: [textOne, textTwo],
+        notifiedUserIds: notifiedUsersIds
+      }
+    } catch (error) {
+      console.error(error)
+      throw new Error(error.message)
+    }
+  }
+
   async getUserNameByUserId(userId: number): Promise<string> {
     let userName: {
       name: string

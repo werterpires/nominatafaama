@@ -235,26 +235,28 @@ export class InvitesModel {
     return true
   }
 
-	async editPendingInvites() {
-		try {
-			const today = new Date(); // Obtém a data de hoje
-			const pendingInvites = await this.knex('invites')
-				.whereNull('accept') // Seleciona convites com accept = null
-				.where('deadline', '<', today) // Seleciona convites com deadline menor que hoje
-	
-			// Atualiza os convites encontrados
-			await Promise.all(pendingInvites.map(async (invite) => {
-				await this.knex('invites')
-					.where('invite_id', invite.invite_id)
-					.update({ accept: false })
-			}))
-	
-			return true; // Retorna true se a operação for bem-sucedida
-		} catch (error) {
-			console.error('Erro ao editar convites pendentes:', error);
-			throw error; // Lança o erro para tratamento externo
-		}
-	}
+  async editPendingInvites() {
+    try {
+      const today = new Date() // Obtém a data de hoje
+      const pendingInvites = await this.knex('invites')
+        .whereNull('accept') // Seleciona convites com accept = null
+        .where('deadline', '<', today) // Seleciona convites com deadline menor que hoje
+
+      // Atualiza os convites encontrados
+      await Promise.all(
+        pendingInvites.map(async (invite) => {
+          await this.knex('invites')
+            .where('invite_id', invite.invite_id)
+            .update({ accept: false })
+        })
+      )
+
+      return true // Retorna true se a operação for bem-sucedida
+    } catch (error) {
+      console.error('Erro ao editar convites pendentes:', error)
+      throw error // Lança o erro para tratamento externo
+    }
+  }
 
   async findAllNotEvaluatedInvites(): Promise<ICompleteInvite[]> {
     try {

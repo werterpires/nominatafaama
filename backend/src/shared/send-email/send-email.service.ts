@@ -11,15 +11,17 @@ import { InvitesModel } from 'src/modules/invites/model/invites.model'
 
 @Injectable()
 export class SendEmailService {
-  constructor(private notificationsModel: NotificationsModel, private InvitesModel: InvitesModel) {
+  constructor(
+    private notificationsModel: NotificationsModel,
+    private InvitesModel: InvitesModel
+  ) {
     this.sendNotifications.start
     this.removeNotifications.start
-		this.recuseInvites.start
+    this.recuseInvites.start
   }
 
   sendNotifications = cron.schedule('0 0 17 * * *', async () => {
     try {
-      console.log('começando o processo')
       const notSentNotifications =
         await this.notificationsModel.findUserSentNotifications(false)
 
@@ -92,16 +94,13 @@ export class SendEmailService {
     } catch (error) {}
   })
 
-	recuseInvites = cron.schedule('0 0 4 * * *', async () => {
-		try {
-	
-			await this.InvitesModel.editPendingInvites()
-		
-		} catch (error) {
-			console.error(error)
-			
-		}
-	})
+  recuseInvites = cron.schedule('0 0 4 * * *', async () => {
+    try {
+      await this.InvitesModel.editPendingInvites()
+    } catch (error) {
+      console.error(error)
+    }
+  })
 
   sendEmail(userEmail: string, emailText: string) {
     try {
@@ -123,8 +122,8 @@ export class SendEmailService {
     		</head>
     		<div style="background-color: #202c3d; color: white; font-family: 'Poppins', sans-serif; padding: 20px; border-radius: 10px">
     			<h1 style="text-align: center; text-transform: uppercase">Notificações Nominata</h1>
-    			<p>Algumas ações executadas no sistema de Nominatas da Faama podem ser de seu interesse.</p> 
-    			${emailText} 
+    			<p>Algumas ações executadas no sistema de Nominatas da Faama podem ser de seu interesse.</p>
+    			${emailText}
 
     		</div>`
       }
