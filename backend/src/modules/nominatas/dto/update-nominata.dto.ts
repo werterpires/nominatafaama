@@ -12,6 +12,9 @@ export class UpdateNominataDto {
   orig_field_invites_begin: string
 
   @IsString()
+  other_fields_invites_begin?: string
+
+  @IsString()
   @Length(1, 7000)
   director_words: string
 

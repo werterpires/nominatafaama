@@ -30,11 +30,14 @@ export class NominatasModel {
         const [degree_id] = await trx('nominatas')
           .insert(createNominataData)
           .returning('degree_id')
+
         nominata = {
           nominata_id: degree_id,
           director_name: '',
           year: createNominataData.year,
           orig_field_invites_begin: createNominataData.orig_field_invites_begin,
+          other_fields_invites_begin:
+            createNominataData.other_fields_invites_begin,
           director_words: createNominataData.director_words,
           director: createNominataData.director,
           class_photo: null,
@@ -258,6 +261,7 @@ export class NominatasModel {
           nominata_id: result.nominata_id,
           year: result.year,
           orig_field_invites_begin: result.orig_field_invites_begin,
+          other_fields_invites_begin: result.other_fields_invites_begin,
           director_words: result.director_words,
           class_photo: result.class_photo,
           created_at: result.created_at,
@@ -599,6 +603,7 @@ export class NominatasModel {
           nominata_id: result.nominata_id,
           year: result.year,
           orig_field_invites_begin: result.orig_field_invites_begin,
+          other_fields_invites_begin: result.other_fields_invites_begin,
           director_words: result.director_words,
           class_photo: result.class_photo,
           director: result.director,
@@ -643,6 +648,7 @@ export class NominatasModel {
           nominata_id: row.nominata_id,
           year: row.year,
           orig_field_invites_begin: row.orig_field_invites_begin,
+          other_fields_invites_begin: row.other_fields_invites_begin,
           director_words: row.director_words,
           class_photo: row.class_photo,
           director: row.director,
@@ -707,13 +713,20 @@ export class NominatasModel {
       try {
         const { year } = updateNominata
         const { orig_field_invites_begin } = updateNominata
+        const { other_fields_invites_begin } = updateNominata
         const { nominata_id } = updateNominata
         const { director_words } = updateNominata
         const { director } = updateNominata
         const oldData = await this.findNominataById(nominata_id)
         await trx('nominatas')
           .where('nominata_id', nominata_id)
-          .update({ year, orig_field_invites_begin, director_words, director })
+          .update({
+            year,
+            orig_field_invites_begin,
+            other_fields_invites_begin,
+            director_words,
+            director
+          })
 
         updatedNominata = await this.findNominataById(nominata_id)
 
@@ -732,6 +745,7 @@ export class NominatasModel {
           newData: {
             nominata: year,
             orig_field_invites_begin: orig_field_invites_begin,
+            other_fields_invites_begin: other_fields_invites_begin,
             director_words: director_words,
             director: personUndOthers.name
           },
@@ -739,6 +753,7 @@ export class NominatasModel {
           oldData: {
             nominata: oldData?.year,
             orig_field_invites_begin: oldData?.orig_field_invites_begin,
+            other_fields_invites_begin: oldData?.other_fields_invites_begin,
             director_words: oldData?.director_words,
             director: oldData?.director_name
           },
