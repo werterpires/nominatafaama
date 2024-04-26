@@ -35,31 +35,41 @@
             [(ngModel)]="createRegistryData.year"
           />
         </label>
+        <label for="" class="inputLabel"
+        >Diretor
+        <select
+          name="nominataDirectorInput"
+          id=""
+          [(ngModel)]="createRegistryData.director"
+        >
+          <option
+            *ngFor="let professor of allProfessors"
+            [value]="professor.professor_id"
+          >
+            {{ professor.name }}
+          </option>
+        </select>
+        </label>
+
+      </div>
+      <div class="subSection">
         <label class="inputLabel">
-          Data para início de convites<input
+          Data para início de convites pelo próprio campo<input
             class="mediumInput"
             type="date"
             name="nominataInviteBeginInput"
             [(ngModel)]="createRegistryData.orig_field_invites_begin"
           />
         </label>
-      </div>
-      <div class="subSection">
-        <label for="" class="inputLabel"
-          >Diretor
-          <select
-            name="nominataDirectorInput"
-            id=""
-            [(ngModel)]="createRegistryData.director"
-          >
-            <option
-              *ngFor="let professor of allProfessors"
-              [value]="professor.professor_id"
-            >
-              {{ professor.name }}
-            </option>
-          </select>
+        <label class="inputLabel">
+          Data para início de convite por outros campos<input
+            class="mediumInput"
+            type="date"
+            name="nominataInviteBeginInput"
+            [(ngModel)]="createRegistryData.other_fields_invites_begin"
+          />
         </label>
+
       </div>
       <div class="subSection">
         <label class="inputLabel">
@@ -88,31 +98,41 @@
             [(ngModel)]="registry.year"
           />
         </label>
+        <label for="" class="inputLabel"
+        >Diretor
+        <select
+          name="nominataDirectorInput"
+          id=""
+          [(ngModel)]="registry.director"
+        >
+          <option
+            *ngFor="let professor of allProfessors"
+            [value]="professor.professor_id"
+            [selected]="professor.professor_id === registry.director"
+          >
+            {{ professor.name }}
+          </option>
+        </select>
+      </label>
+
+      </div>
+      <div class="subSection">
+
         <label class="inputLabel">
-          Data para início de convites<input
+          Data para início de convites pelo campo de origem<input
             class="mediumInput"
             type="date"
             name="nominataBeginInput"
             [(ngModel)]="registry.orig_field_invites_begin"
           />
         </label>
-      </div>
-      <div class="subSection">
-        <label for="" class="inputLabel"
-          >Diretor
-          <select
-            name="nominataDirectorInput"
-            id=""
-            [(ngModel)]="registry.director"
-          >
-            <option
-              *ngFor="let professor of allProfessors"
-              [value]="professor.professor_id"
-              [selected]="professor.professor_id === registry.director"
-            >
-              {{ professor.name }}
-            </option>
-          </select>
+        <label class="inputLabel">
+          Data para início de convites por outros campos<input
+            class="mediumInput"
+            type="date"
+            name="nominataBeginInput"
+            [(ngModel)]="registry.other_fields_invites_begin"
+          />
         </label>
       </div>
       <label class="inputLabel">
