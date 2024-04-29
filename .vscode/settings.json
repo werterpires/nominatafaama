@@ -2,5 +2,7 @@
   "eslint.workingDirectories": ["./frontend", "./backend"],
   "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"],
   "appService.defaultWebAppToDeploy": "/subscriptions/085897ed-5310-4bc8-85b3-754e138f89e6/resourceGroups/primeiro_grupo_de_recursos/providers/Microsoft.Web/sites/nominata-faama-api-linux",
-  "appService.deploySubpath": "backend"
+  "appService.deploySubpath": "backend",
+  "material-icon-theme.activeIconPack": "none",
+  "material-icon-theme.files.associations": {}
 }
