@@ -18,6 +18,14 @@ export interface INominata {
   events?: IEvent[] | null
 }
 
+export interface tinyNominata {
+  nominata_id: number
+  year: string
+  orig_field_invites_begin: Date
+  other_fields_invites_begin: Date | null
+  director: number
+}
+
 export interface ICreateNominata {
   year: string
   orig_field_invites_begin: Date

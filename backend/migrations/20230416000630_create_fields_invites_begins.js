@@ -7,7 +7,7 @@ exports.up = function (knex) {
     'fields_invites_begins',
     (table) => {
       table.increments('fields_invites_id').primary()
-      table.date('orig_field_invites_begin').notNullable()
+      table.date('invites_begin').notNullable()
       table.integer('field_id').unsigned().notNullable()
       table.integer('nominata_id').unsigned().notNullable()
 
@@ -16,7 +16,7 @@ exports.up = function (knex) {
       table.foreign('nominata_id').references('nominatas.nominata_id')
 
       table.timestamps(true, true)
-    },
+    }
   )
 }
 
