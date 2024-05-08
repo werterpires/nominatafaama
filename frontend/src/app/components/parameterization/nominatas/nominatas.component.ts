@@ -3,9 +3,7 @@ import { IPermissions } from '../../shared/container/types'
 import { ICreateNominataDto, INominata, IUpdateNominata } from './types'
 import { NominatasService } from './nominatas.service'
 import { DataService } from '../../shared/shared.service.ts/data.service'
-import { ProfessorsService } from '../../records/professors/professors.service'
 import { GeneralProfessorsService } from '../general-professors/general-professors.service'
-import { IProfessor } from '../../records/professors/types'
 import { ISinteticProfessor } from '../nominatas-professors/types'
 
 @Component({
@@ -111,7 +109,9 @@ export class NominatasComponent implements OnInit {
         orig_field_invites_begin: this.dataService.dateFormatter(
           this.createRegistryData.orig_field_invites_begin,
         ),
-        other_fields_invites_begin: this.dataService.dateFormatter(this.createRegistryData.other_fields_invites_begin??''),
+        other_fields_invites_begin: this.dataService.dateFormatter(
+          this.createRegistryData.other_fields_invites_begin ?? '',
+        ),
         director: parseInt(this.createRegistryData.director.toString()),
       })
       .subscribe({
@@ -136,16 +136,18 @@ export class NominatasComponent implements OnInit {
   editRegistry(index: number, buttonId: string) {
     this.isLoading = true
 
-    const otherFildsDate: string = this.allRegistries[index].other_fields_invites_begin ?? '';
-
-
+    const otherFildsDate: string =
+      this.allRegistries[index].other_fields_invites_begin ?? ''
 
     const updateNominataData: IUpdateNominata = {
       nominata_id: this.allRegistries[index].nominata_id,
       orig_field_invites_begin: this.dataService.dateFormatter(
         this.allRegistries[index].orig_field_invites_begin,
       ),
-      other_fields_invites_begin: otherFildsDate.length > 0 ? this.dataService.dateFormatter(otherFildsDate):'',
+      other_fields_invites_begin:
+        otherFildsDate.length > 0
+          ? this.dataService.dateFormatter(otherFildsDate)
+          : '',
       year: this.allRegistries[index].year,
       director_words: this.allRegistries[index].director_words,
       director: parseInt(this.allRegistries[index].director.toString()),

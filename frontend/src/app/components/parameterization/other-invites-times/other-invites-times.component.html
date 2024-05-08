@@ -1,1 +1,68 @@
-<p>other-invites-times works!</p>
+<section
+  #sectionBox
+  [ngClass]="{ smallSectionBox: !showBox, sectionBox: showBox }"
+>
+  <div class="boxHead">
+    <span class="headField" (click)="showBox = !showBox">
+      <img
+        #expandIcon
+        class="seeMoreIcon"
+        [ngClass]="{ rotatedClock: showBox }"
+        id="seeMoreIconFormations"
+        src="assets/icons/seeMoreIcon.png"
+        alt="Expandir"
+      />
+
+      <p class="sectionTitle1">{{ title }}</p>
+    </span>
+    <img
+      #addIcon
+      class="addIcon"
+      [ngClass]="{ hidden: !showBox }"
+      src="assets/icons/addIcon.png"
+      alt="Criar {{ title }}"
+      (click)="showForm = true"
+    />
+  </div>
+
+  <section class="formCreationWrapper" *ngIf="showForm">
+    <app-creation-form (save)="createRegistry()">
+      <div class="subSection">
+        <label for="" class="inputLabel"
+          >Ano da nominata
+          <select
+            name="nominata"
+            id=""
+            [(ngModel)]="createRegistryData.nominataId"
+          >
+            <option
+              *ngFor="let nominata of shortNominatas"
+              [value]="nominata.nominataId"
+            >
+              {{ nominata.year }}
+            </option>
+          </select>
+        </label>
+        <label for="" class="inputLabel"
+          >Associação
+          <select name="field" id="" [(ngModel)]="createRegistryData.fieldId">
+            <option
+              *ngFor="let association of allAssociations"
+              [value]="association.association_id"
+            >
+              {{ association.association_acronym }}
+            </option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Data para início de convites<input
+            class="mediumInput"
+            type="date"
+            name="nominataInviteBeginInput"
+            [(ngModel)]="createRegistryData.invitesBegin"
+          />
+        </label>
+      </div>
+    </app-creation-form>
+  </section>
+</section>

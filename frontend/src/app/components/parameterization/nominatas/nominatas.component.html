@@ -24,6 +24,7 @@
       (click)="showForm = true"
     />
   </div>
+
   <section class="formCreationWrapper" *ngIf="showForm">
     <app-creation-form (save)="createRegistry()">
       <div class="subSection">
@@ -36,21 +37,20 @@
           />
         </label>
         <label for="" class="inputLabel"
-        >Diretor
-        <select
-          name="nominataDirectorInput"
-          id=""
-          [(ngModel)]="createRegistryData.director"
-        >
-          <option
-            *ngFor="let professor of allProfessors"
-            [value]="professor.professor_id"
+          >Diretor
+          <select
+            name="nominataDirectorInput"
+            id=""
+            [(ngModel)]="createRegistryData.director"
           >
-            {{ professor.name }}
-          </option>
-        </select>
+            <option
+              *ngFor="let professor of allProfessors"
+              [value]="professor.professor_id"
+            >
+              {{ professor.name }}
+            </option>
+          </select>
         </label>
-
       </div>
       <div class="subSection">
         <label class="inputLabel">
@@ -69,7 +69,6 @@
             [(ngModel)]="createRegistryData.other_fields_invites_begin"
           />
         </label>
-
       </div>
       <div class="subSection">
         <label class="inputLabel">
@@ -82,6 +81,7 @@
       </div>
     </app-creation-form>
   </section>
+
   <section class="registriesWrapper">
     <app-update-form
       [registryId]="i"
@@ -99,25 +99,23 @@
           />
         </label>
         <label for="" class="inputLabel"
-        >Diretor
-        <select
-          name="nominataDirectorInput"
-          id=""
-          [(ngModel)]="registry.director"
-        >
-          <option
-            *ngFor="let professor of allProfessors"
-            [value]="professor.professor_id"
-            [selected]="professor.professor_id === registry.director"
+          >Diretor
+          <select
+            name="nominataDirectorInput"
+            id=""
+            [(ngModel)]="registry.director"
           >
-            {{ professor.name }}
-          </option>
-        </select>
-      </label>
-
+            <option
+              *ngFor="let professor of allProfessors"
+              [value]="professor.professor_id"
+              [selected]="professor.professor_id === registry.director"
+            >
+              {{ professor.name }}
+            </option>
+          </select>
+        </label>
       </div>
       <div class="subSection">
-
         <label class="inputLabel">
           Data para início de convites pelo campo de origem<input
             class="mediumInput"

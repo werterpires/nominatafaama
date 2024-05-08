@@ -78,7 +78,6 @@ export class StudentPdfComponent implements OnInit {
 
     parentElements.forEach((parentElement) => {
       let hasOverflowY = this.getIsOverflow(parentElement)
-      console.log(parentElement, hasOverflowY)
 
       if (!hasOverflowY) return
       let contador = 0

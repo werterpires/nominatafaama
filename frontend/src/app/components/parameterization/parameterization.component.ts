@@ -1,14 +1,17 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions, IUserApproved } from '../shared/container/types'
 import { LoginService } from '../shared/shared.service.ts/login.service'
 import { Router } from '@angular/router'
+import { NominatasService } from './nominatas/nominatas.service'
+import { IAssociation } from './associations/types'
+import { AssociationService } from './associations/associations.service'
 
 @Component({
   selector: 'app-parameterization',
   templateUrl: './parameterization.component.html',
   styleUrls: ['./parameterization.component.css'],
 })
-export class ParameterizationComponent {
+export class ParameterizationComponent implements OnInit {
   @Input() permissions: IPermissions = {
     estudante: false,
     secretaria: false,
@@ -21,9 +24,20 @@ export class ParameterizationComponent {
     isApproved: false,
   }
 
-  user: IUserApproved | null = null
+  isLoading = false
+  errorMessage = ''
+  error = false
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  user: IUserApproved | null = null
+  shortNominatas: { nominataId: number; year: number }[] = []
+  allAssociations: IAssociation[] = []
+
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+    private nominataService: NominatasService,
+    private associationsService: AssociationService,
+  ) {}
 
   ngOnInit() {
     this.loginService.user$.subscribe((user) => {
@@ -60,6 +74,39 @@ export class ParameterizationComponent {
       this.permissions.docente = roles.includes('docente')
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
+    })
+
+    this.getShortNominatas()
+    this.getAllAssociations()
+  }
+
+  getShortNominatas() {
+    this.isLoading = true
+    this.nominataService.findAllNominataYearsRegistries().subscribe({
+      next: (res) => {
+        this.shortNominatas = res
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
+
+  getAllAssociations() {
+    this.isLoading = true
+    this.associationsService.findAllRegistries().subscribe({
+      next: (res) => {
+        this.allAssociations = res
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
     })
   }
 }

@@ -60,6 +60,13 @@
       *ngIf="permissions.administrador || permissions.direcao"
       [permissions]="permissions"
     ></app-nominatas>
+    <app-other-invites-times
+      *ngIf="permissions.administrador || permissions.direcao"
+      [permissions]="permissions"
+      [shortNominatas]="shortNominatas"
+      [allAssociations]="allAssociations"
+    >
+    </app-other-invites-times>
 
     <app-nominatas-students
       *ngIf="permissions.administrador || permissions.direcao"

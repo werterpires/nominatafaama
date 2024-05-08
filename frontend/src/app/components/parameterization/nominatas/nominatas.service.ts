@@ -14,7 +14,7 @@ export class NominatasService {
 
   findAllRegistries(): Observable<INominata[]> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get<INominata[]>(environment.API + '/nominatas', {
         headers: head_obj,
@@ -34,7 +34,7 @@ export class NominatasService {
     createNominataData: ICreateNominataDto,
   ): Observable<INominata> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<INominata>(environment.API + '/nominatas', createNominataData, {
         headers: head_obj,
@@ -51,7 +51,7 @@ export class NominatasService {
 
   updateRegistry(editNominataData: IUpdateNominata): Observable<INominata> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .put<INominata>(environment.API + '/nominatas', editNominataData, {
         headers: head_obj,
@@ -68,7 +68,7 @@ export class NominatasService {
 
   deleteRegistry(id: number): Observable<INominata> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .delete<INominata>(environment.API + '/nominatas/' + id, {
         headers: head_obj,
@@ -78,6 +78,29 @@ export class NominatasService {
           console.log('Veja o erro completo', error)
           return throwError(
             () => new Error('Não foi possível criar o estado civil.'),
+          )
+        }),
+      )
+  }
+
+  findAllNominataYearsRegistries(): Observable<
+    { nominataId: number; year: number }[]
+  > {
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .get<{ nominataId: number; year: number }[]>(
+        environment.API + '/nominatas/short',
+        {
+          headers: head_obj,
+        },
+      )
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          return throwError(
+            () =>
+              new Error('Não foi possível encontrar os anos das nominatas.'),
           )
         }),
       )

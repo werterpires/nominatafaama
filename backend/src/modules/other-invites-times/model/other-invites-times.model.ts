@@ -42,8 +42,8 @@ export class OtherInvitesTimesModel {
           'fields_invites_begins.*',
           'nominatas.nominata_id',
           'nominatas.year',
-          'nominatas.orig_field_invites_begins',
-          'nominatas.other_fields_invites_begins',
+          'nominatas.orig_field_invites_begin',
+          'nominatas.other_fields_invites_begin',
           'nominatas.director',
           'associations.*'
         ])
@@ -74,14 +74,15 @@ export class OtherInvitesTimesModel {
         nominata: {
           nominata_id: consultResult.nominata_id,
           year: consultResult.year,
-          orig_field_invites_begin: consultResult.orig_field_invites_begins,
-          other_fields_invites_begin: consultResult.other_fields_invites_begins,
+          orig_field_invites_begin: consultResult.orig_field_invites_begin,
+          other_fields_invites_begin: consultResult.other_fields_invites_begin,
           director: consultResult.director
         }
       }
 
       return otherInvitesTime
     } catch (error) {
+      console.log('Erro capturado no model:', error)
       throw new Error('Failed to find other invites time')
     }
   }

@@ -22,6 +22,8 @@ export class OtherInvitesTimesService {
         field_id: createOtherInvitesTimeDto.fieldId
       }
 
+      console.log('service', createOtherInvitesTimeData)
+
       const createdOtherInvitesTime =
         await this.otherInvitesTimesModel.createOtherInvitesTime(
           createOtherInvitesTimeData
