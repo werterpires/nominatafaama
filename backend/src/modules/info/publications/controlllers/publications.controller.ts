@@ -74,7 +74,7 @@ export class PublicationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/:personType/:userId')
   async findPublicationsByPersonIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -127,7 +127,12 @@ export class PublicationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updatePublicationById(
     @Body() input: UpdatePublicationDto,

@@ -83,7 +83,6 @@ export class LoginComponent {
 
     this.loginService.login(this.loginData).subscribe({
       next: (res) => {
-        // console.log('primeira res:', res)
         localStorage.setItem('access_token', res.access_token)
 
         this.loginService.findApprovedUser(res.access_token).subscribe({
@@ -131,11 +130,7 @@ export class LoginComponent {
         const termsUser: ItermUser[] = this.userApproved?.roles.map((role) => {
           return { role_id: role.role_id, sign: true }
         })
-        this.loginService
-          .signTerms({ termsUser: termsUser }, this.userToken)
-          .subscribe((res) => {
-            console.log(res)
-          })
+        this.loginService.signTerms({ termsUser: termsUser }, this.userToken)
       }
       this.showTerm = false
       this.router.navigateByUrl('/')

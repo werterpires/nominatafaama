@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { CreateSendEmailDto } from './dto/create-send-email.dto'
 import { UpdateSendEmailDto } from './dto/update-send-email.dto'
 import * as cron from 'node-cron'
 import { NotificationsModel } from '../notifications/model/notifications.model'
@@ -8,12 +7,17 @@ import {
   IcompleteNotification
 } from '../notifications/types/types'
 import * as Nodemailer from 'nodemailer'
+import { InvitesModel } from 'src/modules/invites/model/invites.model'
 
 @Injectable()
 export class SendEmailService {
-  constructor(private notificationsModel: NotificationsModel) {
+  constructor(
+    private notificationsModel: NotificationsModel,
+    private InvitesModel: InvitesModel
+  ) {
     this.sendNotifications.start
     this.removeNotifications.start
+    this.recuseInvites.start
   }
 
   sendNotifications = cron.schedule('0 0 17 * * *', async () => {
@@ -64,11 +68,12 @@ export class SendEmailService {
         notificationsTypes.forEach((type) => {
           notificationsToSend.forEach((notification) => {
             if (notification.notification_type === type) {
-              emailText = emailText + `\n ${notification.notification_text}`
+              emailText =
+                emailText + `<p> ${notification.notification_text}</p>`
               userNotificationsIds.push(notification.user_notification_id)
             }
           })
-          emailText = emailText + `\n`
+          emailText = emailText + `<br>`
         })
 
         let sent = this.sendEmail(user.email, emailText)
@@ -87,6 +92,14 @@ export class SendEmailService {
     try {
       await this.notificationsModel.deleteNotification()
     } catch (error) {}
+  })
+
+  recuseInvites = cron.schedule('0 0 4 * * *', async () => {
+    try {
+      await this.InvitesModel.editPendingInvites()
+    } catch (error) {
+      console.error(error)
+    }
   })
 
   sendEmail(userEmail: string, emailText: string) {
@@ -109,8 +122,8 @@ export class SendEmailService {
     		</head>
     		<div style="background-color: #202c3d; color: white; font-family: 'Poppins', sans-serif; padding: 20px; border-radius: 10px">
     			<h1 style="text-align: center; text-transform: uppercase">Notificações Nominata</h1>
-    			<p>Algumas ações executadas no sistema de Nominatas da Faama podem ser de seu interesse.</p> </hr>
-    			<span>${emailText}</span> </hr>
+    			<p>Algumas ações executadas no sistema de Nominatas da Faama podem ser de seu interesse.</p>
+    			${emailText}
 
     		</div>`
       }
@@ -119,14 +132,12 @@ export class SendEmailService {
           console.error('Erro ao enviar email: ', error)
           return false
         } else {
-          console.log('Email enviado:', info.response)
           return true
         }
       })
 
       return true
     } catch (error) {
-      console.log('erro ao enviar email:', error)
       throw error
     }
   }

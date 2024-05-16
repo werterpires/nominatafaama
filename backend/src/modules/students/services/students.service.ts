@@ -535,7 +535,7 @@ export class StudentsService {
         await this.studentsModel.findStudentMaritalStatusByUserId(userId)
       return maritalStatus
     } catch (error) {
-      console.log('erro capturado no service:', error)
+      console.error('erro capturado no service:', error)
       throw error
     }
   }

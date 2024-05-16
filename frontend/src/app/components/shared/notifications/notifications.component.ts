@@ -37,7 +37,7 @@ export class NotificationsComponent implements OnInit {
     this.service.findAllRegistries(read).subscribe({
       next: (res) => {
         this.allNotifications = res
-        console.log(this.allNotifications)
+
         this.isLoading = false
       },
       error: (err) => {

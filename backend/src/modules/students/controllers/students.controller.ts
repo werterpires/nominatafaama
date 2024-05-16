@@ -66,7 +66,7 @@ export class StudentsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/:userId')
   async getStudentByIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -94,7 +94,12 @@ export class StudentsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Get('marital-status/:userId')
   async getStudentMaritalStatusToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -128,7 +133,12 @@ export class StudentsController {
     return await this.studentsService.findAllStudents()
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updateStudent(
     @Body() input: UpdateStudentDto,

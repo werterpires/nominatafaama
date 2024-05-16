@@ -79,7 +79,7 @@ export class EvangelisticExperiencesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/:personType/:userId')
   async findEvangelisticExperiencesByPersonIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -139,7 +139,12 @@ export class EvangelisticExperiencesController {
 
   @Put()
   @UseGuards(JwtAuthGuard)
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   async updateEvangelisticExperienceById(
     @Body() dto: UpdateEvangelisticExperienceDto,
     @CurrentUser() currentUser: UserFromJwt

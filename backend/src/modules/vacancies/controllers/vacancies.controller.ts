@@ -52,7 +52,6 @@ export class VacanciesController {
     @Body() createVacancyDto: CreateVacancyDto,
     @CurrentUser() currentUser: UserFromJwt
   ) {
-    console.log('estou aqui')
     try {
       const newVacancy = await this.vacanciesService.createVacancy(
         createVacancyDto,
@@ -149,7 +148,6 @@ export class VacanciesController {
     @Param('vacancyStudentId') vacancyStudentId: string,
     @CurrentUser() currentUser: UserFromJwt
   ) {
-    console.log('vacancyStudentId', vacancyStudentId)
     try {
       const updatedVacancy =
         await this.vacanciesService.removeStudentFromVacancy(

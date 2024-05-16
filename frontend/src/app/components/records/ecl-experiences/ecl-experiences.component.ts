@@ -75,7 +75,6 @@ export class EclExperiencesComponent implements OnInit {
   toShowBox() {
     this.showBox = !this.showBox
     if (this.showBox) {
-      console.log('entrou')
       this.getAllEclExpTypes()
     } else if (!this.showBox) {
       this.allRegistries = []

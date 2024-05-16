@@ -1,4 +1,5 @@
-import { IsNumber, IsNumberString, IsString, Length } from 'class-validator'
+import { Transform } from 'class-transformer'
+import { IsNumber, IsNumberString, IsOptional, IsString, Length } from 'class-validator'
 
 export class UpdateNominataDto {
   @IsNumber()
@@ -10,6 +11,10 @@ export class UpdateNominataDto {
 
   @IsString()
   orig_field_invites_begin: string
+
+  @IsString()
+  @IsOptional()
+  other_fields_invites_begin?: string;
 
   @IsString()
   @Length(1, 7000)

@@ -74,7 +74,6 @@ export class RepresentationsToApproveComponent implements OnInit {
       this.permissions.design = roles.includes('design')
     })
     this.getAllRegistries()
-    console.log(this.permissions)
   }
 
   getAllRegistries() {

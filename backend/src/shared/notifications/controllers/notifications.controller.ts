@@ -8,25 +8,29 @@ import {
   Delete,
   InternalServerErrorException,
   Put,
-  Query,
-} from '@nestjs/common';
-import { NotificationsService } from '../services/notifications.service';
-import { CreateNotificationDto } from '../dto/create-notification.dto';
-import { UpdateNotificationDto } from '../dto/update-notification.dto';
-import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator';
-import { ERoles } from 'src/shared/auth/types/roles.enum';
-import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator';
-import { UserFromJwt } from 'src/shared/auth/types/types';
-import { IUserNotification } from '../types/types';
+  Query
+} from '@nestjs/common'
+import { NotificationsService } from '../services/notifications.service'
+import { CreateNotificationDto } from '../dto/create-notification.dto'
+import { UpdateNotificationDto } from '../dto/update-notification.dto'
+import { Roles } from 'src/shared/roles/fz_decorators/roles.decorator'
+import { ERoles } from 'src/shared/auth/types/roles.enum'
+import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
+import { UserFromJwt } from 'src/shared/auth/types/types'
+import { IUserNotification } from '../types/types'
 
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
-
-  @Post()
-  @Get()
-  findAll() {
-    return this.notificationsService.findAll();
+  @Get('exists')
+  async findOne(@CurrentUser() curentUser: UserFromJwt) {
+    try {
+      return await this.notificationsService.findAtLeastOneNotification(
+        curentUser.user_id
+      )
+    } catch (error) {
+      throw new InternalServerErrorException(error.message)
+    }
   }
 
   @Roles(
@@ -46,16 +50,12 @@ export class NotificationsController {
   ): Promise<IUserNotification[]> {
     try {
       const notifications =
-        await this.notificationsService.getUserNotifications(currentUser, read);
+        await this.notificationsService.getUserNotifications(currentUser, read)
 
-      return notifications;
+      return notifications
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message)
     }
-  }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.notificationsService.findOne(+id);
   }
 
   @Roles(
@@ -71,23 +71,10 @@ export class NotificationsController {
   @Put('read')
   async setRead(@Body() notificationId: { notificationId: number }) {
     try {
-      return await this.notificationsService.setRead(notificationId);
+      return await this.notificationsService.setRead(notificationId)
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error(error)
+      throw error
     }
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateNotificationDto: UpdateNotificationDto
-  ) {
-    return this.notificationsService.update(+id, updateNotificationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.notificationsService.remove(+id);
   }
 }

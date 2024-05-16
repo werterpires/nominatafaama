@@ -515,7 +515,7 @@ export class StudentsComponent implements OnInit {
 
     const editStudentData: IUpdateStudent = {
       student_id: this.registry.student_id,
-      phone_number: this.registry.phone_number,
+      phone_number: this.phoneNumber,
       is_whatsapp: isWhats,
       alternative_email: this.registry.alternative_email,
       student_mensage: this.registry.student_mensage,

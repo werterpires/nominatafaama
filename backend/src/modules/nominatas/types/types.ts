@@ -7,6 +7,7 @@ export interface INominata {
   director_name: string
   year: string
   orig_field_invites_begin: Date
+  other_fields_invites_begin: Date | null
   director_words: string
   created_at: Date
   updated_at: Date
@@ -17,9 +18,18 @@ export interface INominata {
   events?: IEvent[] | null
 }
 
+export interface tinyNominata {
+  nominata_id: number
+  year: string
+  orig_field_invites_begin: Date
+  other_fields_invites_begin: Date | null
+  director: number
+}
+
 export interface ICreateNominata {
   year: string
   orig_field_invites_begin: Date
+  other_fields_invites_begin: Date | null
   director_words: string
   director: number
 }
@@ -28,6 +38,7 @@ export interface IUpdateNominata {
   nominata_id: number
   year: string
   orig_field_invites_begin: Date
+  other_fields_invites_begin: Date | null
   director_words: string
   director: number
 }

@@ -49,7 +49,6 @@ export class FamilyStudentPhotoComponent {
     this.isLoading = true
     this.service.findAllRegistries().subscribe({
       next: (res) => {
-        console.log(res)
         if (res instanceof Blob) {
           const reader = new FileReader()
           reader.onload = (e: any) => {
@@ -90,8 +89,6 @@ export class FamilyStudentPhotoComponent {
   createRegistry() {
     this.isLoading = true
 
-    if (this.createRegistryData) {
-    }
     const formData = new FormData()
     formData.append(
       'file',

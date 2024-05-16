@@ -55,7 +55,7 @@ export class FavoritesService {
       if (repId == null) {
         throw new Error('Nenhum representante de campo válido foi encontrado.')
       }
-      console.log(repId)
+
       return await this.favoritesModel.findRepFavorites(repId)
     } catch (error) {
       console.error(error)

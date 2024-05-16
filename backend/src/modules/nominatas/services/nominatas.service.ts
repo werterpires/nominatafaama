@@ -32,6 +32,9 @@ export class NominatasService {
       const createNominataData: ICreateNominata = {
         year: dto.year,
         orig_field_invites_begin: new Date(dto.orig_field_invites_begin),
+        other_fields_invites_begin: dto.other_fields_invites_begin
+          ? new Date(dto.other_fields_invites_begin)
+          : null,
         director_words: dto.director_words,
         director: dto.director
       }
@@ -326,6 +329,9 @@ export class NominatasService {
       const updateNominataData: IUpdateNominata = {
         nominata_id: input.nominata_id,
         orig_field_invites_begin: new Date(input.orig_field_invites_begin),
+        other_fields_invites_begin: input.other_fields_invites_begin
+          ? new Date(input.other_fields_invites_begin)
+          : null,
         year: input.year,
         director_words: input.director_words,
         director: input.director

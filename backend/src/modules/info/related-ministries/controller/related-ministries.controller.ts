@@ -75,7 +75,7 @@ export class RelatedMinistriesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/:personType/:userId')
   async findRelatedMinistriesByPersonIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -83,7 +83,6 @@ export class RelatedMinistriesController {
     @Param('userId') userId: string
   ): Promise<IRelatedMinistry[]> {
     try {
-      console.log(personType)
       if (personType !== 'student' && personType !== 'spouse') {
         throw new Error('End point inválido.')
       }
@@ -133,7 +132,12 @@ export class RelatedMinistriesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updateRelatedMinistryById(
     @Body() input: UpdateRelatedMinistryDto,

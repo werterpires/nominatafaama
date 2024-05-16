@@ -75,7 +75,7 @@ export class ProfessionalExperiencesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/:personType/:userId')
   async findProfessionalExperiencesByPersonIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -134,7 +134,12 @@ export class ProfessionalExperiencesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updateProfessionalExperienceById(
     @Body() input: UpdateProfessionalExperienceDto,

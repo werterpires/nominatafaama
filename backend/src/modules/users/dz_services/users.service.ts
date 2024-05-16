@@ -38,7 +38,7 @@ export class UsersService {
     try {
       user = await this.usersModel.createUser(createUser)
     } catch (error) {
-      console.log('error no service:', error)
+      console.error('error no service:', error)
       throw error
     }
 
@@ -244,7 +244,7 @@ export class UsersService {
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-          console.log('Erro ao enviar email: ', error)
+          console.error('Erro ao enviar email: ', error)
         } else {
           console.log('Email enviado:', info.response)
         }

@@ -52,7 +52,7 @@ export class SpousesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/:userId')
   async findSpouseByIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -66,14 +66,18 @@ export class SpousesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updateSpouse(
     @Body() input: UpdateSpouseDto,
     @CurrentUser() currentUser: UserFromJwt
   ) {
     try {
-      console.log(input)
       const id = currentUser.user_id
       const updatedSpouse = await this.spousesService.updateSpouseById(
         input,
@@ -86,7 +90,12 @@ export class SpousesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put('approve/:userId')
   async updateSpouseToApprove(
     @Body() input: UpdateSpouseDto,
@@ -94,8 +103,6 @@ export class SpousesController {
     @Param('userId') userId: string
   ) {
     try {
-      console.log(input)
-
       const updatedSpouse = await this.spousesService.updateSpouseById(
         input,
         +userId,

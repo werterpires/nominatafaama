@@ -228,10 +228,6 @@ export class StudentsSpaceComponent implements OnInit {
     return this.datePipe.transform(date, 'dd/MM/yyyy')
   }
 
-  setFavorite(studentId: number, fav: boolean) {
-    console.log(studentId, fav)
-  }
-
   selectStudent(studentId: string) {
     this.router.navigate(['student/' + studentId])
   }

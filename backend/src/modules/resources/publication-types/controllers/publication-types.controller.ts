@@ -61,7 +61,8 @@ export class PublicationTypesController {
     ERoles.ADMINISTRACAO,
     ERoles.SECRETARIA,
     ERoles.ESTUDANTE,
-    ERoles.DIRECAO
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
   )
   @Get()
   async findAllPublicationTypes() {

@@ -56,7 +56,7 @@ export class UnactiveComponent {
         }
       }
     }
-    console.log(this.createRegistryData)
+
     this.isLoading = false
   }
 

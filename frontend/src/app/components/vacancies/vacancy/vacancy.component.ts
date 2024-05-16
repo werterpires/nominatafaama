@@ -453,8 +453,6 @@ export class VacancyComponent implements OnInit {
       },
     })
 
-    console.log(createInviteData)
-
     this.vacancyStudentId = null
     this.inviteModal = false
     this.isLoading = false
@@ -469,10 +467,8 @@ export class VacancyComponent implements OnInit {
     )
     if (studentsWithInvites) {
       this.notice = false
-      console.log(this.notice)
     } else {
       this.notice = true
-      console.log(this.notice)
     }
     this.inviteModal = true
     this.vacancyStudentId = vacancyStudentId

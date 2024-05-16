@@ -108,7 +108,7 @@ export class AcademicFormationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/student/:userId')
   async findStudentAcademicFormationsByPersonIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -131,7 +131,7 @@ export class AcademicFormationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/spouse/:userId')
   async findSpouseAcademicFormationsByPersonIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -165,7 +165,12 @@ export class AcademicFormationsController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updateAcademicFormationById(
     @Body() input: UpdateAcademicFormationDto,

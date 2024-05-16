@@ -60,11 +60,9 @@ export class ValidateService {
 
     // Verifica se a senha é válido
     if (!this.cpfRegex.test(cpf)) {
-      console.log(cpf)
       return false
     }
     if (/^(\d)\1+$/.test(cpf)) {
-      console.log(2)
       return false
     }
 
@@ -93,7 +91,6 @@ export class ValidateService {
       digit1 !== parseInt(cpf.charAt(9)) ||
       digit2 !== parseInt(cpf.charAt(10))
     ) {
-      console.log(4)
       return false
     }
 
