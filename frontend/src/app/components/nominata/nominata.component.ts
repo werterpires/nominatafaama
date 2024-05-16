@@ -298,7 +298,6 @@ export class NominataComponent implements OnInit {
 
   filterStudentByname() {
     if (this.studentsToList) {
-      console.log('estou chegando aqui')
       this.studentsToList = this.studentsToList.filter((student) => {
         return student.name
           .toLowerCase()

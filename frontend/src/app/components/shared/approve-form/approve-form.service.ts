@@ -31,12 +31,6 @@ export class ApproveFormServices {
     if (this.concluedApprovesNumber === this.activeApproveFormsNumber) {
       this.atualizeStudent$.next()
       this.concluedApprovesNumber = 0
-      console.log(
-        'Salvou tudo: forms concluídos:',
-        this.concluedApprovesNumber,
-        'forms ativos:',
-        this.activeApproveFormsNumber,
-      )
     }
   }
 

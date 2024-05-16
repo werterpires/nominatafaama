@@ -4,10 +4,15 @@ export interface ICreateOtherInvitesTime {
   invitesBegin: string
 }
 
+export interface IUpdateOtherInvitesTime {
+  otherInvitesTimeId: number
+  invitesBegin: string
+}
+
 export interface IOtherInvitesTime {
   fields_invites_id: number
   nominata_id: number
-  invites_begin: Date
+  invites_begin: string
   field_id: number
   field: ITinyAssociation
   nominata: tinyNominata

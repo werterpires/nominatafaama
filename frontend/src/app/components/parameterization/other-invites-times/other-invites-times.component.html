@@ -87,7 +87,7 @@
     <app-update-form
       [registryId]="i"
       (editRegistry)="editRegistry(i, $event.saveButtonId)"
-      (deleteRegistry)="deleteRegistry(registry.nominata_id)"
+      (deleteRegistry)="deleteRegistry(registry.fields_invites_id)"
       *ngFor="let registry of allRegistries; index as i"
     >
       <div class="subSection">
@@ -97,6 +97,7 @@
             <option
               *ngFor="let association of allAssociations"
               [value]="association.association_id"
+              [disabled]="association.association_id !== registry.field_id"
             >
               {{ association.association_acronym }}
             </option>

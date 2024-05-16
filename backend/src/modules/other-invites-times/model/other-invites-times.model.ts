@@ -3,7 +3,11 @@ import { CreateOtherInvitesTimeDto } from '../dto/create-other-invites-time.dto'
 import { UpdateOtherInvitesTimeDto } from '../dto/update-other-invites-time.dto'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
-import { ICreateOtherInvitesTime, IOtherInvitesTime } from '../types/types'
+import {
+  ICreateOtherInvitesTime,
+  IOtherInvitesTime,
+  IUpdateOtherInvitesTime
+} from '../types/types'
 
 @Injectable()
 export class OtherInvitesTimesModel {
@@ -59,7 +63,7 @@ export class OtherInvitesTimesModel {
       const otherInvitesTimes: IOtherInvitesTime[] = consultResult.map(
         (result) => {
           return {
-            fields_invites_id: result.association_id,
+            fields_invites_id: result.fields_invites_id,
             nominata_id: result.nominata_id,
             invites_begin: result.invites_begin,
             field_id: result.association_id,
@@ -161,11 +165,32 @@ export class OtherInvitesTimesModel {
     }
   }
 
-  update(id: number, updateOtherInvitesTimeDto: UpdateOtherInvitesTimeDto) {
-    return `This action updates a #${id} otherInvitesTime`
+  async updateOtherInvitesTime(
+    updateOtherInvitesTimeData: IUpdateOtherInvitesTime
+  ): Promise<void> {
+    try {
+      await this.knex
+        .table('fields_invites_begins')
+        .update({ invites_begin: updateOtherInvitesTimeData.invites_begin })
+        .where(
+          'fields_invites_begins.fields_invites_id',
+          updateOtherInvitesTimeData.fields_invites_id
+        )
+    } catch (error) {
+      console.log('Erro capturado no model:', error)
+      throw new Error('Failed to update other invites time')
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} otherInvitesTime`
+  async deleteOtherInvitesTime(fields_invites_id: number): Promise<void> {
+    try {
+      await this.knex
+        .table('fields_invites_begins')
+        .delete()
+        .where('fields_invites_begins.fields_invites_id', fields_invites_id)
+    } catch (error) {
+      console.log('Erro capturado no model:', error)
+      throw new Error('Failed to delete other invites time')
+    }
   }
 }

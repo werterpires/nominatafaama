@@ -10,6 +10,11 @@ export interface ICreateOtherInvitesTime {
   field_id: number
 }
 
+export interface IUpdateOtherInvitesTime {
+  fields_invites_id: number
+  invites_begin: Date
+}
+
 export interface IOtherInvitesTime {
   fields_invites_id: number
   nominata_id: number

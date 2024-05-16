@@ -93,7 +93,6 @@ export class FieldRepsComponent implements OnInit {
     this.isLoading = true
     this.fieldRepsService.findRegistry().subscribe({
       next: (res) => {
-        console.log(res)
         if (res && res.repId) {
           this.registry = res
           this.formatarTelefone()

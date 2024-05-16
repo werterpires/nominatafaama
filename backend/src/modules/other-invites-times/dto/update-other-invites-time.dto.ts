@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateOtherInvitesTimeDto } from './create-other-invites-time.dto';
+import { IsNumber, IsString } from 'class-validator'
 
-export class UpdateOtherInvitesTimeDto extends PartialType(CreateOtherInvitesTimeDto) {}
+export class UpdateOtherInvitesTimeDto {
+  @IsNumber()
+  otherInvitesTimeId: number
+
+  @IsString()
+  invitesBegin: string
+}

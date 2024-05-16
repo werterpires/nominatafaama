@@ -4,7 +4,11 @@ import { Router } from '@angular/router'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { environment } from 'src/environments/environment'
-import { ICreateOtherInvitesTime, IOtherInvitesTime } from './types'
+import {
+  ICreateOtherInvitesTime,
+  IOtherInvitesTime,
+  IUpdateOtherInvitesTime,
+} from './types'
 
 @Injectable({
   providedIn: 'root',
@@ -60,39 +64,48 @@ export class OtherInvitesTimesService {
       )
   }
 
-  // updateRegistry(editNominataData: IUpdateNominata): Observable<INominata> {
-  //   const token = localStorage.getItem('access_token')
-  //   const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-  //   return this.http
-  //     .put<INominata>(environment.API + '/nominatas', editNominataData, {
-  //       headers: head_obj,
-  //     })
-  //     .pipe(
-  //       catchError((error) => {
-  //         console.log('Veja o erro completo', error)
-  //         return throwError(
-  //           () => new Error('Não foi possível criar o estado civil.'),
-  //         )
-  //       }),
-  //     )
-  // }
+  updateRegistry(
+    updateOtherFieldsInvitesTimes: IUpdateOtherInvitesTime,
+  ): Observable<IOtherInvitesTime> {
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .put<IOtherInvitesTime>(
+        environment.API + '/other-invites-times',
+        updateOtherFieldsInvitesTimes,
+        {
+          headers: head_obj,
+        },
+      )
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          return throwError(
+            () => new Error('Não foi possível criar o estado civil.'),
+          )
+        }),
+      )
+  }
 
-  // deleteRegistry(id: number): Observable<INominata> {
-  //   const token = localStorage.getItem('access_token')
-  //   const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-  //   return this.http
-  //     .delete<INominata>(environment.API + '/nominatas/' + id, {
-  //       headers: head_obj,
-  //     })
-  //     .pipe(
-  //       catchError((error) => {
-  //         console.log('Veja o erro completo', error)
-  //         return throwError(
-  //           () => new Error('Não foi possível criar o estado civil.'),
-  //         )
-  //       }),
-  //     )
-  // }
+  deleteRegistry(id: number): Observable<IOtherInvitesTime> {
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .delete<IOtherInvitesTime>(
+        environment.API + '/other-invites-times/' + id,
+        {
+          headers: head_obj,
+        },
+      )
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          return throwError(
+            () => new Error('Não foi possível criar o estado civil.'),
+          )
+        }),
+      )
+  }
 
   // findAllNominataYearsRegistries(): Observable<
   //   { nominataId: number; year: number }[]

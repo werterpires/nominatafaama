@@ -1,6 +1,6 @@
-import {Component} from '@angular/core'
-import {Router} from '@angular/router'
-import {LoginService} from '../shared.service.ts/login.service'
+import { Component } from '@angular/core'
+import { Router } from '@angular/router'
+import { LoginService } from '../shared.service.ts/login.service'
 
 @Component({
   selector: 'app-login-menu',
@@ -11,17 +11,14 @@ export class LoginMenuComponent {
   constructor(public service: LoginService, private router: Router) {}
 
   login() {
-    console.log('Realizando login')
     this.router.navigateByUrl('/login')
   }
 
   logon() {
-    console.log('Realizando logon')
     this.router.navigateByUrl('/logon')
   }
 
   logout() {
-    console.log('Realizando logout')
     this.service.logout()
     this.router.navigateByUrl('/')
   }

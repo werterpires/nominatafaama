@@ -68,7 +68,6 @@ export class GeneralProfessorsComponent {
         /(\d{3})(\d{3})(\d{3})(\d{2})/,
         '$1.$2.$3-$4',
       )
-    console.log('estou funcionando')
   }
 
   resetCreationRegistry() {

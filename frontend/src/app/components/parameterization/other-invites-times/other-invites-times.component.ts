@@ -1,6 +1,10 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { ICreateOtherInvitesTime, IOtherInvitesTime } from './types'
+import {
+  ICreateOtherInvitesTime,
+  IOtherInvitesTime,
+  IUpdateOtherInvitesTime,
+} from './types'
 import { IAssociation } from '../associations/types'
 import { OtherInvitesTimesService } from './other-invites-times.service'
 import { DataService } from '../../shared/shared.service.ts/data.service'
@@ -49,7 +53,6 @@ export class OtherInvitesTimesComponent {
       .findAllRegistriesByNominata(parseInt(this.chosenNominata))
       .subscribe({
         next: (res) => {
-          console.log(res)
           this.allRegistries = res
           this.isLoading = false
         },
@@ -93,10 +96,44 @@ export class OtherInvitesTimesComponent {
   }
 
   editRegistry(index: number, buttonId: string) {
-    console.log('implementar o update de registros')
+    this.isLoading = true
+    const updateData: IUpdateOtherInvitesTime = {
+      otherInvitesTimeId: this.allRegistries[index].fields_invites_id,
+      invitesBegin: this.dataService.dateFormatter(
+        this.allRegistries[index].invites_begin,
+      ),
+    }
+
+    this.service.updateRegistry(updateData).subscribe({
+      next: () => {
+        this.doneMessage = 'Registro editado com sucesso.'
+        this.done = true
+        document.getElementById(buttonId)?.classList.add('hidden')
+        this.findAllRegistries()
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
   }
 
   deleteRegistry(id: number) {
-    console.log('implementar o delete de registros')
+    this.isLoading = true
+    this.service.deleteRegistry(id).subscribe({
+      next: () => {
+        this.doneMessage = 'Registro removido com sucesso.'
+        this.done = true
+        this.findAllRegistries()
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
   }
 }

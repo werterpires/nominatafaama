@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common'
 import { CreateOtherInvitesTimeDto } from '../dto/create-other-invites-time.dto'
 import { UpdateOtherInvitesTimeDto } from '../dto/update-other-invites-time.dto'
 import { OtherInvitesTimesModel } from '../model/other-invites-times.model'
-import { ICreateOtherInvitesTime } from '../types/types'
+import {
+  ICreateOtherInvitesTime,
+  IUpdateOtherInvitesTime
+} from '../types/types'
 
 @Injectable()
 export class OtherInvitesTimesService {
@@ -32,8 +35,6 @@ export class OtherInvitesTimesService {
         field_id: createOtherInvitesTimeDto.fieldId
       }
 
-      console.log('service', createOtherInvitesTimeData)
-
       const createdOtherInvitesTime =
         await this.otherInvitesTimesModel.createOtherInvitesTime(
           createOtherInvitesTimeData
@@ -54,6 +55,37 @@ export class OtherInvitesTimesService {
           nominataId
         )
       return consultResult
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async updateOtherInvitesTime(
+    updateOtherInvitesTimeDto: UpdateOtherInvitesTimeDto
+  ) {
+    try {
+      const invites_begin = new Date(updateOtherInvitesTimeDto.invitesBegin)
+      if (invites_begin.toString() === 'Invalid Date') {
+        throw new Error('Invalid Date')
+      }
+      const updateOtherInvitesTimeData: IUpdateOtherInvitesTime = {
+        fields_invites_id: updateOtherInvitesTimeDto.otherInvitesTimeId,
+        invites_begin
+      }
+
+      await this.otherInvitesTimesModel.updateOtherInvitesTime(
+        updateOtherInvitesTimeData
+      )
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async deleteOtherInvitesTime(fields_invites_id: number) {
+    try {
+      await this.otherInvitesTimesModel.deleteOtherInvitesTime(
+        fields_invites_id
+      )
     } catch (error) {
       throw new Error(error.message)
     }
