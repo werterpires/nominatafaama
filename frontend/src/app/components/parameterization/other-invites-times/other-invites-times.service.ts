@@ -12,23 +12,30 @@ import { ICreateOtherInvitesTime, IOtherInvitesTime } from './types'
 export class OtherInvitesTimesService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  // findAllRegistries(): Observable<INominata[]> {
-  //   const token = localStorage.getItem('access_token')
-  //   const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
-  //   return this.http
-  //     .get<INominata[]>(environment.API + '/nominatas', {
-  //       headers: head_obj,
-  //     })
-  //     .pipe(
-  //       catchError((error) => {
-  //         console.log('Veja o erro completo', error)
-  //         return throwError(
-  //           () =>
-  //             new Error('Não foi possível encontrar nominatas cadastradas.'),
-  //         )
-  //       }),
-  //     )
-  // }
+  findAllRegistriesByNominata(
+    nominataId: number,
+  ): Observable<IOtherInvitesTime[]> {
+    const token = localStorage.getItem('access_token')
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    return this.http
+      .get<IOtherInvitesTime[]>(
+        environment.API + '/other-invites-times/nominata/' + nominataId,
+        {
+          headers: head_obj,
+        },
+      )
+      .pipe(
+        catchError((error) => {
+          console.log('Veja o erro completo', error)
+          return throwError(
+            () =>
+              new Error(
+                'Não foi possível encontrar as exceções para essa nominata.',
+              ),
+          )
+        }),
+      )
+  }
 
   createRegistry(
     createOtherInvitesTimes: ICreateOtherInvitesTime,

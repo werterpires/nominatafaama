@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
-import { ICreateOtherInvitesTime } from './types'
+import { ICreateOtherInvitesTime, IOtherInvitesTime } from './types'
 import { IAssociation } from '../associations/types'
 import { OtherInvitesTimesService } from './other-invites-times.service'
 import { DataService } from '../../shared/shared.service.ts/data.service'
@@ -15,6 +15,10 @@ export class OtherInvitesTimesComponent {
   @Input() shortNominatas: { nominataId: number; year: number }[] = []
   @Input() allAssociations: IAssociation[] = []
 
+  allRegistries: IOtherInvitesTime[] = []
+
+  chosenNominata = ''
+
   createRegistryData: ICreateOtherInvitesTime = {
     nominataId: 0,
     fieldId: 0,
@@ -22,7 +26,7 @@ export class OtherInvitesTimesComponent {
   }
 
   showBox = true
-  showForm = true
+  showForm = false
   title = 'Campos com exceções para convites'
 
   isLoading = false
@@ -35,6 +39,27 @@ export class OtherInvitesTimesComponent {
     private service: OtherInvitesTimesService,
     private dataService: DataService,
   ) {}
+
+  findAllRegistries() {
+    if (this.chosenNominata === '') {
+      return
+    }
+    this.isLoading = true
+    this.service
+      .findAllRegistriesByNominata(parseInt(this.chosenNominata))
+      .subscribe({
+        next: (res) => {
+          console.log(res)
+          this.allRegistries = res
+          this.isLoading = false
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
+  }
 
   createRegistry() {
     this.isLoading = true
@@ -49,6 +74,7 @@ export class OtherInvitesTimesComponent {
       .subscribe({
         next: () => {
           this.doneMessage = 'Registro criado com sucesso.'
+          this.findAllRegistries()
           this.done = true
           this.isLoading = false
           this.showForm = false
@@ -64,5 +90,13 @@ export class OtherInvitesTimesComponent {
           this.isLoading = false
         },
       })
+  }
+
+  editRegistry(index: number, buttonId: string) {
+    console.log('implementar o update de registros')
+  }
+
+  deleteRegistry(id: number) {
+    console.log('implementar o delete de registros')
   }
 }

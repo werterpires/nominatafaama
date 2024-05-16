@@ -33,4 +33,20 @@ export class OtherInvitesTimesController {
       throw new Error(error.message)
     }
   }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Get('nominata/:nomintaId')
+  async findAllInvitesTimesByNominataId(
+    @Param('nomintaId') nominataId: string
+  ) {
+    try {
+      const invitesTimes =
+        await this.otherInvitesTimesService.findAllInvitesTimesByNominataId(
+          Number(nominataId)
+        )
+      return invitesTimes
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
 }

@@ -11,6 +11,16 @@ export class OtherInvitesTimesService {
     createOtherInvitesTimeDto: CreateOtherInvitesTimeDto
   ) {
     try {
+      const existentInviteTime =
+        await this.otherInvitesTimesModel.findInvitTimeByFieldAndNominataYear({
+          nominataId: createOtherInvitesTimeDto.nominataId,
+          fieldIdId: createOtherInvitesTimeDto.fieldId
+        })
+
+      if (existentInviteTime) {
+        throw new Error('Other invites time already exists')
+      }
+
       const invites_begin = new Date(createOtherInvitesTimeDto.invitesBegin)
       if (invites_begin.toString() === 'Invalid Date') {
         throw new Error('Invalid Date')
@@ -30,6 +40,20 @@ export class OtherInvitesTimesService {
         )
 
       return createdOtherInvitesTime
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async findAllInvitesTimesByNominataId(
+    nominataId: number
+  ): Promise<ICreateOtherInvitesTime[]> {
+    try {
+      const consultResult =
+        await this.otherInvitesTimesModel.findAllInvitesTimesByNominataId(
+          nominataId
+        )
+      return consultResult
     } catch (error) {
       throw new Error(error.message)
     }

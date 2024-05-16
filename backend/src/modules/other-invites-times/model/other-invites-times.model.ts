@@ -29,9 +29,63 @@ export class OtherInvitesTimesModel {
     }
   }
 
-  // findAll() {
-  //   return `This action returns all otherInvitesTimes`
-  // }
+  async findAllInvitesTimesByNominataId(
+    nominataId: number
+  ): Promise<IOtherInvitesTime[]> {
+    try {
+      const consultResult = await this.knex
+        .select([
+          'fields_invites_begins.*',
+          'nominatas.nominata_id',
+          'nominatas.year',
+          'nominatas.orig_field_invites_begin',
+          'nominatas.other_fields_invites_begin',
+          'nominatas.director',
+          'associations.*'
+        ])
+        .from('fields_invites_begins')
+        .leftJoin(
+          'nominatas',
+          'nominatas.nominata_id',
+          'fields_invites_begins.nominata_id'
+        )
+        .leftJoin(
+          'associations',
+          'associations.association_id',
+          'fields_invites_begins.field_id'
+        )
+        .where('nominatas.nominata_id', nominataId)
+
+      const otherInvitesTimes: IOtherInvitesTime[] = consultResult.map(
+        (result) => {
+          return {
+            fields_invites_id: result.association_id,
+            nominata_id: result.nominata_id,
+            invites_begin: result.invites_begin,
+            field_id: result.association_id,
+            field: {
+              association_id: result.association_id,
+              association_name: result.association_name,
+              association_acronym: result.association_acronym,
+              union_id: result.union_id
+            },
+            nominata: {
+              nominata_id: result.nominata_id,
+              year: result.year,
+              orig_field_invites_begin: result.orig_field_invites_begin,
+              other_fields_invites_begin: result.other_fields_invites_begin,
+              director: result.director
+            }
+          }
+        }
+      )
+
+      return otherInvitesTimes
+    } catch (error) {
+      console.log('Erro capturado no model:', error)
+      throw new Error('Failed to find other invites time')
+    }
+  }
 
   async findOneOtherInvitesTimeById(
     otherInvitesTmeId: number
@@ -83,6 +137,26 @@ export class OtherInvitesTimesModel {
       return otherInvitesTime
     } catch (error) {
       console.log('Erro capturado no model:', error)
+      throw new Error('Failed to find other invites time')
+    }
+  }
+
+  async findInvitTimeByFieldAndNominataYear(data: {
+    nominataId: number
+    fieldIdId: number
+  }): Promise<any> {
+    try {
+      const consultResult = await this.knex('fields_invites_begins')
+        .first('fields_invites_id')
+        .where('field_id', data.fieldIdId)
+        .andWhere('nominata_id', data.nominataId)
+
+      return consultResult
+    } catch (error) {
+      console.log(
+        'Erro capturado no findInvitTimeByFieldAndNominataYear model:',
+        error
+      )
       throw new Error('Failed to find other invites time')
     }
   }

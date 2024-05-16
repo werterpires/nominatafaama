@@ -65,4 +65,52 @@
       </div>
     </app-creation-form>
   </section>
+
+  <label for="" class="inputLabel"
+    >Ano da nominata
+    <select
+      name="nominata"
+      id=""
+      [(ngModel)]="chosenNominata"
+      (change)="findAllRegistries()"
+    >
+      <option
+        *ngFor="let nominata of shortNominatas"
+        [value]="nominata.nominataId"
+      >
+        {{ nominata.year }}
+      </option>
+    </select>
+  </label>
+
+  <section class="registriesWrapper">
+    <app-update-form
+      [registryId]="i"
+      (editRegistry)="editRegistry(i, $event.saveButtonId)"
+      (deleteRegistry)="deleteRegistry(registry.nominata_id)"
+      *ngFor="let registry of allRegistries; index as i"
+    >
+      <div class="subSection">
+        <label for="" class="inputLabel"
+          >Associação
+          <select name="field" id="" [(ngModel)]="registry.field_id">
+            <option
+              *ngFor="let association of allAssociations"
+              [value]="association.association_id"
+            >
+              {{ association.association_acronym }}
+            </option>
+          </select>
+        </label>
+        <label class="inputLabel">
+          Data para início de convites<input
+            class="mediumInput"
+            type="date"
+            name="nominataInviteBeginInput"
+            [(ngModel)]="registry.invites_begin"
+          />
+        </label>
+      </div>
+    </app-update-form>
+  </section>
 </section>
