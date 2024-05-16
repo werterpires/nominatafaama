@@ -24,7 +24,6 @@ export class OtherInvitesTimesController {
   @Post()
   async create(@Body() createOtherInvitesTimeDto: CreateOtherInvitesTimeDto) {
     try {
-      console.log('controller', createOtherInvitesTimeDto)
       const createdOtherInvitesTime =
         await this.otherInvitesTimesService.createOtherInvitesTime(
           createOtherInvitesTimeDto

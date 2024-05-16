@@ -179,6 +179,8 @@ export class VacanciesService {
           'there is no correspondense between vacancy and representation'
         )
       }
+
+      return thereIsCorrespondense
     } catch (error) {
       throw error
     }

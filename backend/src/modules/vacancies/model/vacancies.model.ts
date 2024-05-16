@@ -367,6 +367,48 @@ export class VacanciesModel {
     return true
   }
 
+  async findVacancyById(vacancyId: number): Promise<any> {
+    try {
+      const vacancy = await this.knex('vacancies')
+        .leftJoin(
+          'ministry_types',
+          'vacancies.ministry_id',
+          'ministry_types.ministry_type_id'
+        )
+        .leftJoin(
+          'hiring_status',
+          'vacancies.hiring_status_id',
+          'hiring_status.hiring_status_id'
+        )
+        .leftJoin(
+          'associations',
+          'vacancies.field_id',
+          'associations.association_id'
+        )
+        .leftJoin('unions', 'unions.union_id', 'associations.union_id')
+        .leftJoin('nominatas', 'nominatas.nominata_id', 'vacancies.nominata_id')
+        .select(
+          'vacancies.*',
+          'nominatas.orig_field_invites_begin',
+          'nominatas.other_fields_invites_begin',
+          'nominatas.nominata_id',
+          'associations.association_id'
+        )
+        .where('vacancies.vacancy_id', vacancyId)
+        .first()
+      if (!vacancy) {
+        throw new Error('Vaga não encontrada')
+      }
+      return vacancy
+    } catch (error) {
+      console.error(
+        'erro capturado no findVacancyById no VacanciesModel:',
+        error
+      )
+      throw new Error(error.sqlMessage)
+    }
+  }
+
   async findRepVacanciesByNominataId(findVacanciesData: {
     nominataId: number
     repId: number
@@ -777,7 +819,7 @@ export class VacanciesModel {
     representationId: number
     vacancyId?: number
     vacancyStudentId?: number
-  }): Promise<boolean> {
+  }): Promise<any> {
     try {
       let consultResult
 
@@ -817,11 +859,16 @@ export class VacanciesModel {
             'field_representations.representation_id':
               validateData.representationId
           })
-          .first('vacancies.vacancy_id')
+          .first(
+            'vacancies.vacancy_id',
+            'vacancies.field_id',
+            'field_representations.represented_field_id',
+            'field_representations.representation_id'
+          )
       }
 
       if (consultResult) {
-        return true
+        return consultResult
       } else {
         return false
       }

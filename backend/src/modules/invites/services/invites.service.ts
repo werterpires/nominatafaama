@@ -13,13 +13,16 @@ import { FieldRepresentationsModel } from 'src/modules/field-representations/mod
 import { VacanciesService } from 'src/modules/vacancies/services/vacancies.service'
 import { isDate } from 'util/types'
 import { StudentsModel } from 'src/modules/students/model/students.model'
+import { OtherInvitesTimesModel } from 'src/modules/other-invites-times/model/other-invites-times.model'
 
 @Injectable()
 export class InvitesService {
   constructor(
     private readonly invitesModel: InvitesModel,
     private readonly vacaciesService: VacanciesService,
-    private readonly studentsModel: StudentsModel
+    private readonly studentsModel: StudentsModel,
+    private readonly vacanciesModel: VacanciesModel,
+    private readonly otherInvitesModel: OtherInvitesTimesModel
   ) {}
   async validateNotOpenInvites(vacancyId: number, inviteId?: number) {
     try {
@@ -66,11 +69,12 @@ export class InvitesService {
         await this.vacaciesService.findActiveRepresentation(currentUser.user_id)
 
       //verifica se o campo da vaga confere com o campo da representação
-      await this.vacaciesService.validateSameFieldToVacancyAndRepresentations(
-        activeRepresentation.representationID,
-        null,
-        createInviteDto.vacancyStudentId
-      )
+      const result =
+        await this.vacaciesService.validateSameFieldToVacancyAndRepresentations(
+          activeRepresentation.representationID,
+          null,
+          createInviteDto.vacancyStudentId
+        )
 
       //verifica se a vaga ainda não foi aceita por ninguém.
       await this.vacaciesService.validateNotAlredyAcceptedVacancy(
@@ -97,6 +101,55 @@ export class InvitesService {
         throw new Error('Data do voto precisa ser uma data válida')
       }
 
+      const student = await this.studentsModel.findStudentById(
+        createInviteDto.studentId
+      )
+
+      const vacancy = await this.vacanciesModel.findVacancyById(
+        createInviteDto.vacancyId
+      )
+
+      console.log('result:', result)
+
+      console.log('vaga:', vacancy)
+
+      if (
+        student?.origin_field_id !== activeRepresentation.representedFieldID
+      ) {
+        console.log('campo diferente')
+        console.log(
+          student?.origin_field_id,
+          activeRepresentation.representationID
+        )
+        const otherFieldsTime =
+          vacancy.other_fields_invites_begin || vacancy.orig_field_invites_begin
+
+        const today = new Date()
+        const otherFieldsDeadline = new Date(otherFieldsTime)
+        if (otherFieldsDeadline > today) {
+          console.log(otherFieldsDeadline)
+          throw new Error('other fields date to invite not reached')
+        }
+      } else {
+        console.log('campo igual')
+        const otherTimes =
+          await this.otherInvitesModel.findInvitTimeByFieldAndNominataYear({
+            nominataId: vacancy.nominata_id,
+            fieldIdId: activeRepresentation.representedFieldID
+          })
+
+        console.log('otherTimes:', otherTimes)
+
+        const fieldInviteTime =
+          otherTimes?.invites_begin || vacancy.orig_field_invites_begin
+
+        const today = new Date()
+        const fieldDeadLine = new Date(fieldInviteTime)
+        if (fieldDeadLine > today) {
+          throw new Error('field date to invite not reached')
+        }
+      }
+
       const createInviteData: ICreateInvite = {
         accept: null,
         approved: null,
@@ -107,11 +160,13 @@ export class InvitesService {
         studentId: createInviteDto.studentId
       }
 
-      const inviteId = await this.invitesModel.createInvite(
-        createInviteData,
-        currentUser
-      )
-      return inviteId
+      // const inviteId = await this.invitesModel.createInvite(
+      //   createInviteData,
+      //   currentUser
+      // )
+      // return inviteId
+      console.log('chegou no final')
+      return 8
     } catch (error) {
       console.error('erro capturado no createInvite no InvitesService:', error)
       throw error

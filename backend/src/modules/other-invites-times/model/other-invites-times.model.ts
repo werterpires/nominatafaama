@@ -151,7 +151,7 @@ export class OtherInvitesTimesModel {
   }): Promise<any> {
     try {
       const consultResult = await this.knex('fields_invites_begins')
-        .first('fields_invites_id')
+        .first('*')
         .where('field_id', data.fieldIdId)
         .andWhere('nominata_id', data.nominataId)
 
