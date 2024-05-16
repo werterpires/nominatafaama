@@ -49,4 +49,7 @@ JWT_SECRET=VALOR
   > Abra seu aplicativo de conexão com MySQL e na tabela `users`, coloque '1' nas colunas `user_approved`, `consent_term` e `cookies`
 
 - Faça login:
+
   > Navegue até `http://localhost:4200/login` e preencha com os dados de login
+
+- Fim
