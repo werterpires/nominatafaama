@@ -52,7 +52,7 @@ export class SpousesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/:userId')
   async findSpouseByIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -66,7 +66,12 @@ export class SpousesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updateSpouse(
     @Body() input: UpdateSpouseDto,
@@ -85,7 +90,12 @@ export class SpousesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put('approve/:userId')
   async updateSpouseToApprove(
     @Body() input: UpdateSpouseDto,

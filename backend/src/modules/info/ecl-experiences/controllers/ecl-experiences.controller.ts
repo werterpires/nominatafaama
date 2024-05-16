@@ -45,7 +45,7 @@ export class EclExperiencesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/student/:userId')
   async findEclesiasticExperienceByPersonIdToApprove(
     @CurrentUser() user: UserFromJwt,
@@ -94,7 +94,12 @@ export class EclExperiencesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updateEclExperienceById(
     @Body() dto: UpdateExperiencesDto,

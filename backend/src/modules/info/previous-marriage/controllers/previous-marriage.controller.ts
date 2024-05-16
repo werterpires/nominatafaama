@@ -64,7 +64,7 @@ export class PreviousMarriagesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO)
+  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.MINISTERIAL)
   @Get('approve/:userId')
   async findPreviousMarriagesByStudentIdToApprove(
     @Param('userId') userId: string
@@ -116,7 +116,12 @@ export class PreviousMarriagesController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.ESTUDANTE, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.ESTUDANTE,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @Put()
   async updatePreviousMarriageById(
     @Body() input: UpdatePreviousMarriageDto,
