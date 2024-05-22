@@ -40,12 +40,6 @@ export class StudentsSpaceComponent implements OnInit {
   @ViewChild('directorText') directorText!: ElementRef
   @ViewChild('readMore') readMore!: ElementRef
 
-  nominataYear: string =
-    new Date().getMonth() > 6
-      ? new Date().getFullYear().toString()
-      : (new Date().getFullYear() - 1).toString()
-  title = 'Nominata'
-
   searchString = ''
 
   unions: string[] = []
@@ -55,7 +49,15 @@ export class StudentsSpaceComponent implements OnInit {
   searchedStudent = ''
   onlyfavs = false
 
-  @Input() students: IBasicStudent[] | null | undefined = []
+  @Input() set students(students: IBasicStudent[] | null | undefined) {
+    this._students = students
+    this.getStudentsToList()
+    this.searchString = ''
+    this.searchedStudent = ''
+    this.searchedUnion = ''
+    this.searchedAssociation = ''
+  }
+  _students: IBasicStudent[] | null | undefined = []
 
   studentsToList!: IBasicStudent[] | null
 
@@ -77,13 +79,17 @@ export class StudentsSpaceComponent implements OnInit {
   favorites: number[] = []
 
   ngOnInit() {
-    if (this.students) {
-      this.students.forEach((student) => {
+    this.getStudentsToList()
+  }
+
+  getStudentsToList() {
+    if (this._students) {
+      this._students.forEach((student) => {
         if (!this.unions.includes(student.union_acronym)) {
           this.unions.push(student.union_acronym)
         }
       })
-      this.studentsToList = this.students
+      this.studentsToList = this._students
     }
 
     if (this.permissions.representacao || this.permissions.administrador) {
@@ -137,8 +143,8 @@ export class StudentsSpaceComponent implements OnInit {
   }
 
   filterStudents(union?: boolean, fav?: boolean) {
-    if (this.students) {
-      this.studentsToList = this.students
+    if (this._students) {
+      this.studentsToList = this._students
       if (union) {
         this.searchedAssociation = ''
         this.associations = []
@@ -204,8 +210,8 @@ export class StudentsSpaceComponent implements OnInit {
     this.searchedAssociation = ''
     this.searchedUnion = ''
     this.searchedStudent = ''
-    if (this.students) {
-      this.studentsToList = this.students
+    if (this._students) {
+      this.studentsToList = this._students
     }
   }
 

@@ -29,7 +29,7 @@ export class ParameterizationComponent implements OnInit {
   error = false
 
   user: IUserApproved | null = null
-  shortNominatas: { nominataId: number; year: number }[] = []
+  shortNominatas: { nominataId: number; year: string }[] = []
   allAssociations: IAssociation[] = []
 
   constructor(
