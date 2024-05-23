@@ -16,9 +16,10 @@
           <form action="">
             <select
               name="yearSelect"
-              id=""
+              id="yearSelect"
               [(ngModel)]="nominataYear"
               (change)="getAllRegistries()"
+              class="oneStudentSpaceTitle"
             >
               <option
                 *ngFor="let shortNominata of shortNominatas"
