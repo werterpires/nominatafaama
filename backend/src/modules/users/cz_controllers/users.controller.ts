@@ -140,13 +140,23 @@ export class UsersController {
     }
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.DIRECAO, ERoles.SECRETARIA)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.DIRECAO,
+    ERoles.SECRETARIA,
+    ERoles.MINISTERIAL
+  )
   @Get()
   async findAllUsers() {
     return await this.usersService.findAllUsers()
   }
 
-  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO)
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.SECRETARIA,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL
+  )
   @UseGuards(UsersGuard)
   @Put('approve')
   async aproveUserById(

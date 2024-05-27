@@ -129,7 +129,8 @@ export class UsersApprovesComponent implements OnInit {
         if (
           !roles.includes('secretaria') &&
           !roles.includes('direção') &&
-          !roles.includes('administrador')
+          !roles.includes('administrador') &&
+          !roles.includes('ministerial')
         ) {
           this.router.navigate(['nominata'])
         }
