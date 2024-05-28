@@ -816,22 +816,22 @@ export class UsersModel {
     let updatedUser: IUser | null = null
     let sentError: Error | null = null
 
-    const result = await this.knex.transaction(async (trx) => {
+    await this.knex.transaction(async (trx) => {
       try {
         if (updateUser.password_hash) {
-          await this.knex('users')
+          await trx('users')
             .where('user_id', id)
             .update({ password_hash: updateUser.password_hash })
-          await this.knex('users')
+          await trx('users')
             .where('user_id', id)
             .update({ user_approved: updateUser.user_approved })
         }
 
         if (updateUser.principal_email) {
-          await this.knex('users')
+          await trx('users')
             .where('user_id', id)
             .update({ principal_email: updateUser.principal_email })
-          await this.knex('users')
+          await trx('users')
             .where('user_id', id)
             .update({ user_approved: updateUser.user_approved })
         }
@@ -843,21 +843,21 @@ export class UsersModel {
             .where('user_id', id)
 
           if (updateUser.name) {
-            await this.knex('people')
+            await trx('people')
               .where('person_id', userPeople.person_id)
               .update({ name: updateUser.name })
 
-            await this.knex('users')
+            await trx('users')
               .where('user_id', id)
               .update({ user_approved: updateUser.user_approved })
           }
 
           if (updateUser.cpf) {
-            await this.knex('people')
+            await trx('people')
               .where('person_id', userPeople.person_id)
               .update({ cpf: updateUser.cpf })
 
-            await this.knex('users')
+            await trx('users')
               .where('user_id', id)
               .update({ user_approved: updateUser.user_approved })
           }
@@ -867,19 +867,18 @@ export class UsersModel {
           updateUser.roles_id !== undefined &&
           updateUser.roles_id.length > 0
         ) {
-          await this.knex.transaction(async (trx) => {
-            if (updateUser.roles_id !== undefined) {
-              await trx('users_roles').del().where('user_id', id)
-              const roles = updateUser.roles_id.map((role_id) => ({
-                user_id: id,
-                role_id
-              }))
-              await trx('users_roles').insert(roles)
-              await this.knex('users')
-                .where('user_id', id)
-                .update({ user_approved: updateUser.user_approved })
-            }
-          })
+          await trx('users_roles').del().where('user_id', id)
+
+          const roles = updateUser.roles_id.map((role_id) => ({
+            user_id: id,
+            role_id
+          }))
+
+          await trx('users_roles').insert(roles)
+
+          await trx('users')
+            .where('user_id', id)
+            .update({ user_approved: updateUser.user_approved })
         }
 
         updatedUser = await this.findUserById(id)
