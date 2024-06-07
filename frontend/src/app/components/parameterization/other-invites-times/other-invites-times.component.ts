@@ -29,7 +29,7 @@ export class OtherInvitesTimesComponent {
     invitesBegin: '',
   }
 
-  showBox = true
+  showBox = false
   showForm = false
   title = 'Campos com exceções para convites'
 

@@ -115,6 +115,11 @@ export class InvitesModel {
         )
         .leftJoin('people', 'students.person_id', 'people.person_id')
         .leftJoin(
+          'users as studentUsers',
+          'people.person_id',
+          'studentUsers.person_id'
+        )
+        .leftJoin(
           'vacancies',
           'vacancies_students.vacancy_id',
           'vacancies.vacancy_id'
@@ -122,7 +127,13 @@ export class InvitesModel {
         .leftJoin('field_reps', 'vacancies.rep_id', 'field_reps.rep_id')
         .leftJoin('users', 'field_reps.person_id', 'users.person_id')
         .where('invite_id', inviteId)
-        .first('invites.*', 'people.name', 'vacancies.*', 'users.user_id')
+        .first(
+          'invites.*',
+          'people.name',
+          'vacancies.*',
+          'users.user_id',
+          'studentUsers.user_id as student_user_id'
+        )
 
       await this.knex('invites')
         .update({
@@ -139,7 +150,7 @@ export class InvitesModel {
           vaga: `${oldData.title}: ${oldData.description}`,
           estudante: oldData.name
         },
-        oldData: null,
+        oldData: oldData,
         notificationType: 13,
         objectUserId: oldData.user_id,
         table: 'invites'

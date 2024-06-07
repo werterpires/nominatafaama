@@ -1,6 +1,9 @@
 <app-container>
   <div class="sectionBoxes">
-    <section *ngIf="permissions.administrador" class="sectionBox">
+    <section
+      *ngIf="permissions.administrador || permissions.direcao"
+      class="sectionBox"
+    >
       <div class="boxHead">
         <p class="sectionTitle1">Representações ainda não avaliadas</p>
       </div>

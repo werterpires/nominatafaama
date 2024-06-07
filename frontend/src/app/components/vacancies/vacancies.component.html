@@ -82,7 +82,10 @@
       </section>
       <div *ngIf="allVacancies.length > 0">
         <div *ngFor="let vacancy of allVacancies">
-          <p class="sectionTitle1" (click)="selectVacancy(vacancy.vacancyId)">
+          <p
+            class="sectionTitle1 vacancyTitle"
+            (click)="selectVacancy(vacancy.vacancyId)"
+          >
             {{ vacancy.title }}
           </p>
         </div>

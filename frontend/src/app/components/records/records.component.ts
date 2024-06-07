@@ -55,11 +55,13 @@ export class RecordsComponent {
       this.permissions.docente = roles.includes('docente')
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
+      if (this.permissions.estudante || this.permissions.administrador) {
+        this.getMaritalStatus()
+      }
     })
     this.errorService.error$.subscribe((error) => {
       this.error = error
     })
-    this.getMaritalStatus()
   }
 
   getMaritalStatus() {

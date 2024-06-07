@@ -109,36 +109,23 @@ export class InvitesService {
         createInviteDto.vacancyId
       )
 
-      console.log('result:', result)
-
-      console.log('vaga:', vacancy)
-
       if (
         student?.origin_field_id !== activeRepresentation.representedFieldID
       ) {
-        console.log('campo diferente')
-        console.log(
-          student?.origin_field_id,
-          activeRepresentation.representationID
-        )
         const otherFieldsTime =
           vacancy.other_fields_invites_begin || vacancy.orig_field_invites_begin
 
         const today = new Date()
         const otherFieldsDeadline = new Date(otherFieldsTime)
         if (otherFieldsDeadline > today) {
-          console.log(otherFieldsDeadline)
           throw new Error('other fields date to invite not reached')
         }
       } else {
-        console.log('campo igual')
         const otherTimes =
           await this.otherInvitesModel.findInvitTimeByFieldAndNominataYear({
             nominataId: vacancy.nominata_id,
             fieldIdId: activeRepresentation.representedFieldID
           })
-
-        console.log('otherTimes:', otherTimes)
 
         const fieldInviteTime =
           otherTimes?.invites_begin || vacancy.orig_field_invites_begin
@@ -160,13 +147,11 @@ export class InvitesService {
         studentId: createInviteDto.studentId
       }
 
-      // const inviteId = await this.invitesModel.createInvite(
-      //   createInviteData,
-      //   currentUser
-      // )
-      // return inviteId
-      console.log('chegou no final')
-      return 8
+      const inviteId = await this.invitesModel.createInvite(
+        createInviteData,
+        currentUser
+      )
+      return inviteId
     } catch (error) {
       console.error('erro capturado no createInvite no InvitesService:', error)
       throw error

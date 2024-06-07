@@ -742,6 +742,177 @@ export class UsersModel {
     return users
   }
 
+  approvers: { [key: string]: string[] } = {
+    administrador: [
+      'administrador',
+      'direção',
+      'ministerial',
+      'secretaria',
+      'docente',
+      'representante de campo',
+      'estudante',
+      'design'
+    ],
+    direção: [
+      'direção',
+      'ministerial',
+      'secretaria',
+      'docente',
+      'representante de campo',
+      'estudante',
+      'design'
+    ],
+    secretaria: ['secretaria', 'docente', 'estudante', 'design'],
+    docente: [],
+    estudante: [],
+    ministerial: ['estudante', 'design'],
+    design: [],
+    'representante de campo': []
+  }
+
+  async findUserByRole(requiredRoles: string[]): Promise<IUser[]> {
+    const results = await this.knex
+      .table('users')
+      .select(
+        'users.user_id',
+        'users.password_hash',
+        'users.principal_email',
+        'users.person_id',
+        'people.name',
+        'people.cpf',
+        'roles.role_id',
+        'roles.role_name',
+        'roles.role_description',
+        'users.created_at',
+        'users.updated_at',
+        'users.user_approved'
+      )
+      .leftJoin('people', 'users.person_id', 'people.person_id')
+      .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
+      .leftJoin('roles', 'users_roles.role_id', 'roles.role_id')
+      .whereIn('roles.role_name', requiredRoles)
+
+    const users: IUser[] = results.reduce((acc: IUser[], row: any) => {
+      const existingUser = acc.find((u) => u.user_id === row.user_id)
+      if (existingUser) {
+        // Adiciona as informações de role no usuário existente
+        if (row.role_id) {
+          existingUser.roles.push({
+            role_id: row.role_id,
+            role_name: row.role_name,
+            role_description: row.role_description
+          })
+        }
+      } else {
+        // Cria um novo usuário e adiciona suas informações básicas e de role
+        const newUser: IUser = {
+          user_id: row.user_id,
+          principal_email: row.principal_email,
+          person_id: row.person_id,
+          name: row.name,
+          cpf: row.cpf,
+          roles: [],
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          user_approved: row.user_approved
+        }
+        if (row.role_id) {
+          newUser.roles.push({
+            role_id: row.role_id,
+            role_name: row.role_name,
+            role_description: row.role_description
+          })
+        }
+        acc.push(newUser)
+      }
+      return acc
+    }, [])
+
+    return users
+  }
+
+  async findUsersToApprove(currentUser: UserFromJwt): Promise<IUser[]> {
+    let users: IUser[] = []
+    let sentError: Error | null = null
+    let currentUserRoles = currentUser.roles
+
+    await this.knex.transaction(async (trx) => {
+      try {
+        const results = await trx
+          .table('users')
+          .select(
+            'users.user_id',
+            'users.password_hash',
+            'users.principal_email',
+            'users.person_id',
+            'people.name',
+            'people.cpf',
+            'roles.role_id',
+            'roles.role_name',
+            'roles.role_description',
+            'users.created_at',
+            'users.updated_at',
+            'users.user_approved'
+          )
+          .leftJoin('people', 'users.person_id', 'people.person_id')
+          .leftJoin('users_roles', 'users.user_id', 'users_roles.user_id')
+          .leftJoin('roles', 'users_roles.role_id', 'roles.role_id')
+
+        users = results.reduce((acc: IUser[], row: any) => {
+          const existingUser = acc.find((u) => u.user_id === row.user_id)
+
+          if (existingUser) {
+            // Adiciona as informações de role no usuário existente
+            if (row.role_id) {
+              existingUser.roles.push({
+                role_id: row.role_id,
+                role_name: row.role_name,
+                role_description: row.role_description
+              })
+            }
+          } else {
+            // Cria um novo usuário e adiciona suas informações básicas e de role
+            const newUser: IUser = {
+              user_id: row.user_id,
+              principal_email: row.principal_email,
+              person_id: row.person_id,
+              name: row.name,
+              cpf: row.cpf,
+              roles: [],
+              created_at: row.created_at,
+              updated_at: row.updated_at,
+              user_approved: row.user_approved
+            }
+
+            if (row.role_id) {
+              newUser.roles.push({
+                role_id: row.role_id,
+                role_name: row.role_name,
+                role_description: row.role_description
+              })
+            }
+
+            acc.push(newUser)
+          }
+
+          return acc
+        }, [])
+
+        await trx.commit()
+      } catch (error) {
+        console.error(error)
+        await trx.rollback()
+        sentError = new Error(error.sqlMessage)
+      }
+    })
+
+    if (sentError) {
+      throw sentError
+    }
+
+    return users
+  }
+
   async aproveUserById(
     { user_id, user_approved }: IAproveUser,
     currentUser: UserFromJwt
