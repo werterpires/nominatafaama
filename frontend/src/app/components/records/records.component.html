@@ -1,185 +1,99 @@
 <app-container>
   <div class="sectionBoxes">
     <app-users [permissions]="permissions"></app-users>
+    <ng-container *ngIf="permissions.estudante || permissions.administrador">
+      <app-students [permissions]="permissions"></app-students>
 
-    <app-students
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-students>
+      <app-student-academic-formations
+        [permissions]="permissions"
+      ></app-student-academic-formations>
 
-    <app-student-academic-formations
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-student-academic-formations>
+      <app-st-courses [permissions]="permissions"></app-st-courses>
 
-    <app-st-courses
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-st-courses>
+      <app-languages [permissions]="permissions"></app-languages>
 
-    <app-languages
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-languages>
+      <app-publications [permissions]="permissions"></app-publications>
 
-    <app-publications
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-publications>
+      <app-professional-experiences
+        [permissions]="permissions"
+      ></app-professional-experiences>
 
-    <app-professional-experiences
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-professional-experiences>
+      <app-past-ecl-exps [permissions]="permissions"></app-past-ecl-exps>
 
-    <app-past-ecl-exps
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-past-ecl-exps>
+      <app-evg-experiences [permissions]="permissions"></app-evg-experiences>
 
-    <app-evg-experiences
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-evg-experiences>
+      <app-ecl-experiences [permissions]="permissions"></app-ecl-experiences>
 
-    <app-ecl-experiences
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-ecl-experiences>
+      <app-ordinations [permissions]="permissions"></app-ordinations>
 
-    <app-ordinations
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-ordinations>
+      <app-endowments [permissions]="permissions"></app-endowments>
 
-    <app-endowments
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-endowments>
+      <app-related-ministries
+        [permissions]="permissions"
+      ></app-related-ministries>
 
-    <app-related-ministries
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-related-ministries>
+      <app-children [permissions]="permissions"></app-children>
 
-    <app-children
-      *ngIf="permissions.estudante || permissions.administrador"
-      [permissions]="permissions"
-    ></app-children>
+      <ng-container
+        *ngIf="
+          dataService.maritalStatusName === 'Casado' ||
+          dataService.maritalStatusName === 'Noivo'
+        "
+      >
+        <app-spouses [permissions]="permissions"></app-spouses>
 
-    <app-spouses
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-spouses>
-    <app-sp-academic-formations
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-sp-academic-formations>
+        <app-sp-academic-formations
+          [permissions]="permissions"
+        ></app-sp-academic-formations>
 
-    <app-ps-courses
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-ps-courses>
+        <app-ps-courses [permissions]="permissions"></app-ps-courses>
 
-    <app-sp-languages
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-sp-languages>
+        <app-sp-languages [permissions]="permissions"></app-sp-languages>
 
-    <app-sp-publications
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-sp-publications>
+        <app-sp-publications [permissions]="permissions"></app-sp-publications>
 
-    <app-sp-professional-experiences
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-sp-professional-experiences>
+        <app-sp-professional-experiences
+          [permissions]="permissions"
+        ></app-sp-professional-experiences>
 
-    <app-sp-past-ecl-exp
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-sp-past-ecl-exp>
+        <app-sp-past-ecl-exp [permissions]="permissions"></app-sp-past-ecl-exp>
 
-    <app-sp-evg-experiences
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-sp-evg-experiences>
+        <app-sp-evg-experiences
+          [permissions]="permissions"
+        ></app-sp-evg-experiences>
 
-    <app-sp-endowments
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-sp-endowments>
-    <app-sp-related-ministries
-      *ngIf="
-        (dataService.maritalStatusName === 'Casado' ||
-          dataService.maritalStatusName === 'Noivo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-sp-related-ministries>
-    <app-previous-marriage
-      *ngIf="
-        (dataService.maritalStatusName === 'Divorciado' ||
-          dataService.maritalStatusName === 'Viúvo') &&
-        (permissions.estudante || permissions.administrador)
-      "
-      [permissions]="permissions"
-    ></app-previous-marriage>
+        <app-sp-endowments [permissions]="permissions"></app-sp-endowments>
+        <app-sp-related-ministries
+          [permissions]="permissions"
+        ></app-sp-related-ministries>
+      </ng-container>
 
-    <app-professors
-      *ngIf="permissions.docente || permissions.administrador"
-      [permissions]="permissions"
-    ></app-professors>
+      <app-previous-marriage
+        *ngIf="
+          dataService.maritalStatusName === 'Divorciado' ||
+          dataService.maritalStatusName === 'Viúvo'
+        "
+        [permissions]="permissions"
+      ></app-previous-marriage>
+    </ng-container>
 
-    <app-small-alone-professor-photos
-      *ngIf="permissions.docente || permissions.administrador"
-      [permissions]="permissions"
-    ></app-small-alone-professor-photos>
-    <app-field-reps
+    <ng-container *ngIf="permissions.docente || permissions.administrador">
+      <app-professors [permissions]="permissions"></app-professors>
+
+      <app-small-alone-professor-photos
+        [permissions]="permissions"
+      ></app-small-alone-professor-photos>
+    </ng-container>
+
+    <ng-container
       *ngIf="permissions.representacao || permissions.administrador"
-      [permissions]="permissions"
-    ></app-field-reps>
-    <app-representations
-      *ngIf="permissions.representacao || permissions.administrador"
-      [permissions]="permissions"
-    ></app-representations>
+    >
+      <app-field-reps [permissions]="permissions"></app-field-reps>
+      <app-representations
+        *ngIf="permissions.representacao || permissions.administrador"
+        [permissions]="permissions"
+      ></app-representations>
+    </ng-container>
   </div>
   <app-error-modal *ngIf="error"></app-error-modal>
 </app-container>

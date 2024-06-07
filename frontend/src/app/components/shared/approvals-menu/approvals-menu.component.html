@@ -1,7 +1,10 @@
 <div class="loginMenu">
   <button
     *ngIf="
-      permissions.secretaria || permissions.direcao || permissions.administrador
+      permissions.secretaria ||
+      permissions.direcao ||
+      permissions.administrador ||
+      permissions.ministerial
     "
     class="loginMenuButton defaultButton"
     (click)="choseUsers()"

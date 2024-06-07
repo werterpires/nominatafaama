@@ -17,6 +17,8 @@
 .oneStudentSpaceHeader {
   display: flex;
   margin-top: 50px;
+  align-items: center;
+  gap: 5px;
 }
 
 .oneStudentSpaceTitle {
@@ -26,7 +28,24 @@
   line-height: 24px;
   text-transform: uppercase;
   margin-bottom: 16px;
-  margin-right: 16px;
+}
+
+#yearSelect {
+  background-color: transparent;
+  border: none;
+  padding: 0px;
+  outline: none;
+  cursor: pointer;
+
+  -webkit-appearance: none; /* Safari e Chrome */
+  -moz-appearance: none; /* Firefox */
+  appearance: none;
+
+  transition: all 0.3s ease;
+}
+
+#yearSelect:hover {
+  transform: scale(1.1);
 }
 
 section {

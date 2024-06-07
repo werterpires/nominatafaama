@@ -16,7 +16,7 @@ import { DataService } from '../../shared/shared.service.ts/data.service'
 })
 export class OtherInvitesTimesComponent {
   @Input() permissions!: IPermissions
-  @Input() shortNominatas: { nominataId: number; year: number }[] = []
+  @Input() shortNominatas: { nominataId: number; year: string }[] = []
   @Input() allAssociations: IAssociation[] = []
 
   allRegistries: IOtherInvitesTime[] = []
@@ -29,7 +29,7 @@ export class OtherInvitesTimesComponent {
     invitesBegin: '',
   }
 
-  showBox = true
+  showBox = false
   showForm = false
   title = 'Campos com exceções para convites'
 

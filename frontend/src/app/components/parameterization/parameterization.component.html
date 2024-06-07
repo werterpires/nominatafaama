@@ -1,50 +1,20 @@
 <app-container>
   <div class="sectionBoxes">
-    <app-marital-status
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-marital-status>
-    <app-unions
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-unions>
-    <app-associations
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-associations>
-    <app-hiring-status
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-hiring-status>
-    <app-academic-degrees
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-academic-degrees>
-    <app-language-types
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-language-types>
-    <app-evang-exp-types
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-evang-exp-types>
-    <app-ecl-exp-types
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-ecl-exp-types>
-    <app-ministry-types
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-ministry-types>
-    <app-endowment-types
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-endowment-types>
-
-    <app-publication-types
-      *ngIf="permissions.administrador || permissions.direcao"
-      [permissions]="permissions"
-    ></app-publication-types>
+    <ng-container *ngIf="permissions.administrador || permissions.direcao">
+      <app-marital-status [permissions]="permissions"></app-marital-status>
+      <app-unions [permissions]="permissions"></app-unions>
+      <app-associations [permissions]="permissions"></app-associations>
+      <app-hiring-status [permissions]="permissions"></app-hiring-status>
+      <app-academic-degrees [permissions]="permissions"></app-academic-degrees>
+      <app-language-types [permissions]="permissions"></app-language-types>
+      <app-evang-exp-types [permissions]="permissions"></app-evang-exp-types>
+      <app-ecl-exp-types [permissions]="permissions"></app-ecl-exp-types>
+      <app-ministry-types [permissions]="permissions"></app-ministry-types>
+      <app-endowment-types [permissions]="permissions"></app-endowment-types>
+      <app-publication-types
+        [permissions]="permissions"
+      ></app-publication-types>
+    </ng-container>
 
     <app-student-photos
       *ngIf="

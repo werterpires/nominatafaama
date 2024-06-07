@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { IPermissions } from '../../shared/container/types'
 import { UnactiveService } from './unactive.service'
 import { StringArray } from './types'
@@ -9,7 +9,7 @@ import * as XLSX from 'xlsx'
   templateUrl: './unactive.component.html',
   styleUrls: ['./unactive.component.css'],
 })
-export class UnactiveComponent {
+export class UnactiveComponent implements OnInit {
   @Input() permissions!: IPermissions
 
   title = 'Inativação de estudantes'

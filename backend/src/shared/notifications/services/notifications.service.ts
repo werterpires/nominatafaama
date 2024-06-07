@@ -1029,10 +1029,24 @@ export class NotificationsService {
         'ministerial'
       ])
 
-      notifiedUsersIds.splice(
-        notifiedUsersIds.indexOf(notificationData.agentUserId),
-        1
-      )
+      const oldDAta = notificationData.oldData
+
+      if (oldDAta) {
+        const studentUserId = oldDAta['student_user_id']
+
+        if (studentUserId) {
+          notifiedUsersIds.push(studentUserId)
+        }
+      }
+
+      const agentIndex = notifiedUsersIds.indexOf(notificationData.agentUserId)
+
+      if (agentIndex !== -1) {
+        notifiedUsersIds.splice(
+          notifiedUsersIds.indexOf(notificationData.agentUserId),
+          1
+        )
+      }
 
       notifiedUsersIds.push(notificationData.objectUserId)
 

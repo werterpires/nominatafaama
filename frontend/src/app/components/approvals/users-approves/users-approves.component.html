@@ -47,7 +47,8 @@
           *ngIf="
             permissions.administrador ||
             permissions.direcao ||
-            permissions.secretaria
+            permissions.secretaria ||
+            permissions.ministerial
           "
           (click)="choseUsers('est')"
         >
@@ -1543,7 +1544,8 @@
       *ngIf="
         (permissions.administrador ||
           permissions.direcao ||
-          permissions.secretaria) &&
+          permissions.secretaria ||
+          permissions.ministerial) &&
         users['est']
       "
       class="sectionBox"

@@ -63,17 +63,6 @@ export class StudentPhotosModel {
         }
 
         await trx.commit()
-
-        // await this.notificationsService.createNotification({
-        // 	notificationType: 7,
-        // 	action: 'inseriu',
-        // 	agent_name: currentUser.name,
-        // 	agentUserId: currentUser.user_id,
-        // 	newData: {null},
-        // 	objectUserId: null,
-        // 	oldData: null,
-        // 	table: 'Foto de estudante',
-        // })
       } catch (error) {
         console.error(error)
         await trx.rollback()

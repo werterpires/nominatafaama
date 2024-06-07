@@ -12,7 +12,23 @@
       ></div>
       <div class="boxHead">
         <div class="oneStudentSpaceHeader">
-          <p class="oneStudentSpaceTitle">{{ title }} {{ Registry?.year }}</p>
+          <p class="oneStudentSpaceTitle">{{ title }}</p>
+          <form action="">
+            <select
+              name="yearSelect"
+              id="yearSelect"
+              [(ngModel)]="nominataYear"
+              (change)="getAllRegistries()"
+              class="oneStudentSpaceTitle"
+            >
+              <option
+                *ngFor="let shortNominata of shortNominatas"
+                [value]="shortNominata.year"
+              >
+                {{ shortNominata.year }}
+              </option>
+            </select>
+          </form>
         </div>
       </div>
 

@@ -21,7 +21,7 @@ export class ProfessorPhotosComponent {
   title = 'Pequena foto do professor'
   selectedProfessor!: number
   createRegistryData!: File
-  showBox = true
+  showBox = false
   showForm = false
   isLoading = false
   done = false

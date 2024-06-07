@@ -3,40 +3,41 @@ import {
   IsNotEmpty,
   Matches,
   MaxLength,
-  MinLength,
-} from 'class-validator';
-import { Request } from 'express';
-import { IValidateUser, IUser } from '../../../modules/users/bz_types/types';
+  MinLength
+} from 'class-validator'
+import { Request } from 'express'
+import { IValidateUser, IUser } from '../../../modules/users/bz_types/types'
+import { IRole } from 'src/shared/roles/bz_types/types'
 
 export interface AuthRequest extends Request {
-  user: IValidateUser;
+  user: IValidateUser
 }
 
 export interface UserPayload {
-  principal_email: string;
-  sub: number;
-  name: string;
+  principal_email: string
+  sub: number
+  name: string
   user_approved: boolean
-  roles: object;
-  iat?: number;
-  exp?: number;
+  roles: IRole[]
+  iat?: number
+  exp?: number
 }
 
 export interface UserToken {
-  access_token: string;
+  access_token: string
 }
 
 export interface UserFromJwt {
-  user_id: number;
-  principal_email: string;
-  name: string;
-  roles: object;
-  user_approved: boolean;
+  user_id: number
+  principal_email: string
+  name: string
+  roles: IRole[]
+  user_approved: boolean
 }
 
 export class LoginRequestBody {
   @IsEmail()
-  email: string;
+  email: string
 
   @IsNotEmpty()
   @MinLength(8)
@@ -45,8 +46,8 @@ export class LoginRequestBody {
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+-={}|[\]:";'<>,.?/~`]).{8,}$/,
     {
       message:
-        'A senha deve possuir letras minúsculas, maiúsculas, numeros e caracteres especiais.',
-    },
+        'A senha deve possuir letras minúsculas, maiúsculas, numeros e caracteres especiais.'
+    }
   )
-  password: string;
+  password: string
 }

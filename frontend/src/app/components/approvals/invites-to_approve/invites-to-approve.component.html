@@ -98,7 +98,7 @@
               <span class="field">
                 <p class="fieldTitle">Data do voto</p>
                 <p class="fieldContent">
-                  {{ invite.voteDate }}
+                  {{ invite.voteDate | date : 'dd/MM/yyyy' }}
                 </p>
               </span>
             </div>
@@ -106,7 +106,7 @@
               <span class="field">
                 <p class="fieldTitle">Prazo para resposta do estudante:</p>
                 <p class="fieldContent">
-                  {{ invite.deadline }}
+                  {{ invite.deadline | date : 'dd/MM/yyyy' }}
                 </p>
               </span>
             </div>

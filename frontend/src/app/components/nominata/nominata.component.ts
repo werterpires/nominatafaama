@@ -16,6 +16,7 @@ import { DatePipe } from '@angular/common'
 import { Router } from '@angular/router'
 import { environment } from 'src/environments/environment'
 import { LoginService } from '../shared/shared.service.ts/login.service'
+import { NominatasService } from '../parameterization/nominatas/nominatas.service'
 
 @Component({
   selector: 'app-nominata',
@@ -46,11 +47,50 @@ export class NominataComponent implements OnInit {
   invite = false
 
   Registry: ICompleteNominata | null = null
-  nominataYear: string =
-    new Date().getMonth() > 6
-      ? new Date().getFullYear().toString()
-      : (new Date().getFullYear() - 1).toString()
+  nominataYear = ''
+
   title = 'Nominata'
+
+  shortNominatas: { nominataId: number; year: string }[] = []
+
+  getShortNominatas() {
+    this.isLoading = true
+    this.nominatasService.findAllNominataYearsRegistries().subscribe({
+      next: (res) => {
+        this.shortNominatas = res
+
+        let isValidYear = false
+
+        let actualYear: number =
+          new Date().getMonth() > 7
+            ? new Date().getFullYear()
+            : new Date().getFullYear() - 1
+
+        while (!isValidYear) {
+          if (
+            this.shortNominatas.find(
+              (nominata) =>
+                nominata.year === actualYear.toString() || actualYear < 1980,
+            )
+          ) {
+            isValidYear = true
+            this.nominataYear = actualYear.toString()
+          } else {
+            actualYear -= 1
+          }
+
+          this.getAllRegistries()
+        }
+
+        this.isLoading = false
+      },
+      error: (err) => {
+        this.errorMessage = err.message
+        this.error = true
+        this.isLoading = false
+      },
+    })
+  }
 
   words: string[] = []
 
@@ -80,6 +120,7 @@ export class NominataComponent implements OnInit {
     private loginService: LoginService,
     public datePipe: DatePipe,
     private router: Router,
+    private nominatasService: NominatasService,
   ) {}
 
   user: IUserApproved | null = null
@@ -112,7 +153,8 @@ export class NominataComponent implements OnInit {
       this.permissions.ministerial = roles.includes('ministerial')
       this.permissions.design = roles.includes('design')
     })
-    this.getAllRegistries()
+
+    this.getShortNominatas()
   }
 
   getAllRegistries() {
@@ -166,19 +208,6 @@ export class NominataComponent implements OnInit {
         }
 
         this.Registry.students?.forEach((student) => {
-          // const blob = new Blob([new Uint8Array(student.photo?.file.data)], {
-          //   type: 'image/jpeg',
-          // })
-          // if (blob instanceof Blob) {
-          //   const reader = new FileReader()
-          //   reader.onload = (e: any) => {
-          //     student.imgUrl = e.target.result
-          //   }
-          //   reader.readAsDataURL(blob)
-          // } else {
-          //   this.showForm = true
-          // }
-
           // Separação das uniões e associações
           const union = student.union_acronym
           if (!this.unions.includes(union)) {
@@ -200,21 +229,6 @@ export class NominataComponent implements OnInit {
             }
           })
         }
-
-        this.Registry.professors?.forEach(() => {
-          // const blob = new Blob([new Uint8Array(professor.photo?.file.data)], {
-          //   type: 'image/jpeg',
-          // })
-          // if (blob instanceof Blob) {
-          //   const reader = new FileReader()
-          //   reader.onload = (e: any) => {
-          //     professor.imgUrl = e.target.result
-          //   }
-          //   reader.readAsDataURL(blob)
-          // } else {
-          //   this.showForm = true
-          // }
-        })
 
         if (this.Registry.events) {
           this.Registry.events = this.Registry.events.sort((a, b) => {
@@ -240,8 +254,6 @@ export class NominataComponent implements OnInit {
         this.isLoading = false
       },
       error: (err) => {
-        this.nominataYear = (parseInt(this.nominataYear) - 1).toString()
-        this.getAllRegistries()
         this.errorMessage = err.message
         this.error = true
       },

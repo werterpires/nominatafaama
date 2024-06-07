@@ -84,12 +84,12 @@ export class NominatasService {
   }
 
   findAllNominataYearsRegistries(): Observable<
-    { nominataId: number; year: number }[]
+    { nominataId: number; year: string }[]
   > {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
-      .get<{ nominataId: number; year: number }[]>(
+      .get<{ nominataId: number; year: string }[]>(
         environment.API + '/nominatas/short',
         {
           headers: head_obj,
