@@ -285,6 +285,16 @@ export class EvangelisticExperiencesModel {
           .where('evangelistic_experiences.person_id', '=', personId)
           .andWhere('evang_exp_approved', '=', true)
 
+        results.sort((a, b) => {
+          if (!a.exp_end_date && !b.exp_end_date) return 0
+          if (!a.exp_end_date) return 1
+          if (!b.exp_end_date) return -1
+          return (
+            new Date(a.exp_end_date).getTime() -
+            new Date(b.exp_end_date).getTime()
+          )
+        })
+
         evangelisticExperiencesList = results.map((row: any) => ({
           evang_exp_id: row.evang_exp_id,
           project: row.project,

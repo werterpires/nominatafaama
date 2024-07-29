@@ -164,6 +164,16 @@ export class PastEclExpsModel {
           .andWhere('past_ecl_approved', '=', true)
           .select('*')
 
+        pastEclExpList.sort((a, b) => {
+          if (!a.past_exp_end_date && !b.past_exp_end_date) return 0
+          if (!a.past_exp_end_date) return 1
+          if (!b.past_exp_end_date) return -1
+          return (
+            new Date(a.past_exp_end_date).getTime() -
+            new Date(b.past_exp_end_date).getTime()
+          )
+        })
+
         await trx.commit()
       } catch (error) {
         console.error(error)

@@ -217,6 +217,13 @@ export class OrdinationsModel {
           .where('ordinations.person_id', '=', person_id)
           .andWhere('ordinations.ordination_approved', '=', true)
 
+        results.sort((a, b) => {
+          if (!a.year && !b.year) return 0
+          if (!a.year) return 1
+          if (!b.year) return -1
+          return new Date(a.year).getTime() - new Date(b.year).getTime()
+        })
+
         ordinationsList = results.map((row: any) => ({
           ordination_id: row.ordination_id,
           ordination_name: row.ordination_name,

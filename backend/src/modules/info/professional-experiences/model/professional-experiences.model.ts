@@ -163,6 +163,16 @@ export class ProfessionalExperiencesModel {
           .andWhere('experience_approved', '=', true)
           .select('*')
 
+        experienceList.sort((a, b) => {
+          if (!a.job_end_date && !b.job_end_date) return 0
+          if (!a.job_end_date) return 1
+          if (!b.job_end_date) return -1
+          return (
+            new Date(a.job_end_date).getTime() -
+            new Date(b.job_end_date).getTime()
+          )
+        })
+
         await trx.commit()
       } catch (error) {
         console.error(error)

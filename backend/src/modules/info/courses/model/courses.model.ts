@@ -153,6 +153,16 @@ export class CoursesModel {
           .andWhere('course_approved', '=', true)
           .select('*')
 
+        courseList.sort((a, b) => {
+          if (!a.conclusion_date && !b.conclusion_date) return 0
+          if (!a.conclusion_date) return 1
+          if (!b.conclusion_date) return -1
+          return (
+            new Date(a.conclusion_date).getTime() -
+            new Date(b.conclusion_date).getTime()
+          )
+        })
+
         await trx.commit()
       } catch (error) {
         console.error(error)
