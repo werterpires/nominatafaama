@@ -8,7 +8,7 @@ exports.up = function (knex) {
     table.string('year', 4).notNullable()
     table.date('orig_field_invites_begin').notNullable()
     table.date('other_fields_invites_begin')
-    table.string('director_words', 7000).notNullable()
+    table.string('director_words', 10000).notNullable()
     table.string('class_photo', 250).notNullable()
     table.integer('director').unsigned()
 

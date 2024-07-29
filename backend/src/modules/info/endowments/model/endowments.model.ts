@@ -15,14 +15,16 @@ export class EndowmentsModel {
     currentUser: UserFromJwt
   ): Promise<boolean> {
     try {
-      const { endowment_type_id, person_id, endowment_approved } =
+      const { endowment_type_id, person_id, endowment_approved, year, place } =
         createEndowmentData
 
       await this.knex('endowments')
         .insert({
           endowment_type_id,
           person_id,
-          endowment_approved
+          endowment_approved,
+          year,
+          place
         })
         .returning('endowment_id')
 
@@ -94,6 +96,8 @@ export class EndowmentsModel {
           endowment_approved: result.endowment_approved,
           endowment_type_name: result.endowment_type_name,
           application: result.application,
+          year: result.year,
+          place: result.place,
           created_at: result.created_at,
           updated_at: result.updated_at
         }
@@ -142,6 +146,8 @@ export class EndowmentsModel {
           endowment_approved: row.endowment_approved,
           endowment_type_name: row.endowment_type_name,
           application: row.application,
+          year: row.year,
+          place: row.place,
           created_at: row.created_at,
           updated_at: row.updated_at
         }))
@@ -217,6 +223,8 @@ export class EndowmentsModel {
           endowment_approved: row.endowment_approved,
           endowment_type_name: row.endowment_type_name,
           application: row.application,
+          year: row.year,
+          place: row.place,
           created_at: row.created_at,
           updated_at: row.updated_at
         }))
@@ -265,6 +273,8 @@ export class EndowmentsModel {
           person_id: row.person_id,
           endowment_approved: row.endowment_approved,
           endowment_type_name: row.endowment_type_name,
+          year: row.year,
+          place: row.place,
           application: row.application,
           created_at: row.created_at,
           updated_at: row.updated_at
@@ -298,7 +308,9 @@ export class EndowmentsModel {
           endowment_id,
           endowment_type_id,
           person_id,
-          endowment_approved
+          endowment_approved,
+          year,
+          place
         } = updateEndowment
 
         let approved = await trx('endowments')
@@ -321,7 +333,9 @@ export class EndowmentsModel {
           .update({
             endowment_type_id,
             person_id,
-            endowment_approved
+            endowment_approved,
+            year,
+            place
           })
 
         await trx.commit()
