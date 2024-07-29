@@ -444,8 +444,14 @@
                     *ngFor="let endowment of student.endowments"
                     class="oneStudentDinamicField"
                   >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ endowment.year || 'Ano não informado' }}
+                    </p>
                     <p class="oneStudentFieldContent">
-                      {{ endowment.endowment_type_name }}
+                      {{ endowment.endowment_type_name
+                      }}<ng-container *ngIf="endowment.place"
+                        >, {{ endowment.place }}</ng-container
+                      >
                     </p>
                   </div>
                 </div>
@@ -809,8 +815,14 @@
                     *ngFor="let endowment of student.spEndowments"
                     class="oneStudentDinamicField"
                   >
+                    <p class="oneStudentFieldBoldContent">
+                      {{ endowment.year || 'Ano não informado' }}
+                    </p>
                     <p class="oneStudentFieldContent">
-                      {{ endowment.endowment_type_name }}
+                      {{ endowment.endowment_type_name
+                      }}<ng-container *ngIf="endowment.place"
+                        >, {{ endowment.place }}</ng-container
+                      >
                     </p>
                   </div>
                 </div>

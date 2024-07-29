@@ -485,7 +485,10 @@
                 *ngFor="let endowment of student.endowments"
                 class="infoContent"
               >
-                {{ endowment.endowment_type_name }}
+                {{ endowment.endowment_type_name
+                }}<ng-container *ngIf="endowment.place && endowment.year"
+                  >, {{ endowment.place }} ({{ endowment.year }})</ng-container
+                >
               </li>
             </ul>
           </div>
@@ -880,7 +883,10 @@
                 *ngFor="let endowment of student.spEndowments"
                 class="infoContent"
               >
-                {{ endowment.endowment_type_name }}
+                {{ endowment.endowment_type_name
+                }}<ng-container *ngIf="endowment.place && endowment.year"
+                  >, {{ endowment.place }} ({{ endowment.year }})</ng-container
+                >
               </li>
             </ul>
           </div>
