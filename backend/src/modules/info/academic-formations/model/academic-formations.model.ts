@@ -294,6 +294,17 @@ export class AcademicFormationsModel {
             '=',
             true
           )
+
+        results.sort((a, b) => {
+          if (!a.conclusion_date && !b.conclusion_date) return 0
+          if (!a.conclusion_date) return 1
+          if (!b.conclusion_date) return -1
+          return (
+            new Date(a.conclusion_date).getTime() -
+            new Date(b.conclusion_date).getTime()
+          )
+        })
+
         academicFormationsList = results.map((row: any) => ({
           formation_id: row.formation_id,
           course_area: row.course_area,
@@ -310,7 +321,6 @@ export class AcademicFormationsModel {
 
         await trx.commit()
       } catch (error) {
-        console.error(error)
         console.error(error)
         await trx.rollback()
         sentError = new Error(error.sqlMessage)

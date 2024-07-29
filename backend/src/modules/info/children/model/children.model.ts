@@ -307,6 +307,16 @@ export class ChildrenModel {
           .where('children.student_id', '=', student_id)
           .andWhere('children.child_approved', '=', true)
 
+        results.sort((a, b) => {
+          if (!a.child_birth_date && !b.child_birth_date) return 0
+          if (!a.child_birth_date) return 1
+          if (!b.child_birth_date) return -1
+          return (
+            new Date(a.child_birth_date).getTime() -
+            new Date(b.child_birth_date).getTime()
+          )
+        })
+
         childrenList = results.map((row: any) => ({
           child_id: row.child_id,
           child_birth_date: row.child_birth_date,
