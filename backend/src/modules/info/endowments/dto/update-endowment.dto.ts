@@ -6,7 +6,7 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsUrl,
-  IsOptional,
+  IsOptional
 } from 'class-validator'
 
 export class UpdateEndowmentDto {
@@ -24,4 +24,12 @@ export class UpdateEndowmentDto {
   @IsInt()
   @Min(1)
   person_id: number
+
+  @IsNotEmpty()
+  @IsString()
+  year: string
+
+  @IsNotEmpty()
+  @IsString()
+  place: string
 }

@@ -13,6 +13,8 @@ exports.up = function (knex) {
     table
       .foreign('endowment_type_id')
       .references('endowment_types.endowment_type_id')
+    table.string('place', 250)
+    table.string('year', 4)
 
     table.timestamps(true, true)
   })

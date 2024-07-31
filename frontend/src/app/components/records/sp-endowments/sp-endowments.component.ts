@@ -27,6 +27,8 @@ export class SpEndowmentsComponent implements OnInit {
   title = 'Investiduras obtidas pelo Cônjuge'
   createRegistryData: CreateEndowmentDto = {
     endowment_type_id: 0,
+    year: '',
+    place: '',
   }
 
   showBox = false

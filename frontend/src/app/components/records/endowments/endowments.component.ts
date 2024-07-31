@@ -22,6 +22,8 @@ export class EndowmentsComponent implements OnInit {
   title = 'Investiduras obtidas pelo formando'
   createRegistryData: CreateEndowmentDto = {
     endowment_type_id: 0,
+    year: '',
+    place: '',
   }
 
   showBox = false

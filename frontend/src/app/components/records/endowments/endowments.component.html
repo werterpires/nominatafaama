@@ -45,6 +45,25 @@
           </select>
         </label>
       </div>
+
+      <div class="subSection">
+        <label>
+          Local da investidura
+          <input
+            type="text"
+            name="place"
+            [(ngModel)]="createRegistryData.place"
+          />
+        </label>
+        <label>
+          Ano da investidura
+          <input
+            type="text"
+            name="year"
+            [(ngModel)]="createRegistryData.year"
+          />
+        </label>
+      </div>
     </app-creation-form>
   </section>
   <section *ngIf="showBox" class="registriesWrapper">
@@ -85,6 +104,21 @@
               {{ endowmentType.endowment_type_name }}
             </option>
           </select>
+        </label>
+      </div>
+
+      <div class="subSection">
+        <label>
+          Local da ordenação
+          <input type="text" name="place" [(ngModel)]="registry.place" />
+        </label>
+        <label>
+          Ano da ordenação
+          <input
+            type="text"
+            name="pasEclBeginDate"
+            [(ngModel)]="registry.year"
+          />
         </label>
       </div>
     </app-update-form>
