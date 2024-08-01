@@ -161,21 +161,25 @@ export class StudentsService {
       const student: IStudent | null =
         await this.studentsModel.findApprovedStudentByUserId(studentId)
       completeStudent.student = student
+      console.log('student st 1', completeStudent)
 
       if (!student || !student.person_id) {
         return completeStudent
       }
 
+      console.log('student st 2', completeStudent)
       const personId = student.person_id
+      console.log('personId', personId)
 
       let user: IUser | null = await this.usersModel.findApprovedUserByPersonId(
         student.person_id
       )
-
+      console.log('user', user)
       if (user) {
         user.cpf = '00000000000'
       }
       completeStudent.user = user
+      console.log('student st 3', completeStudent)
 
       const academicFormations =
         await this.academicFormationsModel.findApprovedAcademicFormationsByPersonId(
