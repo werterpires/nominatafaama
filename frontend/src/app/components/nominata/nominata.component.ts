@@ -62,7 +62,7 @@ export class NominataComponent implements OnInit {
         let isValidYear = false
 
         let actualYear: number =
-          new Date().getMonth() > 7
+          new Date().getMonth() > 6
             ? new Date().getFullYear()
             : new Date().getFullYear() - 1
 
