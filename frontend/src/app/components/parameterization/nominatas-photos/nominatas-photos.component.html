@@ -37,17 +37,25 @@
         </label>
       </div>
       <div class="subSection">
-        <label>
-          Foto da turma
-          <input
-            type="file"
-            name="smallAlonePhoto"
-            id="smallAlonePhoto"
-            (change)="onFileSelected($event)"
-          />
-        </label>
+        <label> Fotos da turma </label>
       </div>
-      <div class="subSection">
+      <div
+        *ngFor="let photo of allPhotos; let i = index"
+        id="classPhoto"
+        class="classPhotoContainer"
+        [ngStyle]="{
+          'background-image':
+            'url(' + urlBase + '/nominata-photos/' + photo.photo + ')'
+        }"
+      ></div>
+      <input
+        *ngIf="allPhotos.length < 5"
+        type="file"
+        name="smallAlonePhoto"
+        id="smallAlonePhoto"
+        (change)="onFileSelected($event)"
+      />
+      <div class="subSection" *ngIf="allPhotos.length < 5">
         <div class="alonePhoto">
           <div
             class="imageContainer"

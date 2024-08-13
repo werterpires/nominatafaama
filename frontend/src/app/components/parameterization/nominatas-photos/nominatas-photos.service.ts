@@ -11,6 +11,7 @@ import {
 } from './types'
 import { of } from 'rxjs'
 import { INominata } from '../nominatas/types'
+import { INominataPhoto } from '../../nominata/types'
 
 @Injectable({
   providedIn: 'root',
@@ -34,14 +35,17 @@ export class NominataPhotosService {
       )
   }
 
-  findPhoto(nomintaId: number): Observable<Blob | AddressNull> {
+  findPhotos(nomintaId: number): Observable<INominataPhoto[]> {
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    console.log('nominataId', nomintaId)
     return this.http
-      .get(environment.API + '/nominatas/photo/' + nomintaId, {
-        headers: head_obj,
-        responseType: 'blob',
-      })
+      .get<INominataPhoto[]>(
+        environment.API + '/nominata-photos/nominata/' + nomintaId,
+        {
+          headers: head_obj,
+        },
+      )
       .pipe(
         catchError((error) => {
           console.log('Veja o erro completo', error)

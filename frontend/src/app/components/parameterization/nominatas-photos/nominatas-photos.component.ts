@@ -9,6 +9,8 @@ import { NominataPhotosService } from './nominatas-photos.service'
 import { IPermissions } from '../../shared/container/types'
 import { INominata } from '../nominatas/types'
 import { DataService } from '../../shared/shared.service.ts/data.service'
+import { INominataPhoto } from '../../nominata/types'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'app-nominatas-photos',
@@ -22,6 +24,7 @@ export class NominatasPhotosComponent {
   createRegistryData!: File
   nominataId!: number
   allNominatas: INominata[] = []
+  allPhotos: INominataPhoto[] = []
 
   showBox = true
   showForm = false
@@ -55,7 +58,7 @@ export class NominatasPhotosComponent {
     })
   }
   imageUrl: string | null = null
-
+  urlBase = environment.API
   getAllNominatas() {
     this.isLoading = true
     this.service.findAllNominatas().subscribe({
@@ -83,24 +86,14 @@ export class NominatasPhotosComponent {
   getPhoto() {
     this.isLoading = true
 
-    this.service.findPhoto(parseInt(this.nominataId.toString())).subscribe({
+    this.service.findPhotos(this.nominataId).subscribe({
       next: (res) => {
-        if (res instanceof Blob) {
-          const reader = new FileReader()
-          reader.onload = (e: any) => {
-            this.imageUrl = e.target.result
-            this.isLoading = false
-          }
-          reader.readAsDataURL(res)
-        } else {
-          this.imageUrl = null
-          this.showForm = true
-          this.isLoading = false
-        }
+        this.allPhotos = res
+        this.isLoading = false
       },
       error: (err) => {
         if (err.status == 404) {
-          this.imageUrl = null
+          this.allPhotos = []
           this.isLoading = false
         } else {
           this.errorMessage = err.message
@@ -109,6 +102,33 @@ export class NominatasPhotosComponent {
         }
       },
     })
+
+    // this.service.findPhoto(parseInt(this.nominataId.toString())).subscribe({
+    //   next: (res) => {
+    //     if (res instanceof Blob) {
+    //       const reader = new FileReader()
+    //       reader.onload = (e: any) => {
+    //         this.imageUrl = e.target.result
+    //         this.isLoading = false
+    //       }
+    //       reader.readAsDataURL(res)
+    //     } else {
+    //       this.imageUrl = null
+    //       this.showForm = true
+    //       this.isLoading = false
+    //     }
+    //   },
+    //   error: (err) => {
+    //     if (err.status == 404) {
+    //       this.imageUrl = null
+    //       this.isLoading = false
+    //     } else {
+    //       this.errorMessage = err.message
+    //       this.error = true
+    //       this.isLoading = false
+    //     }
+    //   },
+    // })
   }
 
   onFileSelected(event: any) {
@@ -125,8 +145,6 @@ export class NominatasPhotosComponent {
   createRegistry() {
     this.isLoading = true
 
-    if (this.createRegistryData) {
-    }
     const formData = new FormData()
     formData.append(
       'file',

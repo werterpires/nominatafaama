@@ -77,4 +77,21 @@ export class NominataPhotosService {
       throw error
     }
   }
+
+  async findNominataPhotoByNominataId(nominataId: number) {
+    try {
+      const nominataPhotos =
+        await this.nominataPhotosModel.findNominataPhotosByNominataId(
+          nominataId
+        )
+
+      return nominataPhotos
+    } catch (error) {
+      console.error(
+        'Erro capturado no NominataPhotosService findNominataPhotoByNominataId: ',
+        error
+      )
+      throw error
+    }
+  }
 }

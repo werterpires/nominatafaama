@@ -21,6 +21,7 @@ import { extname } from 'path'
 import { CurrentUser } from 'src/shared/auth/decorators/current-user.decorator'
 import { UserFromJwt } from 'src/shared/auth/types/types'
 import { IsPublic } from 'src/shared/auth/decorators/is-public.decorator'
+import { INominataPhoto } from './types'
 
 @Controller('nominata-photos')
 export class NominataPhotosController {
@@ -85,6 +86,21 @@ export class NominataPhotosController {
       }
     } catch (error) {
       res.status(500).json({ error: 'Erro ao recuperar a foto.' })
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
+  @Get('nominata/:nominataId')
+  async getPhotosByNominataId(
+    @Param('nominataId') nominataId: string
+  ): Promise<INominataPhoto[]> {
+    try {
+      return this.nominataPhotosService.findNominataPhotoByNominataId(
+        +nominataId
+      )
+    } catch (error) {
+      console.error('Erro capturado no NominataPhotosController: ', error)
+      throw error
     }
   }
 }
