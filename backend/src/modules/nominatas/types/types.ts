@@ -14,7 +14,7 @@ export interface INominata {
   students?: IBasicStudent[] | null
   professors?: IBasicProfessor[] | null
   photo?: { file: Buffer; headers: Record<string, string> } | null
-  class_photo: string | null
+  class_photo: string[]
   events?: IEvent[] | null
 }
 

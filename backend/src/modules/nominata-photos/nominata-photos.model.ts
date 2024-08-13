@@ -7,7 +7,7 @@ import { UserFromJwt } from 'src/shared/auth/types/types'
 import { NominataPhoto } from './entities/nominata-photo.entity'
 
 @Injectable()
-export class NominatasModel {
+export class NominatasPhotosModel {
   @InjectModel() private readonly knex: Knex
   constructor(private notificationsService: NotificationsService) {}
 
@@ -81,6 +81,18 @@ export class NominatasModel {
       }, [])
 
       return nominataPhotos
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  async deleteNominataPhotoById(photoId: number): Promise<void> {
+    try {
+      await this.knex
+        .table('nominata_photos')
+        .where('nominata_photo_id', '=', photoId)
+        .del()
     } catch (error) {
       console.error(error)
       throw error
