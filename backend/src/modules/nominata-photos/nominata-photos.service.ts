@@ -6,6 +6,7 @@ import { NominatasModel } from '../nominatas/model/nominatas.model'
 import { INominata } from '../nominatas/types/types'
 import { NominatasPhotosModel } from './nominata-photos.model'
 import { ICreateNominataPhoto } from './types'
+import * as fs from 'fs'
 
 @Injectable()
 export class NominataPhotosService {
@@ -19,20 +20,24 @@ export class NominataPhotosService {
     currentUser: UserFromJwt
   ) {
     try {
+      const sanitizedFilename = filename.replace(/[^a-zA-Z0-9-_\.~]/g, '')
+      const filePath = `src/modules/nominatas/files/${sanitizedFilename}`
       const nominata: INominata | null =
         await this.nominatasModel.findNominataById(nominataId)
 
       if (!nominata) {
+        await fs.promises.unlink(filePath)
         throw new BadRequestException('Nominata não encontrada')
       }
 
       if (nominata.class_photo.length >= 5) {
+        await fs.promises.unlink(filePath)
         throw new BadRequestException('#Limite de fotos alcançado. ')
       }
 
       const createNominataPhotoData: ICreateNominataPhoto = {
         nominata_id: nominataId,
-        photo: filename
+        photo: sanitizedFilename
       }
 
       this.nominataPhotosModel.createNominataPhoto(
@@ -42,6 +47,31 @@ export class NominataPhotosService {
     } catch (error) {
       console.error(
         'Erro capturado no NominataPhotosService createNominataPhoto: ',
+        error
+      )
+      throw error
+    }
+  }
+
+  async findNominataPhotoByFileName(fileName: string) {
+    try {
+      const filePath = `src/modules/nominatas/files/${fileName}`
+      console.log('filePath', filePath)
+
+      if (fs.existsSync(filePath)) {
+        const fileStream = fs.createReadStream(filePath)
+        const headers = {
+          'Content-Type': 'image/jpeg',
+          'Content-Disposition': `attachment; filename=${fileName}`
+        }
+
+        return { fileStream, headers }
+      } else {
+        return { fileStream: null, headers: null }
+      }
+    } catch (error) {
+      console.error(
+        'Erro capturado no NominataPhotosService findNominataPhotoByFileName: ',
         error
       )
       throw error

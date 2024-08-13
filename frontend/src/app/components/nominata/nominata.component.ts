@@ -162,6 +162,7 @@ export class NominataComponent implements OnInit {
     this.service.findAllRegistries(this.nominataYear).subscribe({
       next: async (res) => {
         this.Registry = res
+        console.log(this.Registry)
 
         this.Registry.director_words = this.Registry.director_words
           .replace(/<b>(.*?)<\/b>/g, '<strong>$1</strong>')
@@ -250,6 +251,8 @@ export class NominataComponent implements OnInit {
         }
 
         this.studentsToList = this.Registry.students
+
+        this.rollCarrossel()
 
         this.isLoading = false
       },
@@ -367,6 +370,205 @@ export class NominataComponent implements OnInit {
   selectStudent(studentId: string) {
     this.router.navigate(['student/' + studentId])
     // this.toStudent.emit({ option: 'student', studentId: studentId })
+  }
+
+  // rollCarrossel(index? = 0) {
+  //   const attemptInterval = 62.5 // Intervalo entre as tentativas (5 segundos)
+  //   const maxAttempts = 800 // Número máximo de tentativas
+
+  //   const tryInitializeCarrossel = (attempts: number) => {
+  //     const photoNumber = this.Registry?.class_photo.length
+  //     if (photoNumber) {
+  //       // Capturar todos os elementos com a classe "classPhotoContainer"
+  //       const allPhotos = document.querySelectorAll(
+  //         '.classPhotoContainer',
+  //       ) as NodeListOf<HTMLElement>
+
+  //       const photoControllers = document.querySelectorAll(
+  //         '.sliderController',
+  //       ) as NodeListOf<HTMLElement>
+
+  //       // Verifica se os elementos foram encontrados
+  //       if (allPhotos.length === 0 && attempts < maxAttempts) {
+  //         // Tenta novamente após o intervalo
+  //         setTimeout(
+  //           () => tryInitializeCarrossel(attempts + 1),
+  //           attemptInterval,
+  //         )
+  //         return
+  //       }
+
+  //       if (allPhotos.length === 0) {
+  //         console.error(
+  //           'Não foram encontrados elementos com a classe "classPhotoContainer".',
+  //         )
+  //         return
+  //       }
+
+  //       let currentIndex = index
+
+  //       // Função para mover as fotos
+  //       const movePhotos = () => {
+  //         // Calcula o quanto cada foto deve se mover com base no índice
+  //         allPhotos.forEach((photo) => {
+  //           const offset = -100 * currentIndex // Multiplicado pelo índice atual
+  //           photo.style.transform = `translateX(${offset}%)`
+  //         })
+
+  //         if (currentIndex !== 0) {
+  //           photoControllers[currentIndex - 1].classList.remove(
+  //             'controllerSelected',
+  //           )
+  //         } else {
+  //           photoControllers[photoControllers.length - 1].classList.remove(
+  //             'controllerSelected',
+  //           )
+  //         }
+
+  //         photoControllers[currentIndex].classList.add('controllerSelected')
+
+  //         // Incrementa o índice atual
+  //         currentIndex++
+
+  //         // Se todas as fotos foram exibidas, reinicia o índice para começar do início
+  //         if (currentIndex === photoNumber) {
+  //           currentIndex = 0
+  //         }
+  //       }
+
+  //       // Inicia a rolagem do carrossel a cada 8 segundos
+  //       movePhotos() // Chamada inicial para começar imediatamente
+  //       setInterval(movePhotos, 6000) // Repetir a cada 8 segundos
+  //     } else {
+  //       console.error(
+  //         'Não foi possível encontrar o número de fotos no Registry.',
+  //       )
+  //     }
+  //   }
+
+  //   // Inicializa a função de tentativa
+  //   tryInitializeCarrossel(0)
+  // }
+
+  carrosselIntervalId: ReturnType<typeof setInterval> | null = null // Variável global para armazenar o ID do intervalo
+
+  // Função separada para mover as fotos
+  movePhotos(
+    allPhotos: NodeListOf<HTMLElement>,
+    photoControllers: NodeListOf<HTMLElement>,
+    currentIndex: number,
+    photoNumber: number,
+  ): number {
+    // Calcula o quanto cada foto deve se mover com base no índice
+    allPhotos.forEach((photo) => {
+      const offset = -100 * currentIndex // Multiplicado pelo índice atual
+      photo.style.transform = `translateX(${offset}%)`
+    })
+
+    photoControllers.forEach((controller) => {
+      controller.classList.remove('controllerSelected')
+    })
+
+    photoControllers[currentIndex].classList.add('controllerSelected')
+
+    // Incrementa o índice atual
+    currentIndex++
+
+    // Se todas as fotos foram exibidas, reinicia o índice para começar do início
+    if (currentIndex === photoNumber) {
+      currentIndex = 0
+    }
+    console.log('currentIndex', currentIndex)
+    return currentIndex
+  }
+
+  atualIndex = 0
+
+  // Função principal do carrossel
+  rollCarrossel(atualIndex = 0) {
+    const attemptInterval = 62.5 // Intervalo entre as tentativas (5 segundos)
+    const maxAttempts = 800 // Número máximo de tentativas
+
+    const tryInitializeCarrossel = (attempts: number) => {
+      const photoNumber = this.Registry?.class_photo.length
+      if (photoNumber) {
+        // Capturar todos os elementos com a classe "classPhotoContainer"
+        const allPhotos = document.querySelectorAll(
+          '.classPhotoContainer',
+        ) as NodeListOf<HTMLElement>
+
+        const photoControllers = document.querySelectorAll(
+          '.sliderController',
+        ) as NodeListOf<HTMLElement>
+
+        // Verifica se os elementos foram encontrados
+        if (allPhotos.length === 0 && attempts < maxAttempts) {
+          // Tenta novamente após o intervalo
+          setTimeout(
+            () => tryInitializeCarrossel(attempts + 1),
+            attemptInterval,
+          )
+          return
+        }
+
+        if (allPhotos.length === 0) {
+          console.error(
+            'Não foram encontrados elementos com a classe "classPhotoContainer".',
+          )
+          return
+        }
+
+        let currentIndex = atualIndex
+
+        // Inicia a rolagem do carrossel a cada 8 segundos
+        currentIndex = this.movePhotos(
+          allPhotos,
+          photoControllers,
+          currentIndex,
+          photoNumber,
+        ) // Chamada inicial para começar imediatamente
+
+        this.carrosselIntervalId = setInterval(() => {
+          currentIndex = this.movePhotos(
+            allPhotos,
+            photoControllers,
+            currentIndex,
+            photoNumber,
+          )
+        }, 6000) // Repetir a cada 8 segundos
+      } else {
+        console.error(
+          'Não foi possível encontrar o número de fotos no Registry.',
+        )
+      }
+    }
+
+    // Inicializa a função de tentativa
+    tryInitializeCarrossel(0)
+  }
+
+  // Função para parar o carrossel
+  stopCarrossel() {
+    if (this.carrosselIntervalId !== null) {
+      clearInterval(this.carrosselIntervalId)
+      this.carrosselIntervalId = null
+    }
+  }
+
+  selectPhoto(photoIndex: number) {
+    const allPhotos = document.querySelectorAll(
+      '.classPhotoContainer',
+    ) as NodeListOf<HTMLElement>
+    const photoControllers = document.querySelectorAll(
+      '.sliderController',
+    ) as NodeListOf<HTMLElement>
+
+    const photoNumber = this.Registry?.class_photo.length || 0
+    this.stopCarrossel()
+
+    this.movePhotos(allPhotos, photoControllers, photoIndex, photoNumber)
+
+    this.rollCarrossel(photoIndex)
   }
 
   closeError() {

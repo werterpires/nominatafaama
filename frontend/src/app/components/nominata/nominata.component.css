@@ -210,13 +210,18 @@ footer {
   justify-content: flex-end;
 }
 
+.classPhotoContainer {
+  transition: 1s ease all;
+  width: 80vw;
+  min-width: 80vw;
+  height: 26.66vw;
+  flex-shrink: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 @media (max-width: 480px) {
-  .classPhotoContainer {
-    position: relative;
-    right: 10vw;
-    width: 100vw;
-    height: 34.25vw;
-  }
   .smallAlonePhoto {
     width: 80vw;
     height: 82.05vw;
@@ -289,13 +294,6 @@ footer {
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-  .classPhotoContainer {
-    position: relative;
-    right: 10vw;
-    width: 100vw;
-    height: 34.25vw;
-  }
-
   .smallAlonePhoto {
     width: 39vw;
     height: 40vw;
@@ -384,13 +382,6 @@ footer {
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .classPhotoContainer {
-    position: relative;
-    right: 10vw;
-    width: 100vw;
-    height: 34.25vw;
-  }
-
   .smallAlonePhoto {
     width: 39vw;
     height: 40vw;
@@ -480,13 +471,6 @@ footer {
 }
 
 @media (min-width: 1025px) and (max-width: 1200px) {
-  .classPhotoContainer {
-    position: relative;
-    right: 10vw;
-    width: 100vw;
-    height: 34.25vw;
-  }
-
   .eventSpace {
     width: 80vw;
     flex: unset;
@@ -517,4 +501,31 @@ footer {
     stroke-width: 2px;
     width: 40px;
   }
+}
+
+.carrossel {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#sliderControllerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 20px;
+}
+
+.sliderController {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+
+  margin: 0 5px;
+  border: 2px solid #233d57;
+}
+
+.controllerSelected {
+  background-color: #202c3d;
 }

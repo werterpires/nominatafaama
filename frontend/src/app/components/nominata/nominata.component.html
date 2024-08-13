@@ -1,7 +1,7 @@
 <app-container *ngIf="!invite">
   <div class="sectionDataList">
     <section #sectionBox ngClass="sectionBoxAll">
-      <div
+      <!-- <div
         id="classPhoto"
         class="classPhotoContainer"
         *ngIf="Registry"
@@ -9,7 +9,29 @@
           'background-image':
             'url(' + urlBase + '/nominatas/photo/' + Registry.nominata_id + ')'
         }"
-      ></div>
+      ></div> -->
+
+      <div class="carrossel">
+        <div
+          *ngFor="let photo of Registry?.class_photo; let i = index"
+          id="classPhoto"
+          class="classPhotoContainer"
+          [ngStyle]="{
+            'background-image':
+              'url(' + urlBase + '/nominata-photos/' + photo.photo + ')'
+          }"
+          (mouseover)="atualIndex = i; stopCarrossel()"
+          (mouseleave)="rollCarrossel(atualIndex)"
+        ></div>
+      </div>
+      <div id="sliderControllerContainer">
+        <div
+          *ngFor="let photo of Registry?.class_photo; let i = index"
+          class="sliderController"
+          (click)="selectPhoto(i)"
+        ></div>
+      </div>
+
       <div class="boxHead">
         <div class="oneStudentSpaceHeader">
           <p class="oneStudentSpaceTitle">{{ title }}</p>

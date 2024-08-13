@@ -36,7 +36,7 @@ export class NominataPhotosService {
 
   findPhoto(nomintaId: number): Observable<Blob | AddressNull> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .get(environment.API + '/nominatas/photo/' + nomintaId, {
         headers: head_obj,
@@ -55,10 +55,10 @@ export class NominataPhotosService {
     nominataId: number,
   ): Observable<IStudentPhoto> {
     const token = localStorage.getItem('access_token')
-    let head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
+    const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
       .post<IStudentPhoto>(
-        environment.API + '/nominatas/photo/' + nominataId,
+        environment.API + '/nominata-photos/' + nominataId,
         formData,
         {
           headers: head_obj,

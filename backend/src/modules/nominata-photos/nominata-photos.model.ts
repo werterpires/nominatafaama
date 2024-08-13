@@ -63,7 +63,7 @@ export class NominatasPhotosModel {
 
   async findNominataPhotosByNominataId(
     nominataId: number
-  ): Promise<NominataPhoto[]> {
+  ): Promise<INominataPhoto[]> {
     let nominataPhotos: INominataPhoto[] = []
 
     try {
