@@ -13,6 +13,7 @@ export interface ICompleteNominata {
   students: IBasicStudent[] | null
   professors?: IBasicProfessor[] | null
   photo?: { file: any; headers: Record<string, string> } | null
+  class_photo: INominataPhoto[]
   imgUrl?: SafeResourceUrl
   events: IEvent[] | null
 }
@@ -46,4 +47,10 @@ export interface IBasicProfessor {
   professor_photo_address: string | null
   photo?: { file: any; headers: Record<string, string> } | null
   imgUrl?: SafeResourceUrl
+}
+
+export interface INominataPhoto {
+  nominata_photo_id: number
+  nominata_id: number
+  photo: string
 }

@@ -728,7 +728,7 @@ button:active {
 
 .sectionBoxAll {
   width: 80vw;
-  max-width: 1900px;
+
   background: transparent;
   transition: height 5s ease;
   padding-bottom: 15px;

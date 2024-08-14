@@ -28,6 +28,7 @@ import { FieldRepsModule } from './modules/field-reps/field-reps.module';
 import { FieldRepresentationsModule } from './modules/field-representations/field-representations.module';
 import { InvitesModule } from './modules/invites/invites.module';
 import { OtherInvitesTimesModule } from './modules/other-invites-times/other-invites-times.module';
+import { NominataPhotosModule } from './modules/nominata-photos/nominata-photos.module';
 
 config();
 
@@ -109,6 +110,7 @@ const mssqlConfig: KnexModuleOptions = {
     FieldRepresentationsModule,
     InvitesModule,
     OtherInvitesTimesModule,
+    NominataPhotosModule,
   ],
   providers: [
     {

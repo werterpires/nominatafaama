@@ -40,7 +40,7 @@ export class NominatasModel {
             createNominataData.other_fields_invites_begin,
           director_words: createNominataData.director_words,
           director: createNominataData.director,
-          class_photo: null,
+          class_photo: [],
           created_at: new Date(),
           updated_at: new Date()
         }
@@ -249,26 +249,40 @@ export class NominatasModel {
             'professors.professor_id'
           )
           .leftJoin('people', 'professors.person_id', 'people.person_id')
-          .first('nominatas.*', 'people.name as director')
-          .select('nominatas.*', 'people.name as director_name')
-          .where('nominata_id', '=', id)
+          .leftJoin(
+            'nominata_photos',
+            'nominatas.nominata_id',
+            'nominata_photos.nominata_id'
+          )
+          .select(
+            'nominatas.*',
+            'people.name as director_name',
+            'nominata_photos.photo as class_photo'
+          )
+          .where('nominatas.nominata_id', id)
 
         if (!result || result.length < 1) {
           throw new Error('Nominata not found')
         }
 
-        nominata = {
-          nominata_id: result.nominata_id,
-          year: result.year,
-          orig_field_invites_begin: result.orig_field_invites_begin,
-          other_fields_invites_begin: result.other_fields_invites_begin,
-          director_words: result.director_words,
-          class_photo: result.class_photo,
-          created_at: result.created_at,
-          updated_at: result.updated_at,
-          director: result.director,
-          director_name: result.director_name
-        }
+        nominata = result.reduce(
+          (acc, nominata) => {
+            acc.nominata_id = nominata.nominata_id
+            acc.year = nominata.year
+            acc.orig_field_invites_begin = nominata.orig_field_invites_begin
+            acc.other_fields_invites_begin = nominata.other_fields_invites_begin
+            acc.director_words = nominata.director_words
+            nominata.class_photo
+              ? acc.class_photo.push(nominata.class_photo)
+              : acc.class_photo
+            acc.created_at = nominata.created_at
+            acc.updated_at = nominata.updated_at
+            acc.director = nominata.director
+            acc.director_name = nominata.director_name
+            return acc
+          },
+          { class_photo: [] }
+        )
 
         await trx.commit()
       } catch (error) {
@@ -718,15 +732,13 @@ export class NominatasModel {
         const { director_words } = updateNominata
         const { director } = updateNominata
         const oldData = await this.findNominataById(nominata_id)
-        await trx('nominatas')
-          .where('nominata_id', nominata_id)
-          .update({
-            year,
-            orig_field_invites_begin,
-            other_fields_invites_begin,
-            director_words,
-            director
-          })
+        await trx('nominatas').where('nominata_id', nominata_id).update({
+          year,
+          orig_field_invites_begin,
+          other_fields_invites_begin,
+          director_words,
+          director
+        })
 
         updatedNominata = await this.findNominataById(nominata_id)
 

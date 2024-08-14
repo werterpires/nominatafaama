@@ -16,12 +16,16 @@ import {
 import * as fs from 'fs'
 import { EventsModel } from 'src/modules/events/model/events.model'
 import { UserFromJwt } from 'src/shared/auth/types/types'
+import { NominatasPhotosModel } from 'src/modules/nominata-photos/nominata-photos.model'
+import { NominataPhoto } from 'src/modules/nominata-photos/entities/nominata-photo.entity'
+import { INominataPhoto } from 'src/modules/nominata-photos/types'
 
 @Injectable()
 export class NominatasService {
   constructor(
     private nominatasModel: NominatasModel,
-    private eventsModel: EventsModel
+    private eventsModel: EventsModel,
+    private nominataPhotosModel: NominatasPhotosModel
   ) {}
 
   async createNominata(
@@ -85,7 +89,8 @@ export class NominatasService {
 
   async findNominataByYear(year: string): Promise<INominata> {
     try {
-      const nominata = await this.nominatasModel.findNominataByYear(year)
+      const nominata: INominata | null =
+        await this.nominatasModel.findNominataByYear(year)
       let photosInfo: {
         fileStream: fs.ReadStream | null
         headers: Record<string, string>
@@ -94,8 +99,11 @@ export class NominatasService {
       if (nominata) {
         const { nominata_id } = nominata
 
-        // const photo = await this.findNominaPhoto(nominata.class_photo);
-        // nominata.photo = photo;
+        const nominataPhotos: INominataPhoto[] =
+          await this.nominataPhotosModel.findNominataPhotosByNominataId(
+            nominata_id
+          )
+        nominata.class_photo = nominataPhotos
 
         const students = await this.findNominataBasicStudents(nominata_id)
         nominata.students = students
