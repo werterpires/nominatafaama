@@ -24,7 +24,12 @@
           (mouseleave)="rollCarrossel(atualIndex)"
         ></div>
       </div>
-      <div id="sliderControllerContainer">
+      <div
+        id="sliderControllerContainer"
+        *ngIf="
+          Registry && Registry.class_photo && Registry.class_photo.length > 1
+        "
+      >
         <div
           *ngFor="let photo of Registry?.class_photo; let i = index"
           class="sliderController"

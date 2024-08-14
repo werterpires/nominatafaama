@@ -162,7 +162,6 @@ export class NominataComponent implements OnInit {
     this.service.findAllRegistries(this.nominataYear).subscribe({
       next: async (res) => {
         this.Registry = res
-        console.log(this.Registry)
 
         this.Registry.director_words = this.Registry.director_words
           .replace(/<b>(.*?)<\/b>/g, '<strong>$1</strong>')
@@ -251,10 +250,8 @@ export class NominataComponent implements OnInit {
         }
 
         this.studentsToList = this.Registry.students
-
-        this.rollCarrossel()
-
         this.isLoading = false
+        this.rollCarrossel()
       },
       error: (err) => {
         this.errorMessage = err.message
@@ -478,7 +475,7 @@ export class NominataComponent implements OnInit {
     if (currentIndex === photoNumber) {
       currentIndex = 0
     }
-    console.log('currentIndex', currentIndex)
+
     return currentIndex
   }
 

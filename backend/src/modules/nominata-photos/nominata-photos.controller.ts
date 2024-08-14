@@ -62,6 +62,8 @@ export class NominataPhotosController {
       file.filename,
       currentUser
     )
+
+    return nominataPhoto
   }
 
   @IsPublic()
@@ -98,6 +100,17 @@ export class NominataPhotosController {
       return this.nominataPhotosService.findNominataPhotoByNominataId(
         +nominataId
       )
+    } catch (error) {
+      console.error('Erro capturado no NominataPhotosController: ', error)
+      throw error
+    }
+  }
+
+  @Roles(ERoles.ADMINISTRACAO, ERoles.SECRETARIA, ERoles.DIRECAO, ERoles.DESIGN)
+  @Delete(':nominataPhotoId/')
+  async deletePhotoById(@Param('nominataPhotoId') nominataId: string) {
+    try {
+      return this.nominataPhotosService.deleteNominataPhotoById(+nominataId)
     } catch (error) {
       console.error('Erro capturado no NominataPhotosController: ', error)
       throw error

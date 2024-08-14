@@ -47,7 +47,17 @@
           'background-image':
             'url(' + urlBase + '/nominata-photos/' + photo.photo + ')'
         }"
-      ></div>
+        (mouseover)="deleteIcon.classList.remove('hidden')"
+        (mouseout)="deleteIcon.classList.add('hidden')"
+      >
+        <img
+          src="assets/icons/delete.svg"
+          alt="desenho de uma lixeira"
+          class="deleteIcon hidden"
+          #deleteIcon
+          (click)="deleteRegistry(photo.nominata_photo_id)"
+        />
+      </div>
       <input
         *ngIf="allPhotos.length < 5"
         type="file"
@@ -65,7 +75,7 @@
           <div
             class="imageContainer imageModel"
             [ngStyle]="{
-              'background-image': 'url(assets/img/smallAlone.png)'
+              'background-image': 'url(assets/img/selectPhoto.jpg)'
             }"
             *ngIf="!imageUrl"
           ></div>

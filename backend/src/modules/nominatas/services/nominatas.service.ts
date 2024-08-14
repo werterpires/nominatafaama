@@ -370,7 +370,6 @@ export class NominatasService {
     currentUser: UserFromJwt
   ): Promise<null | number> {
     try {
-      console.log('filename: ', filename)
       const nominata = await this.nominatasModel.findNominataById(nominataId)
 
       if (nominata == null) {
