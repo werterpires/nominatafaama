@@ -1,5 +1,6 @@
 import { ICompleteUser } from 'src/modules/approvals/types/types'
 import { IEvent } from 'src/modules/events/types/types'
+import { INominataPhoto } from 'src/modules/nominata-photos/types'
 
 export interface INominata {
   nominata_id: number
@@ -14,7 +15,7 @@ export interface INominata {
   students?: IBasicStudent[] | null
   professors?: IBasicProfessor[] | null
   photo?: { file: Buffer; headers: Record<string, string> } | null
-  class_photo: string | null
+  class_photo: INominataPhoto[]
   events?: IEvent[] | null
 }
 
