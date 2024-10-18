@@ -28,10 +28,14 @@ import { AproveUserDto } from '../az_dto/aproveUserDto'
 import { UpdateUserDto } from '../az_dto/updateUserDto'
 import { CreateRecoverPassDto } from '../az_dto/createRecoverPassDto'
 import { CompareRecoverPassDto } from '../az_dto/compareRecoverPassDto'
+import { UsersToApproveService } from '../dz_services/usersToApprove.service'
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly usersToApproveService: UsersToApproveService
+  ) {}
 
   @IsPublic()
   @Post()
@@ -41,6 +45,33 @@ export class UsersController {
       return user
     } catch (error) {
       console.error('erro no controller', error)
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  @Roles(
+    ERoles.ADMINISTRACAO,
+    ERoles.DIRECAO,
+    ERoles.MINISTERIAL,
+    ERoles.SECRETARIA
+  )
+  @Get('usersToApprove/:requiredRole/:status')
+  async findUsersToApprove(
+    @Param('requiredRole') requiredRole: string,
+    @Param('status') status: string,
+    @CurrentUser() currentUser: UserFromJwt
+  ) {
+    try {
+      const usersToapprove =
+        await this.usersToApproveService.findUsersToApprove(
+          currentUser,
+          requiredRole,
+          status
+        )
+
+      return usersToapprove
+    } catch (error) {
+      console.log('Erro no controller, findUsersToApprove:', error)
       throw new InternalServerErrorException(error.message)
     }
   }
