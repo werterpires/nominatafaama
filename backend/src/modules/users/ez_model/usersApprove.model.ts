@@ -26,11 +26,15 @@ export class UsersToApproveModel {
     let users: IUser[] = []
 
     try {
-      const ids = await this.knex
-        .table('roles')
-        .join('users_roles', 'roles.role_id', 'users_roles.role_id')
-        .select('user_id')
-        .where('role_name', requiredRole)
+      const ids = (
+        await this.knex
+          .table('roles')
+          .join('users_roles', 'roles.role_id', 'users_roles.role_id')
+          .select('user_id')
+          .where('role_name', requiredRole)
+      ).map((row) => row.user_id)
+
+      console.log('ids', ids)
 
       const results = await this.knex
         .table('users')

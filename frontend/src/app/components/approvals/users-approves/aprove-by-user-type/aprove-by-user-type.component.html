@@ -1,1 +1,107 @@
-<p>aprove-by-user-type works!</p>
+<section class="sectionBox">
+  <div class="boxHead">
+    <p class="sectionTitle1">{{ userTitle }}</p>
+    <form class="sectionForm">
+      <fieldset>
+        <label class="labelRadio">
+          <input
+            id="true"
+            name="userStatus"
+            type="radio"
+            (input)="status = true; getUsers()"
+          />
+          Aprovados
+        </label>
+        <label class="labelRadio">
+          <input
+            id="false"
+            name="userStatus"
+            type="radio"
+            (input)="status = false; getUsers()"
+          />
+          Reprovados
+        </label>
+        <label class="labelRadio">
+          <input
+            id="null"
+            name="userStatus"
+            type="radio"
+            (input)="status = null; getUsers()"
+            checked
+          />
+          Não avaliados
+        </label>
+      </fieldset>
+    </form>
+  </div>
+
+  <section>
+    <div *ngFor="let user of users; let i = index">
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">Nome:</p>
+          <p class="fieldContent">{{ user.name }}</p>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">CPF:</p>
+          <p class="fieldContent">
+            {{ user.cpf.slice(0, 3) }}.{{ user.cpf.slice(3, 6) }}.{{
+              user.cpf.slice(6, 9)
+            }}-{{ user.cpf.slice(9) }}
+          </p>
+        </span>
+      </div>
+      <div class="subSection">
+        <span class="field">
+          <p class="fieldTitle">email:</p>
+          <p class="fieldContent">{{ user.principal_email }}</p>
+        </span>
+        <span class="field">
+          <p class="fieldTitle">Papéis:</p>
+          <p *ngFor="let role of user.roles" class="fieldContent">
+            {{ role.role_name }}
+          </p>
+        </span>
+      </div>
+      <form class="formSection">
+        <label class="labelRadio" (click)="user.user_approved = true">
+          <input
+            class="approvedRadio"
+            [id]="'approveuserTrue' + i"
+            type="radio"
+            name="status"
+            [checked]="user.user_approved"
+          />
+          Aprovado
+        </label>
+        <label class="labelRadio" (click)="user.user_approved = false">
+          <input
+            class="rejectedRadio"
+            [id]="'rejectuserTrue' + i"
+            type="radio"
+            name="status"
+            [checked]="!user.user_approved"
+          />
+          Desaprovado
+        </label>
+
+        <button
+          class="saveButton"
+          type="button"
+          (click)="
+            approveUser(
+              'approveuserTrue' + i,
+              'rejectuserTrue' + i,
+              user.user_id,
+              user.roles
+            )
+          "
+        >
+          SALVAR
+        </button>
+      </form>
+
+      <hr class="sectionDivisiion" />
+    </div>
+  </section>
+</section>

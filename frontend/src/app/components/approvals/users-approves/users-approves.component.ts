@@ -9,7 +9,7 @@ import { UserApprovesService } from './users-approves.service'
 import { IUser } from '../../records/users/types'
 import { LoginService } from '../../shared/shared.service.ts/login.service'
 import { Router } from '@angular/router'
-import { UsersAprovesTypes } from './types'
+import { UsersAprovesTypes, UserType } from './types'
 
 @Component({
   selector: 'app-users-approves',
@@ -17,6 +17,8 @@ import { UsersAprovesTypes } from './types'
   styleUrls: ['./users-approves.component.css'],
 })
 export class UsersApprovesComponent implements OnInit {
+  usersType = ''
+  usersTitle = ''
   constructor(
     private userServices: UsersServices,
     private usersApprovesServices: UserApprovesService,
@@ -87,23 +89,48 @@ export class UsersApprovesComponent implements OnInit {
     isApproved: false,
   }
 
-  users: UsersAprovesTypes = {
-    adm: false,
-    dir: false,
-    min: false,
-    rep: false,
-    sec: false,
-    doc: false,
-    est: false,
-    des: false,
-  }
+  userTypes: UserType[] = [
+    {
+      name: 'Administradores/as',
+      requiredRole: 'administrador',
+    },
+    {
+      name: 'Secretários/as',
+      requiredRole: 'secretaria',
+    },
+    {
+      name: 'Diretores',
+      requiredRole: 'direcao',
+    },
+    {
+      name: 'Representantes de campo',
+      requiredRole: 'representacao',
+    },
+    {
+      name: 'Docentes',
+      requiredRole: 'docente',
+    },
+    {
+      name: 'Ministeriais',
+      requiredRole: 'ministerial',
+    },
+    {
+      name: 'Designers',
+      requiredRole: 'design',
+    },
+    {
+      name: 'Estudantes',
+      requiredRole: 'estudante',
+    },
+  ]
 
   choseUsers(userType: string) {
-    //tornar false todos os users usando um loop
-    for (const type in this.users) {
-      this.users[type] = false
+    const type = this.userTypes.find((type) => type.requiredRole === userType)
+    if (!type) {
+      return
     }
-    this.users[userType] = true
+    this.usersTitle = type.name
+    this.usersType = type.requiredRole
   }
 
   user: IUserApproved | null = null
@@ -153,139 +180,165 @@ export class UsersApprovesComponent implements OnInit {
       this.permissions.design = roles.includes('design')
     })
 
-    this.userServices.findAllUsers().subscribe({
-      next: (res) => {
-        this.allUsers = res
+    // this.userServices.findAllUsers().subscribe({
+    //   next: (res) => {
+    //     this.allUsers = res
 
-        this.desUsersNull = this.userServices.filterUsers(
-          null,
-          this.allUsers,
-          0,
-        )
-        this.desUsersFalse = this.userServices.filterUsers(
-          false,
-          this.allUsers,
-          0,
-        )
-        this.desUsersTrue = this.userServices.filterUsers(
-          true,
-          this.allUsers,
-          0,
-        )
-        this.minUsersNull = this.userServices.filterUsers(
-          null,
-          this.allUsers,
-          5,
-        )
-        this.minUsersFalse = this.userServices.filterUsers(
-          false,
-          this.allUsers,
-          5,
-        )
-        this.minUsersTrue = this.userServices.filterUsers(
-          true,
-          this.allUsers,
-          5,
-        )
-        this.admUsersNull = this.userServices.filterUsers(
-          null,
-          this.allUsers,
-          7,
-        )
-        this.admUsersFalse = this.userServices.filterUsers(
-          false,
-          this.allUsers,
-          7,
-        )
-        this.admUsersTrue = this.userServices.filterUsers(
-          true,
-          this.allUsers,
-          7,
-        )
-        this.repUsersNull = this.userServices.filterUsers(
-          null,
-          this.allUsers,
-          4,
-        )
-        this.repUsersFalse = this.userServices.filterUsers(
-          false,
-          this.allUsers,
-          4,
-        )
-        this.repUsersTrue = this.userServices.filterUsers(
-          true,
-          this.allUsers,
-          4,
-        )
-        this.dirUsersNull = this.userServices.filterUsers(
-          null,
-          this.allUsers,
-          6,
-        )
-        this.dirUsersFalse = this.userServices.filterUsers(
-          false,
-          this.allUsers,
-          6,
-        )
-        this.dirUsersTrue = this.userServices.filterUsers(
-          true,
-          this.allUsers,
-          6,
-        )
-        this.secUsersNull = this.userServices.filterUsers(
-          null,
-          this.allUsers,
-          3,
-        )
-        this.secUsersFalse = this.userServices.filterUsers(
-          false,
-          this.allUsers,
-          3,
-        )
-        this.secUsersTrue = this.userServices.filterUsers(
-          true,
-          this.allUsers,
-          3,
-        )
-        this.docUsersNull = this.userServices.filterUsers(
-          null,
-          this.allUsers,
-          2,
-        )
-        this.docUsersFalse = this.userServices.filterUsers(
-          false,
-          this.allUsers,
-          2,
-        )
-        this.docUsersTrue = this.userServices.filterUsers(
-          true,
-          this.allUsers,
-          2,
-        )
-        this.estUsersNull = this.userServices.filterUsers(
-          null,
-          this.allUsers,
-          1,
-        )
-        this.estUsersFalse = this.userServices.filterUsers(
-          false,
-          this.allUsers,
-          1,
-        )
-        this.estUsersTrue = this.userServices.filterUsers(
-          true,
-          this.allUsers,
-          1,
-        )
+    //     this.desUsersNull = this.userServices.filterUsers(
+    //       null,
+    //       this.allUsers,
+    //       0,
+    //     )
+    //     this.desUsersFalse = this.userServices.filterUsers(
+    //       false,
+    //       this.allUsers,
+    //       0,
+    //     )
+    //     this.desUsersTrue = this.userServices.filterUsers(
+    //       true,
+    //       this.allUsers,
+    //       0,
+    //     )
+    //     this.minUsersNull = this.userServices.filterUsers(
+    //       null,
+    //       this.allUsers,
+    //       5,
+    //     )
+    //     this.minUsersFalse = this.userServices.filterUsers(
+    //       false,
+    //       this.allUsers,
+    //       5,
+    //     )
+    //     this.minUsersTrue = this.userServices.filterUsers(
+    //       true,
+    //       this.allUsers,
+    //       5,
+    //     )
+    //     this.admUsersNull = this.userServices.filterUsers(
+    //       null,
+    //       this.allUsers,
+    //       7,
+    //     )
+    //     this.admUsersFalse = this.userServices.filterUsers(
+    //       false,
+    //       this.allUsers,
+    //       7,
+    //     )
+    //     this.admUsersTrue = this.userServices.filterUsers(
+    //       true,
+    //       this.allUsers,
+    //       7,
+    //     )
+    //     this.repUsersNull = this.userServices.filterUsers(
+    //       null,
+    //       this.allUsers,
+    //       4,
+    //     )
+    //     this.repUsersFalse = this.userServices.filterUsers(
+    //       false,
+    //       this.allUsers,
+    //       4,
+    //     )
+    //     this.repUsersTrue = this.userServices.filterUsers(
+    //       true,
+    //       this.allUsers,
+    //       4,
+    //     )
+    //     this.dirUsersNull = this.userServices.filterUsers(
+    //       null,
+    //       this.allUsers,
+    //       6,
+    //     )
+    //     this.dirUsersFalse = this.userServices.filterUsers(
+    //       false,
+    //       this.allUsers,
+    //       6,
+    //     )
+    //     this.dirUsersTrue = this.userServices.filterUsers(
+    //       true,
+    //       this.allUsers,
+    //       6,
+    //     )
+    //     this.secUsersNull = this.userServices.filterUsers(
+    //       null,
+    //       this.allUsers,
+    //       3,
+    //     )
+    //     this.secUsersFalse = this.userServices.filterUsers(
+    //       false,
+    //       this.allUsers,
+    //       3,
+    //     )
+    //     this.secUsersTrue = this.userServices.filterUsers(
+    //       true,
+    //       this.allUsers,
+    //       3,
+    //     )
+    //     this.docUsersNull = this.userServices.filterUsers(
+    //       null,
+    //       this.allUsers,
+    //       2,
+    //     )
+    //     this.docUsersFalse = this.userServices.filterUsers(
+    //       false,
+    //       this.allUsers,
+    //       2,
+    //     )
+    //     this.docUsersTrue = this.userServices.filterUsers(
+    //       true,
+    //       this.allUsers,
+    //       2,
+    //     )
+    //     this.estUsersNull = this.userServices.filterUsers(
+    //       null,
+    //       this.allUsers,
+    //       1,
+    //     )
+    //     this.estUsersFalse = this.userServices.filterUsers(
+    //       false,
+    //       this.allUsers,
+    //       1,
+    //     )
+    //     this.estUsersTrue = this.userServices.filterUsers(
+    //       true,
+    //       this.allUsers,
+    //       1,
+    //     )
 
-        this.isLoading = false
-      },
-      error: (err) => {
-        this.errorMessage = err.message
-        this.error = true
-        this.isLoading = false
-      },
-    })
+    //     this.isLoading = false
+    //   },
+    //   error: (err) => {
+    //     this.errorMessage = err.message
+    //     this.error = true
+    //     this.isLoading = false
+    //   },
+    // })
+  }
+
+  getUsersToApprove(requiredRole: string, status: boolean | null) {
+    this.isLoading = true
+    let statusToString = 'null'
+    if (status) {
+      statusToString = 'true'
+    } else if (status === false) {
+      statusToString = 'false'
+    }
+
+    console.log('status to string', statusToString)
+
+    this.usersApprovesServices
+      .getUsersToApprove(requiredRole, statusToString)
+      .subscribe({
+        next: (res) => {
+          this.allUsers = res
+          this.isLoading = false
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
   }
 
   approveUser(
