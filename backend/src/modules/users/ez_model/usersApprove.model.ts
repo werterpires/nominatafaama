@@ -34,8 +34,6 @@ export class UsersToApproveModel {
           .where('role_name', requiredRole)
       ).map((row) => row.user_id)
 
-      console.log('ids', ids)
-
       const results = await this.knex
         .table('users')
         .select(

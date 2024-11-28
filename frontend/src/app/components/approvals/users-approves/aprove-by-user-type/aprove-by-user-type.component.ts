@@ -20,7 +20,6 @@ export class AproveByUserTypeComponent {
 
   @Input() set userType(userType: string) {
     this._userType = userType
-    console.log('set user type com input', this._userType)
     this.getUsers()
   }
 
@@ -35,14 +34,15 @@ export class AproveByUserTypeComponent {
   }
 
   approveUser(
-    approveString: string,
-    rejectString: string,
+    approveString: boolean | null | undefined,
     userId: number,
     userRoles: IRole[],
   ) {
+    if (approveString == undefined) {
+      return
+    }
     const approveUserObj: ApproveUserObj = {
       approveString,
-      rejectString,
       userId,
       userRoles,
     }

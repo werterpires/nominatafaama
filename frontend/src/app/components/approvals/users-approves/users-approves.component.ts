@@ -10,6 +10,7 @@ import { IUser } from '../../records/users/types'
 import { LoginService } from '../../shared/shared.service.ts/login.service'
 import { Router } from '@angular/router'
 import { UsersAprovesTypes, UserType } from './types'
+import { ApproveUserObj } from './aprove-by-user-type/types'
 
 @Component({
   selector: 'app-users-approves',
@@ -324,8 +325,6 @@ export class UsersApprovesComponent implements OnInit {
       statusToString = 'false'
     }
 
-    console.log('status to string', statusToString)
-
     this.usersApprovesServices
       .getUsersToApprove(requiredRole, statusToString)
       .subscribe({
@@ -380,6 +379,41 @@ export class UsersApprovesComponent implements OnInit {
             approveInput.classList.remove('setted')
           }
           this.ngOnInit()
+        },
+        error: (err) => {
+          this.errorMessage = err.message
+          this.error = true
+          this.isLoading = false
+        },
+      })
+  }
+
+  approveUserNew(approveUserObj: ApproveUserObj) {
+    this.isLoading = true
+
+    if (approveUserObj.approveString == null) {
+      this.errorMessage = 'Você precisa selecionar uma das opções.'
+      this.error = true
+      this.isLoading = false
+      return
+    }
+
+    this.usersApprovesServices
+      .approveUser({
+        user_id: approveUserObj.userId,
+        user_approved: approveUserObj.approveString,
+        roles: approveUserObj.userRoles,
+      })
+      .subscribe({
+        next: (res) => {
+          this.doneMessage = 'Status modificao com sucesso.'
+          this.done = true
+          this.isLoading = false
+          const userIndex = this.allUsers.findIndex(
+            (user) => user.user_id == approveUserObj.userId,
+          )
+
+          this.allUsers.splice(userIndex, 1)
         },
         error: (err) => {
           this.errorMessage = err.message

@@ -861,7 +861,8 @@ button:active {
 }
 
 /* Estilização dos botões de rádio quando selecionados */
-.rejectedRadio:checked {
+.rejectedRadio:checked,
+.rejectedRadioChecked {
   transform: scale(1.2);
   border-color: red;
 }

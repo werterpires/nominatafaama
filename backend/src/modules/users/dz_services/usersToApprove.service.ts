@@ -25,6 +25,8 @@ export class UsersToApproveService {
   ) {
     if (requiredRole === 'direcao') {
       requiredRole = 'direção'
+    } else if (requiredRole === 'representacao') {
+      requiredRole = 'representante de campo'
     }
 
     if (!this.validateRolesToApprove(currentUser.roles, requiredRole)) {
@@ -46,8 +48,6 @@ export class UsersToApproveService {
       status
     )
 
-    console.log('users to approve', allSelectedUsers)
-
     const filteredUsers = allSelectedUsers.filter((user) => {
       return user.roles.every((role) => {
         return RolesWeights[role.role_name] <= RolesWeights[requiredRole]
@@ -59,16 +59,10 @@ export class UsersToApproveService {
 
   validateRolesToApprove(currentUserRoles: IRole[], requiredRole: string) {
     const approvableRolesSet = new Set<string>()
-    console.log('currentUserRoles', currentUserRoles)
-    console.log('requiredRole', requiredRole)
+
     currentUserRoles.forEach((role) => {
       const approvableRoles = CanApprove.get(role.role_name)
-      console.log(
-        'aprovableRoles para a role:',
-        role.role_name,
-        ':',
-        approvableRoles
-      )
+
       if (approvableRoles) {
         approvableRoles.forEach((approvableRole) => {
           approvableRolesSet.add(approvableRole)
@@ -77,8 +71,6 @@ export class UsersToApproveService {
     })
 
     const approvableRoles = Array.from(approvableRolesSet)
-
-    console.log('approvableRoles', approvableRoles)
 
     return approvableRoles.includes(requiredRole)
   }

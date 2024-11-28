@@ -67,35 +67,24 @@
         <label class="labelRadio" (click)="user.user_approved = true">
           <input
             class="approvedRadio"
-            [id]="'approveuserTrue' + i"
             type="radio"
-            name="status"
             [checked]="user.user_approved"
           />
           Aprovado
         </label>
         <label class="labelRadio" (click)="user.user_approved = false">
-          <input
+          <div
             class="rejectedRadio"
-            [id]="'rejectuserTrue' + i"
             type="radio"
-            name="status"
-            [checked]="!user.user_approved"
-          />
+            [ngClass]="{ rejectedRadioChecked: user.user_approved === false }"
+          ></div>
           Desaprovado
         </label>
 
         <button
           class="saveButton"
           type="button"
-          (click)="
-            approveUser(
-              'approveuserTrue' + i,
-              'rejectuserTrue' + i,
-              user.user_id,
-              user.roles
-            )
-          "
+          (click)="approveUser(user.user_approved, user.user_id, user.roles)"
         >
           SALVAR
         </button>

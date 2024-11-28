@@ -1,8 +1,7 @@
 import { IRole } from 'src/app/components/shared/container/types'
 
 export interface ApproveUserObj {
-  approveString: string
-  rejectString: string
+  approveString: boolean | null
   userId: number
   userRoles: IRole[]
 }

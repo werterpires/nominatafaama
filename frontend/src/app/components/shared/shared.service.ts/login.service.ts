@@ -93,14 +93,7 @@ export class LoginService {
     return this.http
       .post<{ access_token: string }>(environment.API + '/login', loginData)
       .pipe(
-        // switchMap((res) => {
-        //   // this.userToken = res.access_token
-        //   // localStorage.setItem('access_token', this.userToken)
-        //   // console.log('token recebido:', this.userToken)
-
-        // }),
         catchError((error) => {
-          console.log('O erro que chegou foi:', error)
           if (error.error.message === 'Estudante inativo') {
             return throwError(
               () =>
@@ -193,7 +186,6 @@ export class LoginService {
     signatureDto: { termsUser: ItermUser[] },
     access_token: string,
   ): Observable<boolean> {
-    console.log('no service front')
     return this.http
       .post<boolean>(
         environment.API + '/terms/sign/',

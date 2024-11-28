@@ -21,11 +21,7 @@
           Ministeriais
         </li>
         <li
-          *ngIf="
-            permissions.administrador ||
-            permissions.direcao ||
-            permissions.secretaria
-          "
+          *ngIf="permissions.administrador || permissions.direcao"
           (click)="choseUsers('representacao')"
         >
           Representantes
@@ -61,7 +57,8 @@
           *ngIf="
             permissions.administrador ||
             permissions.direcao ||
-            permissions.ministerial
+            permissions.ministerial ||
+            permissions.secretaria
           "
           (click)="choseUsers('design')"
         >
@@ -77,6 +74,7 @@
       [userTitle]="usersTitle"
       [users]="allUsers"
       (getUsersEmmiter)="getUsersToApprove($event.requiredRole, $event.status)"
+      (approveUserEmmiter)="approveUserNew($event)"
     ></app-aprove-by-user-type>
     <!-- <section
       *ngIf="permissions.administrador && users['adm']"
