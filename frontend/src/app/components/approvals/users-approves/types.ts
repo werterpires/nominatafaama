@@ -9,3 +9,8 @@ export interface ApproveUserDto {
 export interface UsersAprovesTypes {
   [key: string]: boolean // Add an index signature
 }
+
+export interface UserType {
+  requiredRole: string
+  name: string
+}

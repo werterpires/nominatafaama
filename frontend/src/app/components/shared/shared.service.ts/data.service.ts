@@ -53,7 +53,6 @@ export class DataService {
     }/${objectDate.getUTCDate()}/${objectDate.getUTCFullYear()}`
   }
   formatarTelefone(phoneNumber: string) {
-    console.log(phoneNumber)
     let formatedNumber = ''
     phoneNumber = phoneNumber.replace(/\D/g, '')
 
@@ -72,7 +71,7 @@ export class DataService {
         '($1) $2-$3',
       )
     }
-    console.log(formatedNumber)
+
     return formatedNumber
   }
 

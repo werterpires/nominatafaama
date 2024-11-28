@@ -2,34 +2,33 @@
   <aside class="sideBar">
     <nav>
       <ul class="ulSideBar">
-        <li *ngIf="permissions.administrador" (click)="choseUsers('adm')">
+        <li
+          *ngIf="permissions.administrador"
+          (click)="choseUsers('administrador')"
+        >
           Administradores/as
         </li>
         <li
           *ngIf="permissions.administrador || permissions.direcao"
-          (click)="choseUsers('dir')"
+          (click)="choseUsers('direcao')"
         >
           Diretores/as
         </li>
         <li
           *ngIf="permissions.administrador || permissions.direcao"
-          (click)="choseUsers('min')"
+          (click)="choseUsers('ministerial')"
         >
           Ministeriais
         </li>
         <li
-          *ngIf="
-            permissions.administrador ||
-            permissions.direcao ||
-            permissions.secretaria
-          "
-          (click)="choseUsers('rep')"
+          *ngIf="permissions.administrador || permissions.direcao"
+          (click)="choseUsers('representacao')"
         >
           Representantes
         </li>
         <li
           *ngIf="permissions.administrador || permissions.direcao"
-          (click)="choseUsers('sec')"
+          (click)="choseUsers('secretaria')"
         >
           Secretarios/as
         </li>
@@ -39,7 +38,7 @@
             permissions.direcao ||
             permissions.secretaria
           "
-          (click)="choseUsers('doc')"
+          (click)="choseUsers('docente')"
         >
           Professores/as
         </li>
@@ -50,7 +49,7 @@
             permissions.secretaria ||
             permissions.ministerial
           "
-          (click)="choseUsers('est')"
+          (click)="choseUsers('estudante')"
         >
           Estudantes
         </li>
@@ -58,9 +57,10 @@
           *ngIf="
             permissions.administrador ||
             permissions.direcao ||
-            permissions.ministerial
+            permissions.ministerial ||
+            permissions.secretaria
           "
-          (click)="choseUsers('des')"
+          (click)="choseUsers('design')"
         >
           Designs
         </li>
@@ -69,7 +69,14 @@
   </aside>
 
   <div class="sectionBoxes">
-    <section
+    <app-aprove-by-user-type
+      [userType]="usersType"
+      [userTitle]="usersTitle"
+      [users]="allUsers"
+      (getUsersEmmiter)="getUsersToApprove($event.requiredRole, $event.status)"
+      (approveUserEmmiter)="approveUserNew($event)"
+    ></app-aprove-by-user-type>
+    <!-- <section
       *ngIf="permissions.administrador && users['adm']"
       class="sectionBox"
     >
@@ -2031,7 +2038,7 @@
           <hr class="sectionDivisiion" />
         </div>
       </section>
-    </section>
+    </section> -->
 
     <div *ngIf="error" class="error">
       <div class="errorTitle">

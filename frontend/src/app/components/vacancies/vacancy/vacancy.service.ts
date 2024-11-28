@@ -37,9 +37,6 @@ export class VacancyService {
           throw new Error(
             this.errorService.makeErrorMessage(error.error.message),
           )
-          return throwError(
-            () => new Error('Não foi possível atualizar a vaga.'),
-          )
         }),
       )
   }
@@ -80,7 +77,6 @@ export class VacancyService {
           throw new Error(
             this.errorService.makeErrorMessage(error.error.message),
           )
-          return throwError(() => new Error('Não foi possível deletar a vaga.'))
         }),
       )
   }
@@ -132,7 +128,6 @@ export class VacancyService {
   }
 
   removeStudentFromVacancy(vacancyStudentId: number): Observable<boolean> {
-    console.log('vacancyStudentId:', vacancyStudentId)
     const token = localStorage.getItem('access_token')
     const head_obj = new HttpHeaders().set('Authorization', 'bearer ' + token)
     return this.http
