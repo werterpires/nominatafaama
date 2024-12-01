@@ -1,0 +1,17 @@
+.dateInput {
+  width: 320px;
+  padding: 0.5rem 1rem;
+  margin: 4px 0;
+  background: #ffffff;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1.5px solid #dcdada;
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #23435f;
+}
