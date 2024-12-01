@@ -6,6 +6,7 @@
           #addIcon
           src="assets/icons/addIcon.png"
           (click)="showForm = true"
+          id="addVacancyButton"
         >
           Adicionar nova vaga
         </button>
@@ -80,7 +81,7 @@
           </div>
         </app-creation-form>
       </section>
-      <div *ngIf="allVacancies.length > 0">
+      <div *ngIf="allVacancies.length > 0" id="vacancyList">
         <div *ngFor="let vacancy of allVacancies">
           <p
             class="sectionTitle1 vacancyTitle"

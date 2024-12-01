@@ -1,3 +1,15 @@
 .vacancyTitle {
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  #addVacancyButton {
+    margin-top: 15px;
+    margin-left: 30px;
+  }
+
+  #nominataSelect,
+  #vacancyList {
+    margin-left: 30px;
+  }
+}

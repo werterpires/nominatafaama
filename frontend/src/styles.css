@@ -479,6 +479,7 @@ button:active {
   box-sizing: border-box;
   position: fixed;
   width: 395.63px;
+  max-width: 90vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -491,6 +492,7 @@ button:active {
 
 .errorTitle {
   width: 395.59px;
+  max-width: 90vw;
   height: 46.48px;
   background: #f60e0e;
   border-radius: 6.66045px 6.66045px 0px 0px;
@@ -533,6 +535,7 @@ button:active {
   box-sizing: border-box;
   position: fixed;
   width: 395.63px;
+  max-width: 90vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -545,6 +548,7 @@ button:active {
 
 .alertTitle {
   width: 395.59px;
+  max-width: 90vw;
   height: 46.48px;
   background: #b3b02c;
   border-radius: 6.66045px 6.66045px 0px 0px;
@@ -593,6 +597,7 @@ button:active {
   box-sizing: border-box;
   position: fixed;
   width: 395.63px;
+  max-width: 90vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -604,6 +609,7 @@ button:active {
 
 .doneTitle {
   width: 395.59px;
+  max-width: 90vw;
   height: 46.48px;
   background: green;
   border-radius: 6.66045px 6.66045px 0px 0px;

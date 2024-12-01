@@ -3,3 +3,7 @@
   justify-content: flex-end;
   gap: 25px;
 }
+
+form {
+  max-width: 95vw;
+}
