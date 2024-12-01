@@ -261,3 +261,18 @@ textarea:focus {
   gap: 10px;
   flex-wrap: wrap;
 }
+
+@media (max-width: 768px) {
+  .vacancyStudents {
+    flex-direction: column;
+    overflow: unset;
+  }
+
+  .studentsNotInVacancy {
+    height: fit-content;
+  }
+
+  .studentsInVacancy {
+    max-height: 50vh;
+  }
+}
